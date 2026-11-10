@@ -1,0 +1,12 @@
+services:
+  campus:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATA_DIR: /data
+      APP_HTML: /app/app/index.html
+    volumes:
+      - ./data:/data
+    ports:
+      - "127.0.0.1:3000:3000"   # solo accesible desde el propio servidor; el proxy HTTPS lo publica

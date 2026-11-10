@@ -411,3 +411,35 @@ Se asignan automáticamente en este orden, un equipo por nombre y sin repetir de
   - Textos secundarios más claros; las cajas vacías y los botones desactivados, menos apagados.
   - Corregido: la pestaña activa del menú perdía el fondo al pasar el ratón por encima.
   - El modo claro no se ha tocado: el rosa de marca (#ea456c) sobre gris (#e4e4e4) tiene poco contraste en textos pequeños (pendiente de Pau).
+- 10/11: Nuevo apartado «Recursos Humanos» en el menú y en Inicio, junto a Registros, Horarios, Equipos y Contabilidad. De momento muestra «Coming soon»; Pau definirá su contenido.
+- 10/11: Navegación con barra lateral izquierda, que sustituye a las pestañas de arriba.
+  - Apartados agrupados en General (Inicio), Operativa (Registros, Horarios, Equipos) y Gestión (Contabilidad, Recursos Humanos).
+  - Cada apartado se despliega con sus subapartados, para saltar sin volver atrás:
+    - Registros: Resumen, Todos los registros, W1–W9 con nº de inscritos, Valencia y Málaga.
+    - Horarios: Semanas, Simulador y W1–W9.
+    - Equipos: Resumen, W1–W9 y campus nacionales.
+    - Contabilidad: Pagos, Devoluciones y Cancelaciones.
+  - Contadores: total de registros e impagos (en rosa).
+  - Las semanas con equipos u horario completos tienen borde verde.
+  - Se pliega con la flecha o con Ctrl/Cmd+B. Plegada muestra solo iconos, y al pasar el ratón salen los subapartados flotando. Recuerda si estaba plegada.
+  - En móvil se abre con el botón de menú.
+  - Arriba se ve siempre el apartado y la sección actual, con el estado de Zoho y Actualizar. El botón atrás del navegador funciona.
+- 10/11: Versión para servidor propio (carpeta `selfhost/`). La versión de claude.ai se mantiene mientras tanto, con el mismo `index.html`.
+  - Acceso con email y contraseña, con doble control:
+    1. Usuario activo del Zoho CRM de ISL. Se comprueba al crearlo, al entrar y cada 30 min. Si se desactiva en Zoho, pierde el acceso.
+    2. Accesos dentro del software, que da el administrador.
+  - Permisos por apartado y subapartado, con tres niveles: Sin acceso, Ver, Editar.
+    - Registros: Madrid, Nacionales e institucionales, Todos los registros.
+    - Horarios: Semanas, Simulador.
+    - Equipos: Madrid, Nacionales e institucionales.
+    - Contabilidad: Pagos, Devoluciones, Cancelaciones.
+    - Recursos Humanos.
+  - El servidor aplica los permisos en cada petición. Con «Ver», la pantalla oculta los botones de modificar y muestra «Solo lectura».
+  - Panel «Usuarios y accesos», solo para el administrador:
+    - Para crear un usuario se elige a la persona de la lista de usuarios activos de Zoho y se le pone una contraseña inicial (botón para generarla). Se le obliga a cambiarla al entrar.
+    - Se marcan sus accesos, con atajos «Nada», «Ver todo» y «Editar todo».
+    - Se puede desactivar, borrar, poner una contraseña nueva y comprobar su estado en Zoho.
+    - Pestaña «Actividad» con el registro de accesos y cambios.
+  - Contraseñas cifradas (nadie puede verlas). Bloqueo tras 5 intentos fallidos. La sesión se cierra tras 8 h sin uso.
+  - Los datos de Zoho los filtra la interfaz, no el servidor: quien tiene acceso a Registros, Equipos, Horarios o Contabilidad recibe las inscripciones en su navegador.
+  - Instalación para IT en `selfhost/INSTALACION.md` (Node 22.13+ o Docker, HTTPS y credenciales Self Client de Zoho en solo lectura).
