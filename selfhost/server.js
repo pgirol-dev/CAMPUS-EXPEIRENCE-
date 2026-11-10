@@ -54,7 +54,7 @@ const CATALOG = [
   { k: "registros", b: "Registros", l: "Registros", subs: [["madrid", "Madrid (semanas)"], ["campus", "Nacionales e institucionales"], ["todos", "Todos los registros"]] },
   { k: "horarios", b: "Operativa", l: "Horarios", subs: [["semanas", "Horarios de las semanas"], ["simulador", "Simulador"]] },
   { k: "equipos", b: "Operativa", l: "Equipos", subs: [["madrid", "Madrid (semanas)"], ["campus", "Nacionales e institucionales"]] },
-  { k: "contabilidad", b: "Administración", l: "Contabilidad", subs: [["pagos", "Pagos"], ["devoluciones", "Devoluciones"], ["cancelaciones", "Cancelaciones"]] },
+  { k: "contabilidad", b: "Administración", l: "Contabilidad", subs: [["pagos", "Pagos"], ["devoluciones", "Devoluciones"], ["cancelaciones", "Cancelaciones"], ["facturas", "Control de facturas"]] },
   { k: "atencion", b: "Atención al público", l: "Atención al público", subs: [["general", "Atención al público"]] },
   { k: "marketing", b: "Marketing", l: "Marketing", subs: [["general", "Marketing"]] },
   { k: "rrhh", b: "Recursos Humanos", l: "Recursos Humanos", subs: [["general", "Recursos Humanos"]] },
@@ -216,6 +216,17 @@ async function zohoGate(u) {
   return fresh ? { ok: true, degraded: true } : { ok: false, msg: "No se ha podido comprobar tu usuario en Zoho CRM. Inténtalo en unos minutos." };
 }
 
+/* Zoho Books: listado de facturas de una serie (solo lectura) */
+const BOOKS = { org: env("ZOHO_BOOKS_ORG", "20110950454"), url: env("ZOHO_BOOKS_URL", "https://www.zohoapis.eu/books/v3").replace(/\/$/, "") };
+async function booksInvoices(prefix, page) {
+  if (MOCK) { const pages = MOCK.invoices || []; return pages[page - 1] || { invoices: [], page_context: { has_more_page: false } }; }
+  const t = await zohoToken();
+  const u = BOOKS.url + "/invoices?organization_id=" + encodeURIComponent(BOOKS.org) + "&invoice_number_startswith=" + encodeURIComponent(prefix) + "&per_page=200&page=" + page;
+  const r = await fetch(u, { headers: { Authorization: "Zoho-oauthtoken " + t }, signal: AbortSignal.timeout(30000) });
+  const j = await r.json().catch(() => null);
+  if (!r.ok || !j) throw Object.assign(new Error((j && j.message) || "Error de Zoho Books " + r.status), { status: 502 });
+  return j;
+}
 /* ---------- utilidades HTTP ---------- */
 const SEC_HEADERS = {
   "X-Content-Type-Options": "nosniff", "Referrer-Policy": "same-origin", "X-Frame-Options": "DENY",
@@ -382,6 +393,15 @@ async function handle(req, res) {
     return send(res, 200, out);
   }
 
+  /* --- Zoho Books (solo lectura): facturas para el control de facturación --- */
+  if (p === "/api/books/invoices" && M === "POST") {
+    if (lvl(U, "contabilidad.facturas") < 1) return fail(res, 403, "Sin acceso al control de facturas.");
+    const b = await readBody(req, 5000); const qp = b.query_params || {};
+    const prefix = String(qp.invoice_number_startswith || ""); const page = Math.max(1, Math.min(50, +qp.page || 1));
+    if (!/^[A-Z0-9\-]{1,20}$/.test(prefix)) return fail(res, 400, "Serie de facturas no válida.");
+    try { return send(res, 200, { payload: await booksInvoices(prefix, page) }); }
+    catch (e) { return fail(res, e.status || 502, e.message || "Error al consultar Zoho Books"); }
+  }
   /* --- Zoho (solo lectura) --- */
   if (p === "/api/zoho/coql" && M === "POST") {
     if (!canZoho(U)) return fail(res, 403, "Sin acceso a los datos de Zoho.");

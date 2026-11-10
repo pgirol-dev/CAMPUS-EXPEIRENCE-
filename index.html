@@ -807,6 +807,27 @@ table.oplist th .fsel.on{background:var(--pink);border-color:var(--pink);color:v
 .pnx{font-size:12.5px;color:var(--ink-2)}
 .pnx b{font-weight:700;color:var(--ink)}
 .pnx.ko,.pnx.ko b{color:var(--bad);font-weight:700}
+.prow.frow{grid-template-columns:minmax(190px,1.3fr) 110px minmax(0,1.7fr) minmax(0,1.6fr)}
+.prow.frow.is-sin,.prow.frow.is-dif,.prow.frow.is-cobro,.prow.frow.is-orph{background:var(--bad-soft);box-shadow:inset 4px 0 0 var(--bad)}
+.prow.frow.is-orph{cursor:default}
+.ist-ok{background:color-mix(in srgb,var(--green) 22%,transparent);color:var(--ink)} .ist-sin,.ist-dif,.ist-cobro{background:var(--bad);color:var(--on-hot)} .ist-none{background:color-mix(in srgb,var(--ink) 10%,transparent);color:var(--ink-2)}
+.fchips{display:flex;gap:5px;flex-wrap:wrap;min-width:0}
+.iorph{margin-top:14px}
+.iorph summary{cursor:pointer;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;padding:12px 14px;border-radius:6px;background:var(--surface-2);list-style:none}
+.iorph summary::-webkit-details-marker{display:none}
+.iorph summary b{font-family:var(--f-wide);font-style:italic;font-weight:900;font-stretch:125%;text-transform:uppercase;font-size:.8rem}
+.iorph summary span{font-weight:800;color:var(--bad)}
+.iorph summary small{flex-basis:100%;color:var(--ink-2);font-size:12px}
+.iorph[open] summary{margin-bottom:6px}
+.iorph .prow{cursor:default}
+.ichip{font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;background:color-mix(in srgb,var(--ink) 9%,transparent);color:var(--ink);text-decoration:none;white-space:nowrap;font-variant-numeric:tabular-nums}
+.ichip b{font-weight:800}
+.ichip i{font-style:normal;color:var(--ink-2)}
+a.ichip:hover{background:var(--navy);color:var(--navy-ink)}
+.ichip.ko{box-shadow:inset 0 0 0 1.5px var(--bad)}
+.ichip.none{background:transparent;border:1px dashed var(--bad);color:var(--bad);font-weight:700}
+.pbx.ib-err::before,.pbx.ib-sin::before,.pbx.ib-dif::before{background:var(--bad)} .pbx.ib-ok::before{background:var(--green)}
+@media (max-width:860px){.prow.frow{grid-template-columns:1fr auto}.prow.frow .pnx,.prow.frow .fchips{grid-column:1/-1}}
 @media (max-width:720px){.prow{grid-template-columns:1fr auto}.prow .psteps{grid-column:1}.prow .pnx{grid-column:1/-1}}
 
 /* horarios v4: general + sedes por modalidad + instalaciones por semana */
@@ -1531,6 +1552,13 @@ html.sb-min .sfh{display:block;font-family:var(--f-wide);font-style:italic;font-
   <section id="view-rrhh" class="stack" hidden>
     <div class="soonpanel"><h2>Coming soon</h2><p class="wide" style="font-weight:900;font-style:italic;text-transform:uppercase">Recursos Humanos</p></div>
   </section>
+  <section id="view-facturas" class="stack" hidden>
+    <div class="eqhead"><div class="eqtitlebox"><h2 class="eqtitle">Facturas</h2><span class="sub" id="invSub"></span></div><button class="btn" type="button" id="invRefresh">Actualizar facturas</button></div>
+    <div class="paygrid" id="invBoxes" role="group" aria-label="Estado de las facturas"></div>
+    <div class="filters"><input type="search" id="invQ" placeholder="Buscar jugador, código o número de factura" aria-label="Buscar"><span class="count" id="invCount"></span></div>
+    <div class="paylist" id="invList"></div>
+    <div id="invOrph"></div>
+  </section>
   <section id="view-pagos" class="stack" hidden>
   <div class="stack">
     <div class="eqhead"><div class="eqtitlebox"><h2 class="eqtitle">Contabilidad</h2><span class="sub" id="payToday"></span></div>
@@ -1567,7 +1595,10 @@ const EVENT="Campus Experience Madrid 2027";
 /* campus que se leen de Zoho. madrid = las weeks; nac = nacionales; inst = institucionales (se irán añadiendo) */
 const CAMPS=[{id:"mad",n:"Madrid",kind:"madrid",ev:[EVENT]},
   {id:"val",n:"Valencia",kind:"nac",ev:["Campus Experience Valencia 2027"]},
-  {id:"mal",n:"Málaga",kind:"nac",ev:["Campus Experience Málaga 2027","Campus Experience Malaga 2027"]}
+  {id:"mal",n:"Málaga",kind:"nac",ev:["Campus Experience Málaga 2027","Campus Experience Malaga 2027"]},
+  {id:"and",n:"Andorra",kind:"nac",ev:["Campus Experience Andorra 2027"]},
+  {id:"alm",n:"Almería",kind:"nac",ev:["Campus Experience Almería 2027","Campus Experience Almeria 2027"]},
+  {id:"ali",n:"Alicante",kind:"nac",ev:["Campus Experience Alicante 2027"]}
   // institucionales: {id:"seg",n:"Segovia",kind:"inst",ev:["<nombre del evento en Zoho>"]}
 ];
 const EVS="("+CAMPS.flatMap(c=>c.ev).map(e=>"'"+e.replace(/'/g,"\\'")+"'").join(",")+")";
@@ -1991,7 +2022,7 @@ async function load(fresh){
     const byId={};parts.forEach(pt=>pt.rows.forEach(x=>{byId[x.id]=Object.assign(byId[x.id]||{},x)}));
     const a={rows:Object.values(byId),first:parts[0].first};
     S.auth={};if(c.rows)c.rows.forEach(x=>{const id=x.Application&&x.Application.id;if(id)(S.auth[id]=S.auth[id]||[]).push(x)});S.authOk=!!c.rows;
-    S.deals=a.rows;S.weeks=b.rows;hideBanner();stamp(a.first);build();
+    S.deals=a.rows;S.weeks=b.rows;hideBanner();stamp(a.first);build();if(typeof loadBooks==="function"&&(!INV.list||fresh))setTimeout(()=>loadBooks(!!fresh),300);
     if(!a.rows.length){$("empty").hidden=false;$("empty").innerHTML="<h3>Aún no hay inscripciones</h3><p>No hay inscripciones con pagos en "+esc(EVENT)+".</p>"}
     startRefresh();
   }catch(e){
@@ -2017,7 +2048,7 @@ function exportCsv(){
 }
 
 /* events */
-const VIEWS=["inicio","temporada","registros","operativa","horarios","equipos","administracion","pagos","atencion","marketing","rrhh"];
+const VIEWS=["inicio","temporada","registros","operativa","horarios","equipos","administracion","pagos","facturas","atencion","marketing","rrhh"];
 function show(v){
   if(v==="contabilidad")v="pagos";if(v==="recursos-humanos")v="rrhh";if(v==="atencion-al-publico")v="atencion";
   if(!VIEWS.includes(v))v="inicio";
@@ -2026,6 +2057,7 @@ function show(v){
   if(v==="horarios")try{renderHorarios()}catch(e){}
   if(v==="equipos")try{renderEquipos()}catch(e){}
   if(v==="pagos")try{renderPagos()}catch(e){}
+  if(v==="facturas")try{renderFacturas();if(!INV.list&&!INV.busy)loadBooks(false)}catch(e){}
   try{if(window.__hub)window.__hub(v)}catch(e){}
   window.scrollTo(0,0);try{sbSync()}catch(e){}
 }
@@ -3733,6 +3765,80 @@ function renderPagos(){
 $("accTabs").addEventListener("click",e=>{const b=e.target.closest("[data-acc]");if(!b)return;const k=b.dataset.acc;
   $("accTabs").querySelectorAll("[data-acc]").forEach(x=>{const on=x.dataset.acc===k;x.setAttribute("aria-selected",String(on));x.setAttribute("aria-pressed",String(on))});
   $("accPagos").hidden=k!=="pagos";$("accDev").hidden=k!=="dev";$("accCan").hidden=k!=="can";if(k==="pagos")renderPagos();try{sbSync()}catch(e){}});
+/* ===== FACTURAS: comprobación entre el CRM (lo pagado) y Zoho Books (lo facturado) =====
+   En Books se crea una factura por cada pago, serie C-2027, con la referencia «<fecha>-<id de la inscripción>».
+   Las reservas de 50 € antiguas no llevan el id: se enlazan por el email de la familia. */
+var INV={f:"err",q:"",list:null,busy:false,err:"",at:null};
+const BOOKS_ORG="20110950454",INV_PREFIX="C-2027";
+const r2=n=>Math.round((+n||0)*100)/100;
+async function loadBooks(force){
+  if(!S.mcp||INV.busy)return;
+  if(window.CE_ACL&&!(window.CE_ACL.admin||(window.CE_ACL.perms||{})["contabilidad.facturas"]))return;INV.busy=true;INV.err="";renderFacturas();
+  try{const all=[];
+    for(let page=1;page<=25;page++){
+      const res=await S.mcp.callTool("Zoho Books","list_invoices",{query_params:{organization_id:BOOKS_ORG,invoice_number_startswith:INV_PREFIX,per_page:200,page}},{cache:{staleTime:60000,gcTime:600000,refresh:!!force}});
+      let p=res&&res.payload;if(typeof p==="string"){try{p=JSON.parse(p)}catch(e){p=null}}
+      const d=p&&(p.data&&Array.isArray(p.data.invoices)?p.data:p);
+      if(!d||!Array.isArray(d.invoices))throw {code:"shape",message:"respuesta no reconocida"};
+      all.push(...d.invoices);if(!d.page_context||!d.page_context.has_more_page)break}
+    INV.list=all;INV.at=new Date()}
+  catch(e){const c=e&&e.code;
+    INV.err=c==="server_not_connected"?"Zoho Books no está conectado. Añádelo en claude.ai → Configuración → Conectores.":c==="needs_reauth"?"Vuelve a conectar Zoho Books en claude.ai → Configuración → Conectores.":c==="not_in_manifest"||c==="approval_required"?"Falta dar permiso a esta página para leer Zoho Books.":c==="blocked_by_policy"?"Tu organización no permite leer Zoho Books desde aquí.":"No se han podido leer las facturas de Zoho Books"+(e&&e.message?" ("+e.message+")":"")+"."}
+  INV.busy=false;renderFacturas();try{sbSync()}catch(e){}}
+function invCheck(){
+  const AR=S.allRows||[],L=(INV.list||[]).filter(i=>i.status!=="void"&&i.status!=="draft");
+  const ids=new Set(AR.map(r=>String(r.id))),byDeal={},byEmail={},orph=[];
+  L.forEach(i=>{const m=/-(\d{12,})$/.exec(i.reference_number||"");
+    if(m&&ids.has(m[1]))(byDeal[m[1]]=byDeal[m[1]]||[]).push(i);
+    else if(m)orph.push({i,why:"La inscripción no está activa en el software (baja, devolución o borrada)"});
+    else{const e=String(i.email||"").toLowerCase();(byEmail[e]=byEmail[e]||[]).push(i)}});
+  const used=new Set();const eq=(a,b)=>Math.abs(a-b)<0.01;
+  const paidOf=r=>{const d=r.d;if(d.Paid!=null)return r2(d.Paid);try{const s=payState(r);return s.k==="paid"?r2(d.Total):r2(s.inst.filter(x=>x.st==="Paid").reduce((a,x)=>a+(+x.amt||0),0))}catch(e){return 0}};
+  /* las facturas de reserva (sin código) se reparten entre las inscripciones de la misma familia: cada una a una sola inscripción, solo si falta ese importe */
+  const rows=AR.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(r=>{const d=r.d;
+    const inv=(byDeal[r.id]||[]).slice().sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+    const paid=paidOf(r),total=r2(d.Total),sum=r2(inv.reduce((a,i)=>a+(+i.total||0),0));
+    const res=[];const need=r2(paid-sum);
+    if(need>0.01){const c=[];[d.Email,d.Email_persona].map(x=>String(x||"").toLowerCase()).filter(Boolean).forEach(e=>(byEmail[e]||[]).forEach(i=>{if(!used.has(i)&&!c.includes(i))c.push(i)}));
+      c.sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+      c.forEach(i=>{if(r2(res.reduce((a,x)=>a+(+x.total||0),0)+(+i.total||0))<=need+0.01){res.push(i);used.add(i)}})}
+    const tot=r2(sum+res.reduce((a,i)=>a+(+i.total||0),0));const unpaid=inv.concat(res).filter(i=>+i.balance>0);
+    let k;if(!paid&&!inv.length&&!res.length)k="none";else if(!inv.length&&!res.length)k="sin";else if(eq(tot,paid))k=unpaid.length?"cobro":"ok";else k="dif";
+    return {r,inv,res,resIn:true,paid,total,sum:tot,k,diff:r2(tot-paid),unpaid}});
+  Object.values(byEmail).flat().forEach(i=>{if(!used.has(i))orph.push({i,why:Math.abs(+i.total-50)<.01?"Reserva de 50 € sin inscripción activa con ese email":"Factura sin el código de la inscripción en la referencia"})});
+  return {rows,orph}}
+const INV_BOX=[["err","Con error","Sin factura, no cuadra o sin cobrar"],["sin","Sin factura","Ha pagado y no hay factura"],["dif","No cuadra","Facturado distinto de lo pagado"],["ok","Correctas","Facturado igual a lo pagado"],["none","Sin pagos","Aún no ha pagado nada"],["all","Todos",""]];
+const INV_LBL={ok:"Correcta",sin:"Sin factura",dif:"No cuadra",cobro:"Sin cobrar",none:"Sin pagos"};
+const INV_ERR=k=>k==="sin"||k==="dif"||k==="cobro";
+function invErrCount(){if(!INV.list||!(S.allRows||[]).length)return null;try{const c=invCheck();return c.rows.filter(x=>INV_ERR(x.k)).length}catch(e){return null}}
+const booksUrl=i=>"https://books.zoho.eu/app/"+BOOKS_ORG+"#/invoices/"+encodeURIComponent(i.invoice_id);
+function renderFacturas(){
+  if($("view-facturas").hidden)return;
+  $("invSub").textContent=INV.busy?"Leyendo Zoho Books…":INV.at?"Comprobado con Zoho Books a las "+INV.at.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})+" · serie "+INV_PREFIX:"Comprobación con Zoho Books";
+  $("invRefresh").disabled=INV.busy;
+  const AR=S.allRows||[];
+  if(INV.err&&!INV.list){$("invBoxes").innerHTML="";$("invCount").textContent="";$("invList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Sin facturas</h3><p>'+esc(INV.err)+"</p></div>";$("invOrph").innerHTML="";return}
+  if(!INV.list||!AR.length){$("invBoxes").innerHTML="";$("invList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">'+(INV.busy||!AR.length?"Cargando facturas…":"Sin datos")+"</h3></div>";$("invOrph").innerHTML="";return}
+  const {rows,orph}=invCheck();const cnt={all:rows.length,ok:0,sin:0,dif:0,cobro:0,none:0};rows.forEach(x=>cnt[x.k]++);cnt.err=cnt.sin+cnt.dif+cnt.cobro;
+  $("invBoxes").innerHTML=INV_BOX.map(([k,t,sub])=>'<button type="button" class="pbx ib-'+k+'" data-if="'+k+'" aria-pressed="'+(INV.f===k)+'"><span class="pt2">'+t+'</span><span class="pc2">'+cnt[k]+'</span><span class="ps2">'+sub+"</span></button>").join("");
+  const nrm=t=>String(t).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();const q=nrm(INV.q.trim());
+  let it=rows.filter(x=>INV.f==="all"||(INV.f==="err"?INV_ERR(x.k):x.k===INV.f));
+  if(q)it=it.filter(x=>nrm(x.r.hay+" "+x.r.name+" "+x.r.code+" "+((campById(x.r.camp||"mad")||{}).n||"")+" "+x.inv.map(i=>i.invoice_number).join(" ")).includes(q));
+  const ord={sin:0,dif:1,cobro:2,ok:3,none:4};it.sort((a,b)=>ord[a.k]-ord[b.k]||a.r.name.localeCompare(b.r.name));
+  $("invCount").textContent=it.length+" jugadores";
+  const chip=(i,extra)=>'<a class="ichip'+(+i.balance>0?" ko":"")+'" href="'+booksUrl(i)+'" target="_blank" rel="noopener" title="Abrir en Zoho Books · '+esc(i.date||"")+(+i.balance>0?" · pendiente "+eur(i.balance):"")+'">'+esc(i.invoice_number)+" <b>"+eur(i.total)+"</b>"+(extra||"")+"</a>";
+  $("invList").innerHTML=it.length?it.map(x=>{
+    const amt=x.k==="none"?'<span class="pnx muted">Sin pagos todavía'+(x.total?" · total "+eur(x.total):"")+"</span>"
+      :'<span class="pnx'+(INV_ERR(x.k)?" ko":"")+'">Facturado <b>'+eur(x.sum)+"</b> · Pagado <b>"+eur(x.paid)+"</b>"+(x.total?" · Total "+eur(x.total):"")+(x.k==="dif"?" · <b>"+(x.diff>0?"+":"")+eur(x.diff)+"</b>":"")+(x.k==="cobro"?" · factura sin cobrar":"")+"</span>";
+    const chips=x.inv.map(i=>chip(i)).concat(x.res.map(i=>chip(i,' <i>reserva</i>'))).join("");
+    return '<div class="prow frow is-'+x.k+'" data-pid="'+esc(x.r.id)+'"><span class="pnm"><b>'+esc(x.r.name)+vipTag(x.r)+campTag(x.r)+'</b><span class="code">'+esc(x.r.code)+'</span></span><span class="pst ist-'+x.k+'">'+INV_LBL[x.k]+"</span>"+amt+'<span class="fchips">'+(chips||(x.k==="none"?"":'<span class="ichip none">Ninguna factura</span>'))+"</span></div>"}).join("")
+    :'<div class="eqempty"><h3 class="wide" style="margin:0">'+(INV.f==="err"?"Ningún error: todo cuadra":"Nadie en este estado")+"</h3></div>";
+  $("invOrph").innerHTML=orph.length?'<details class="iorph"><summary><b>Facturas de la serie '+INV_PREFIX+' sin inscripción activa</b><span>'+orph.length+'</span><small>Reservas sin inscripción, bajas o devoluciones. Revisa si necesitan factura rectificativa.</small></summary><div class="paylist">'+orph.sort((a,b)=>String(b.i.date).localeCompare(String(a.i.date))).map(o=>'<div class="prow frow is-orph"><span class="pnm"><b>'+esc(o.i.customer_name||"—")+'</b><span class="code">'+esc(o.i.email||"")+'</span></span><span class="pst ist-sin">Revisar</span><span class="pnx ko">'+esc(o.why)+'</span><span class="fchips">'+chip(o.i)+"</span></div>").join("")+"</div></details>":"";
+}
+$("invBoxes").addEventListener("click",e=>{const b=e.target.closest("[data-if]");if(!b)return;INV.f=b.dataset.if;renderFacturas()});
+$("invQ").addEventListener("input",e=>{INV.q=e.target.value;renderFacturas()});
+$("invRefresh").addEventListener("click",()=>loadBooks(true));
+$("invList").addEventListener("click",e=>{if(e.target.closest("a"))return;const row=e.target.closest("[data-pid]");if(!row)return;if(typeof openDrawer==="function")openDrawer(row.dataset.pid)});
 $("payBoxes").addEventListener("click",e=>{const b=e.target.closest("[data-pf]");if(!b)return;PAY.f=b.dataset.pf;renderPagos()});
 $("payQ").addEventListener("input",e=>{PAY.q=e.target.value;renderPagos()});
 $("payList").addEventListener("click",e=>{const row=e.target.closest("[data-pid]");if(!row)return;const r=(S.allRows||S.rows).find(x=>x.id===row.dataset.pid);if(r&&typeof openDrawer==="function")openDrawer(r.id)});
@@ -3788,22 +3894,23 @@ Object.assign(SB_IC,{
   rrhh:SVG('<circle cx="9" cy="8" r="3.2"/><path d="M3 19.5c.6-3.2 2.9-5 6-5s5.4 1.8 6 5"/><circle cx="17.2" cy="9.2" r="2.5"/><path d="M16.2 14.6c2.4.3 4.2 1.9 4.8 4.4"/>'),
   horarios:SVG('<rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/><circle cx="12" cy="15.5" r="3.1"/><path d="M12 14v1.7l1.1.8"/>'),
   equipos:SVG('<path d="M8.2 3.5 4 6 2.5 10.5l3.2 1.3V20.5h12.6v-8.7l3.2-1.3L20 6l-4.2-2.5C15.2 5.1 13.8 6 12 6s-3.2-.9-3.8-2.5z"/><path d="M12 9.5v4"/>'),
-  pagos:SVG('<circle cx="12" cy="12" r="8.5"/><path d="M15.3 8.9a4.1 4.1 0 1 0 0 6.2M7.6 11h6.2M7.6 13.1h6.2"/>')});
+  pagos:SVG('<circle cx="12" cy="12" r="8.5"/><path d="M15.3 8.9a4.1 4.1 0 1 0 0 6.2M7.6 11h6.2M7.6 13.1h6.2"/>'),
+  facturas:SVG('<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 11.5h6"/><path d="m9.3 15.4 1.7 1.6 3.4-3.4"/>')});
 const BK_TXT={registros:"Madrid, nacionales e institucionales",operativa:"El día a día del campus",administracion:"Contabilidad y gestión económica",atencion:"Consultas y comunicación con las familias",marketing:"Campañas y comunicación",rrhh:"El equipo de trabajo del campus",
   horarios:"Semanas, simulador, buses e instalaciones",equipos:"Equipos por semana y por campus",pagos:"Pagos, devoluciones y cancelaciones"};
 const CHEV=SVG('<path d="m9 6 6 6-6 6"/>');
-const SB_LBL={inicio:"Inicio",temporada:"Campus Experience 2027",registros:"Registros",operativa:"Operativa",horarios:"Horarios",equipos:"Equipos",administracion:"Administración",pagos:"Contabilidad",atencion:"Atención al público",marketing:"Marketing",rrhh:"Recursos Humanos",admin:"Usuarios y accesos"};
+const SB_LBL={inicio:"Inicio",temporada:"Campus Experience 2027",registros:"Registros",operativa:"Operativa",horarios:"Horarios",equipos:"Equipos",administracion:"Administración",pagos:"Contabilidad",facturas:"Facturas",atencion:"Atención al público",marketing:"Marketing",rrhh:"Recursos Humanos",admin:"Usuarios y accesos"};
 /* bloques de la temporada y a qué bloque pertenece cada pantalla */
 const SEASON=2027;
-const GRP_OF={inicio:"inicio",temporada:"temporada",registros:"registros",operativa:"operativa",horarios:"operativa",equipos:"operativa",administracion:"administracion",pagos:"administracion",atencion:"atencion",marketing:"marketing",rrhh:"rrhh",admin:"admin"};
-const BLOCKS=[["registros",[]],["operativa",["horarios","equipos"]],["administracion",["pagos"]],["atencion",[]],["marketing",[]],["rrhh",[]]];
+const GRP_OF={inicio:"inicio",temporada:"temporada",registros:"registros",operativa:"operativa",horarios:"operativa",equipos:"operativa",administracion:"administracion",pagos:"administracion",facturas:"administracion",atencion:"atencion",marketing:"marketing",rrhh:"rrhh",admin:"admin"};
+const BLOCKS=[["registros",[]],["operativa",["horarios","equipos"]],["administracion",["pagos","facturas"]],["atencion",[]],["marketing",[]],["rrhh",[]]];
 const SOON=new Set(["atencion","marketing","rrhh"]);
 /* ===== ACCESOS: solo cuando el software corre en el servidor propio (window.CE_ACL) ===== */
 const ACL=window.CE_ACL||null;
 const CAN=(k,min)=>!ACL||!!ACL.admin||(((ACL.perms||{})[k]||0)>=(min||1));
 const ANY=(a,min)=>!ACL||!!ACL.admin||Object.keys(ACL.perms||{}).some(k=>k.startsWith(a+".")&&ACL.perms[k]>=(min||1));
 const VIEW_AP={registros:"registros",horarios:"horarios",equipos:"equipos",pagos:"contabilidad",atencion:"atencion",marketing:"marketing",rrhh:"rrhh"};
-const viewOk=v=>v==="inicio"||v==="temporada"||(v==="admin"?!!(ACL&&ACL.admin):v==="operativa"?(viewOk("horarios")||viewOk("equipos")):v==="administracion"?viewOk("pagos"):!VIEW_AP[v]||ANY(VIEW_AP[v]));
+const viewOk=v=>v==="inicio"||v==="temporada"||(v==="admin"?!!(ACL&&ACL.admin):v==="operativa"?(viewOk("horarios")||viewOk("equipos")):v==="administracion"?(viewOk("pagos")||viewOk("facturas")):v==="facturas"?CAN("contabilidad.facturas"):v==="pagos"?(CAN("contabilidad.pagos")||CAN("contabilidad.devoluciones")||CAN("contabilidad.cancelaciones")):!VIEW_AP[v]||ANY(VIEW_AP[v]));
 const regKey=w=>w===WALL||w==="99"?"registros.todos":isCampKey(w)?"registros.campus":(w&&w!=="0")?"registros.madrid":null;
 const eqKeyOf=w=>isCampKey(w)?"equipos.campus":"equipos.madrid";
 const ACC_K={pagos:"contabilidad.pagos",dev:"contabilidad.devoluciones",can:"contabilidad.cancelaciones"};
@@ -3848,9 +3955,10 @@ function renderSide(){
   const AR=S.allRows||[];let late=0;try{late=AR.filter(r=>payState(r).k==="late").length}catch(e){}
   const regN=ACL&&!CAN("registros.campus")&&!CAN("registros.todos")?(S.rows||[]).length:AR.length;if(ACL&&!CAN("contabilidad.pagos"))late=0;
   const bd={registros:regN?'<span class="sbdg">'+regN+"</span>":"",pagos:late?'<span class="sbdg hot" title="'+late+' impagos">'+late+"</span>":""};
-  const modH=(m,ss)=>viewOk(m)?'<button type="button" class="ss ssm" data-sv="'+m+'" data-ss="'+ss+'"><span class="ic">'+SB_IC[m]+"</span><span>"+SB_LBL[m]+"</span>"+(m==="pagos"&&late?'<span class="n" style="color:var(--sb-pink)">'+late+" impagos</span>":"")+"</button>":"";
-  const subOfG=g=>g==="operativa"?(viewOk("horarios")?modH("horarios","0")+sbSub("horarios"):"")+(viewOk("equipos")?modH("equipos","0")+sbSub("equipos"):""):g==="administracion"?(viewOk("pagos")?modH("pagos","")+sbSub("pagos"):""):g==="registros"?sbSub("registros"):"";
-  const bdg={registros:bd.registros,administracion:bd.pagos};
+  const modH=(m,ss)=>viewOk(m)?'<button type="button" class="ss ssm" data-sv="'+m+'" data-ss="'+ss+'"><span class="ic">'+SB_IC[m]+"</span><span>"+SB_LBL[m]+"</span>"+(m==="pagos"&&late?'<span class="n" style="color:var(--sb-pink)">'+late+" impagos</span>":"")+(m==="facturas"&&invErr?'<span class="n" style="color:var(--sb-pink)">'+invErr+" errores</span>":"")+"</button>":"";
+  const subOfG=g=>g==="operativa"?(viewOk("horarios")?modH("horarios","0")+sbSub("horarios"):"")+(viewOk("equipos")?modH("equipos","0")+sbSub("equipos"):""):g==="administracion"?(viewOk("pagos")?modH("pagos","")+sbSub("pagos"):"")+(viewOk("facturas")?modH("facturas",""):""):g==="registros"?sbSub("registros"):"";
+  const invErr=viewOk("facturas")?invErrCount():null;
+  const bdg={registros:bd.registros,administracion:(late||invErr)?'<span class="sbdg hot" title="'+(late||0)+" impagos · "+(invErr||0)+' errores de facturas">'+((late||0)+(invErr||0))+"</span>":""};
   const grp=(v)=>{if(!viewOk(v))return "";const sub=subOfG(v);const open=SB_OPEN.has(v);
     return '<div class="sg'+(sub&&open?" open":"")+'" data-g="'+v+'"><button type="button" class="si" data-sv="'+v+'" title="'+SB_LBL[v]+'"><span class="ic">'+SB_IC[v]+'</span><span class="sl">'+SB_LBL[v]+"</span>"+(bdg[v]||"")+(SOON.has(v)?'<span class="soon">Pronto</span>':"")+(sub?'<span class="chev" data-sx="'+v+'" role="button" aria-label="Desplegar '+SB_LBL[v]+'">'+CHEV+"</span>":"")+"</button>"
       +(sub?'<div class="ssub"><div class="ssin"><div class="ssbox"><div class="sfh">'+SB_LBL[v]+"</div>"+sub+"</div></div></div>":"")+"</div>"};
@@ -3867,7 +3975,7 @@ function sbMark(){
   const ro=aclClasses(v);
   const blk=GRP_OF[v]&&GRP_OF[v]!==v&&SB_LBL[GRP_OF[v]]?"<small>"+SB_LBL[GRP_OF[v]]+" ›</small>":"";
   $("tbWhere").innerHTML=blk+"<b>"+SB_LBL[v]+"</b>"+(sub?"<span>"+esc(sub)+"</span>":"")+(ro?'<em class="tb-ro" title="Puedes ver pero no modificar">Solo lectura</em>':"");}
-function sbSync(){if(!SBR||SB_RAF)return;SB_RAF=requestAnimationFrame(()=>{SB_RAF=0;const AR=S.allRows||[];const sig=AR.length+"|"+(S.weeks?1:0)+"|"+Object.keys(EQ.docs||{}).length+"|"+Object.keys(H.docs||{}).length+"|"+Object.keys(H.wk||{}).length;if(sig!==SB_SIG){SB_SIG=sig;renderSide();try{hubRender(curView())}catch(e){}}else sbMark()})}
+function sbSync(){if(!SBR||SB_RAF)return;SB_RAF=requestAnimationFrame(()=>{SB_RAF=0;const AR=S.allRows||[];const sig=AR.length+"|"+(S.weeks?1:0)+"|"+Object.keys(EQ.docs||{}).length+"|"+Object.keys(H.docs||{}).length+"|"+Object.keys(H.wk||{}).length+"|"+(INV.list?INV.list.length:0)+"|"+(INV.at?+INV.at:0);if(sig!==SB_SIG){SB_SIG=sig;renderSide();try{hubRender(curView())}catch(e){}}else sbMark()})}
 /* páginas de inicio, temporada y bloques */
 function hubCard(v,o){o=o||{};const soon=SOON.has(v);
   return '<a class="bk'+(soon?" soon":" live")+'" href="#'+v+'" data-sv="'+v+'"><span class="bk-top"><span class="bk-ic" aria-hidden="true">'+(SB_IC[v]||"")+'</span><span class="bk-st">'+(soon?"Próximamente":"En uso")+'</span></span><span class="bk-tx"><span class="bk-t">'+esc(o.l||SB_LBL[v])+"</span></span>"
@@ -3878,7 +3986,7 @@ function hubRender(v){
     $("hubSeasons").innerHTML='<button type="button" class="season" data-sv="temporada"><span class="sy">'+SEASON+'</span><span class="sn">Campus Experience '+SEASON+'</span><span class="sst"><span><b>'+(AR.length||"—")+'</b>participantes</span><span><b>9</b>semanas en Madrid</span><span><b>'+camps+'</b>campus nacionales</span></span><span class="sgo">Entrar</span></button>'}
   if(v==="temporada")$("hubBlocks").innerHTML=BLOCKS.filter(b=>viewOk(b[0])).map(([b,mods])=>hubCard(b,{mods:b==="registros"?(AR.length?[AR.length+" participantes"]:[]):mods.filter(viewOk).map(m=>SB_LBL[m])})).join("");
   if(v==="operativa")$("hubOperativa").innerHTML=["horarios","equipos"].filter(viewOk).map(m=>hubCard(m)).join("");
-  if(v==="administracion")$("hubAdministracion").innerHTML=["pagos"].filter(viewOk).map(m=>hubCard(m,{mods:["Pagos","Devoluciones","Cancelaciones"].filter((x,i)=>subOk("pagos",["pagos","dev","can"][i]))})).join("");
+  if(v==="administracion")$("hubAdministracion").innerHTML=["pagos","facturas"].filter(viewOk).map(m=>m==="pagos"?hubCard(m,{mods:["Pagos","Devoluciones","Cancelaciones"].filter((x,i)=>subOk("pagos",["pagos","dev","can"][i]))}):hubCard(m,{mods:(()=>{const n=invErrCount();return n==null?["Zoho Books"]:[n?n+" errores":"Todo cuadra"]})()})).join("");
 }
 window.__hub=hubRender;
 document.querySelector("main").addEventListener("click",e=>{const b=e.target.closest(".hub [data-sv]");if(!b)return;e.preventDefault();sbGo(b.dataset.sv)});

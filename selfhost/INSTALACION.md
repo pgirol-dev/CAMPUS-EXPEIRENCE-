@@ -29,7 +29,7 @@ El servidor consulta Zoho con una cuenta técnica de **solo lectura**.
    - `https://api-console.zoho.com` si es `crm.zoho.com`.
 2. **Add Client → Self Client → Create**. Apuntad el **Client ID** y el **Client Secret**.
 3. En la pestaña **Generate Code**:
-   - **Scope:** `ZohoCRM.coql.READ,ZohoCRM.modules.READ,ZohoCRM.users.READ`
+   - **Scope:** `ZohoCRM.coql.READ,ZohoCRM.modules.READ,ZohoCRM.users.READ,ZohoBooks.invoices.READ`
    - **Time duration:** 10 minutos.
    - Pulsad **Create** y copiad el código que aparece (*grant code*).
 4. Cambiad ese código por un *refresh token*. Ejecutadlo antes de que pasen los 10 minutos:

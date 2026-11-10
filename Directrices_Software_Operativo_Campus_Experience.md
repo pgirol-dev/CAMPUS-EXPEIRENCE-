@@ -453,3 +453,15 @@ Se asignan automáticamente en este orden, un equipo por nombre y sin repetir de
   - Barra lateral: Inicio, la temporada (con botón para cambiarla), los seis bloques y, solo para el administrador del servidor propio, «Sistema › Usuarios y accesos». Este apartado queda fuera de las temporadas porque los usuarios son los mismos para todas.
   - Arriba se ve el bloque y la pantalla actual (por ejemplo «Operativa › Horarios · Week 4»).
   - Permisos: Atención al público y Marketing entran en el catálogo. La matriz de accesos se agrupa por bloque. Por ahora los permisos valen para todas las temporadas.
+- 10/11: El repositorio se organiza para Zoho Catalyst, a petición del director de tecnología. Se despliega desde GitHub.
+  - `catalyst.json` en la raíz.
+  - `client/` para Web Client Hosting: app, pantalla de acceso y primera instalación.
+  - `functions/campus_api/` es una función Advanced I/O en Node.js que hace el login, los permisos, la lectura de Zoho CRM y el guardado de datos en el Data Store.
+  - Decisión de Pau: las contraseñas las gestiona nuestro sistema (no Catalyst Authentication). El administrador pone la contraseña inicial y el usuario la cambia al entrar.
+  - Doble control igual que antes: usuario activo de Zoho CRM más los accesos que da el administrador.
+  - El primer administrador se crea desde la pantalla «Primera instalación», con una clave que configura el equipo técnico.
+  - Los horarios y equipos se guardan troceados, porque una columna de texto del Data Store admite como máximo 10.000 caracteres.
+  - Los cambios de otros usuarios llegan cada 15 segundos.
+  - `build.js` genera `client/` y `selfhost/app/` a partir de `index.html`.
+  - La guía para el equipo técnico está en `CATALYST.md`: tablas, variables, credenciales de Zoho y despliegue.
+  - `selfhost/` se mantiene como alternativa.

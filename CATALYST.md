@@ -35,6 +35,7 @@ selfhost/                     alternativa: servidor propio (Node + SQLite). No s
     1. el usuario debe estar **activo en Zoho CRM**; se comprueba al crearlo, al entrar y cada 30 minutos;
     2. después, los permisos por apartado y subapartado (sin acceso, ver o editar) que da el administrador;
   - consulta a Zoho CRM en **solo lectura**: solo acepta consultas COQL `SELECT`;
+  - lee las facturas de Zoho Books (solo lectura) para el control de facturas de Administración;
   - guarda los datos del software en el **Data Store**.
 - **Cambios en vivo:** como las funciones no mantienen conexiones abiertas, la aplicación pregunta cada 15 segundos si alguien ha cambiado algo (`/api/changes`). Si el administrador cambia los permisos de un usuario, su página se recarga sola.
 
@@ -113,7 +114,7 @@ En Cloud Scale → Data Store creáis estas 5 tablas, con estas columnas y tipos
 
 ### 3. Credenciales de Zoho CRM (solo lectura)
 Cread un **Self Client** en la consola de API de Zoho, con el mismo centro de datos que vuestro CRM.
-- **Scopes:** `ZohoCRM.coql.READ,ZohoCRM.modules.READ,ZohoCRM.users.READ`
+- **Scopes:** `ZohoCRM.coql.READ,ZohoCRM.modules.READ,ZohoCRM.users.READ,ZohoBooks.invoices.READ`
 - Cambiad el código generado por un *refresh token*:
   ```bash
   curl -X POST "https://accounts.zoho.eu/oauth/v2/token" \
@@ -130,6 +131,8 @@ Se configuran en la consola (Serverless → Functions → campus_api → Configu
 | `ZOHO_REFRESH_TOKEN` | el refresh token |
 | `ZOHO_ACCOUNTS_URL` | `https://accounts.zoho.eu` (o `.com`) |
 | `ZOHO_API_URL` | `https://www.zohoapis.eu` (o `.com`) |
+| `ZOHO_BOOKS_ORG` | id de la organización de Zoho Books (por defecto `20110950454`, ISL Agency RMF) |
+| `ZOHO_BOOKS_URL` | `https://www.zohoapis.eu/books/v3` (por defecto) |
 | `CE_SETUP_KEY` | una clave larga inventada, para crear el primer administrador. **Borradla después.** |
 | `CE_LOGIN_URL` | ruta de la pantalla de acceso; por defecto `/app/login.html`. Si el hosting sirve la web en la raíz del dominio, `/login.html` |
 | `CE_ALLOWED_ORIGINS` | opcional: dominio de la web, por ejemplo `https://operativa.islagency.com` |
