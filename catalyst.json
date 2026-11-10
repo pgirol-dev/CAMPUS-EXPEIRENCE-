@@ -1,0 +1,10 @@
+{
+  "functions": {
+    "targets": ["campus_api"],
+    "ignore": [],
+    "source": "functions"
+  },
+  "client": {
+    "source": "client"
+  }
+}

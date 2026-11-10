@@ -71,6 +71,17 @@ button.go:disabled{opacity:.6;cursor:default;transform:none}
     <button class="go" type="submit" id="bLogin">Entrar</button>
     <div class="note"><div class="check"><b>1</b><span>Comprobamos que tu usuario está activo en Zoho CRM.</span></div><div class="check" style="margin-top:8px"><b>2</b><span>Verás solo los apartados que te ha dado el administrador.</span></div></div>
   </form>
+  <form class="card" id="fSetup" hidden novalidate>
+    <h2>Primera instalación</h2>
+    <p class="sub">Todavía no hay ningún usuario. Crea la cuenta del administrador con su email de Zoho CRM y la clave de instalación que ha configurado el equipo técnico.</p>
+    <div class="err" id="eSetup" role="alert"></div>
+    <div class="fld"><label for="sKey">Clave de instalación</label><input id="sKey" type="password" autocomplete="off"></div>
+    <div class="fld"><label for="sEmail">Email del administrador (Zoho CRM)</label><input id="sEmail" type="email" autocomplete="username"></div>
+    <div class="fld"><label for="sPw">Contraseña</label><input id="sPw" type="password" autocomplete="new-password"></div>
+    <ul class="rules"><li>Al menos 10 caracteres, con letras y números</li></ul>
+    <div class="fld"><label for="sPw2">Repite la contraseña</label><input id="sPw2" type="password" autocomplete="new-password"></div>
+    <button class="go" type="submit" id="bSetup">Crear administrador</button>
+  </form>
   <form class="card" id="fChange" hidden novalidate>
     <h2>Nueva contraseña</h2>
     <p class="sub">Es tu primera vez o el administrador te ha puesto una contraseña nueva. Elige una contraseña solo tuya.</p>
@@ -86,16 +97,23 @@ button.go:disabled{opacity:.6;cursor:default;transform:none}
 (function(){
   const $=id=>document.getElementById(id);
   const H={"Content-Type":"application/json","X-CE":"1"};
-  const post=async(u,b)=>{const r=await fetch(u,{method:"POST",headers:H,credentials:"same-origin",body:JSON.stringify(b)});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"No se ha podido completar. Inténtalo de nuevo.");return j};
+  const BASE=window.CE_API_BASE||"",APP=window.CE_APP_URL||"/";
+  const post=async(u,b)=>{const r=await fetch(BASE+u,{method:"POST",headers:H,credentials:"same-origin",body:JSON.stringify(b)});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"No se ha podido completar. Inténtalo de nuevo.");return j};
   const err=(id,m)=>{const e=$(id);e.textContent=m||"";e.classList.toggle("on",!!m)};
   let lastPw="";
   document.querySelectorAll("[data-eye]").forEach(b=>b.addEventListener("click",()=>{const i=$(b.dataset.eye);const v=i.type==="password";i.type=v?"text":"password";b.textContent=v?"Ocultar":"Ver"}));
   const showChange=fromLogin=>{$("fLogin").hidden=true;$("fChange").hidden=false;$("curWrap").hidden=!!fromLogin;if(fromLogin)$("cur").value=lastPw;$("n1").focus()};
   if(new URLSearchParams(location.search).get("cambio")==="1")showChange(false);
+  else fetch(BASE+"/api/setup",{credentials:"same-origin"}).then(r=>r.ok?r.json():null).then(j=>{if(j&&j.needed){$("fLogin").hidden=true;$("fSetup").hidden=false}}).catch(()=>{});
+  $("fSetup").addEventListener("submit",async e=>{e.preventDefault();err("eSetup","");
+    if($("sPw").value!==$("sPw2").value){err("eSetup","Las dos contraseñas no coinciden.");return}
+    $("bSetup").disabled=true;
+    try{await post("/api/setup",{key:$("sKey").value,email:$("sEmail").value.trim(),password:$("sPw").value});$("fSetup").hidden=true;$("fLogin").hidden=false;$("email").value=$("sEmail").value.trim();err("eLogin","");$("pw").focus()}
+    catch(x){err("eSetup",x.message)}finally{$("bSetup").disabled=false}});
   $("fLogin").addEventListener("submit",async e=>{e.preventDefault();err("eLogin","");
     const email=$("email").value.trim(),pw=$("pw").value;if(!email||!pw){err("eLogin","Escribe tu email y tu contraseña.");return}
     $("bLogin").disabled=true;$("bLogin").textContent="Comprobando en Zoho…";
-    try{const j=await post("/api/login",{email,password:pw});lastPw=pw;if(j.mustChange)showChange(true);else location.href="/"}
+    try{const j=await post("/api/login",{email,password:pw});lastPw=pw;if(j.mustChange)showChange(true);else location.href=APP}
     catch(x){err("eLogin",x.message);$("pw").select()}
     finally{$("bLogin").disabled=false;$("bLogin").textContent="Entrar"}});
   const rules=()=>{const v=$("n1").value;const ok={len:v.length>=10,mix:/[A-Za-zÀ-ÿ]/.test(v)&&/[0-9]/.test(v)};document.querySelectorAll("#rules li").forEach(li=>li.classList.toggle("ok",ok[li.dataset.r]));return ok.len&&ok.mix};
@@ -104,7 +122,7 @@ button.go:disabled{opacity:.6;cursor:default;transform:none}
     if(!rules()){err("eChange","La contraseña nueva no cumple los requisitos.");return}
     if($("n1").value!==$("n2").value){err("eChange","Las dos contraseñas nuevas no coinciden.");return}
     $("bChange").disabled=true;
-    try{await post("/api/me/password",{current:$("cur").value,password:$("n1").value});location.href="/"}
+    try{await post("/api/me/password",{current:$("cur").value,password:$("n1").value});location.href=APP}
     catch(x){err("eChange",x.message)}finally{$("bChange").disabled=false}});
 })();
 </script>

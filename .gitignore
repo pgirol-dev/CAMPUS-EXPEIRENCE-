@@ -1,0 +1,5 @@
+node_modules/
+.env
+selfhost/data/
+.catalystrc
+.DS_Store

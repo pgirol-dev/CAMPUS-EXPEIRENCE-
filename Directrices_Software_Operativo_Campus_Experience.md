@@ -443,3 +443,13 @@ Se asignan automáticamente en este orden, un equipo por nombre y sin repetir de
   - Contraseñas cifradas (nadie puede verlas). Bloqueo tras 5 intentos fallidos. La sesión se cierra tras 8 h sin uso.
   - Los datos de Zoho los filtra la interfaz, no el servidor: quien tiene acceso a Registros, Equipos, Horarios o Contabilidad recibe las inscripciones en su navegador.
   - Instalación para IT en `selfhost/INSTALACION.md` (Node 22.13+ o Docker, HTTPS y credenciales Self Client de Zoho en solo lectura).
+- 10/11: Nueva organización del software (decisión de Pau).
+  - **Inicio** solo dice «Campus Experience» y pide elegir la temporada. Ahora mismo solo existe Campus Experience 2027; la 2028 se creará en verano.
+  - Dentro de la temporada hay seis bloques:
+    - **Registros**, igual que antes.
+    - **Operativa**: Horarios y Equipos (se irán añadiendo más).
+    - **Administración**: Contabilidad (Pagos, Devoluciones, Cancelaciones).
+    - **Atención al público**, **Marketing** y **Recursos Humanos**: vacíos, en «Coming soon».
+  - Barra lateral: Inicio, la temporada (con botón para cambiarla), los seis bloques y, solo para el administrador del servidor propio, «Sistema › Usuarios y accesos». Este apartado queda fuera de las temporadas porque los usuarios son los mismos para todas.
+  - Arriba se ve el bloque y la pantalla actual (por ejemplo «Operativa › Horarios · Week 4»).
+  - Permisos: Atención al público y Marketing entran en el catálogo. La matriz de accesos se agrupa por bloque. Por ahora los permisos valen para todas las temporadas.

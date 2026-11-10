@@ -286,12 +286,11 @@ const aclFor = u => ({ id: "u" + u.id, name: u.name, email: u.email, admin: u.is
 const PUB = path.join(__dirname, "public");
 const STATIC = { "/login": ["login.html", "text/html; charset=utf-8"], "/ce-shim.js": ["ce-shim.js", "text/javascript; charset=utf-8"], "/favicon.svg": ["favicon.svg", "image/svg+xml"] };
 function appPage(u) {
-  let html = fs.readFileSync(CFG.appHtml, "utf8");
-  const inject = '<script>window.CE_ACL=' + JSON.stringify(aclFor(u)).replace(/</g, "\\u003c") + ';</script><script src="/ce-shim.js"></script><link rel="icon" href="/favicon.svg">';
-  html = /<head[^>]*>/i.test(html) ? html.replace(/<head[^>]*>/i, m => m + inject) : inject + html;
-  if (!/<meta[^>]+charset/i.test(html)) html = '<meta charset="utf-8">' + html;
-  if (!/^\s*<!doctype/i.test(html)) html = "<!doctype html>" + html;
-  return html;
+  const app = fs.readFileSync(CFG.appHtml, "utf8");
+  return '<!doctype html>\n<html lang="es">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n'
+    + '<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>\n'
+    + '<script>window.CE_ACL=' + JSON.stringify(aclFor(u)).replace(/</g, "\\u003c") + ';</script><script src="/ce-shim.js"></script><link rel="icon" href="/favicon.svg">\n</head>\n<body>\n'
+    + app + "\n</body>\n</html>\n";
 }
 
 /* ---------- rutas ---------- */

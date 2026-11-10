@@ -1,12 +1,19 @@
-/* Puente entre la aplicación y el servidor propio.
+/* Puente entre la aplicación y el servidor (servidor propio o Zoho Catalyst).
    La aplicación se escribió para claude.ai (window.claude.use(...)); aquí se ofrecen
-   las mismas funciones, pero contra este servidor: datos guardados, Zoho CRM, usuario y descargas. */
+   las mismas funciones contra el servidor: datos guardados, Zoho CRM, usuario y descargas.
+   Configuración (opcional, antes de cargar este archivo):
+     window.CE_API_BASE  prefijo de la API ("" en servidor propio, "/server/campus_api" en Catalyst)
+     window.CE_LOGIN_URL página de acceso ("/login" o "login.html")
+     window.CE_POLL      true = avisos de cambios por consulta periódica (Catalyst); false = en vivo (SSE) */
 (function () {
   "use strict";
+  const BASE = window.CE_API_BASE || "";
+  const LOGIN = window.CE_LOGIN_URL || "/login";
   const H = { "Content-Type": "application/json", "X-CE": "1" };
-  const toLogin = () => { location.href = "/login"; };
+  const toLogin = q => { if (window.CE_DEMO) return; location.href = LOGIN + (q || ""); };
   async function api(method, url, body) {
-    const r = await fetch(url, { method, headers: H, credentials: "same-origin", body: body === undefined ? undefined : JSON.stringify(body) });
+    const full = url.startsWith("/api/") ? BASE + url : url;
+    const r = await fetch(full, { method, headers: H, credentials: "same-origin", body: body === undefined ? undefined : JSON.stringify(body) });
     if (r.status === 401) { toLogin(); throw new Error("Sesión caducada"); }
     const j = await r.json().catch(() => ({}));
     if (!r.ok) { const e = new Error(j.error || ("Error " + r.status)); e.status = r.status; throw e; }
@@ -15,31 +22,46 @@
   window.CE_API = api;
 
   /* --- datos guardados (misma forma que la base de datos de claude.ai) --- */
-  const listeners = {};      // col -> [fn]
-  const cache = {};          // col -> {id:data}
+  const listeners = {}, cache = {};
   const snap = col => ({ docs: Object.entries(cache[col] || {}).map(([id, v]) => ({ id, data: () => (v == null ? v : JSON.parse(JSON.stringify(v))) })) });
+  const fire = col => (listeners[col] || []).forEach(f => { try { f(snap(col)); } catch (e) { console.error(e); } });
   async function refresh(col) {
-    try { const j = await api("GET", "/api/db/" + col); cache[col] = j.docs || {}; (listeners[col] || []).forEach(f => { try { f(snap(col)); } catch (e) { console.error(e); } }); }
-    catch (e) { if (e.status === 403) { cache[col] = {}; (listeners[col] || []).forEach(f => { try { f(snap(col)); } catch (x) {} }); } }
+    try { const j = await api("GET", "/api/db/" + col); cache[col] = j.docs || {}; fire(col); }
+    catch (e) { if (e.status === 403) { cache[col] = {}; fire(col); } }
   }
-  let es = null;
-  function stream() {
-    if (es) return; es = new EventSource("/api/events");
-    es.addEventListener("change", ev => { try { const d = JSON.parse(ev.data); if (listeners[d.col]) refresh(d.col); } catch (e) {} });
-    es.addEventListener("acl", () => { location.reload(); });
-    es.addEventListener("logout", () => { toLogin(); });
-    es.onerror = () => { /* el navegador reconecta solo */ };
+  /* avisos de cambios hechos por otras personas */
+  let started = false;
+  function watch() {
+    if (started) return; started = true;
+    if (!window.CE_POLL && window.EventSource) {
+      const es = new EventSource(BASE + "/api/events");
+      es.addEventListener("change", ev => { try { const d = JSON.parse(ev.data); if (listeners[d.col]) refresh(d.col); } catch (e) {} });
+      es.addEventListener("acl", () => location.reload());
+      es.addEventListener("logout", () => toLogin());
+      return;
+    }
+    let since = Date.now(), myVer = null, busy = false;
+    const tick = async () => {
+      if (busy || document.hidden) return; busy = true;
+      try {
+        const j = await api("GET", "/api/changes?since=" + since);
+        since = j.now || Date.now();
+        if (myVer === null) myVer = j.me; else if (j.me !== myVer) { location.reload(); return; }
+        Object.keys(j.cols || {}).forEach(col => { if (listeners[col]) refresh(col); });
+      } catch (e) {} finally { busy = false; }
+    };
+    setInterval(tick, 15000); document.addEventListener("visibilitychange", () => { if (!document.hidden) tick(); }); tick();
   }
   const writeErr = e => { if (window.CE_SOLO_LECTURA) window.CE_SOLO_LECTURA(e.message); throw e; };
   const db = {
     collection(col) {
       return {
-        onSnapshot(fn) { (listeners[col] = listeners[col] || []).push(fn); stream(); refresh(col); return () => { listeners[col] = (listeners[col] || []).filter(f => f !== fn); }; },
+        onSnapshot(fn) { (listeners[col] = listeners[col] || []).push(fn); watch(); refresh(col); return () => { listeners[col] = (listeners[col] || []).filter(f => f !== fn); }; },
         doc(id) {
           const u = "/api/db/" + col + "/" + encodeURIComponent(id);
           return {
-            async set(v) { await api("PUT", u, { data: v }).catch(writeErr); (cache[col] = cache[col] || {})[id] = JSON.parse(JSON.stringify(v)); (listeners[col] || []).forEach(f => f(snap(col))); },
-            async delete() { await api("DELETE", u).catch(writeErr); if (cache[col]) delete cache[col][id]; (listeners[col] || []).forEach(f => f(snap(col))); },
+            async set(v) { await api("PUT", u, { data: v }).catch(writeErr); (cache[col] = cache[col] || {})[id] = JSON.parse(JSON.stringify(v)); fire(col); },
+            async delete() { await api("DELETE", u).catch(writeErr); if (cache[col]) delete cache[col][id]; fire(col); },
           };
         },
       };
@@ -75,5 +97,6 @@
   };
 
   const caps = { db, mcp, user, downloads };
-  window.claude = { use: async name => caps[name] || null };
+  const set = v => { try { window.claude = v; } catch (e) {} if (window.claude !== v) { try { Object.defineProperty(window, "claude", { value: v, configurable: true, writable: true }); } catch (e) {} } };
+  set({ use: async name => caps[name] || null });
 })();

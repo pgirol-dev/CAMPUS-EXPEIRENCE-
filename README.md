@@ -2,19 +2,26 @@
 
 Herramienta del equipo operativo de Campus Experience (Real Madrid, ISL Agency) para dejar de trabajar con Excel.
 
-## Estructura
+## Estructura del software
 - **Inicio:** se elige la temporada (Campus Experience 2027).
 - **Registros**
 - **Operativa:** Horarios y Equipos.
 - **Administración:** Contabilidad (pagos, devoluciones y cancelaciones).
 - **Atención al público**, **Marketing** y **Recursos Humanos:** próximamente.
-- **Sistema › Usuarios y accesos:** solo en la versión de servidor propio.
+- **Sistema › Usuarios y accesos:** solo en las versiones con login.
 
-## Dos formas de usarlo
-- **En claude.ai:** `index.html` publicado como artefacto. Usa el conector de Zoho CRM y la base de datos de Claude.
-- **En servidor propio:** carpeta `selfhost/`. Tiene acceso con usuario y contraseña, doble control (usuario activo de Zoho CRM más los permisos que da el administrador) y base de datos propia. Ver `selfhost/INSTALACION.md`.
+## Dónde funciona
+| Versión | Carpeta | Guía |
+|---|---|---|
+| **Zoho Catalyst** (Web Client Hosting y función) | `catalyst.json`, `client/`, `functions/` | `CATALYST.md` |
+| Servidor propio (Node y SQLite) | `selfhost/` | `selfhost/INSTALACION.md` |
+| claude.ai (artefacto) | `index.html` | — |
 
-Las dos versiones usan la misma aplicación. Al actualizar, hay que copiar `index.html` también en `selfhost/app/index.html`.
+Las tres usan la misma aplicación, `index.html`. Después de cambiarla, ejecuta `node build.js`: regenera `client/` y `selfhost/app/`.
+
+Las versiones con login tienen doble control de acceso:
+1. La persona debe ser usuario activo del Zoho CRM de ISL.
+2. Después, el administrador decide qué apartados puede ver o editar.
 
 ## Documentación
 - `Directrices_Software_Operativo_Campus_Experience.md`: decisiones y criterios.

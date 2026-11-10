@@ -1,0 +1,11 @@
+{
+  "name": "campus_api",
+  "version": "1.0.0",
+  "description": "API del Software Operativo de Campus Experience (login, accesos, datos y Zoho CRM)",
+  "main": "index.js",
+  "private": true,
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "zcatalyst-sdk-node": "^2.5.0"
+  }
+}

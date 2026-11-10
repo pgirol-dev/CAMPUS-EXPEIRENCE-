@@ -3909,7 +3909,7 @@ function sbMe(){
   if(ACL){$("sbKey").remove();const ini=String(ACL.name||"?").split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0].toUpperCase()).join("");
     $("sbMe").innerHTML='<span class="ad-av" style="width:32px;height:32px;font-size:11px;flex:none">'+esc(ini)+'</span><span><b>'+esc(ACL.name||"")+"</b><small>"+(ACL.admin?"Administrador":esc(ACL.email||""))+"</small></span>";
     $("sbMe").insertAdjacentHTML("afterend",'<div class="sb-acts"><button type="button" id="sbPw" title="Cambiar mi contraseña" aria-label="Cambiar mi contraseña">'+SVG('<rect x="5" y="10.5" width="14" height="10" rx="2.2"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/>')+'</button><button type="button" id="sbOut" title="Cerrar sesión" aria-label="Cerrar sesión">'+SVG('<path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/><path d="M10 16l-4-4 4-4M6 12h10"/>')+"</button></div>");
-    $("sbOut").addEventListener("click",async()=>{try{await window.CE_API("POST","/api/logout",{})}catch(e){}location.href="/login"});
+    $("sbOut").addEventListener("click",async()=>{try{await window.CE_API("POST","/api/logout",{})}catch(e){}if(window.CE_DEMO){location.hash="";location.reload()}else location.href=window.CE_LOGIN_URL||"/login"});
     $("sbPw").addEventListener("click",()=>{["mePw0","mePw1","mePw2"].forEach(i=>$(i).value="");$("mePwE").hidden=true;$("mePw").hidden=false;$("mePw0").focus()});
     return}
   $("sbMe").innerHTML='<img alt=""><span><b>ISL Agency</b><small>Campus Experience</small></span>';
