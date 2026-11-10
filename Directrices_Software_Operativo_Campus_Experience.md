@@ -1,0 +1,406 @@
+# Directrices · Software operativo Campus Experience
+
+Documento vivo con las decisiones tomadas con Pau (director de Campus Experience) para el software operativo y para el dashboard de registros. Claude debe leerlo antes de crear o modificar cualquiera de los dos y mantenerlo al día cada vez que se tome una decisión nueva.
+
+- Última actualización: 27/10/2026
+- Software operativo: artifact «Operativa Campus Experience» → https://claude.ai/artifact/WGfoJZ9KMWvPQkm2J4Pg54
+- Dashboard de registros: artifact «Campus Experience 2027 · Dashboard de registros» → https://claude.ai/artifact/EQ3ML11Bgm2A5yX5K5DMKi
+- Especificación funcional de referencia: `Software_Operativo_Campus_Experience.docx` (esta misma carpeta)
+- Instrucciones de actualización del dashboard: `instrucciones_actualizacion_dashboard.md` (esta misma carpeta)
+
+---
+
+## 1. Forma de trabajar
+
+- Avanzar fase a fase. Antes de construir, analizar, validar los datos reales en Zoho y proponer; Pau decide y después se construye.
+- Cuando Pau pida solo análisis, no tocar la herramienta.
+- No inventar campos, valores ni relaciones de Zoho: comprobarlos siempre en la cuenta real.
+- Explicar cada fase con poco texto y pedir decisiones concretas.
+- Es una **herramienta de trabajo para el equipo**: priorizar lo práctico, con poco texto, pero sin perder lo decorativo.
+
+## 2. Arquitectura y datos
+
+- **Zoho CRM es la fuente de verdad de las inscripciones.** Las inscripciones entran por Zoho y los datos de inscripción se corrigen en Zoho.
+- **El software lee de Zoho y no escribe en Zoho.** Si algo cambia en el CRM, el software se actualiza solo (cada 5 minutos, o al momento con el botón *Actualizar*).
+- **Lo operativo vive en el software:** equipos, solicitudes especiales, seguimiento, y más adelante buses, horarios, rooming, incidencias y staff.
+- **La información no sale del software.** No hay descargas ni exportación a Excel hasta que Pau diga lo contrario.
+- **Acceso:** de momento solo lo usa Pau. Para el equipo (más de 30 personas) hará falta un desarrollo propio con servidor, API de Zoho y roles. El prototipo sirve para validar.
+- **Datos sensibles** (salud, documentos): marcados como *sensible*; en el futuro con acceso restringido.
+
+### 2.1 Qué inscripciones cuentan
+- Aplicaciones (*Applications/Deals*) con Evento = **Campus Experience Madrid 2027** y fase **1st Payment** o **Paid**. Coincide con la vista de Zoho «2027_Registrations CE Madrid (Pau)».
+- **El Campus F no existe.** Solo hay dos programas: **ONE** y **MAX**. Quitar F de todas partes.
+
+### 2.2 Semanas y modalidades
+- **Unidad de trabajo = inscripción semanal.** Cada aplicación lleva dentro una línea por semana contratada (subformulario *Campus y servicios extra*: Producto + Semana + fechas).
+- La semana real sale de las líneas (campo *Semana*), **no** del campo *Weeks* de la aplicación, que está incompleto.
+- Todas las inscripciones tienen semana asignada. Puede haber aplicaciones con varias semanas y con **varias modalidades** (cada semana lleva la suya).
+- Nueve semanas: **Week 1 a Week 9**.
+- Cinco apartados (programa + modalidad): **ONE – Jornada completa, ONE – Media jornada, ONE – Interno, MAX – Jornada completa, MAX – Interno**.
+- Fechas: Jornada completa y Media jornada van de lunes a viernes; ONE Interno de domingo a viernes; MAX Interno de domingo a sábado. Todas comparten el número de semana.
+
+### 2.3 Campos validados (dónde está la información real)
+| Dato | Campo real |
+|---|---|
+| Nombre del niño | *Player* (Nombre/Apellidos persona = quien inscribe, no el niño) |
+| Programa + modalidad | Producto de cada línea semanal |
+| Semanas | *Semana* de cada línea |
+| Año de nacimiento | *A_o_de_nacimiento* |
+| Género | *Gender* de la aplicación (no el del módulo Player) |
+| Posición | *Posicion_participante* |
+| Idioma | *Idioma_comunicaciones* |
+| Talla | *Talla_equipacion* |
+| Consentimiento imagen | *Consentimientos_imagen_fotos_voz_RM* (Sí / No / sin dato) |
+| Familia | *Account_Name* (Families) |
+| Autorizados para recogida | Módulo *Personas Autorizadas* (nombre, DNI/pasaporte, email), vinculado a la aplicación |
+| Equipaciones extra | Productos *Uniforme Oficial Adidas* y *Uniforme Portero Oficial Adidas* |
+
+### 2.4 Campos pendientes (se conectarán cuando lleguen al CRM)
+- **Extra bus, transfer y noches extra:** llegarán por formulario.
+- **Dieta, alergias y problemas médicos:** llegarán por formulario.
+- **Autorizados para recogida:** llegarán con el **Form 2**. Ya está conectado al módulo *Personas Autorizadas*; mientras no haya datos se muestra «Pendiente: llegará con el Form 2».
+- Todos se muestran ya como columnas o campos «pendiente de formulario» (punto rosa). Al llegar, basta con conectar el campo en el **catálogo de campos** del software.
+
+## 3. Diseño (obligatorio)
+
+- Usar **siempre** los cánones del dashboard de registros: sus colores y tipografías. No inventar ni salirse de ese diseño.
+- **Colores:**
+  - Gris clarito **#e4e4e4**: fondos (color predominante).
+  - Gris oscuro **#2f3e40**: textos y resaltes.
+  - Azul marino **#0f2145**: tono oscuro alternativo al gris oscuro.
+  - Rosa **#ea456c**: detalles, cifras grandes y avisos.
+  - Lo importante es jugar con esas tonalidades.
+- **Tipografías:**
+  - Archivo itálica ancha (*wide*) para títulos y etiquetas.
+  - Instrument Serif itálica para cifras grandes y textos destacados.
+  - Helvetica / «RM Neue» para el texto corriente.
+- **Muy visual**, con el gris como color predominante.
+- **Inicio:** cajas con el título de cada apartado y su etiqueta de estado (*En uso* / *En preparación*), sin cifras ni descripciones. Se mantienen el titular «Campus Experience · Madrid 2027» y los detalles decorativos.
+- Modo oscuro con la misma paleta adaptada.
+
+## 4. Software operativo: apartados
+
+### 4.1 Inicio
+- Menú con cajas: **Registros**, **Horarios**, **Equipos**. Se irán añadiendo apartados (rooming, dietas, incidencias, staff, logística…).
+
+### 4.2 Registros (cerrado)
+- **Primera página:**
+  - **Premium:** los jugadores con más de 2 semanas contratadas (3 o más) llevan una etiqueta rosa «Premium» junto al nombre, en la lista, en el buscador, en la ficha y en los niños de Equipos.
+  - **Filtros por columna en la lista:** cada columna con datos tiene debajo del título un desplegable con sus valores y el número de inscritos de cada uno. Se pueden combinar varios filtros; el que está activo sale en rosa y *Quitar filtros* los limpia. En Nombre se filtra Premium / Sin Premium. Las columnas pendientes de formulario no tienen filtro hasta que se conecten.
+  - Buscador de jugador por nombre o código. Muestra sus semanas y modalidades; al pulsar una semana se abre esa lista con el jugador resaltado.
+  - Nueve cajas *Week 1…9*, cada una con fechas, total y una barra ONE/MAX.
+- **Dentro de una semana:** caja *Toda la semana* y los 5 apartados, cada uno con su recuento.
+- **Listado operativo:** una fila por niño y semana. Columnas fijas en este orden:
+  - **Nombre** (columna fija añadida delante de la 1).
+  1. Tipo + Modalidad
+  2. Weeks (todas las del niño, con la actual resaltada)
+  3. Año nacimiento
+  4. Team
+  5. Extra bus *(pendiente)*
+  6. Bus *(fase de buses)*
+  7. Género
+  8. Posición participante
+  9. Idioma comunicaciones
+  10. Dieta *(pendiente)*
+  11. Alergias alimentarias *(pendiente)*
+  12. Problemas médicos *(pendiente)*
+  13. Consentimiento imagen
+  14. Talla equipación
+  15. **Equipaciones**, desglosadas en *Incluidas*, *Extra* y *Total*
+  16. Uds camisetas portero/a
+- **Regla de equipaciones (igual que el dashboard):**
+  - Incluidas por semana según la modalidad: ONE MJ/JC = 1 blanca; ONE Interno = 2 blancas; MAX JC/Interno = 1 blanca + 1 light blue.
+  - Extra = productos *Uniforme Oficial Adidas* contratados.
+  - Portero = productos *Uniforme Portero Oficial Adidas*, en la columna 16 (no suman al total).
+  - Los extras se cuentan en la **primera semana** del niño; en las demás aparece «en W#».
+- **Ficha completa** (al pulsar un niño), con secciones:
+  - Participante.
+  - Semanas contratadas, con Team y Bus por semana; la semana de origen va marcada.
+  - Equipaciones.
+  - Servicios (pendientes y petición de rooming).
+  - Salud y dieta (pendiente, sensible).
+  - Consentimientos.
+  - **Familia y contacto**: debe verse.
+  - **Autorizados para recogida**: deben verse; documento oculto con «Ver documento».
+  - **Pago** (se queda: estado, total, pagado, pendiente, forma de pago, descuento y 3 plazos).
+  - **Seguimiento del equipo**: se deja como está (llamada, WhatsApp, documentación, notas); se modificará con otros campos más adelante.
+  - Otros.
+- **Catálogo de campos único:** cada dato se define una vez y aparece en la ficha y en el listado. Conectar un campo nuevo es un único cambio.
+- **Exportación a Excel:** aparcada. La información no debe salir del software.
+
+### 4.3 Equipos (Teams) (en curso)
+- El formato actual del tablero gusta («es justo como lo queremos»); se retoca sobre esa base.
+- **Siempre segregado por semana y por modalidad** (los 5 apartados). Cada combinación semana + modalidad tiene su propio reparto, independiente del resto.
+- **Grupos con nombre de jugador** (Mbappé, Courtois…) y **tres equipos por grupo**: Mbappé 1, Mbappé 2, Mbappé 3. El nombre del grupo es editable.
+- **Nombres estandarizados (base de datos «Data Teams»):** los grupos se nombran con la lista oficial, en su orden, sin repetir nombre dentro de la misma semana y programa.
+  - ONE: Mbappé, Diomande, Courtois, Rüdiger, Tchouaméni, Arda Güler, E. Militão, Huijsen, Rodrygo, Espí, Á. Carreras, Lunin, Asencio, Kroos, F. Mendy, Camavinga, Marcelo, Zidane, R. Carlos, Xabi Alonso, Di Stéfano, Casillas, Butragueño, Figo, Morientes, Hugo Sánchez, Hierro, Juanito, Santillana, Schuster, Buyo.
+  - MAX: Vini Jr., Cucurella, Bellingham, Konaté, Bernardo Silva, Valverde, Trent, Endrick, Dumfries, Brahim, Puskás, David Beckham, Makelele, Seedorf, M. Salgado, Gento, I. Helguera, Prosinečki, Míchel.
+  - La lista «Teams F» de esa pestaña no se usa (Campus F no existe).
+- **Máximo por equipo:** 16 en ONE y 14 en MAX.
+- **Crear equipos automáticamente**, por este orden de criterios:
+  1. **Edad.**
+  2. **Género:** nunca dejar chicas solas (chicos solos no se dan, siempre hay muchos más). Se hacen **equipos de chicas siempre que sea posible**, permitiendo en ellos un **gap de 2 años** (p. ej. 2013-2015). Si no hay chicas suficientes, van todas juntas en el mismo equipo mixto.
+  3. **Solicitudes especiales:** se juntan a quien lo ha pedido (hermanos y solicitudes manuales) si la edad y el tamaño lo permiten, sin dejar a ninguna chica sola.
+- **Regla de edad para detectar errores:** pueden convivir dos años seguidos (2014-2015). Un 2013 con un 2015 es un error y el que no encaja se marca. En los equipos solo de chicas se admite el gap de 2 años.
+- **Todo lo que sea un error marca al jugador en rojo** (fila roja con franja), como que no está en un equipo correcto: fuera de su año, solicitud sin atender (no marcada como *Hecha*) o chica sola. Arriba aparecen los recuentos de cada tipo de error.
+- **Como mucho dos años de nacimiento seguidos** dentro de un equipo (2014-2015); en equipos de chicas, gap de 2 años. Si no se cumple, el niño que no le corresponde sale en rojo.
+- Columna **Sin equipo** para los nuevos registros o pendientes. Las bajas en Zoho desaparecen solas de su equipo.
+- **Selección múltiple:** seleccionar varios niños arrastrando con el ratón (o con clic) y asignarlos de golpe a un equipo desde la barra inferior. Para uno solo, desplegable *Mover…*.
+- **Entrada a Equipos:** el mismo menú que en Registros, con las 9 cajas *Week 1…9* (fechas, inscritos y equipos creados). Al entrar en una semana aparecen las **cajas de modalidades** (nombre y recuento) para pasar de una a otra con el ratón, y una ruta *Semanas › Week N · modalidad* para volver. Sin números ni etiquetas de pasos.
+- **Check verde de completo:** en las cajas de semana y en las de modalidad aparece un ✓ verde (y borde verde) cuando todos los jugadores tienen equipo y no queda ninguna solicitud por atender. La semana solo sale completa si lo están todas sus modalidades con inscritos.
+- **Página limpia y con poco texto:** sin leyenda de iconos ni textos explicativos; los avisos de errores van **dentro del apartado de Solicitudes especiales**; los equipos vacíos solo muestran «Vacío».
+- **Botones:** *Crear equipos automáticamente* (aplica los criterios de reparto) y *Modificar manualmente* (activa la edición: mover niños, seleccionar arrastrando, renombrar o quitar grupos). *Añadir grupo* se ha quitado: los grupos de cada modalidad vendrán de una base de datos que facilitará Pau.
+- **Todo agrupado a la izquierda**, recogido; nada repartido a lo ancho con datos en cada punta.
+- **Cada niño en formato lista, en columnas alineadas:** nombre (con el icono **POR** justo después si es portero, sin alinear) | fecha de nacimiento | chico/chica | SOL | *Mover…* (este último solo en modo manual). Si está fuera de su año, la fecha sale en rosa.
+- **Caja «Sin equipo»** compacta (no ocupa todo el ancho).
+- **Solicitudes:** botón *Hecha* (buen contraste: marino con texto blanco).
+- **Tarjeta de equipo:** nombre, recuento n/máx con barra de llenado, y etiquetas de nacidos, chicos, chicas y porteros.
+- **Solicitudes especiales** (panel encima del tablero):
+  - Hermanos detectados automáticamente (misma familia en la misma semana y modalidad).
+  - Solicitudes de Zoho (rooming, «quiere ir con…», «viaja acompañado»), cuando lleguen.
+  - Solicitudes añadidas a mano (niño + con quién + texto).
+  - Indica si están **juntos** o **separados** y permite **Marcar hecha** o **Reabrir**.
+- **Tabla de la semana:** todos los equipos de la semana agrupados por modalidad, con Team, Programa y modalidad, Jugadores, Nacidos, Chicos/chicas, Porteros y Estado. Al pulsar un equipo se abre en el tablero.
+- **Aparcado:**
+  - Staff (coach y head con sus teléfonos): se añadirá en la fase de staff, también como columnas de la tabla.
+  - Equipos *Mixtos*: no se contemplan de momento.
+
+### 4.4 Horarios (en uso, rediseñado el 29/10)
+- **Organización (decisión de Pau, 29/10):**
+  - Se entra por **semanas**.
+  - Dentro de la semana, el horario es **general**: cada día muestra **todos los grupos de todas las modalidades** (ONE MJ, ONE JC, MAX JC, internos), agrupados por modalidad.
+  - Ya no hay un horario por modalidad separado.
+- **Cajas de modalidad (arriba):** al pulsarlas se despliegan las **sedes que puede usar esa modalidad**.
+  - Se pueden activar varias.
+  - Cada una tiene franja: todo el día / solo mañana / solo tarde (mañana = antes de las 14:00).
+  - Ejemplo: los internos van a Valdebebas solo por la tarde.
+- **Prioridad:**
+  - Campos: **siempre se llena primero Valdebebas**. Si no cabe, pasa a la siguiente sede activa. Si no cabe en ninguna, la sesión sale en rojo como «No cabe».
+  - Comedor, piscina y preparación física: primero la sede del horario tipo si está activa, después el orden de prioridad.
+- **Apartado Instalaciones (por semana):**
+  - **Campos de fútbol por sede:** número disponible esa semana (+/−), con nombre de cada campo y grupos que caben por campo (2 por defecto = 6 equipos).
+  - **Comedor:** turnos con hora de inicio, hora de fin y personas que caben. Sin turnos, el comedor no limita.
+  - **Piscina:** grupos que caben a la vez (0 = sin límite).
+  - **Espacio de preparación física.**
+  - Se pueden añadir sedes nuevas (p. ej. Universidad Europea), copiar de la semana anterior o aplicar a todas las semanas.
+  - Sedes por defecto: Valdebebas (Campos 5, 6, 8, 9, 10 + comedor), Santa Ana (F7, F11), L.A. (F11), UAM (comedor y piscina) y RESA (comedor). Los nombres se pueden cambiar.
+- **Vistas de la semana:**
+  - *Horario* (general del día).
+  - *Ocupación:* cada campo, comedor o turno y piscina, con los grupos que lo usan. Rosa «Completo» si está al límite; rojo «Sobrepasa» si se pasa.
+  - *Instalaciones.*
+- **Botones:**
+  - **Crear horario automáticamente:** solo el día o toda la semana. Parte del horario tipo (lunes de la W4) y reparte las instalaciones según sedes, franjas, prioridad y capacidad.
+  - **Modificar manualmente:** barra *Asignar instalación* para pulsar sesiones, o editar bloque (actividad, instalación, horas, aplicar a todos los grupos de la modalidad).
+  - **Borrar todo:** el día o la semana entera, para empezar de cero, siempre con confirmación.
+- **Errores en rojo:**
+  - No cabe.
+  - Instalación completa por encima de su capacidad (grupos o personas del turno).
+  - Sede no activa para la modalidad.
+  - Fuera de franja.
+  - Sesiones que se pisan.
+  - Sin instalación.
+- **Check verde** en el día y la semana cuando todos los grupos tienen horario y no hay avisos. Los días muestran Por hacer / A medias / Hecho / N avisos.
+- **La unidad es el grupo:** 3 equipos por grupo (Mbappé 1, 2 y 3), que hacen siempre el mismo horario. Los grupos salen de Equipos.
+- **Días por modalidad:** MJ y JC de lunes a viernes; ONE Interno de domingo a viernes; MAX Interno de domingo a sábado.
+- **Fuente:** Excel «Horarios W4 (cambiar buses)». Solo contiene el lunes.
+- **Horario tipo:** se copia el lunes de la W4 tal cual, por modalidad y grupo. Sirve de base para **todos los días** (también domingo y sábado de internos); el equipo le da forma a mano.
+  - Al grupo 1 de una modalidad le corresponde el horario del primer grupo de esa modalidad en el Excel, al 2 el segundo, etc. (si hay más grupos que en el Excel, se vuelve a empezar).
+  - Los huecos grises sin texto del Excel se cargan como bloques «Actividades».
+- **Reglas operativas de horarios (29/10):**
+  - Documento completo y estado de implementación en **Reglas_Horarios_Campus_Experience.md** (carpeta CLAUDE). Es la referencia obligatoria para todo lo de horarios.
+  - **Fase 1 hecha:**
+    - Escala cada 15 minutos y colores (verde fútbol, verde claro prep, azul claro piscina, rosa actividades).
+    - Ocupación en 4 categorías (Comedores / Piscinas / Actividades / Campos).
+    - Pestaña Buses con coste Juliá.
+    - Instalaciones con días y franjas, y residencia de internos por semana.
+    - Grupos de 2 o 4 equipos.
+    - Comprobación de reglas con avisos en rojo y Aprobar / Rechazar en las excepciones.
+  - **Fase 2 pendiente:** generador automático completo, a la espera de las 17 preguntas.
+- **Normas del horario (pendiente):**
+  - Pau dará las directrices: timings, qué modalidad va a qué sede y a qué hora, comidas, rotaciones…
+  - Se convertirán en reglas del sistema dentro del propio software, para que el automático las aplique siempre, sin depender de Claude, y se anotarán aquí.
+  - Primera regla ya incluida: franja por sede y modalidad.
+
+### 4.5 Pagos (en uso)
+- Apartado nuevo en el menú y en Inicio. **Solo informa del estado de pago**, nada más.
+- **Fuente (Zoho, aplicación):**
+  - *Stage*.
+  - Para cada plazo: *First/Second/Third Instalment Amount*, *Status* (Paid / Unpaid / Expired) y *Due Date*.
+- **Estados:**
+  - **Pagado total:** Stage = Paid, o todos los plazos con importe pagados.
+  - **Fase 1:** 1er plazo pagado y el 2º todavía en fecha.
+  - **Fase 2:** 1º y 2º pagados y el 3º todavía en fecha.
+  - **Impago:** el siguiente plazo sin pagar ha pasado su fecha de vencimiento (o Zoho lo marca *Expired*).
+- **Pantalla:**
+  - Cajas con recuento: *Pendientes* (fase 1 + fase 2 + impago, seleccionada por defecto), *Impago*, *Fase 1*, *Fase 2*, *Pagado total* y *Todos*.
+  - Lista con nombre (y Premium), estado, plazos 1º/2º/3º (verde pagado, rojo vencido) y el siguiente plazo con importe y fecha («vencido hace N días»).
+  - Impagos arriba en rojo.
+  - Buscador; al pulsar un jugador se abre su ficha.
+- **Datos a 28/10/2026:**
+  - 69 en Paid y 96 en 1st Payment.
+  - Ningún 2º plazo pagado todavía; los 2º plazos vencen entre el 7 y el 26/11/2026.
+
+### 4.6 Siguientes fases según la especificación
+- **Buses (§7):** cuando exista el campo *Extra bus* en el CRM. Bus asignado por semana, independiente de *Extra bus*.
+- **Informes (§9):** como vistas filtradas dentro del software (alergias, dietas, transfer, buses, noches extra, no consentimiento), no como descargas, mientras se mantenga que la información no sale.
+- **Staff, rooming, incidencias, logística, contabilidad, apps para familias y trabajadores:** más adelante.
+
+## 5. Dashboard de registros (reglas acordadas)
+
+- Fuente: Zoho CRM, módulo *Applications/Deals*, Ano_Campus = 2027 (Campus Experience Madrid 2027).
+- **Se excluyen las pruebas:**
+  - *utm_source* que empieza por «qa_».
+  - *utm_campaign* = qa_ce_original_campaign, test2027 o ce27_qa_promo.
+  - Código de descuento que contiene «TEST» o igual a SOCIALMEDIATEST.
+- **Se excluye Stage = Trash** de todas las métricas (solo se muestra su recuento).
+- **Formularios rellenados** = no prueba y no Trash.
+- **Han pagado** = Paid, 1st Payment o Reservation Payment Completed. **No han pagado** = Unpaid.
+- **Carrito abandonado** = Unpaid y sin modalidad. Va aparte, fuera de las métricas por modalidad, género, etc.
+- Lo que está bajo «Solo registros pagados» se calcula solo con los que han pagado al menos una vez.
+- **Importes:**
+  - Facturación confirmada = suma de *Total* de los pagados.
+  - Cobrado = suma de *Paid*.
+  - Pendiente = Total − Paid.
+- **Moneda:** el CRM dice USD pero son **euros** (mostrar «€»).
+- **Modalidad por inscripción:** sale de las líneas semanales (producto de cada semana). Si una aplicación tiene más de una modalidad cuenta como «Varias»; sin líneas, se usa *Tipo_Modalidad*.
+- **Semanas por inscripción:** de las líneas semanales; si no hay, del campo *Weeks*.
+- **Facturación por modalidad:** el importe de programa (Total − extras) se reparte entre sus líneas semanales en proporción a su importe.
+- **Extras por categoría:**
+  - Equipaciones (productos «Uniforme…»).
+  - Campus Protection Plan.
+  - Noches extra.
+  - Buses y transfers.
+- **Equipaciones por semana y talla:**
+  - Incluidas por modalidad: ONE MJ/JC = 1 blanca; ONE Interno = 2 blancas; MAX = 1 blanca + 1 light blue.
+  - Las extra y las de portero se cuentan en la primera semana del niño.
+- **Canal de origen:** a partir de *utm_source* / *utm_medium* (Email/newsletter, Meta Ads, Instagram/Facebook, Google Ads, Google orgánico, TikTok, ChatGPT, YouTube, LinkedIn, X, Directo/sin dato).
+- **Actualización:** tarea programada (ver `instrucciones_actualizacion_dashboard.md`); si algo falla, no se publica a medias.
+- **Diseño del dashboard:** es la referencia de diseño del software (ver apartado 3).
+
+## 6. Registro de decisiones
+
+- 26/10: Software externo alimentado desde Zoho; Zoho es fuente de verdad; el software no escribe en Zoho.
+- 26/10: Diseño con los cánones del dashboard: gris predominante, gris oscuro para resaltes, rosa para detalles y marino como alternativo.
+- 26/10: Equipos: MAX máx. 14, ONE máx. 16; por edad; máx. 1 año de diferencia con alarma; grupos con nombre de jugador y 3 equipos.
+- 26/10: Campus F eliminado.
+- 27/10: Fases ordenadas según la especificación funcional; primero validar datos y campos reales.
+- 27/10: Registros: columna Nombre añadida; equipaciones desglosadas en incluidas, extra y total; bus, salud y dieta como campos pendientes de formulario.
+- 27/10: Buscador de jugador en la primera página de Registros.
+- 27/10: Ficha: pago se queda; seguimiento se queda como está; familia, contacto y autorizados deben verse; autorizados llegarán con el Form 2.
+- 27/10: No exportar a Excel de momento: la información no sale del software.
+- 27/10: Equipos segregados por semana y modalidad; tabla general de la semana sin staff; selección múltiple arrastrando; sin mixtos.
+- 27/10: Solicitudes especiales marcadas en el tablero y marcables como hechas; género (chico/chica) visible en cada niño.
+- 27/10: Horarios: un horario por modalidad y por día, con inicio y fin propios; el grupo es la unidad; control de recursos con aviso de solapes; internos con tarde y noche.
+- 27/10: Check verde en semanas y modalidades cuando todo está asignado y sin solicitudes pendientes.
+- 27/10: Equipos empieza con el menú de semanas y dentro las modalidades; avisos dentro de Solicitudes especiales; sin leyenda; menos texto.
+- 27/10: Criterios del botón automático: edad → género (equipos de chicas con gap de 2 años, nunca chicas solas) → solicitudes. Cualquier error (edad, solicitud sin atender, chica sola) marca al jugador en rojo. Icono POR justo después del nombre.
+- 27/10: Equipos: modalidades en cajas; botones «Crear equipos automáticamente» y «Modificar manualmente»; sin «Añadir grupo»; filas alineadas en columnas; botón «Hecha».
+- 27/10: Equipos: quitar los números de pasos; niños en lista seguida (nombre, fecha, género, solicitud); todo agrupado a la izquierda; reparto por edad y después por género, sin chicas ni chicos solos.
+- 27/10: Horarios: se copia el lunes de la W4 como horario tipo para todos los días; el equipo lo ajusta a mano. En cada campo caben 2 grupos (6 equipos). Cada grupo tiene 3 equipos.
+- 27/10: Equipos: los nombres de grupo salen de la base de datos «Data Teams» (listas ONE y MAX) para que queden estandarizados.
+- 28/10: Horarios: activar instalaciones disponibles por modalidad y asignar la instalación de cada sesión. Pau dará después los condicionantes.
+- 28/10: Horarios más intuitivo:
+  - Barra con *Cargar horario tipo*, *Editar horario*, *Borrar horario* e *Instalaciones disponibles*.
+  - *Borrar horario* deja el horario «por hacer», solo el día o toda la semana de la modalidad, siempre con confirmación.
+  - Al editar aparece la barra *Asignar instalación*: se elige una instalación y se pulsan las sesiones.
+  - El panel de instalaciones solo sirve para activarlas y fijar cuántos grupos caben.
+  - Días y grupos sin horario salen como «Por hacer».
+- 28/10: Registros: etiqueta VIP junto al nombre para quien tenga más de 2 semanas contratadas.
+- 28/10: La etiqueta VIP pasa a llamarse «Premium» (jugadores con más de 2 semanas contratadas).
+- 28/10: La etiqueta Premium también aparece en Equipos, junto al nombre de cada niño.
+- 28/10: Registros: filtros por columna; letras blancas en la etiqueta Premium.
+- 28/10: Nuevo apartado Pagos: estado de pago por jugador (pagado total, fase 1, fase 2, impago) con los pendientes seleccionados por defecto.
+- 29/10: Horarios rediseñado:
+  - Horario general por semana y día con todos los grupos.
+  - Sedes por modalidad desde las cajas (varias, con franja; Valdebebas siempre primero).
+  - Apartado Instalaciones por semana (campos, turnos de comedor con aforo, piscina).
+  - Botones Crear automáticamente / Modificar manualmente / Borrar todo.
+- 29/10: Reglas operativas de horarios recibidas (Reglas_Horarios_Campus_Experience.md). Fase 1 implementada; fase 2 (generador) pendiente de aclaraciones. Equipos admite grupos de 2 o 4.
+- 03/11: Respuestas de Pau a las 17 preguntas de horarios (en Reglas_Horarios_Campus_Experience.md).
+- 03/11: Generador automático con todas las reglas (fase 2), el mismo para real y simulador.
+- 03/11: Resumen de inscritos compacto (abreviaturas, participantes y equipos, sin sedes) y días más pequeños.
+- 03/11: Nueva pestaña SIMULADOR: semana, nº de equipos por modalidad, instalaciones como en real, «Generar horario», vistas Horario / Ocupación / Necesidades / Buses / Instalaciones. Datos ficticios, independientes de los reales.
+- 03/11: Horarios: sin fines de semana de momento (no se generan ni cuentan para completar la semana). Reglas pendientes de Pau.
+- 03/11: Clausura de ONE y MAX internos el viernes al terminar los entrenamientos, a la misma hora. ONE INT acaba con check-out de 20:00 a 20:30. MAX INT sigue con cena, velada y Curfew (check-out el sábado de 10:00 a 11:00).
+- 03/11: Simulador: 16 plazas por equipo ONE y 14 por equipo MAX (confirmado). Coste de buses aceptado por ahora; revisión a fondo más adelante.
+- 04/11: Simulador: el nº de equipos se conserva al cambiar de pestaña de «Ver» (antes se perdía lo escrito al pasar a otra casilla o pestaña).
+- 04/11: Simulador: botón «Descargar horario» a la derecha de «Generar horario». Abre una ventana para elegir PDF (una página por día y modalidad) o Excel (una hoja por día) y luego «Descargar». Es la única excepción a «la información no sale del software»: solo datos ficticios del simulador. Cada descarga pide confirmación de Claude.
+- 04/11: Instalaciones (real y simulador, mismo sistema). Estructura INSTALACIÓN PRINCIPAL → ESPACIOS → FRANJAS.
+  - Instalaciones principales predefinidas: VBB, S.A., L.A., UAM, RESA, UEM, BNB, VILLA. No se crean sedes nuevas.
+  - Cruz para quitar un espacio arriba a la derecha de cada recuadro, junto al tipo.
+  - «Añadir espacio» (antes «Añadir instalación») dentro de cada instalación.
+  - Espacio Experience en VBB: solo los predefinidos, solo los de los campos añadidos esa semana y sin repetir.
+  - «Quitar instalación» quita la instalación de la semana con sus espacios y franjas.
+  - Desplegable «Añadir instalación» con las principales que falten esa semana. Se añade con sus espacios por defecto.
+- 04/11: Registros: estructura de la portada.
+  1. Caja principal «REGISTROS» (la más destacada, azul marino), con todos los campus.
+     - Muestra participantes, semanas contratadas, ONE, MAX, Nacional e Institucional.
+     - Al pulsarla se abre directamente la lista general: una fila por participante, mismo formato y filtros que las weeks.
+  2. Madrid: cajas Week 1 a Week 9, sin cambios.
+  3. Nacionales: una caja por campus, con diseño neutro propio (Valencia y Málaga). Se abre su lista.
+  4. Institucionales: otro diseño neutro; aparecerán cuando Pau los pida añadir.
+  - Los campus se leen de Zoho por el nombre del evento (Campus Experience Valencia 2027, Málaga 2027…). Equipos, Horarios y Pagos siguen solo con Madrid.
+- 04/11: Registros: etiqueta de campus junto al nombre (Madrid en azul marino; Valencia, Málaga y demás nacionales en gris con borde; institucionales con otro formato). Solo en la lista general «Todos los registros» y en el buscador de la portada; las listas de cada week no la llevan.
+- 04/11: Horarios (real y simulador, mismo sistema):
+  - Piscinas: el generador evita los turnos antes de las 10:30 siempre que la planificación lo permita (preferencia, no prohibición).
+  - Avisos: cada aviso rojo se puede pulsar y abre una ventana con cruz (X) arriba a la derecha. Muestra grupo, hora e instalación, y explica qué pasa, por qué y cómo solucionarlo.
+  - Colores: Actividades Experience en amarillo pastel medio y FUN en amarillo pastel claro (fuera de la paleta, por decisión de Pau). También en el PDF y el Excel del simulador.
+  - Instalaciones: todo espacio o instalación nuevo se añade disponible todos los días. Un día deshabilitado se ve gris con una X. Las franjas funcionan igual que antes.
+- 04/11: Pagos incluye todos los campus: Madrid, nacionales (Valencia, Málaga, Andorra…) e institucionales cuando se activen. Cada nombre lleva la etiqueta de su campus; en los institucionales será el nombre del pueblo. El buscador de Pagos encuentra también por campus («valencia») y sin tener en cuenta las tildes.
+- Para añadir un campus nuevo hace falta el nombre exacto del evento en Zoho y saber si es nacional o institucional (y el pueblo). Aparece automáticamente en Registros, en el total general y en Pagos.
+- 04/11: Equipos de los campus nacionales e institucionales.
+  - Portada: debajo de las Weeks de Madrid, una caja por campus con su diseño (nacionales e institucionales).
+  - No hay semanas: al pulsar un campus se ven sus modalidades (solo las que tienen inscritos) y sus equipos.
+  - Un equipo por nombre de jugador, sin «1, 2, 3», con un máximo de 18 jugadores.
+  - Mismos criterios que Madrid: edad, sexo, hermanos y solicitudes especiales.
+  - Nombres: lista «NAC» con la primera plantilla del Real Madrid 2026/27 (26 jugadores, fuente: realmadrid.com). Se asignan solos de más a menos relevancia: Mbappé, Vini Jr., Bellingham, Courtois, Valverde, Diomande, Cucurella, Trent, Arda Güler, Tchouaméni, Camavinga, E. Militão, Bernardo Silva, Endrick, Huijsen, Brahim, Konaté, Rüdiger, Dumfries, F. Mendy, Á. Carreras, Lunin, Asencio, Rodrygo, Espí, Thiago (orden ajustado por Pau el 04/11). No se repiten dentro del mismo campus; a partir del 27.º equipo saldría «Equipo 27».
+
+## Lista de equipos · Nacionales e Institucionales (oficial, 04/11/2026)
+Se asignan automáticamente en este orden, un equipo por nombre y sin repetir dentro de un mismo campus:
+1. Mbappé · 2. Vini Jr. · 3. Bellingham · 4. Courtois · 5. Valverde · 6. Diomande · 7. Cucurella · 8. Trent · 9. Arda Güler · 10. Tchouaméni · 11. Camavinga · 12. E. Militão · 13. Bernardo Silva · 14. Endrick · 15. Huijsen · 16. Brahim · 17. Konaté · 18. Rüdiger · 19. Dumfries · 20. F. Mendy · 21. Á. Carreras · 22. Lunin · 23. Asencio · 24. Rodrygo · 25. Espí · 26. Thiago
+- 04/11: Horarios, 3.er documento de reglas (detalle en Reglas_Horarios):
+  - Ocupación completa en amarillo; turnos de 1 h separados.
+  - Prohibido el campo de 14:30 a 15:30.
+  - Turnos de campo en horas fijas para llenar campos a 6 equipos, empezando por VBB.
+  - Aviso de aprobación con 3 h seguidas de campo; botones Aprobar/Denegar en la ventana del aviso, también en el simulador.
+  - Sin FUN seguidas y rotación semanal de Experience (máximo 1 repetición).
+  - VBB no exclusiva; comida y piscina en UAM agrupadas cuando se puede.
+  - Pendiente: confirmar qué manda entre Experience extra en huecos y máximo 1 repetición.
+- 05/11: El apartado «Pagos» pasa a llamarse «Contabilidad». Dentro hay dos pestañas: «Pagos» (igual que estaba) y «Devoluciones» (en preparación; Pau definirá su contenido).
+- 05/11: Contabilidad tiene tres pestañas: Pagos, Devoluciones y Cancelaciones (las dos últimas en preparación; Pau definirá su contenido).
+- 05/11: Incidencia en Pagos. Al cobrarse la 2.ª cuota, Zoho pone la fase «2nd Payment», y el software solo leía «1st Payment» y «Paid», así que el jugador desaparecía de todo el software (caso de Daniel Tomas).
+  - Solución: el software lee todas las fases menos las que no son inscripciones activas: Unpaid, Trash, Erased, Closed Lost, Cancelled, Refund y Reservation Payment Completed.
+  - Cualquier fase nueva de pago aparecerá sola.
+  - Pendiente de Pau: qué hacer con «Reservation Payment Completed» (53 reservas de 50 € en Madrid 2027).
+- 05/11: Horarios: nuevo sistema de trabajo (decisión de Pau).
+  - Pau construye el horario a mano en el software. El software calcula la ocupación (campos, piscinas, comedores, espacios Experience y buses) y marca los errores de aforo y choques.
+  - El botón «Crear automáticamente» se mantiene como borrador opcional; se irá desarrollando con normas.
+  - «Editar horario» (también en el simulador y con el día vacío):
+    1. Paleta de bloques con su duración: Entrenamiento 1 h, Partido 1 h, Prep. física 1 h, Experience 1 h o 45', FUN 30', Piscina 1 h 30 con vestuarios, Comida 30', Snack 15', Desayuno 30', Cena 30', Bus 15', Descanso 15' y Clausura 45'. Se pulsa en la columna del grupo a la hora de inicio, y existe la opción «En todos los grupos de la modalidad».
+    2. Al colocar un bloque que necesita instalación, se elige entre las instalaciones de la semana con su sitio libre en ese momento («Campo 8 · 3 de 6 equipos libres»). El desplegable de editar también muestra el sitio libre.
+    3. Arrastrar bloques para moverlos (también a otro grupo; la piscina se mueve con sus vestuarios) y estirar el borde de abajo para cambiar la duración, siempre en cuartos de hora.
+    4. Copiar y pegar el día de un grupo en otro grupo, en todos los de su modalidad o en otro día. «Copiar este día a…» copia todos los grupos a otro día; entre el lunes y el resto se cambian los check-in de los externos.
+    5. Errores en directo: el bloque se pone rojo si pasa el aforo, choca con otro o no tiene instalación. Al pulsarlo se ve con quién comparte la instalación.
+    - Deshacer (botón o Ctrl/Cmd+Z).
+  - Avisos: arriba solo los problemas de aforo o choque (rojo). El resto de reglas y las aprobaciones (Aprobar/Denegar) van en «Revisión de reglas», que se abre al pulsarla.
+  - Pendiente: propuesta de catálogo de instalaciones más intuitivo (por validar con Pau).
+- 06/11: Mejoras de Horarios y Simulador (las dos funcionan igual; el simulador nunca toca los datos reales).
+  1. Copiar y pegar cajas con el teclado: se pulsa una caja, Ctrl/Cmd+C, y luego Ctrl/Cmd+V. Pega con todas sus propiedades justo después de la caja seleccionada, o donde se haya pulsado. Al repetir Ctrl/Cmd+V se encadena a continuación.
+  2. Cajas nuevas en la paleta: Check-in 15', Check-out 15', Ceremonia 15' y Welcome Pack 30'.
+  3. La fila de cabecera con modalidades y nombres de los equipos queda fija al bajar por el horario. La columna de horas queda fija al moverse en horizontal.
+  4. Desayuno, Snack, Comida y Cena llevan el mismo naranja pastel de tono medio (#F5B37A), también en la descarga.
+  5. Solo en «Editar horario», cada caja tiene una X arriba a la derecha que la borra; la piscina se borra con sus vestuarios. Fuera del modo de edición no hay X.
+  6. Necesidades tiene una tabla nueva, «Horario de uso de cada instalación», por día. Muestra la instalación en negrita y debajo cada espacio. Los huecos de 30 min o menos cuentan como uso (09:00–10:00 + 10:30–11:30 = 09:00–11:30).
+  7. Al pulsar una caja de bus se abre la ventana de editar con Origen y Destino. Los desplegables muestran Fleming y las sedes con algún espacio disponible ese día; también hay «Automático». El trayecto elegido manda en el horario y en Buses.
+  8. Las cajas de bus muestran solo «BUS n». Si la caja combina otra actividad, como «Check-in Fleming · BUS 1», se mantiene esa actividad y se cambia solo la parte del bus.
+  9. Pestaña Buses, gestión manual guardada por día (colección hbus; en el simulador va dentro de la simulación):
+     - Por bus: Plazas y Disponible (desde–hasta).
+     - Por cada grupo de un trayecto: cambiar de bus (o «Bus nuevo»), Editar origen/destino y × para quitar el trayecto.
+     - Los trayectos quitados aparecen en «Trayectos sin bus» con «Volver a ponerlo».
+     - «Volver al reparto automático» borra los cambios manuales del día.
+  9.1. Los cambios manuales se revisan siempre y sus avisos van a «Revisión de reglas»:
+     - bus con más pasajeros que plazas;
+     - bus que no llega a tiempo de un trayecto a otro;
+     - trayecto fuera de la disponibilidad del bus;
+     - trayecto sin bus;
+     - origen del bus distinto de donde está el grupo.
