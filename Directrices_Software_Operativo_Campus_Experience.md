@@ -404,3 +404,10 @@ Se asignan automáticamente en este orden, un equipo por nombre y sin repetir de
      - trayecto fuera de la disponibilidad del bus;
      - trayecto sin bus;
      - origen del bus distinto de donde está el grupo.
+- 08/11: Contrastes del modo oscuro revisados en todas las pantallas (Inicio, Registros, Equipos, Contabilidad, Horarios y Simulador, con edición, avisos y ventanas). Todos los textos cumplen el contraste mínimo de lectura (WCAG AA: 4,5:1, o 3:1 en texto grande).
+  - Rosa algo más claro en modo oscuro (#ff8aa5).
+  - Texto oscuro sobre fondos rosa y verde en modo oscuro (etiquetas Impago, Premium, Chica, botones Guardar o Terminar edición, checks verdes).
+  - La etiqueta «Fase 1» de Contabilidad pasa a azul claro con borde.
+  - Textos secundarios más claros; las cajas vacías y los botones desactivados, menos apagados.
+  - Corregido: la pestaña activa del menú perdía el fondo al pasar el ratón por encima.
+  - El modo claro no se ha tocado: el rosa de marca (#ea456c) sobre gris (#e4e4e4) tiene poco contraste en textos pequeños (pendiente de Pau).
