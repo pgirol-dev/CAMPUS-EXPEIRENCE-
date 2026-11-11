@@ -1,11 +1,16 @@
 # Software Operativo · Campus Experience en Zoho Catalyst
 
-Guía para el equipo técnico: cómo conectar este repositorio de GitHub con Zoho Catalyst (Web Client Hosting más una función para el servidor).
+Guía para el equipo técnico: cómo funciona el software en Zoho Catalyst (Web Client Hosting más una función para el servidor) y cómo se publica desde este repositorio de GitHub.
+
+**Proyecto en Catalyst:** Campus-Experience-OS (id `35863000000014061`, organización `20121257243`, centro de datos UE).
+**Web (Development):** https://campus-experience-os-20121257243.development.catalystserverless.eu/app/
+**Dashboard de registros:** `/app/dashboard.html` (también desde el menú lateral del software, «Dashboard»).
 
 ## Estructura del repositorio
 
 ```
-catalyst.json                 configuración del proyecto Catalyst (obligatoria para desplegar desde GitHub)
+catalyst.json                 configuración del proyecto Catalyst (obligatoria para desplegar)
+.github/workflows/            despliegue automático en Catalyst en cada cambio de main (catalyst-deploy.yml)
 client/                       → Web Client Hosting
   client-package.json
   index.html                  la aplicación (generada con build.js)
@@ -21,12 +26,39 @@ functions/campus_api/         → función Advanced I/O (Node.js): login, permis
   store.js                    acceso al Data Store (todo lo específico de Catalyst está aquí)
   dashboard.js, ce_engine.js  datos del dashboard de registros
 dashboard/                    fuente del dashboard de registros y su README
-index.html                    la aplicación original (también la versión de claude.ai)
+index.html                    la aplicación: AQUÍ se hacen los cambios (client/index.html se genera a partir de ella)
 build.js                      regenera client/ y selfhost/app/ a partir de index.html
 selfhost/                     alternativa: servidor propio (Node + SQLite). No se usa en Catalyst.
 ```
 
-**Al cambiar la aplicación:** se edita `index.html`, se ejecuta `node build.js` y se suben los cambios a GitHub.
+**Al cambiar la aplicación:** se edita `index.html` (nunca `client/index.html` directamente), se ejecuta `node build.js` y se suben los cambios a GitHub. El despliegue comprueba que `client/` está regenerado y, si no, se para.
+
+**Al cambiar el dashboard:** se edita `dashboard/` y se regenera `client/dashboard.html` (ver `dashboard/README.md`). Los datos salen de `functions/campus_api/dashboard.js` y `ce_engine.js`.
+
+## Publicar cambios en Catalyst
+
+### Automático (GitHub Actions)
+Cada cambio que llega a la rama `main` se despliega solo en Catalyst (Development) con `.github/workflows/catalyst-deploy.yml`:
+1. instala la CLI de Catalyst y las dependencias de `campus_api`;
+2. comprueba que `client/` coincide con `index.html`;
+3. ejecuta `catalyst deploy` (web y función).
+
+**Activarlo (una sola vez):**
+1. En el ordenador, con la CLI de Catalyst ya iniciada: `catalyst token:generate`. Se abre una dirección con un código de verificación; al confirmarlo, la CLI muestra la clave.
+2. En GitHub › repositorio › **Settings › Secrets and variables › Actions › New repository secret**: nombre `CATALYST_TOKEN`, valor la clave.
+3. Comprobación: en **Actions › Desplegar en Catalyst › Run workflow**.
+
+Mientras no exista el secreto, el flujo solo muestra un aviso. Si se revoca la clave (`catalyst token:revoke`), hay que generar otra y actualizar el secreto.
+
+### Manual (desde el ordenador)
+En la carpeta del proyecto:
+```bash
+git pull origin main
+cd functions/campus_api && npm install --omit=dev && cd ../..
+catalyst deploy
+```
+
+**Nota:** la consola actual de Catalyst ya no tiene «DevOps › Repositories › Git». GitHub está vinculado en Ajustes › Integraciones, pero el despliegue se hace con la CLI (manual o desde GitHub Actions).
 
 ## Cómo funciona
 
@@ -45,17 +77,11 @@ selfhost/                     alternativa: servidor propio (Node + SQLite). No s
 
 ## Puesta en marcha
 
-### 1. Crear el proyecto y conectar GitHub
+### 1. Crear el proyecto y publicar el código
 1. En Catalyst, cread un proyecto. Elegid el centro de datos de la UE si vuestro Zoho CRM está en `.eu`.
-2. Conectad el repositorio `pgirol-dev/CAMPUS-EXPEIRENCE-`, rama `main`:
-   - con **Catalyst Pipelines**, que es lo recomendado para cuentas nuevas y despliega en cada push;
-   - o con la **integración Git de GitHub** (Deploy y Sync manuales).
-3. **Dependencias de la función:** `functions/campus_api` usa `zcatalyst-sdk-node`.
-   - **Integración Git de GitHub (opción elegida, 11/11):** la carpeta `functions/campus_api/node_modules` se sube al repositorio (el `.gitignore` la deja pasar). Se genera una vez en un ordenador con Node: `cd functions/campus_api && npm install --omit=dev`, y se vuelve a generar solo si cambia `package.json`.
-   - Con Pipelines, añadid antes del despliegue el paso `cd functions/campus_api && npm install`.
-   - Con la CLI: `npm install` en esa carpeta y `catalyst deploy`.
-   - Tras cada `git push`: Catalyst → DevOps → Repositories → Git → **Sync**.
-4. El `stack` de `catalyst-config.json` está como `node20`. Ajustadlo si vuestro proyecto ofrece otra versión de Node.
+2. Publicad el repositorio con la CLI (`catalyst deploy`) o activad el despliegue automático (ver «Publicar cambios en Catalyst»).
+3. **Dependencias de la función:** `functions/campus_api` usa `zcatalyst-sdk-node`. La carpeta `functions/campus_api/node_modules` está en el repositorio (el `.gitignore` la deja pasar) y el despliegue automático la reinstala con `npm ci --omit=dev`.
+4. El `stack` de `catalyst-config.json` está como `node20`.
 
 ### 2. Crear las tablas en el Data Store
 En Cloud Scale → Data Store creáis estas 5 tablas, con estas columnas y tipos.
@@ -143,6 +169,7 @@ Se configuran en la consola (Serverless → Functions → campus_api → Configu
 | `CE_LOGIN_URL` | ruta de la pantalla de acceso; por defecto `/app/login.html`. Si el hosting sirve la web en la raíz del dominio, `/login.html` |
 | `CE_ALLOWED_ORIGINS` | opcional: dominio de la web, por ejemplo `https://operativa.islagency.com` |
 | `SESSION_IDLE_MIN`, `SESSION_MAX_HOURS`, `ZOHO_RECHECK_MIN`, `ZOHO_GRACE_HOURS` | opcionales: 480, 72, 30 y 12 por defecto |
+| `CE_DASH_TTL_MIN` | opcional: minutos que se reutilizan los datos del dashboard antes de volver a leer Zoho (15 por defecto) |
 
 **Importante:**
 - **No activéis Catalyst Authentication** para esta web. El software tiene su propio acceso y la función tiene que poder recibir peticiones sin usuario de Catalyst.
@@ -156,6 +183,12 @@ Se configuran en la consola (Serverless → Functions → campus_api → Configu
 
 ### 6. Pasar a producción
 Catalyst publica primero en el entorno de Development. Desde la consola desplegad a **Production** para que lo use el equipo y, si queréis, configurad un dominio propio.
+
+## Dashboard de registros
+- Página `/app/dashboard.html`; acceso desde el menú lateral («Dashboard»). La ven **todos los usuarios con sesión**.
+- `GET /server/campus_api/dashboard.js`: cifras agregadas de las inscripciones **con pago** (Zoho CRM, solo lectura). Se guardan en el Data Store (`CEDocs` col `dash`; marca `dash_ts` en `CEMeta`) y se reutilizan 15 minutos.
+- `POST /server/campus_api/api/dashboard/refresh`: botón «Actualizar» (máximo una lectura de Zoho por minuto; queda en el registro de actividad).
+- Detalle en `dashboard/README.md`.
 
 ## Seguridad: resumen
 - **Contraseñas:** scrypt con sal; nadie puede verlas.

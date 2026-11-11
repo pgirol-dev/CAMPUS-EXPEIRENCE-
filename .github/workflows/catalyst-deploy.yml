@@ -1,0 +1,57 @@
+# Despliegue automático en Zoho Catalyst (entorno Development) en cada cambio de la rama main.
+# Necesita el secreto CATALYST_TOKEN en GitHub (Settings › Secrets and variables › Actions).
+# Se genera una sola vez en el ordenador con la CLI de Catalyst: `catalyst token:generate`.
+# Mientras no exista el secreto, el flujo no hace nada (solo avisa).
+name: Desplegar en Catalyst
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: catalyst-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      CATALYST_TOKEN: ${{ secrets.CATALYST_TOKEN }}
+      CATALYST_PROJECT: "35863000000014061"   # Campus-Experience-OS
+      CATALYST_ORG: "20121257243"
+    steps:
+      - name: Comprobar la clave de Catalyst
+        if: env.CATALYST_TOKEN == ''
+        run: echo "::warning::Falta el secreto CATALYST_TOKEN. No se despliega; añádelo para activar el despliegue automático."
+
+      - uses: actions/checkout@v4
+        if: env.CATALYST_TOKEN != ''
+
+      - uses: actions/setup-node@v4
+        if: env.CATALYST_TOKEN != ''
+        with:
+          node-version: "20"
+
+      - name: Instalar la CLI de Catalyst
+        if: env.CATALYST_TOKEN != ''
+        run: npm install -g zcatalyst-cli
+
+      - name: Dependencias de la función campus_api
+        if: env.CATALYST_TOKEN != ''
+        run: cd functions/campus_api && npm ci --omit=dev
+
+      - name: Comprobar que la aplicación está regenerada (node build.js)
+        if: env.CATALYST_TOKEN != ''
+        run: |
+          node build.js
+          git checkout -- client/favicon.svg selfhost/public/favicon.svg 2>/dev/null || true
+          if ! git diff --quiet -- client selfhost/app; then
+            echo "::error::client/ no coincide con index.html. Ejecuta 'node build.js' y sube los cambios."
+            git diff --stat -- client selfhost/app
+            exit 1
+          fi
+
+      - name: Desplegar (web y función)
+        if: env.CATALYST_TOKEN != ''
+        run: catalyst deploy --project "$CATALYST_PROJECT" --org "$CATALYST_ORG" --dc eu --token "$CATALYST_TOKEN"
