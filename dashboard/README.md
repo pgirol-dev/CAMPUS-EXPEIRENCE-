@@ -34,5 +34,5 @@ Después de cualquier cambio: subir a GitHub (`main`). Se despliega solo en Cata
 - Solo inscripciones con pago: se excluyen Unpaid, Cancelled, Refund, Trash y Reservation Payment Completed. Layout ISL - Real Madrid y Ano_Campus = 2027.
 - Modalidad y semanas: de las líneas del subformulario «Campus y servicios extra», no de los campos Weeks/Tipo_Modalidad.
 - Sedes nacionales: cada inscripción es una semana; los productos llevan la ciudad al final («… Jornada Completa Andorra»).
-- Sedes: abiertas Andorra, Valencia y Málaga; próximamente Alicante, Almería y Torrevieja (la lista `OPEN` está en `template_natv.html`). Para abrir una sede, añadirla a `OPEN` y regenerar.
+- Sedes: abiertas Andorra, Valencia, Málaga y Alicante (desde el 11 nov); próximamente Almería y Torrevieja (la lista `OPEN` está en `template_natv.html`). Para abrir una sede, añadirla a `OPEN` y regenerar.
 - Torrevieja aún no existe como Ubicacion en Zoho: cuando exista, añadirla a `SEDES` en `functions/campus_api/dashboard.js`.

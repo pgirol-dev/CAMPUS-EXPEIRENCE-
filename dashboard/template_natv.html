@@ -1370,7 +1370,7 @@ function stShow(k){stSel=k;root.dataset.sede='stor';kitsTo($('#st-host'),'01');
   const sub=$('#st-sub');if(sub)sub.textContent=k==='general'?'Suma de Madrid, sedes nacionales e institucionales':k==='nac'?'Suma de todas las sedes nacionales':k==='ins'?'Institucionales · a cero hasta que haya datos':k==='madrid'?'Sede Madrid':'Sede '+(SN[k]||k);}
 function go(v){if(v==='madrid')useSede('madrid');else if(v==='stor')stShow(stSel);setView(v);}
 {const bk=$('#back-nac');if(bk)bk.onclick=()=>go('nac');}
-const OPEN=['andorra','valencia','malaga'];
+const OPEN=['andorra','valencia','malaga','alicante'];
 function renderNac(){const g=$('#nac-grid'),t=$('#nac-tot');if(!g||!t)return;
   const st=k=>{const D=SEDES[k];const K=Object.fromEntries((D.kpis||[]).map(r=>[r.metric,+r.value]));return{k,n:K.n||0,hoy:K.hoy||0,fact:K.fact||0,cobr:K.cobr||0,sem:d3.sum((D.dims||[]).filter(r=>r.dim==='campwk'),r=>+r.count)};};
   const S=NAC.map(st),T={};['n','hoy','fact','cobr','sem'].forEach(x=>T[x]=d3.sum(S,s=>s[x]));
