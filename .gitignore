@@ -1,4 +1,6 @@
 node_modules/
+# la función se despliega desde GitHub con sus dependencias incluidas
+!functions/campus_api/node_modules/
 .env
 selfhost/data/
 .catalystrc

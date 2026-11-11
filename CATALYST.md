@@ -47,8 +47,10 @@ selfhost/                     alternativa: servidor propio (Node + SQLite). No s
    - con **Catalyst Pipelines**, que es lo recomendado para cuentas nuevas y despliega en cada push;
    - o con la **integración Git de GitHub** (Deploy y Sync manuales).
 3. **Dependencias de la función:** `functions/campus_api` usa `zcatalyst-sdk-node`.
+   - **Integración Git de GitHub (opción elegida, 11/11):** la carpeta `functions/campus_api/node_modules` se sube al repositorio (el `.gitignore` la deja pasar). Se genera una vez en un ordenador con Node: `cd functions/campus_api && npm install --omit=dev`, y se vuelve a generar solo si cambia `package.json`.
    - Con Pipelines, añadid antes del despliegue el paso `cd functions/campus_api && npm install`.
-   - Si desplegáis sin pipeline, ejecutad `npm install` en esa carpeta y desplegad con la CLI (`catalyst deploy`).
+   - Con la CLI: `npm install` en esa carpeta y `catalyst deploy`.
+   - Tras cada `git push`: Catalyst → DevOps → Repositories → Git → **Sync**.
 4. El `stack` de `catalyst-config.json` está como `node20`. Ajustadlo si vuestro proyecto ofrece otra versión de Node.
 
 ### 2. Crear las tablas en el Data Store
