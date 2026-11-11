@@ -3,6 +3,7 @@
 Este repositorio es el **software operativo de Campus Experience** y se publica en **Zoho Catalyst** (proyecto Campus-Experience-OS, org 20121257243, centro de datos UE). Todo se documenta y se piensa para Catalyst.
 
 ## Antes de cambiar nada
+- **Primero `git pull origin main`.** Trabajar sobre una copia antigua borra lo que otros han subido (el 11 nov el apartado de Ingresos se subió sobre una copia sin el dashboard y lo quitó del menú y del servidor). El despliegue automático se para si falta el dashboard.
 - Lee `README.md`, `CATALYST.md` y, si tocas el dashboard, `dashboard/README.md`.
 - El software operativo está en uso: **no se modifica sin confirmación expresa** de Pau Girol (director del proyecto). Los cambios van en una rama y por pull request.
 - Zoho CRM y Zoho Books: **solo lectura**. Nunca escribir en Zoho desde el software.

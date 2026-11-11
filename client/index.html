@@ -4178,7 +4178,9 @@ function renderSide(){
       +(sub?'<div class="ssub"><div class="ssin"><div class="ssbox"><div class="sfh">'+SB_LBL[v]+"</div>"+sub+"</div></div></div>":"")+"</div>"};
   const capIf=(t,h)=>h?'<div class="sb-cap">'+t+"</div>"+h:"";
   const season='<button type="button" class="sb-season" data-sv="temporada" title="Campus Experience '+SEASON+'"><span class="yy"><span class="y4">'+SEASON+'</span><span class="y2">'+String(SEASON).slice(2)+'</span></span><span class="tt"><small>Temporada</small><b>Campus Experience</b></span><span class="sw" data-sv="inicio" title="Cambiar de temporada" aria-label="Cambiar de temporada">'+SVG('<path d="M7 7h11l-3-3M17 17H6l3 3"/>')+'</span></button>';
-  $("sbNav").innerHTML=grp("inicio")+season+BLOCKS.map(b=>grp(b[0])).join("")+(ACL&&ACL.admin?capIf("Sistema",grp("admin")):"");
+  /* acceso al dashboard de registros: solo en la versión Catalyst (client/dashboard.html) */
+  const dash=window.CE_API_BASE&&ACL?'<a class="si sb-dash" href="dashboard.html" title="Dashboard de registros"><span class="ic">'+SVG('<path d="M3 20h18"/><path d="M6 16v-5M11 16V6M16 16v-8M21 16v-3"/>')+'</span><span class="sl">Dashboard</span></a>':"";
+  $("sbNav").innerHTML=grp("inicio")+season+dash+BLOCKS.map(b=>grp(b[0])).join("")+(ACL&&ACL.admin?capIf("Sistema",grp("admin")):"");
   sbMark()}
 function sbMark(){
   const v=curView(),c=sbCur(v);
