@@ -12,11 +12,15 @@ client/                       → Web Client Hosting
   login.html                  pantalla de acceso y primera instalación
   ce-shim.js                  puente entre la aplicación y la API
   favicon.svg
+  dashboard.html              dashboard de registros (ver dashboard/README.md)
+  cover.jpg                   imagen de portada del dashboard
 functions/campus_api/         → función Advanced I/O (Node.js): login, permisos, datos y Zoho CRM
   catalyst-config.json
   package.json                dependencia: zcatalyst-sdk-node
   index.js                    API
   store.js                    acceso al Data Store (todo lo específico de Catalyst está aquí)
+  dashboard.js, ce_engine.js  datos del dashboard de registros
+dashboard/                    fuente del dashboard de registros y su README
 index.html                    la aplicación original (también la versión de claude.ai)
 build.js                      regenera client/ y selfhost/app/ a partir de index.html
 selfhost/                     alternativa: servidor propio (Node + SQLite). No se usa en Catalyst.
