@@ -170,6 +170,7 @@ Documento vivo con las decisiones tomadas con Pau (director de Campus Experience
   - Se entra por **semanas**.
   - Dentro de la semana, el horario es **general**: cada día muestra **todos los grupos de todas las modalidades** (ONE MJ, ONE JC, MAX JC, internos), agrupados por modalidad.
   - Ya no hay un horario por modalidad separado.
+  - **Campus nacionales (11/11):** cada uno tiene su horario aparte, con sus instalaciones, hecho a mano y replicando días. Detalle en el registro de decisiones.
 - **Cajas de modalidad (arriba):** al pulsarlas se despliegan las **sedes que puede usar esa modalidad**.
   - Se pueden activar varias.
   - Cada una tiene franja: todo el día / solo mañana / solo tarde (mañana = antes de las 14:00).
@@ -354,6 +355,27 @@ Documento vivo con las decisiones tomadas con Pau (director de Campus Experience
   - Un equipo por nombre de jugador, sin «1, 2, 3», con un máximo de 18 jugadores.
   - Mismos criterios que Madrid: edad, sexo, hermanos y solicitudes especiales.
   - Nombres: lista «NAC» con la primera plantilla del Real Madrid 2026/27 (26 jugadores, fuente: realmadrid.com). Se asignan solos de más a menos relevancia: Mbappé, Vini Jr., Bellingham, Courtois, Valverde, Diomande, Cucurella, Trent, Arda Güler, Tchouaméni, Camavinga, E. Militão, Bernardo Silva, Endrick, Huijsen, Brahim, Konaté, Rüdiger, Dumfries, F. Mendy, Á. Carreras, Lunin, Asencio, Rodrygo, Espí, Thiago (orden ajustado por Pau el 04/11). No se repiten dentro del mismo campus; a partir del 27.º equipo saldría «Equipo 27».
+
+- 10/11: **Control de facturas** en Administración (Contabilidad › Facturas).
+  - Lee las facturas de Zoho Books (solo lectura, organización ISL Agency RMF) y las compara con lo pagado en Zoho CRM (campo *Paid*).
+  - Cada pago genera una factura. La referencia termina en el id de la inscripción en el CRM; así se emparejan.
+  - Las reservas antiguas de 50 € no llevan id: se asignan por email, solo si falta ese importe.
+  - Estados: correcta, sin factura, no cuadra, cobro sin factura y sin pagos. Las facturas sin inscripción activa salen aparte, plegadas, para revisar si necesitan rectificativa.
+  - Permiso propio: «Contabilidad › Control de facturas».
+- 11/11: **Series de factura de los nacionales.** Madrid factura con la serie C-2027; cada campus nacional tiene su propia serie (Valencia: VAL27.01, VAL27.02…).
+  - El control lee la serie C-2027 y todas las que contienen «27.», así entran solas las series de Málaga, Andorra, Almería y Alicante en cuanto emitan la primera factura, sin depender de su nombre exacto.
+  - Arriba se ven las series encontradas.
+  - El aviso de Alejandro Santamaría (Valencia) era falso: su pago de 123 € está en la factura VAL27.01.
+- 11/11: **Horarios de los campus nacionales** (decisión de Pau).
+  - Van separados de Madrid, porque cada campus tiene sus propias instalaciones. Madrid no cambia.
+  - En la portada de Horarios, debajo de las Weeks de Madrid, sale «Nacionales» con una caja por campus (Valencia, Málaga, Andorra, Almería, Alicante). También en la barra lateral.
+  - Fechas: las del campus en el CRM. Grupos: los equipos de ese campus en Equipos. Modalidades: solo las que tienen inscritos.
+  - **Se hacen a mano.** No hay botón «Crear horario automáticamente». Se hace un día y se replica con «Replicar el lunes a…» (un día concreto o «Todos»). Ese botón también está en el panel de edición, donde «Copiar este día a» tiene ahora la opción «Todos» (también en Madrid).
+  - **Instalaciones propias por campus**: se empieza vacío. Se añade cada instalación con su nombre (por ejemplo, la ciudad deportiva) y dentro sus espacios: campos, comedor, piscina, espacios de actividades… con capacidad, días y franjas. Cada instalación nueva queda activa para todas las modalidades del campus.
+  - Avisos: solo los de instalaciones (sin instalación, capacidad superada, solapes, días y franjas no disponibles). No se aplican las reglas de Madrid (Fleming, Valdebebas, UAM, buses, check-ins…) hasta que Pau diga qué reglas valen para los nacionales.
+  - Sin Buses ni Simulador en los nacionales.
+  - Permiso propio: «Horarios › Nacionales» (sin acceso, ver o editar). El servidor lo comprueba al guardar.
+  - Se guardan con prefijo de campus (`c-val-…`), separados de las semanas de Madrid.
 
 ## Lista de equipos · Nacionales e Institucionales (oficial, 04/11/2026)
 Se asignan automáticamente en este orden, un equipo por nombre y sin repetir dentro de un mismo campus:

@@ -52,7 +52,7 @@ fs.mkdirSync(CFG.dataDir, { recursive: true });
 /* ---------- catálogo de permisos ---------- */
 const CATALOG = [
   { k: "registros", b: "Registros", l: "Registros", subs: [["madrid", "Madrid (semanas)"], ["campus", "Nacionales e institucionales"], ["todos", "Todos los registros"]] },
-  { k: "horarios", b: "Operativa", l: "Horarios", subs: [["semanas", "Horarios de las semanas"], ["simulador", "Simulador"]] },
+  { k: "horarios", b: "Operativa", l: "Horarios", subs: [["semanas", "Horarios de las semanas"], ["campus", "Nacionales"], ["simulador", "Simulador"]] },
   { k: "equipos", b: "Operativa", l: "Equipos", subs: [["madrid", "Madrid (semanas)"], ["campus", "Nacionales e institucionales"]] },
   { k: "contabilidad", b: "Administración", l: "Contabilidad", subs: [["pagos", "Pagos"], ["devoluciones", "Devoluciones"], ["cancelaciones", "Cancelaciones"], ["facturas", "Control de facturas"]] },
   { k: "atencion", b: "Atención al público", l: "Atención al público", subs: [["general", "Atención al público"]] },
@@ -73,10 +73,10 @@ const COLS = {
   ops:   { read: u => anyOf(u, "registros"), write: u => anyOf(u, "registros", 2) },
   teams: { read: u => anyOf(u, "equipos") || anyOf(u, "horarios"), write: (u, id) => lvl(u, String(id).startsWith("c-") ? "equipos.campus" : "equipos.madrid") >= 2 },
   reqs:  { read: u => anyOf(u, "equipos"), write: (u, id) => lvl(u, String(id).startsWith("c-") ? "equipos.campus" : "equipos.madrid") >= 2 },
-  hor:   { read: u => anyOf(u, "horarios"), write: u => lvl(u, "horarios.semanas") >= 2 },
-  hweek: { read: u => anyOf(u, "horarios"), write: u => lvl(u, "horarios.semanas") >= 2 },
-  happr: { read: u => anyOf(u, "horarios"), write: u => lvl(u, "horarios.semanas") >= 2 },
-  hbus:  { read: u => anyOf(u, "horarios"), write: u => lvl(u, "horarios.semanas") >= 2 },
+  hor:   { read: u => anyOf(u, "horarios"), write: (u, id) => lvl(u, String(id).startsWith("c-") ? "horarios.campus" : "horarios.semanas") >= 2 },
+  hweek: { read: u => anyOf(u, "horarios"), write: (u, id) => lvl(u, String(id).startsWith("c-") ? "horarios.campus" : "horarios.semanas") >= 2 },
+  happr: { read: u => anyOf(u, "horarios"), write: (u, id) => lvl(u, String(id).startsWith("c-") ? "horarios.campus" : "horarios.semanas") >= 2 },
+  hbus:  { read: u => anyOf(u, "horarios"), write: (u, id) => lvl(u, String(id).startsWith("c-") ? "horarios.campus" : "horarios.semanas") >= 2 },
   hsim:  { read: u => lvl(u, "horarios.simulador") >= 1, write: u => lvl(u, "horarios.simulador") >= 2 },
 };
 const canZoho = u => ["registros", "equipos", "horarios", "contabilidad"].some(a => anyOf(u, a));
@@ -218,10 +218,10 @@ async function zohoGate(u) {
 
 /* Zoho Books: listado de facturas de una serie (solo lectura) */
 const BOOKS = { org: env("ZOHO_BOOKS_ORG", "20110950454"), url: env("ZOHO_BOOKS_URL", "https://www.zohoapis.eu/books/v3").replace(/\/$/, "") };
-async function booksInvoices(prefix, page) {
+async function booksInvoices(prefix, page, mode) {
   if (MOCK) { const pages = MOCK.invoices || []; return pages[page - 1] || { invoices: [], page_context: { has_more_page: false } }; }
   const t = await zohoToken();
-  const u = BOOKS.url + "/invoices?organization_id=" + encodeURIComponent(BOOKS.org) + "&invoice_number_startswith=" + encodeURIComponent(prefix) + "&per_page=200&page=" + page;
+  const u = BOOKS.url + "/invoices?organization_id=" + encodeURIComponent(BOOKS.org) + "&invoice_number_" + (mode === "contains" ? "contains" : "startswith") + "=" + encodeURIComponent(prefix) + "&per_page=200&page=" + page;
   const r = await fetch(u, { headers: { Authorization: "Zoho-oauthtoken " + t }, signal: AbortSignal.timeout(30000) });
   const j = await r.json().catch(() => null);
   if (!r.ok || !j) throw Object.assign(new Error((j && j.message) || "Error de Zoho Books " + r.status), { status: 502 });
@@ -397,9 +397,10 @@ async function handle(req, res) {
   if (p === "/api/books/invoices" && M === "POST") {
     if (lvl(U, "contabilidad.facturas") < 1) return fail(res, 403, "Sin acceso al control de facturas.");
     const b = await readBody(req, 5000); const qp = b.query_params || {};
-    const prefix = String(qp.invoice_number_startswith || ""); const page = Math.max(1, Math.min(50, +qp.page || 1));
-    if (!/^[A-Z0-9\-]{1,20}$/.test(prefix)) return fail(res, 400, "Serie de facturas no válida.");
-    try { return send(res, 200, { payload: await booksInvoices(prefix, page) }); }
+    const mode = qp.invoice_number_contains != null ? "contains" : "startswith";
+    const prefix = String((mode === "contains" ? qp.invoice_number_contains : qp.invoice_number_startswith) || ""); const page = Math.max(1, Math.min(50, +qp.page || 1));
+    if (!/^[A-Z0-9.\-]{1,20}$/.test(prefix) || prefix.length < 3) return fail(res, 400, "Serie de facturas no válida.");
+    try { return send(res, 200, { payload: await booksInvoices(prefix, page, mode) }); }
     catch (e) { return fail(res, e.status || 502, e.message || "Error al consultar Zoho Books"); }
   }
   /* --- Zoho (solo lectura) --- */
