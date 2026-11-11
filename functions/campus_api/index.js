@@ -25,14 +25,13 @@ const CFG = {
   },
 };
 const makeStore = require(env("CE_STORE_MODULE", "./store.js"));
-const makeDashboard = require("./dashboard.js");
 
 /* ---------- catálogo de permisos ---------- */
 const CATALOG = [
   { k: "registros", b: "Registros", l: "Registros", subs: [["madrid", "Madrid (semanas)"], ["campus", "Nacionales e institucionales"], ["todos", "Todos los registros"]] },
   { k: "horarios", b: "Operativa", l: "Horarios", subs: [["semanas", "Horarios de las semanas"], ["campus", "Nacionales"], ["simulador", "Simulador"]] },
   { k: "equipos", b: "Operativa", l: "Equipos", subs: [["madrid", "Madrid (semanas)"], ["campus", "Nacionales e institucionales"]] },
-  { k: "contabilidad", b: "Administración", l: "Contabilidad", subs: [["pagos", "Pagos"], ["devoluciones", "Devoluciones"], ["cancelaciones", "Cancelaciones"], ["facturas", "Control de facturas"]] },
+  { k: "contabilidad", b: "Administración", l: "Contabilidad", subs: [["pagos", "Pagos"], ["devoluciones", "Devoluciones"], ["cancelaciones", "Cancelaciones"], ["facturas", "Control de facturas"], ["ingresos", "Ingresos"]] },
   { k: "atencion", b: "Atención al público", l: "Atención al público", subs: [["general", "Atención al público"]] },
   { k: "marketing", b: "Marketing", l: "Marketing", subs: [["general", "Marketing"]] },
   { k: "rrhh", b: "Recursos Humanos", l: "Recursos Humanos", subs: [["general", "Recursos Humanos"]] },
@@ -50,6 +49,7 @@ const COLS = {
   hweek: { read: u => anyOf(u, "horarios"), write: (u, id) => lvl(u, String(id).startsWith("c-") ? "horarios.campus" : "horarios.semanas") >= 2 },
   happr: { read: u => anyOf(u, "horarios"), write: (u, id) => lvl(u, String(id).startsWith("c-") ? "horarios.campus" : "horarios.semanas") >= 2 },
   hbus:  { read: u => anyOf(u, "horarios"), write: (u, id) => lvl(u, String(id).startsWith("c-") ? "horarios.campus" : "horarios.semanas") >= 2 },
+  ing:   { read: u => lvl(u, "contabilidad.ingresos") >= 1, write: u => lvl(u, "contabilidad.ingresos") >= 2 },
   hsim:  { read: u => lvl(u, "horarios.simulador") >= 1, write: u => lvl(u, "horarios.simulador") >= 2 },
 };
 const canZoho = u => ["registros", "equipos", "horarios", "contabilidad"].some(a => anyOf(u, a));
@@ -119,26 +119,6 @@ async function zohoStatusOf(zohoId) {
     if (status >= 400) return json && json.code === "INVALID_DATA" ? "inactive" : "unknown";
     const u = (json.users || [])[0]; return u && u.status === "active" && u.confirm !== false ? "active" : "inactive";
   } catch (e) { return "unknown"; }
-}
-
-/* ---------- dashboard de registros (antes en claude.ai) ---------- */
-const dashBuild = makeDashboard(q => zohoCoql(q));
-const DASH = { data: null, t: 0, busy: null, ttl: +env("CE_DASH_TTL_MIN", 15) * 60000 };
-const dashN = d => { const r = d && (d.kpis || []).find(x => x.metric === "n"); return r ? +r.value : 0; };
-async function dashGet(st, force) {
-  /* otra instancia de la función puede haber actualizado: se mira la marca guardada */
-  let saved = 0; try { const r = await st.meta.get("dash_ts"); saved = r ? +r.v || 0 : 0; } catch (e) {}
-  if (saved > DASH.t) { try { const d = (await st.docs.list("dash")).data; if (d) { DASH.data = d; DASH.t = saved; } } catch (e) {} }
-  const age = Date.now() - DASH.t;
-  if (DASH.data && age < (force ? 60000 : DASH.ttl)) return { data: DASH.data };
-  if (!DASH.busy) DASH.busy = (async () => {
-    const D = await dashBuild(dashN(DASH.data));
-    const now = Date.now();
-    await st.docs.put("dash", "data", D, null); await st.meta.set("dash_ts", String(now));
-    DASH.data = D; DASH.t = now; return D;
-  })().finally(() => { DASH.busy = null; });
-  try { return { data: await DASH.busy }; }
-  catch (e) { if (DASH.data && !force) return { data: DASH.data, stale: e.message }; throw e; }
 }
 
 /* Zoho Books: listado de facturas de una serie (solo lectura) */
@@ -272,20 +252,6 @@ async function handle(req, res) {
     return send(res, 200, js, { "Content-Type": "text/javascript; charset=utf-8" });
   }
 
-  /* dashboard.js: los datos del dashboard de registros (todos los usuarios con sesión) */
-  if (p === "/dashboard.js" && M === "GET") {
-    const S0 = await sessionOf(); const JS = { "Content-Type": "text/javascript; charset=utf-8" };
-    if (!S0) return send(res, 200, 'location.replace(' + JSON.stringify(CFG.loginUrl) + ');document.documentElement.style.display="none";', JS);
-    if (S0.u.must_change) return send(res, 200, 'location.replace(' + JSON.stringify(CFG.loginUrl + "?cambio=1") + ');document.documentElement.style.display="none";', JS);
-    try {
-      const r = await dashGet(st, false);
-      return send(res, 200, "window.CE_DATA=" + JSON.stringify(r.data).replace(/</g, "\\u003c") + ";" + (r.stale ? "window.CE_DATA_WARN=" + JSON.stringify(r.stale).replace(/</g, "\\u003c") + ";" : ""), JS);
-    } catch (e) {
-      console.error(e);
-      return send(res, 200, "window.CE_DATA=null;window.CE_DATA_ERR=" + JSON.stringify(e.status ? e.message : "Error interno").replace(/</g, "\\u003c") + ";", JS);
-    }
-  }
-
   const S = await sessionOf();
   if (!S) return fail(res, 401, "Sesión caducada. Vuelve a entrar.");
   const U = S.u;
@@ -327,7 +293,7 @@ async function handle(req, res) {
   }
   /* --- Zoho Books (solo lectura): facturas para el control de facturación --- */
   if (p === "/api/books/invoices" && M === "POST") {
-    if (lvl(U, "contabilidad.facturas") < 1) return fail(res, 403, "Sin acceso al control de facturas.");
+    if (lvl(U, "contabilidad.facturas") < 1 && lvl(U, "contabilidad.ingresos") < 1) return fail(res, 403, "Sin acceso a las facturas.");
     const b = await readBody(req, 5000); const qp = b.query_params || {};
     const mode = qp.invoice_number_contains != null ? "contains" : "startswith";
     const prefix = String((mode === "contains" ? qp.invoice_number_contains : qp.invoice_number_startswith) || ""); const page = Math.max(1, Math.min(50, +qp.page || 1));
@@ -342,13 +308,6 @@ async function handle(req, res) {
     const hit = Z.cache.get(q); if (hit && !b.refresh && Date.now() - hit.t < 60000) return send(res, 200, { payload: hit.v });
     try { const v = await zohoCoql(q); Z.cache.set(q, { t: Date.now(), v }); if (Z.cache.size > 300) Z.cache.delete(Z.cache.keys().next().value); return send(res, 200, { payload: v }); }
     catch (e) { return fail(res, e.status || 502, e.message || "Error al consultar Zoho"); }
-  }
-
-  /* --- dashboard de registros: actualizar ahora (cualquier usuario con sesión) --- */
-  if (p === "/api/dashboard/refresh" && M === "POST") {
-    if (!zohoConfigured()) return fail(res, 503, "El servidor no tiene configurada la conexión con Zoho CRM.");
-    try { const r = await dashGet(st, true); await audit(U, "dashboard_actualizado", ""); return send(res, 200, { ok: true, ts: r.data.ts }); }
-    catch (e) { if (!e.status) console.error(e); return fail(res, e.status || 502, e.status ? e.message : "Error al leer Zoho CRM"); }
   }
 
   /* --- administración --- */

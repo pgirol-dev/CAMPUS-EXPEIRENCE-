@@ -792,6 +792,68 @@ table.oplist th .fsel.on{background:var(--pink);border-color:var(--pink);color:v
 .pbx[aria-pressed="true"] .pc2{color:#ff8aa5}
 .pbx[aria-pressed="true"] .ps2{color:color-mix(in srgb,var(--navy-ink) 70%,transparent)}
 .paylist{display:flex;flex-direction:column;gap:4px;max-width:1000px}
+/* ingresos */
+.inggrid{grid-template-columns:repeat(5,minmax(0,1fr))}
+@media (max-width:900px){.inggrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.pbx.gb-pend::before{background:var(--pink)} .pbx.gb-ok::before{background:var(--green)} .pbx.gb-rev::before{background:var(--bad)} .pbx.gb-sum::before{background:var(--navy)}
+.pbx.gb-sum{cursor:default} .pbx.gb-sum:hover{transform:none;box-shadow:none} .pbx.gb-sum .pc2{font-size:1.7rem}
+#ingCamp{border:1px solid var(--line);background:var(--field);color:var(--ink);border-radius:96px;padding:8px 12px;font:600 12.5px var(--f-body)}
+.inglist{display:flex;flex-direction:column;gap:6px;max-width:1100px}
+.ingm{display:flex;align-items:baseline;gap:12px;margin:14px 0 2px;font-family:var(--f-wide);font-style:italic;font-weight:900;font-stretch:125%;text-transform:uppercase;font-size:.9rem}
+.ingm span{font-family:var(--f-body);font-style:normal;font-weight:600;font-stretch:100%;text-transform:none;font-size:12px;color:var(--ink-3)}
+.ingm b{margin-left:auto;font-family:var(--f-serif);font-style:italic;font-weight:400;font-size:1.25rem;text-transform:none;color:var(--pink)}
+.ingd{border-radius:8px;background:var(--surface-2);box-shadow:inset 4px 0 0 var(--ink-3);overflow:hidden}
+.ingd.st-ok{box-shadow:inset 4px 0 0 var(--green)} .ingd.st-pend{box-shadow:inset 4px 0 0 var(--pink)} .ingd.st-rev{box-shadow:inset 4px 0 0 var(--bad);background:var(--bad-soft)}
+.ingh{display:grid;grid-template-columns:28px minmax(150px,1.2fr) 90px minmax(110px,.8fr) minmax(220px,1.6fr) auto;gap:12px;align-items:center;padding:10px 14px 10px 16px;cursor:pointer}
+.ingh:hover{background:color-mix(in srgb,var(--ink) 5%,transparent)}
+.ingh .chev{all:unset;cursor:pointer;display:grid;place-items:center;width:24px;height:24px;border-radius:6px;transition:transform .2s}
+.ingd.open .ingh .chev{transform:rotate(90deg)}
+.ingh .dd2{display:flex;flex-direction:column;min-width:0}
+.ingh .dd2 b{font-weight:800;text-transform:capitalize}
+.ingh .dd2 small{font-size:11px;color:var(--ink-3)}
+.ingh .np{font-size:12px;color:var(--ink-2)}
+.ingh .tot{font-family:var(--f-serif);font-style:italic;font-size:1.5rem;line-height:1;text-align:right}
+.ingbank{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.ingbank label{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3)}
+.ingbank input{width:104px;border:1px solid var(--line);background:var(--field);color:var(--ink);border-radius:96px;padding:6px 10px;font:600 12.5px var(--f-body);text-align:right}
+.ingdiff{font-size:12px;font-weight:800;padding:4px 9px;border-radius:96px}
+.ingdiff.ok{background:color-mix(in srgb,var(--green) 22%,transparent);color:var(--ink)} .ingdiff.ko{background:var(--bad);color:var(--on-hot)}
+.ingact{display:flex;align-items:center;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.ingok{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:96px;font:800 10.5px var(--f-body);letter-spacing:.06em;text-transform:uppercase;background:var(--navy);color:var(--navy-ink);white-space:nowrap}
+.ingok:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+.ingok.done{background:var(--green);color:var(--on-green)}
+.ingok.rev{background:var(--bad);color:var(--on-hot)}
+.ingok[disabled]{cursor:default}
+.ingwho{font-size:11px;color:var(--ink-3);text-align:right;line-height:1.25}
+.ingwho b{color:var(--ink-2)}
+.ingrev{padding:0 16px 10px 56px;font-size:12px;font-weight:600;color:var(--bad)}
+.ingp{display:none;border-top:1px solid var(--line);padding:6px 10px 10px 50px}
+.ingd.open .ingp{display:block}
+.ingr{display:grid;grid-template-columns:62px minmax(180px,1.6fr) 96px 100px minmax(140px,1fr) 96px;gap:10px;align-items:center;padding:7px 6px;border-bottom:1px dashed var(--line);font-size:12.5px}
+.ingr:last-child{border-bottom:0}
+.ingr .hr{font-family:var(--f-mono);font-size:12px}
+.ingr .hr.n23{color:var(--pink);font-weight:800}
+.ingr .who{display:flex;flex-direction:column;min-width:0;cursor:pointer}
+.ingr .who b{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ingr .who small{color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ingr .cp{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-2)}
+.ingr .am{text-align:right;font-weight:800}
+.ingr .fl{grid-column:2/-1;font-size:11px;font-weight:600;color:var(--bad)}
+.ingr .fl.soft{color:var(--ink-3)}
+.ingr .ichip{justify-self:start}
+.ingnote{font-size:12px;color:var(--ink-3);max-width:1100px}
+html.no-ing-edit .ingbank input{pointer-events:none;border-color:transparent;background:transparent}
+@media (max-width:900px){
+  .ingh{grid-template-columns:24px 1fr auto;row-gap:8px}
+  .ingh .np{grid-column:2}
+  .ingh .tot{grid-column:3;grid-row:1}
+  .ingbank,.ingact{grid-column:1/-1;justify-content:flex-start}
+  .ingp{padding-left:12px}
+  .ingr{grid-template-columns:52px 1fr auto;row-gap:2px}
+  .ingr .cp,.ingr .cmp{grid-column:2}
+  .ingr .am{grid-column:3;grid-row:1}
+  .ingr .ichip{grid-column:2/-1}
+}
 .prow{display:grid;grid-template-columns:minmax(200px,1.4fr) 118px 120px minmax(0,1.6fr);gap:12px;align-items:center;padding:8px 12px;border-radius:6px;background:var(--surface-2);cursor:pointer}
 .prow:hover{background:color-mix(in srgb,var(--ink) 10%,var(--bg))}
 .prow.ps-late{background:var(--bad-soft);box-shadow:inset 4px 0 0 var(--bad)}
@@ -1568,6 +1630,12 @@ html.sb-min .sfh{display:block;font-family:var(--f-wide);font-style:italic;font-
     <div class="paylist" id="invList"></div>
     <div id="invOrph"></div>
   </section>
+  <section id="view-ingresos" class="stack" hidden>
+    <div class="eqhead"><div class="eqtitlebox"><h2 class="eqtitle">Ingresos</h2><span class="sub" id="ingSub"></span></div><button class="btn" type="button" id="ingRefresh">Actualizar</button></div>
+    <div class="paygrid inggrid" id="ingBoxes" role="group" aria-label="Estado de los días"></div>
+    <div class="filters"><input type="search" id="ingQ" placeholder="Buscar familia, jugador o factura" aria-label="Buscar"><select id="ingCamp" aria-label="Campus"></select><span class="count" id="ingCount"></span></div>
+    <div id="ingList" class="inglist"></div>
+  </section>
   <section id="view-pagos" class="stack" hidden>
   <div class="stack">
     <div class="eqhead"><div class="eqtitlebox"><h2 class="eqtitle">Contabilidad</h2><span class="sub" id="payToday"></span></div>
@@ -2057,7 +2125,7 @@ function exportCsv(){
 }
 
 /* events */
-const VIEWS=["inicio","temporada","registros","operativa","horarios","equipos","administracion","pagos","facturas","atencion","marketing","rrhh"];
+const VIEWS=["inicio","temporada","registros","operativa","horarios","equipos","administracion","pagos","facturas","ingresos","atencion","marketing","rrhh"];
 function show(v){
   if(v==="contabilidad")v="pagos";if(v==="recursos-humanos")v="rrhh";if(v==="atencion-al-publico")v="atencion";
   if(!VIEWS.includes(v))v="inicio";
@@ -2067,6 +2135,7 @@ function show(v){
   if(v==="equipos")try{renderEquipos()}catch(e){}
   if(v==="pagos")try{renderPagos()}catch(e){}
   if(v==="facturas")try{renderFacturas();if(!INV.list&&!INV.busy)loadBooks(false)}catch(e){}
+  if(v==="ingresos")try{renderIngresos();if(!INV.list&&!INV.busy)loadBooks(false)}catch(e){}
   try{if(window.__hub)window.__hub(v)}catch(e){}
   window.scrollTo(0,0);try{sbSync()}catch(e){}
 }
@@ -3806,7 +3875,7 @@ const invSeries=n=>{n=String(n||"");return n.startsWith(INV_PREFIX)?INV_PREFIX:(
 const r2=n=>Math.round((+n||0)*100)/100;
 async function loadBooks(force){
   if(!S.mcp||INV.busy)return;
-  if(window.CE_ACL&&!(window.CE_ACL.admin||(window.CE_ACL.perms||{})["contabilidad.facturas"]))return;INV.busy=true;INV.err="";renderFacturas();
+  if(window.CE_ACL&&!(window.CE_ACL.admin||(window.CE_ACL.perms||{})["contabilidad.facturas"]||(window.CE_ACL.perms||{})["contabilidad.ingresos"]))return;INV.busy=true;INV.err="";renderFacturas();try{renderIngresos()}catch(e){}
   try{const all=[],seen=new Set();
     for(const [qk,qv] of INV_SERIES)for(let page=1;page<=25;page++){
       const res=await S.mcp.callTool("Zoho Books","list_invoices",{query_params:{organization_id:BOOKS_ORG,[qk]:qv,per_page:200,page}},{cache:{staleTime:60000,gcTime:600000,refresh:!!force}});
@@ -3817,7 +3886,7 @@ async function loadBooks(force){
     INV.list=all;INV.at=new Date()}
   catch(e){const c=e&&e.code;
     INV.err=c==="server_not_connected"?"Zoho Books no está conectado. Añádelo en claude.ai → Configuración → Conectores.":c==="needs_reauth"?"Vuelve a conectar Zoho Books en claude.ai → Configuración → Conectores.":c==="not_in_manifest"||c==="approval_required"?"Falta dar permiso a esta página para leer Zoho Books.":c==="blocked_by_policy"?"Tu organización no permite leer Zoho Books desde aquí.":"No se han podido leer las facturas de Zoho Books"+(e&&e.message?" ("+e.message+")":"")+"."}
-  INV.busy=false;renderFacturas();try{sbSync()}catch(e){}}
+  INV.busy=false;renderFacturas();try{renderIngresos()}catch(e){}try{sbSync()}catch(e){}}
 function invCheck(){
   const AR=S.allRows||[],L=(INV.list||[]).filter(i=>i.status!=="void"&&i.status!=="draft");
   const ids=new Set(AR.map(r=>String(r.id))),byDeal={},byEmail={},orph=[];
@@ -3872,6 +3941,104 @@ $("invBoxes").addEventListener("click",e=>{const b=e.target.closest("[data-if]")
 $("invQ").addEventListener("input",e=>{INV.q=e.target.value;renderFacturas()});
 $("invRefresh").addEventListener("click",()=>loadBooks(true));
 $("invList").addEventListener("click",e=>{if(e.target.closest("a"))return;const row=e.target.closest("[data-pid]");if(!row)return;if(typeof openDrawer==="function")openDrawer(row.dataset.pid)});
+/* ===== INGRESOS =====
+   Cobros de Zoho Books agrupados por «día de la plataforma de pago»: el día cierra a las 23:00, hora de España
+   (un cobro a las 23:01 del lunes cuenta en el martes). La hora del cobro sale de la referencia de la factura
+   (aaaammddhhmm, en UTC); si no la trae, se usa la hora en que Books registró la factura y se marca como aproximada.
+   Cuadrar un día guarda quién y cuándo, el total y las facturas de ese momento: si después cambia, el día pasa a «Revisar». */
+var ING={f:"pend",q:"",camp:"",open:new Set(),docs:{},me:null};
+const ING_TZ=new Intl.DateTimeFormat("en-GB",{timeZone:"Europe/Madrid",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"});
+function ingLocal(d){const p={};ING_TZ.formatToParts(d).forEach(x=>{p[x.type]=x.value});return {y:+p.year,m:+p.month,d:+p.day,h:+p.hour%24,mi:+p.minute}}
+const ingKey=(y,m,d)=>new Date(Date.UTC(y,m-1,d)).toISOString().slice(0,10);
+function ingWhen(i){const m=/^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})/.exec(String(i.reference_number||""));let d=null,exact=false;
+  if(m&&+m[1]>2020&&+m[2]<=12&&+m[4]<24){d=new Date(Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5]));exact=!isNaN(d)}
+  if(!exact)d=i.created_time?new Date(i.created_time):i.date?new Date(i.date+"T12:00:00Z"):null;
+  if(!d||isNaN(d))return null;
+  const L=ingLocal(d);const late=L.h>=23;
+  return {d,day:late?ingKey(L.y,L.m,L.d+1):ingKey(L.y,L.m,L.d),hm:String(L.h).padStart(2,"0")+":"+String(L.mi).padStart(2,"0"),late,exact}}
+const ING_SER={VAL:"val",MAL:"mal",AND:"and",ALM:"alm",ALI:"ali"};
+function ingRows(){const byId={};(S.allRows||[]).forEach(r=>{byId[String(r.id)]=r});const perDeal={};
+  const out=(INV.list||[]).filter(i=>i.status!=="void"&&i.status!=="draft").map(i=>{const w=ingWhen(i);const dm=/-(\d{12,})$/.exec(i.reference_number||"");const r=dm?byId[dm[1]]||null:null;
+    const ser=invSeries(i.invoice_number);const camp=r?(r.camp||"mad"):ser===INV_PREFIX?"mad":(ING_SER[ser.replace(/27$/,"")]||"");
+    const o={i,w,r,deal:dm?dm[1]:null,camp,player:i.cf_jugador||i.cf_player_name||(r&&r.name)||"",fam:i.customer_name||"",amt:r2(i.total)};
+    if(o.deal)(perDeal[o.deal]=perDeal[o.deal]||[]).push(o);return o});
+  Object.values(perDeal).forEach(a=>{a.sort((x,y)=>(x.w?+x.w.d:0)-(y.w?+y.w.d:0));a.forEach((o,k)=>{o.n=k+1;o.of=a.length})});
+  out.forEach(o=>{o.cp=!o.deal?(Math.abs(o.amt-50)<.01?"Reserva":"Pago"):(o.of===1&&o.r&&o.r.d&&Math.abs(r2(o.r.d.Total)-o.amt)<.01)?"Pago completo":(["1er","2º","3er"][o.n-1]||o.n+"º")+" pago"});
+  return out}
+function ingDays(rows){const by={};rows.forEach(o=>{if(o.w)(by[o.w.day]=by[o.w.day]||[]).push(o)});
+  return Object.entries(by).map(([day,ps])=>{ps.sort((a,b)=>a.w.d-b.w.d);const total=r2(ps.reduce((a,o)=>a+o.amt,0));const doc=ING.docs["d"+day]||null;const sig=ps.map(o=>o.i.invoice_number).sort().join(",");
+    let st="pend",chg=null;if(doc&&doc.ok){if(Math.abs(r2(doc.total)-total)<.01&&doc.sig===sig)st="ok";else{st="rev";const A=new Set(String(doc.sig||"").split(",").filter(Boolean)),B=new Set(sig.split(","));chg={add:[...B].filter(x=>!A.has(x)),del:[...A].filter(x=>!B.has(x)),was:r2(doc.total)}}}
+    return {day,ps,total,doc,sig,st,chg}}).sort((a,b)=>b.day.localeCompare(a.day))}
+const ingEdit=()=>!window.CE_ACL||!!window.CE_ACL.admin||(((window.CE_ACL.perms||{})["contabilidad.ingresos"]||0)>=2);
+const ingDate=(k,o)=>new Date(k+"T12:00:00Z").toLocaleDateString("es-ES",Object.assign({timeZone:"UTC"},o));
+const ingNum=v=>{v=String(v||"").replace(/[\s€]/g,"");if(!v)return null;if(v.includes(","))v=v.replace(/\./g,"").replace(",",".");const n=+v;return isNaN(n)?NaN:r2(n)};
+function ingPendCount(){if(!INV.list)return null;try{return ingDays(ingRows()).filter(d=>d.st!=="ok").length}catch(e){return null}}
+function renderIngresos(){
+  if($("view-ingresos").hidden)return;
+  document.documentElement.classList.toggle("no-ing-edit",!ingEdit());
+  $("ingSub").textContent=INV.busy?"Leyendo Zoho Books…":"Cobros de Zoho Books por día de la plataforma de pago (de 23:00 a 22:59)"+(INV.at?" · actualizado a las "+INV.at.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"}):"");
+  $("ingRefresh").disabled=INV.busy;
+  const cs=CAMPS.filter(c=>c.kind!=="inst");$("ingCamp").innerHTML='<option value="">Todos los campus</option>'+cs.map(c=>'<option value="'+c.id+'"'+(ING.camp===c.id?" selected":"")+">"+esc(c.n)+"</option>").join("");
+  if(INV.err&&!INV.list){$("ingBoxes").innerHTML="";$("ingCount").textContent="";$("ingList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Sin datos de Zoho Books</h3><p>'+esc(INV.err)+"</p></div>";return}
+  if(!INV.list){$("ingBoxes").innerHTML="";$("ingCount").textContent="";$("ingList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Cargando cobros…</h3></div>';return}
+  const days=ingDays(ingRows());const cnt={pend:0,rev:0,ok:0,all:days.length};days.forEach(d=>cnt[d.st]++);
+  const tot=r2(days.reduce((a,d)=>a+d.total,0)),np=days.reduce((a,d)=>a+d.ps.length,0);const first=days.length?days[days.length-1].day:null;
+  const BX=[["pend","Por cuadrar","Días sin marcar"],["rev","Revisar","Han cambiado después de cuadrar"],["ok","Cuadrados","Marcados como correctos"],["all","Todos","Todos los días con cobros"]];
+  $("ingBoxes").innerHTML=BX.map(([k,t,sub])=>'<button type="button" class="pbx gb-'+k+'" data-gf="'+k+'" aria-pressed="'+(ING.f===k)+'"><span class="pt2">'+t+'</span><span class="pc2">'+cnt[k]+'</span><span class="ps2">'+sub+"</span></button>").join("")+
+    '<div class="pbx gb-sum" aria-label="Total cobrado"><span class="pt2">Total cobrado</span><span class="pc2">'+eur(tot)+'</span><span class="ps2">'+np+" cobros"+(first?" desde el "+ingDate(first,{day:"numeric",month:"short"}):"")+"</span></div>";
+  const nrm=t=>String(t).normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();const q=nrm(ING.q.trim());
+  const match=o=>(!ING.camp||o.camp===ING.camp)&&(!q||nrm(o.fam+" "+o.player+" "+o.i.invoice_number+" "+(o.r?o.r.code:"")).includes(q));
+  const filt=!!(q||ING.camp);
+  let list=days.filter(d=>ING.f==="all"||d.st===ING.f);if(filt)list=list.filter(d=>d.ps.some(match));
+  $("ingCount").textContent=list.length+" días";
+  if(!list.length){$("ingList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">'+(ING.f==="pend"&&!filt?"Todo cuadrado":ING.f==="rev"&&!filt?"Nada que revisar":"Ningún día")+"</h3></div>";return}
+  const ed=ingEdit();let h="",curM="";
+  const mt={};list.forEach(d=>{const m=d.day.slice(0,7);mt[m]=mt[m]||{n:0,t:0};mt[m].n++;mt[m].t=r2(mt[m].t+d.total)});
+  list.forEach(d=>{const m=d.day.slice(0,7);
+    if(m!==curM){curM=m;h+='<div class="ingm">'+esc(ingDate(m+"-15",{month:"long",year:"numeric"}))+"<span>"+mt[m].n+" días</span><b>"+eur(mt[m].t)+"</b></div>"}
+    const prev=ingKey(+d.day.slice(0,4),+d.day.slice(5,7),+d.day.slice(8)-1);
+    const bank=d.doc&&d.doc.bank!=null?+d.doc.bank:null;const diff=bank==null?null:r2(bank-d.total);
+    const shown=filt?d.ps.filter(match):d.ps;const sub=filt?r2(shown.reduce((a,o)=>a+o.amt,0)):null;
+    const who=d.doc&&d.doc.ok?'<span class="ingwho">'+(d.st==="rev"?"Cuadrado antes por ":"Cuadrado por ")+"<b>"+esc(d.doc.byName||"—")+"</b><br>"+esc(d.doc.at?new Date(d.doc.at).toLocaleString("es-ES",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}):"")+"</span>":"";
+    const btn=d.st==="ok"?'<button type="button" class="ingok done" data-ingok="'+d.day+'"'+(ed?' title="Quitar la marca"':" disabled")+'>✓ Cuadrado</button>':d.st==="rev"?'<button type="button" class="ingok rev" data-ingok="'+d.day+'"'+(ed?"":" disabled")+">Volver a cuadrar</button>":(ed?'<button type="button" class="ingok" data-ingok="'+d.day+'">Marcar cuadrado</button>':'<span class="ingwho">Por cuadrar</span>');
+    const open=ING.open.has(d.day)||(filt&&shown.length<=6);
+    h+='<div class="ingd st-'+d.st+(open?" open":"")+'" data-ingday="'+d.day+'"><div class="ingh" data-ingtog="'+d.day+'"><button type="button" class="chev" aria-label="Ver los cobros" aria-expanded="'+open+'"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>'+
+      '<span class="dd2"><b>'+esc(ingDate(d.day,{weekday:"long",day:"numeric",month:"short"}))+"</b><small>23:00 del "+esc(ingDate(prev,{day:"numeric"}))+" → 22:59 del "+esc(ingDate(d.day,{day:"numeric"}))+"</small></span>"+
+      '<span class="np">'+d.ps.length+" cobro"+(d.ps.length>1?"s":"")+(filt?"<br><small>filtrado: "+eur(sub)+"</small>":"")+'</span><span class="tot">'+eur(d.total)+"</span>"+
+      '<span class="ingbank"><label>Banco <input type="text" inputmode="decimal" data-ingbank="'+d.day+'" value="'+(bank==null?"":String(bank).replace(".",","))+'" placeholder="Importe" aria-label="Importe del banco el '+esc(d.day)+'"></label>'+(diff==null?"":Math.abs(diff)<.01?'<span class="ingdiff ok">Cuadra</span>':'<span class="ingdiff ko">'+(diff>0?"+":"")+eur(diff)+"</span>")+"</span>"+
+      '<span class="ingact">'+who+btn+"</span></div>";
+    if(d.st==="rev"&&d.chg)h+='<div class="ingrev">Ha cambiado desde que se cuadró: antes '+eur(d.chg.was)+", ahora "+eur(d.total)+(d.chg.add.length?" · nuevas: "+esc(d.chg.add.join(", ")):"")+(d.chg.del.length?" · ya no están: "+esc(d.chg.del.join(", ")):"")+"</div>";
+    h+='<div class="ingp">'+shown.map(o=>{const c=campById(o.camp);const fl=[];
+        if(o.deal&&!o.r)fl.push("La inscripción no está activa en el software (baja, devolución o borrada)");
+        if(+o.i.balance>0)fl.push("Books no tiene registrado el cobro de esta factura (pendiente "+eur(o.i.balance)+")");
+        const soft=[];if(o.w.late)soft.push("Pagado después de las 23:00: cuenta en este día");
+        return '<div class="ingr"><span class="hr'+(o.w.late?" n23":"")+'" title="'+(o.w.exact?"Hora del cobro":"Hora aproximada: la referencia no trae la hora del cobro; es la hora en que Books registró la factura")+(o.w.late?" · después de las 23:00: cuenta en el día siguiente":"")+'">'+(o.w.exact?"":"≈")+o.w.hm+'</span>'+
+          '<span class="who"'+(o.r?' data-ingpid="'+esc(o.r.id)+'"':"")+'><b>'+esc(o.player||o.fam||"—")+"</b><small>"+esc(o.player&&o.fam&&o.fam!==o.player?o.fam:(o.i.email||""))+"</small></span>"+
+          '<span class="cmp">'+(c?'<span class="ctag ct-'+c.kind+'">'+esc(c.n)+"</span>":"")+'</span><span class="cp">'+esc(o.cp)+"</span>"+
+          '<a class="ichip'+(+o.i.balance>0?" ko":"")+'" href="'+booksUrl(o.i)+'" target="_blank" rel="noopener" title="Abrir la factura en Zoho Books">'+esc(o.i.invoice_number)+"</a>"+
+          '<span class="am">'+eur(o.amt)+"</span>"+(fl.length?'<span class="fl">'+esc(fl.join(" · "))+"</span>":"")+(soft.length?'<span class="fl soft">'+esc(soft.join(" · "))+"</span>":"")+"</div>"}).join("")+"</div></div>"});
+  h+='<p class="ingnote">El día de la plataforma va de las 23:00 del día anterior a las 22:59 (hora de España). La hora sale de la referencia de cada factura; «≈» indica hora aproximada.</p>';
+  $("ingList").innerHTML=h;
+}
+async function ingSave(day,patch,msg){if(!S.db){toast("No se puede guardar en esta vista");return}
+  const k="d"+day;const doc=Object.assign({},ING.docs[k]||{},patch,{updatedAt:new Date().toISOString()});if(S.me)doc.updatedBy=S.me;
+  ING.docs[k]=doc;renderIngresos();
+  try{await S.db.collection("ing").doc(k).set(doc);if(msg)toast(msg)}catch(e){toast(e&&e.code==="permission_denied"?"No tienes permiso para cuadrar ingresos":"No se pudo guardar. Vuelve a intentarlo.")}}
+async function ingMe(){if(ING.me)return ING.me;try{ING.me=S.user?await S.user.me():null}catch(e){}return ING.me||{}}
+$("ingBoxes").addEventListener("click",e=>{const b=e.target.closest("[data-gf]");if(!b)return;ING.f=b.dataset.gf;renderIngresos()});
+$("ingQ").addEventListener("input",e=>{ING.q=e.target.value;renderIngresos()});
+$("ingCamp").addEventListener("change",e=>{ING.camp=e.target.value;renderIngresos()});
+$("ingRefresh").addEventListener("click",()=>loadBooks(true));
+$("ingList").addEventListener("click",async e=>{let b;
+  if(e.target.closest("a")||e.target.closest("input")||e.target.closest("label"))return;
+  if((b=e.target.closest("[data-ingok]"))){if(b.disabled||!ingEdit())return;const day=b.dataset.ingok;const d=ingDays(ingRows()).find(x=>x.day===day);if(!d)return;
+    if(d.st==="ok"){ingSave(day,{ok:false},"Marca quitada");return}
+    const me=await ingMe();ingSave(day,{ok:true,total:d.total,n:d.ps.length,sig:d.sig,at:new Date().toISOString(),by:S.me||null,byName:me.name||""},"Día cuadrado");return}
+  if((b=e.target.closest("[data-ingpid]"))){if(typeof openDrawer==="function")openDrawer(b.dataset.ingpid);return}
+  if((b=e.target.closest("[data-ingtog]"))){const day=b.dataset.ingtog;if(ING.open.has(day))ING.open.delete(day);else ING.open.add(day);renderIngresos()}});
+$("ingList").addEventListener("change",e=>{const el=e.target.closest("[data-ingbank]");if(!el)return;if(!ingEdit()){renderIngresos();return}const v=ingNum(el.value);if(Number.isNaN(v)){toast("Importe no válido");renderIngresos();return}
+  ingSave(el.dataset.ingbank,{bank:v},v==null?"Importe del banco borrado":"Importe del banco guardado")});
+$("ingList").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.matches("[data-ingbank]"))e.target.blur()});
 $("payBoxes").addEventListener("click",e=>{const b=e.target.closest("[data-pf]");if(!b)return;PAY.f=b.dataset.pf;renderPagos()});
 $("payQ").addEventListener("input",e=>{PAY.q=e.target.value;renderPagos()});
 $("payList").addEventListener("click",e=>{const row=e.target.closest("[data-pid]");if(!row)return;const r=(S.allRows||S.rows).find(x=>x.id===row.dataset.pid);if(r&&typeof openDrawer==="function")openDrawer(r.id)});
@@ -3889,6 +4056,7 @@ renderRegistros();
     db.collection("hbus").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});H.busOv=m;renderHorarios()},()=>{});
     db.collection("happr").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});H.appr=m;renderHorarios()},()=>{});
     db.collection("hweek").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});H.wk=m;renderHorarios()},()=>{});
+    db.collection("ing").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});ING.docs=m;try{renderIngresos()}catch(e){}},()=>{});
     db.collection("hor").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});H.docs=m;renderHorarios()},()=>{});
     db.collection("ops").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});S.ops=m;if(S.rows.length)render();
       if(S.open&&draft&&m[S.open]&&m[S.open].updatedAt!==draft.updatedAt&&$("dMeta")){$("dMeta").textContent="Otra persona ha actualizado este seguimiento. Cierra y vuelve a abrir la ficha para verlo."}
@@ -3905,6 +4073,7 @@ renderRegistros();
 /* ===== BARRA LATERAL: navegación entre apartados ===== */
 const SVG=p=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+p+"</svg>";
 const SB_IC={
+  ingresos:SVG('<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6.5 9.5v5M17.5 9.5v5"/>'),
   inicio:SVG('<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/>'),
   registros:SVG('<circle cx="9" cy="8" r="3.2"/><path d="M3.5 19.5c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><path d="M16 5.2a3 3 0 0 1 0 5.6M18 14.6c1.5.7 2.4 2.3 2.7 4.9"/>'),
   horarios:SVG('<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><path d="M12 12.5V15l1.8 1.2"/>'),
@@ -3932,18 +4101,18 @@ Object.assign(SB_IC,{
 const BK_TXT={registros:"Madrid, nacionales e institucionales",operativa:"El día a día del campus",administracion:"Contabilidad y gestión económica",atencion:"Consultas y comunicación con las familias",marketing:"Campañas y comunicación",rrhh:"El equipo de trabajo del campus",
   horarios:"Semanas, simulador, buses e instalaciones",equipos:"Equipos por semana y por campus",pagos:"Pagos, devoluciones y cancelaciones"};
 const CHEV=SVG('<path d="m9 6 6 6-6 6"/>');
-const SB_LBL={inicio:"Inicio",temporada:"Campus Experience 2027",registros:"Registros",operativa:"Operativa",horarios:"Horarios",equipos:"Equipos",administracion:"Administración",pagos:"Contabilidad",facturas:"Facturas",atencion:"Atención al público",marketing:"Marketing",rrhh:"Recursos Humanos",admin:"Usuarios y accesos"};
+const SB_LBL={inicio:"Inicio",temporada:"Campus Experience 2027",registros:"Registros",operativa:"Operativa",horarios:"Horarios",equipos:"Equipos",administracion:"Administración",pagos:"Contabilidad",facturas:"Facturas",ingresos:"Ingresos",atencion:"Atención al público",marketing:"Marketing",rrhh:"Recursos Humanos",admin:"Usuarios y accesos"};
 /* bloques de la temporada y a qué bloque pertenece cada pantalla */
 const SEASON=2027;
-const GRP_OF={inicio:"inicio",temporada:"temporada",registros:"registros",operativa:"operativa",horarios:"operativa",equipos:"operativa",administracion:"administracion",pagos:"administracion",facturas:"administracion",atencion:"atencion",marketing:"marketing",rrhh:"rrhh",admin:"admin"};
-const BLOCKS=[["registros",[]],["operativa",["horarios","equipos"]],["administracion",["pagos","facturas"]],["atencion",[]],["marketing",[]],["rrhh",[]]];
+const GRP_OF={inicio:"inicio",temporada:"temporada",registros:"registros",operativa:"operativa",horarios:"operativa",equipos:"operativa",administracion:"administracion",pagos:"administracion",facturas:"administracion",ingresos:"administracion",atencion:"atencion",marketing:"marketing",rrhh:"rrhh",admin:"admin"};
+const BLOCKS=[["registros",[]],["operativa",["horarios","equipos"]],["administracion",["pagos","facturas","ingresos"]],["atencion",[]],["marketing",[]],["rrhh",[]]];
 const SOON=new Set(["atencion","marketing","rrhh"]);
 /* ===== ACCESOS: solo cuando el software corre en el servidor propio (window.CE_ACL) ===== */
 const ACL=window.CE_ACL||null;
 const CAN=(k,min)=>!ACL||!!ACL.admin||(((ACL.perms||{})[k]||0)>=(min||1));
 const ANY=(a,min)=>!ACL||!!ACL.admin||Object.keys(ACL.perms||{}).some(k=>k.startsWith(a+".")&&ACL.perms[k]>=(min||1));
 const VIEW_AP={registros:"registros",horarios:"horarios",equipos:"equipos",pagos:"contabilidad",atencion:"atencion",marketing:"marketing",rrhh:"rrhh"};
-const viewOk=v=>v==="inicio"||v==="temporada"||(v==="admin"?!!(ACL&&ACL.admin):v==="operativa"?(viewOk("horarios")||viewOk("equipos")):v==="administracion"?(viewOk("pagos")||viewOk("facturas")):v==="facturas"?CAN("contabilidad.facturas"):v==="pagos"?(CAN("contabilidad.pagos")||CAN("contabilidad.devoluciones")||CAN("contabilidad.cancelaciones")):!VIEW_AP[v]||ANY(VIEW_AP[v]));
+const viewOk=v=>v==="inicio"||v==="temporada"||(v==="admin"?!!(ACL&&ACL.admin):v==="operativa"?(viewOk("horarios")||viewOk("equipos")):v==="administracion"?(viewOk("pagos")||viewOk("facturas")||viewOk("ingresos")):v==="facturas"?CAN("contabilidad.facturas"):v==="ingresos"?CAN("contabilidad.ingresos"):v==="pagos"?(CAN("contabilidad.pagos")||CAN("contabilidad.devoluciones")||CAN("contabilidad.cancelaciones")):!VIEW_AP[v]||ANY(VIEW_AP[v]));
 const regKey=w=>w===WALL||w==="99"?"registros.todos":isCampKey(w)?"registros.campus":(w&&w!=="0")?"registros.madrid":null;
 const eqKeyOf=w=>isCampKey(w)?"equipos.campus":"equipos.madrid";
 const ACC_K={pagos:"contabilidad.pagos",dev:"contabilidad.devoluciones",can:"contabilidad.cancelaciones"};
@@ -3989,7 +4158,7 @@ function renderSide(){
   const regN=ACL&&!CAN("registros.campus")&&!CAN("registros.todos")?(S.rows||[]).length:AR.length;if(ACL&&!CAN("contabilidad.pagos"))late=0;
   const bd={registros:regN?'<span class="sbdg">'+regN+"</span>":"",pagos:late?'<span class="sbdg hot" title="'+late+' impagos">'+late+"</span>":""};
   const modH=(m,ss)=>viewOk(m)?'<button type="button" class="ss ssm" data-sv="'+m+'" data-ss="'+ss+'"><span class="ic">'+SB_IC[m]+"</span><span>"+SB_LBL[m]+"</span>"+(m==="pagos"&&late?'<span class="n" style="color:var(--sb-pink)">'+late+" impagos</span>":"")+(m==="facturas"&&invErr?'<span class="n" style="color:var(--sb-pink)">'+invErr+" errores</span>":"")+"</button>":"";
-  const subOfG=g=>g==="operativa"?(viewOk("horarios")?modH("horarios","0")+sbSub("horarios"):"")+(viewOk("equipos")?modH("equipos","0")+sbSub("equipos"):""):g==="administracion"?(viewOk("pagos")?modH("pagos","")+sbSub("pagos"):"")+(viewOk("facturas")?modH("facturas",""):""):g==="registros"?sbSub("registros"):"";
+  const subOfG=g=>g==="operativa"?(viewOk("horarios")?modH("horarios","0")+sbSub("horarios"):"")+(viewOk("equipos")?modH("equipos","0")+sbSub("equipos"):""):g==="administracion"?(viewOk("pagos")?modH("pagos","")+sbSub("pagos"):"")+(viewOk("facturas")?modH("facturas",""):"")+(viewOk("ingresos")?modH("ingresos",""):""):g==="registros"?sbSub("registros"):"";
   const invErr=viewOk("facturas")?invErrCount():null;
   const bdg={registros:bd.registros,administracion:(late||invErr)?'<span class="sbdg hot" title="'+(late||0)+" impagos · "+(invErr||0)+' errores de facturas">'+((late||0)+(invErr||0))+"</span>":""};
   const grp=(v)=>{if(!viewOk(v))return "";const sub=subOfG(v);const open=SB_OPEN.has(v);
@@ -3997,9 +4166,7 @@ function renderSide(){
       +(sub?'<div class="ssub"><div class="ssin"><div class="ssbox"><div class="sfh">'+SB_LBL[v]+"</div>"+sub+"</div></div></div>":"")+"</div>"};
   const capIf=(t,h)=>h?'<div class="sb-cap">'+t+"</div>"+h:"";
   const season='<button type="button" class="sb-season" data-sv="temporada" title="Campus Experience '+SEASON+'"><span class="yy"><span class="y4">'+SEASON+'</span><span class="y2">'+String(SEASON).slice(2)+'</span></span><span class="tt"><small>Temporada</small><b>Campus Experience</b></span><span class="sw" data-sv="inicio" title="Cambiar de temporada" aria-label="Cambiar de temporada">'+SVG('<path d="M7 7h11l-3-3M17 17H6l3 3"/>')+'</span></button>';
-  /* acceso al dashboard de registros: solo en la versión Catalyst (client/dashboard.html) */
-  const dash=window.CE_API_BASE&&ACL?'<a class="si sb-dash" href="dashboard.html" title="Dashboard de registros"><span class="ic">'+SVG('<path d="M3 20h18"/><path d="M6 16v-5M11 16V6M16 16v-8M21 16v-3"/>')+'</span><span class="sl">Dashboard</span></a>':"";
-  $("sbNav").innerHTML=grp("inicio")+season+dash+BLOCKS.map(b=>grp(b[0])).join("")+(ACL&&ACL.admin?capIf("Sistema",grp("admin")):"");
+  $("sbNav").innerHTML=grp("inicio")+season+BLOCKS.map(b=>grp(b[0])).join("")+(ACL&&ACL.admin?capIf("Sistema",grp("admin")):"");
   sbMark()}
 function sbMark(){
   const v=curView(),c=sbCur(v);
@@ -4021,7 +4188,7 @@ function hubRender(v){
     $("hubSeasons").innerHTML='<button type="button" class="season" data-sv="temporada"><span class="sy">'+SEASON+'</span><span class="sn">Campus Experience '+SEASON+'</span><span class="sst"><span><b>'+(AR.length||"—")+'</b>participantes</span><span><b>9</b>semanas en Madrid</span><span><b>'+camps+'</b>campus nacionales</span></span><span class="sgo">Entrar</span></button>'}
   if(v==="temporada")$("hubBlocks").innerHTML=BLOCKS.filter(b=>viewOk(b[0])).map(([b,mods])=>hubCard(b,{mods:b==="registros"?(AR.length?[AR.length+" participantes"]:[]):mods.filter(viewOk).map(m=>SB_LBL[m])})).join("");
   if(v==="operativa")$("hubOperativa").innerHTML=["horarios","equipos"].filter(viewOk).map(m=>hubCard(m)).join("");
-  if(v==="administracion")$("hubAdministracion").innerHTML=["pagos","facturas"].filter(viewOk).map(m=>m==="pagos"?hubCard(m,{mods:["Pagos","Devoluciones","Cancelaciones"].filter((x,i)=>subOk("pagos",["pagos","dev","can"][i]))}):hubCard(m,{mods:(()=>{const n=invErrCount();return n==null?["Zoho Books"]:[n?n+" errores":"Todo cuadra"]})()})).join("");
+  if(v==="administracion")$("hubAdministracion").innerHTML=["pagos","facturas","ingresos"].filter(viewOk).map(m=>m==="ingresos"?hubCard(m,{mods:(()=>{const n=ingPendCount();return n==null?["Zoho Books"]:[n?n+" días por cuadrar":"Todo cuadrado"]})()}):m==="pagos"?hubCard(m,{mods:["Pagos","Devoluciones","Cancelaciones"].filter((x,i)=>subOk("pagos",["pagos","dev","can"][i]))}):hubCard(m,{mods:(()=>{const n=invErrCount();return n==null?["Zoho Books"]:[n?n+" errores":"Todo cuadra"]})()})).join("");
 }
 window.__hub=hubRender;
 document.querySelector("main").addEventListener("click",e=>{const b=e.target.closest(".hub [data-sv]");if(!b)return;e.preventDefault();sbGo(b.dataset.sv)});

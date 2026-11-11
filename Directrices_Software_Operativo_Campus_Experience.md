@@ -385,6 +385,18 @@ Documento vivo con las decisiones tomadas con Pau (director de Campus Experience
   - Credenciales de Zoho de solo lectura (Self Client) puestas en la función. Pau decide no renovarlas.
   - Los datos guardados en la versión de claude.ai eran pruebas: no se traspasan. El equipo empieza de cero en Catalyst (11/11). La versión de claude.ai queda para desarrollar y probar.
   - La web tiene su propia página 404 (Catalyst no permite que sea la misma que la principal).
+  - Corrección (11/11): el servidor consultaba Zoho con la API v6, que devuelve los campos de búsqueda (jugador, evento, producto, tutor) sin nombre. Por eso faltaban datos en Registros. Ahora usa la v8, igual que el conector de claude.ai.
+
+- 11/11: **Ingresos** (Administración › Ingresos), para cuadrar cada día lo cobrado con lo que manda la plataforma de pago.
+  - Fuente: las facturas de Zoho Books de Campus Experience (serie C-2027 y series de los nacionales). Cada cobro tiene su factura.
+  - **Día de la plataforma:** de las 23:00 del día anterior a las 22:59, hora de España. Un cobro a las 23:01 cuenta en el día siguiente. La hora sale de la referencia de la factura (aaaammddhhmm en UTC); si no la trae, se usa la hora en que Books creó la factura y se marca con «≈».
+  - El importe que manda la plataforma es **bruto** (decisión de Pau).
+  - Por día: número de cobros, total, campo «Banco» para escribir lo recibido (muestra la diferencia o «Cuadra») y botón «Marcar cuadrado».
+  - Al abrir un día: hora, jugador y familia, campus, qué pago es (reserva, 1er, 2º, 3er pago o pago completo), factura con enlace a Books e importe.
+  - Cuadrar guarda quién, cuándo, el total y las facturas de ese momento. Si después cambia, el día pasa a «Revisar» y dice qué ha cambiado.
+  - Cajas: por cuadrar, revisar, cuadrados, todos y total cobrado. Agrupado por meses, con total del mes. Filtro por campus y buscador.
+  - Lo cuadra **Olivia**. Permiso propio: «Contabilidad › Ingresos» (ver, o editar para poder cuadrar).
+  - Pendiente: devoluciones (refunds), que restarán en su día.
 
 ## Lista de equipos · Nacionales e Institucionales (oficial, 04/11/2026)
 Se asignan automáticamente en este orden, un equipo por nombre y sin repetir dentro de un mismo campus:

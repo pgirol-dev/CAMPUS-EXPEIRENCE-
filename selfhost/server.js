@@ -54,7 +54,7 @@ const CATALOG = [
   { k: "registros", b: "Registros", l: "Registros", subs: [["madrid", "Madrid (semanas)"], ["campus", "Nacionales e institucionales"], ["todos", "Todos los registros"]] },
   { k: "horarios", b: "Operativa", l: "Horarios", subs: [["semanas", "Horarios de las semanas"], ["campus", "Nacionales"], ["simulador", "Simulador"]] },
   { k: "equipos", b: "Operativa", l: "Equipos", subs: [["madrid", "Madrid (semanas)"], ["campus", "Nacionales e institucionales"]] },
-  { k: "contabilidad", b: "Administración", l: "Contabilidad", subs: [["pagos", "Pagos"], ["devoluciones", "Devoluciones"], ["cancelaciones", "Cancelaciones"], ["facturas", "Control de facturas"]] },
+  { k: "contabilidad", b: "Administración", l: "Contabilidad", subs: [["pagos", "Pagos"], ["devoluciones", "Devoluciones"], ["cancelaciones", "Cancelaciones"], ["facturas", "Control de facturas"], ["ingresos", "Ingresos"]] },
   { k: "atencion", b: "Atención al público", l: "Atención al público", subs: [["general", "Atención al público"]] },
   { k: "marketing", b: "Marketing", l: "Marketing", subs: [["general", "Marketing"]] },
   { k: "rrhh", b: "Recursos Humanos", l: "Recursos Humanos", subs: [["general", "Recursos Humanos"]] },
@@ -77,6 +77,7 @@ const COLS = {
   hweek: { read: u => anyOf(u, "horarios"), write: (u, id) => lvl(u, String(id).startsWith("c-") ? "horarios.campus" : "horarios.semanas") >= 2 },
   happr: { read: u => anyOf(u, "horarios"), write: (u, id) => lvl(u, String(id).startsWith("c-") ? "horarios.campus" : "horarios.semanas") >= 2 },
   hbus:  { read: u => anyOf(u, "horarios"), write: (u, id) => lvl(u, String(id).startsWith("c-") ? "horarios.campus" : "horarios.semanas") >= 2 },
+  ing:   { read: u => lvl(u, "contabilidad.ingresos") >= 1, write: u => lvl(u, "contabilidad.ingresos") >= 2 },
   hsim:  { read: u => lvl(u, "horarios.simulador") >= 1, write: u => lvl(u, "horarios.simulador") >= 2 },
 };
 const canZoho = u => ["registros", "equipos", "horarios", "contabilidad"].some(a => anyOf(u, a));
@@ -395,7 +396,7 @@ async function handle(req, res) {
 
   /* --- Zoho Books (solo lectura): facturas para el control de facturación --- */
   if (p === "/api/books/invoices" && M === "POST") {
-    if (lvl(U, "contabilidad.facturas") < 1) return fail(res, 403, "Sin acceso al control de facturas.");
+    if (lvl(U, "contabilidad.facturas") < 1 && lvl(U, "contabilidad.ingresos") < 1) return fail(res, 403, "Sin acceso a las facturas.");
     const b = await readBody(req, 5000); const qp = b.query_params || {};
     const mode = qp.invoice_number_contains != null ? "contains" : "startswith";
     const prefix = String((mode === "contains" ? qp.invoice_number_contains : qp.invoice_number_startswith) || ""); const page = Math.max(1, Math.min(50, +qp.page || 1));
