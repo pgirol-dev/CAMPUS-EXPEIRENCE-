@@ -377,6 +377,15 @@ Documento vivo con las decisiones tomadas con Pau (director de Campus Experience
   - Permiso propio: «Horarios › Nacionales» (sin acceso, ver o editar). El servidor lo comprueba al guardar.
   - Se guardan con prefijo de campus (`c-val-…`), separados de las semanas de Madrid.
 
+- 11/11: **El software ya funciona en Zoho Catalyst** (proyecto «Campus-Experience-OS», centro de datos UE).
+  - Dirección (entorno Development): https://campus-experience-os-20121257243.development.catalystserverless.eu/app/
+  - Pau entra como administrador. La clave de primera instalación ya está borrada.
+  - Publicación: la integración directa con GitHub no está disponible para cuentas nuevas de Catalyst. De momento se publica desde el Mac con `catalyst deploy` en la carpeta CLAUDE. Pendiente: montar Catalyst Pipelines para que se publique solo en cada `git push`.
+  - Data Store: las 5 tablas creadas y cerradas; solo las usa el servidor.
+  - Credenciales de Zoho de solo lectura (Self Client) puestas en la función. Pau decide no renovarlas.
+  - Los datos guardados en la versión de claude.ai eran pruebas: no se traspasan. El equipo empieza de cero en Catalyst (11/11). La versión de claude.ai queda para desarrollar y probar.
+  - La web tiene su propia página 404 (Catalyst no permite que sea la misma que la principal).
+
 ## Lista de equipos · Nacionales e Institucionales (oficial, 04/11/2026)
 Se asignan automáticamente en este orden, un equipo por nombre y sin repetir dentro de un mismo campus:
 1. Mbappé · 2. Vini Jr. · 3. Bellingham · 4. Courtois · 5. Valverde · 6. Diomande · 7. Cucurella · 8. Trent · 9. Arda Güler · 10. Tchouaméni · 11. Camavinga · 12. E. Militão · 13. Bernardo Silva · 14. Endrick · 15. Huijsen · 16. Brahim · 17. Konaté · 18. Rüdiger · 19. Dumfries · 20. F. Mendy · 21. Á. Carreras · 22. Lunin · 23. Asencio · 24. Rodrygo · 25. Espí · 26. Thiago

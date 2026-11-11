@@ -91,7 +91,7 @@ async function zohoFetch(pathname, init = {}) {
 }
 async function zohoCoql(q) {
   if (MOCK) { const m = /limit (\d+), (\d+)/i.exec(q); const o = m ? +m[1] : 0, n = m ? +m[2] : 100; const src = q.includes("Personas_Autorizadas") ? (MOCK.auth || []) : q.includes("Campus_y_servicios") ? (MOCK.weeks || []) : (MOCK.deals || []); return { data: src.slice(o, o + n), info: { more_records: o + n < src.length } }; }
-  const { status, json } = await zohoFetch("/crm/v6/coql", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ select_query: q }) });
+  const { status, json } = await zohoFetch("/crm/v8/coql", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ select_query: q }) });
   if (status === 204) return { data: [], info: { count: 0, more_records: false } };
   if (status >= 400) throw Object.assign(new Error((json && (json.message || json.code)) || "Error de Zoho " + status), { status: 502 });
   return json;
