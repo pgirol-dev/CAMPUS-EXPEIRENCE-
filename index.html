@@ -807,6 +807,27 @@ table.oplist th .fsel.on{background:var(--pink);border-color:var(--pink);color:v
 .pnx{font-size:12.5px;color:var(--ink-2)}
 .pnx b{font-weight:700;color:var(--ink)}
 .pnx.ko,.pnx.ko b{color:var(--bad);font-weight:700}
+.prow.frow{grid-template-columns:minmax(190px,1.3fr) 110px minmax(0,1.7fr) minmax(0,1.6fr)}
+.prow.frow.is-sin,.prow.frow.is-dif,.prow.frow.is-cobro,.prow.frow.is-orph{background:var(--bad-soft);box-shadow:inset 4px 0 0 var(--bad)}
+.prow.frow.is-orph{cursor:default}
+.ist-ok{background:color-mix(in srgb,var(--green) 22%,transparent);color:var(--ink)} .ist-sin,.ist-dif,.ist-cobro{background:var(--bad);color:var(--on-hot)} .ist-none{background:color-mix(in srgb,var(--ink) 10%,transparent);color:var(--ink-2)}
+.fchips{display:flex;gap:5px;flex-wrap:wrap;min-width:0}
+.iorph{margin-top:14px}
+.iorph summary{cursor:pointer;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;padding:12px 14px;border-radius:6px;background:var(--surface-2);list-style:none}
+.iorph summary::-webkit-details-marker{display:none}
+.iorph summary b{font-family:var(--f-wide);font-style:italic;font-weight:900;font-stretch:125%;text-transform:uppercase;font-size:.8rem}
+.iorph summary span{font-weight:800;color:var(--bad)}
+.iorph summary small{flex-basis:100%;color:var(--ink-2);font-size:12px}
+.iorph[open] summary{margin-bottom:6px}
+.iorph .prow{cursor:default}
+.ichip{font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;background:color-mix(in srgb,var(--ink) 9%,transparent);color:var(--ink);text-decoration:none;white-space:nowrap;font-variant-numeric:tabular-nums}
+.ichip b{font-weight:800}
+.ichip i{font-style:normal;color:var(--ink-2)}
+a.ichip:hover{background:var(--navy);color:var(--navy-ink)}
+.ichip.ko{box-shadow:inset 0 0 0 1.5px var(--bad)}
+.ichip.none{background:transparent;border:1px dashed var(--bad);color:var(--bad);font-weight:700}
+.pbx.ib-err::before,.pbx.ib-sin::before,.pbx.ib-dif::before{background:var(--bad)} .pbx.ib-ok::before{background:var(--green)}
+@media (max-width:860px){.prow.frow{grid-template-columns:1fr auto}.prow.frow .pnx,.prow.frow .fchips{grid-column:1/-1}}
 @media (max-width:720px){.prow{grid-template-columns:1fr auto}.prow .psteps{grid-column:1}.prow .pnx{grid-column:1/-1}}
 
 /* horarios v4: general + sedes por modalidad + instalaciones por semana */
@@ -865,6 +886,14 @@ table.oplist th .fsel.on{background:var(--pink);border-color:var(--pink);color:v
 .turno>span:first-child{font-weight:700;min-width:54px}
 .tx{all:unset;cursor:pointer;width:20px;height:20px;display:grid;place-items:center;border-radius:50%;color:var(--bad);font-weight:900}
 .iadd2{flex-direction:row;align-items:center;flex-wrap:wrap}
+.inew .sub{flex-basis:100%}
+#hMode.nac [data-hview="buses"],#hMode.nac [data-hview="sim"]{display:none}
+.hrep{display:inline-flex;flex-wrap:wrap;align-items:center;gap:6px}
+.hrep[hidden]{display:none}
+.hrep .mlab{font-size:12px;color:var(--ink-2);margin-right:2px}
+.hrep .btn.mini{padding:4px 10px;font-size:10.5px}
+html.ro-h #hRep{display:none!important}
+html.ro-h .isnin{pointer-events:none;border-bottom-color:transparent}
 .iadd2 input{flex:1;min-width:160px;border:1px solid var(--line);background:var(--field);border-radius:96px;padding:8px 12px;font-size:12.5px}
 .occ{position:absolute;left:3px;right:3px;border-radius:4px;padding:3px 7px;font-size:10.5px;line-height:1.25;overflow:hidden;background:var(--navy);color:var(--navy-ink)}
 .occ b{font-weight:700;display:block;white-space:normal}
@@ -1489,6 +1518,7 @@ html.sb-min .sfh{display:block;font-family:var(--f-wide);font-style:italic;font-
           <button class="btn" type="button" id="hDl" hidden>Descargar horario</button>
           <button class="btn" type="button" id="hManual" aria-pressed="false">Modificar manualmente</button>
           <button class="btn" type="button" id="hDel">Borrar todo</button>
+          <span class="hrep" id="hRep" hidden></span>
           <span class="count" id="hSave"></span>
         </div></div>
         <div class="eqconfirm" id="hConfirm" hidden></div>
@@ -1531,6 +1561,13 @@ html.sb-min .sfh{display:block;font-family:var(--f-wide);font-style:italic;font-
   <section id="view-rrhh" class="stack" hidden>
     <div class="soonpanel"><h2>Coming soon</h2><p class="wide" style="font-weight:900;font-style:italic;text-transform:uppercase">Recursos Humanos</p></div>
   </section>
+  <section id="view-facturas" class="stack" hidden>
+    <div class="eqhead"><div class="eqtitlebox"><h2 class="eqtitle">Facturas</h2><span class="sub" id="invSub"></span></div><button class="btn" type="button" id="invRefresh">Actualizar facturas</button></div>
+    <div class="paygrid" id="invBoxes" role="group" aria-label="Estado de las facturas"></div>
+    <div class="filters"><input type="search" id="invQ" placeholder="Buscar jugador, código o número de factura" aria-label="Buscar"><span class="count" id="invCount"></span></div>
+    <div class="paylist" id="invList"></div>
+    <div id="invOrph"></div>
+  </section>
   <section id="view-pagos" class="stack" hidden>
   <div class="stack">
     <div class="eqhead"><div class="eqtitlebox"><h2 class="eqtitle">Contabilidad</h2><span class="sub" id="payToday"></span></div>
@@ -1567,7 +1604,10 @@ const EVENT="Campus Experience Madrid 2027";
 /* campus que se leen de Zoho. madrid = las weeks; nac = nacionales; inst = institucionales (se irán añadiendo) */
 const CAMPS=[{id:"mad",n:"Madrid",kind:"madrid",ev:[EVENT]},
   {id:"val",n:"Valencia",kind:"nac",ev:["Campus Experience Valencia 2027"]},
-  {id:"mal",n:"Málaga",kind:"nac",ev:["Campus Experience Málaga 2027","Campus Experience Malaga 2027"]}
+  {id:"mal",n:"Málaga",kind:"nac",ev:["Campus Experience Málaga 2027","Campus Experience Malaga 2027"]},
+  {id:"and",n:"Andorra",kind:"nac",ev:["Campus Experience Andorra 2027"]},
+  {id:"alm",n:"Almería",kind:"nac",ev:["Campus Experience Almería 2027","Campus Experience Almeria 2027"]},
+  {id:"ali",n:"Alicante",kind:"nac",ev:["Campus Experience Alicante 2027"]}
   // institucionales: {id:"seg",n:"Segovia",kind:"inst",ev:["<nombre del evento en Zoho>"]}
 ];
 const EVS="("+CAMPS.flatMap(c=>c.ev).map(e=>"'"+e.replace(/'/g,"\\'")+"'").join(",")+")";
@@ -1991,7 +2031,7 @@ async function load(fresh){
     const byId={};parts.forEach(pt=>pt.rows.forEach(x=>{byId[x.id]=Object.assign(byId[x.id]||{},x)}));
     const a={rows:Object.values(byId),first:parts[0].first};
     S.auth={};if(c.rows)c.rows.forEach(x=>{const id=x.Application&&x.Application.id;if(id)(S.auth[id]=S.auth[id]||[]).push(x)});S.authOk=!!c.rows;
-    S.deals=a.rows;S.weeks=b.rows;hideBanner();stamp(a.first);build();
+    S.deals=a.rows;S.weeks=b.rows;hideBanner();stamp(a.first);build();if(typeof loadBooks==="function"&&(!INV.list||fresh))setTimeout(()=>loadBooks(!!fresh),300);
     if(!a.rows.length){$("empty").hidden=false;$("empty").innerHTML="<h3>Aún no hay inscripciones</h3><p>No hay inscripciones con pagos en "+esc(EVENT)+".</p>"}
     startRefresh();
   }catch(e){
@@ -2017,7 +2057,7 @@ function exportCsv(){
 }
 
 /* events */
-const VIEWS=["inicio","temporada","registros","operativa","horarios","equipos","administracion","pagos","atencion","marketing","rrhh"];
+const VIEWS=["inicio","temporada","registros","operativa","horarios","equipos","administracion","pagos","facturas","atencion","marketing","rrhh"];
 function show(v){
   if(v==="contabilidad")v="pagos";if(v==="recursos-humanos")v="rrhh";if(v==="atencion-al-publico")v="atencion";
   if(!VIEWS.includes(v))v="inicio";
@@ -2026,6 +2066,7 @@ function show(v){
   if(v==="horarios")try{renderHorarios()}catch(e){}
   if(v==="equipos")try{renderEquipos()}catch(e){}
   if(v==="pagos")try{renderPagos()}catch(e){}
+  if(v==="facturas")try{renderFacturas();if(!INV.list&&!INV.busy)loadBooks(false)}catch(e){}
   try{if(window.__hub)window.__hub(v)}catch(e){}
   window.scrollTo(0,0);try{sbSync()}catch(e){}
 }
@@ -2511,10 +2552,16 @@ function legacyRes(r){if(!r)return null;let m;
   if(r==="Piscina UAM")return {sd:"uam",u:"Piscina interior UAM"};
   if((m=/^Comedor (\w+)$/.exec(r)))return {sd:m[1].toLowerCase(),u:"Comedor "+m[1]};
   return null}
-function hKey(week,dow,ap){return "w"+week+"-d"+dow+"-"+apKey(ap)}
+/* campus nacionales: la «semana» es la clave del campus (c:val) y sus documentos van con prefijo c-val */
+const hw=w=>isCampKey(w)?w.replace(":","-"):"w"+w;
+const hNac=w=>isCampKey(w);
+const hWL=w=>isCampKey(w)?wLabel(w):"Week "+w;
+const hCan=k=>{try{return CAN(k)}catch(e){return true}};
+function hKey(week,dow,ap){return hw(week)+"-d"+dow+"-"+apKey(ap)}
 function weekMonday(n){
-  let s=null;S.rows.forEach(r=>r.weeks.forEach(w=>{if(w.n===n&&w.mod!=="Interno"&&w.start&&(!s||w.start<s))s=w.start}));
-  const d=s?new Date(s+"T12:00:00"):new Date(Date.UTC(2027,5,14+7*(n-1),12));
+  let s=null;if(hNac(n)){const id=n.slice(2);(S.allRows||[]).forEach(r=>{if(r.camp===id)r.weeks.forEach(w=>{if(w.start&&(!s||w.start<s))s=w.start})})}
+  else S.rows.forEach(r=>r.weeks.forEach(w=>{if(w.n===n&&w.mod!=="Interno"&&w.start&&(!s||w.start<s))s=w.start}));
+  const d=s?new Date(s+"T12:00:00"):new Date(Date.UTC(2027,5,14+7*((hNac(n)?1:n)-1),12));
   const k=(d.getUTCDay()+6)%7;d.setUTCDate(d.getUTCDate()-k);return d;
 }
 function dayDate(n,dow){const d=weekMonday(n);d.setUTCDate(d.getUTCDate()+(dow===0?-1:dow-1));return String(d.getUTCDate()).padStart(2,"0")+"/"+String(d.getUTCMonth()+1).padStart(2,"0")}
@@ -2522,18 +2569,18 @@ function dayDate(n,dow){const d=weekMonday(n);d.setUTCDate(d.getUTCDate()+(dow==
 /* simulador: grupos ficticios a partir del nº de equipos (mismo reparto en grupos de 3, 4 o 2 que en Equipos) */
 const SIM_PLAYERS={ONE:16,MAX:14};
 function groupSizes(n){const z=[];if(n<=4&&n!==3){if(n)z.push(n)}else{let k=Math.floor(n/3),r=n%3;if(r===1){k--;for(let i=0;i<k;i++)z.push(3);z.push(4)}else{for(let i=0;i<k;i++)z.push(3);if(r===2)z.push(2)}}return z}
-function simGroups(week,ap){const T=(H.simTeams["w"+week]||{});const prog=ap.split("|")[0];let off=0;
+function simGroups(week,ap){const T=(H.simTeams[hw(week)]||{});const prog=ap.split("|")[0];let off=0;
   for(const [p,m] of APARTADOS){const a2=p+"|"+m;if(a2===ap)break;if(p===prog)off+=groupSizes(+T[apKey(a2)]||0).length}
   const names=TEAM_DB[prog]||TEAM_DB.ONE;return groupSizes(+T[apKey(ap)]||0).map((z,i)=>({name:names[off+i]||("Grupo "+(off+i+1)),teams:z,size:z*SIM_PLAYERS[prog]}))}
-function apGroupsFull(week,ap){if(H.sim)return simGroups(week,ap);const d=EQ.docs["w"+week+"-"+apKey(ap)];return d&&Array.isArray(d.groups)?d.groups.map(g=>{const T=(g.teams||[]).filter(t=>t&&t.length);return {name:String(g.name||""),teams:T.length,size:T.reduce((a,t)=>a+t.length,0)}}).filter(g=>g.teams):[]}
+function apGroupsFull(week,ap){if(H.sim)return simGroups(week,ap);const d=EQ.docs[hw(week)+"-"+apKey(ap)];return d&&Array.isArray(d.groups)?d.groups.map(g=>{const T=(g.teams||[]).filter(t=>t&&t.length);return {name:String(g.name||""),teams:T.length,size:T.reduce((a,t)=>a+t.length,0)}}).filter(g=>g.teams):[]}
 function apGroups(week,ap){return apGroupsFull(week,ap).map(g=>g.name)}
-function apCount(week,ap){if(H.sim)return (+(H.simTeams["w"+week]||{})[apKey(ap)]||0)*SIM_PLAYERS[ap.split("|")[0]];return S.rows.filter(r=>r.weeks.some(w=>w.n===week&&w.prog+"|"+w.mod===ap)).length}
+function apCount(week,ap){if(H.sim)return (+(H.simTeams[hw(week)]||{})[apKey(ap)]||0)*SIM_PLAYERS[ap.split("|")[0]];if(hNac(week))return rowsFor(week,ap).length;return S.rows.filter(r=>r.weeks.some(w=>w.n===week&&w.prog+"|"+w.mod===ap)).length}
 function dayAps(week,dow){return APARTADOS.map(([p,m])=>p+"|"+m).filter(ap=>MODDAYS[ap].includes(dow)&&apCount(week,ap))}
 function weekDays(week){return [1,2,3,4,5,6,0].filter(d=>dayAps(week,d).length)}
 function tplFor(ap,i){const T=HTPL[ap]||[];return T.length?T[i%T.length].map(b=>Object.assign({},b)):[]}
 /* ---------- configuración de la semana ---------- */
-function wkCfg(week){const c=H.sim?(H.simCfg["w"+week]||H.wk["w"+week]):H.wk["w"+week];const out={sedes:clone(SEDES_DEF),mods:clone(MODS_DEF),resi:week>=5?"UEM":"RESA"};
-  if(c){if(Array.isArray(c.sedes)&&c.v===4)out.sedes=clone(c.sedes);if(c.mods)Object.assign(out.mods,clone(c.mods));if(c.resi)out.resi=c.resi}
+function wkCfg(week){const c=H.sim?(H.simCfg[hw(week)]||H.wk[hw(week)]):H.wk[hw(week)];const NAC=hNac(week);const out=NAC?{sedes:[],mods:{},resi:""}:{sedes:clone(SEDES_DEF),mods:clone(MODS_DEF),resi:week>=5?"UEM":"RESA"};
+  if(c){if(Array.isArray(c.sedes)&&(c.v===4||NAC))out.sedes=clone(c.sedes);if(c.mods)Object.assign(out.mods,clone(c.mods));if(c.resi)out.resi=c.resi}
   out.sedes.forEach(s=>{s.res=(s.res||[]).map(r=>Object.assign({off:[],win:{},cap:0},r))});return out}
 const findSede=(cfg,id)=>cfg.sedes.find(x=>x.id===id);
 const findRes=(cfg,sd,u)=>{const s=findSede(cfg,sd);return s?s.res.find(r=>r.n===u):null};
@@ -2557,10 +2604,10 @@ function normBlock(b){const x=Object.assign({},b);if(!x.c)x.c=ACT_CAT[x.a]||"log
 function schedOf(week,dow,ap){const d=(H.sim?H.simDocs:H.docs)[hKey(week,dow,ap)];const m={};if(d&&Array.isArray(d.groups))d.groups.forEach(g=>{m[g.name]=(g.blocks||[]).map(normBlock).sort((p,q)=>tm(p.s)-tm(q.s))});return m}
 /* aprobaciones (excepciones que la responsable aprueba o rechaza) */
 const apprKey=(dow,ap,g,b)=>"d"+dow+"|"+apKey(ap)+"|"+g+"|"+b.s+"|"+b.a;
-function apprOf(week,k){if(H.sim){const d=H.simAppr["w"+week];return d&&d[k]||""}const d=H.appr["w"+week];return d&&d.items?d.items[k]||"":""}
+function apprOf(week,k){if(H.sim){const d=H.simAppr[hw(week)];return d&&d[k]||""}const d=H.appr[hw(week)];return d&&d.items?d.items[k]||"":""}
 /* ---------- COMPROBACIÓN DE REGLAS ---------- */
 function dayIssues(week,dow){
-  const cfg=wkCfg(week);const flags=new Map(),list=[];const occ={};const entries={};
+  const NAC=hNac(week);const cfg=wkCfg(week);const flags=new Map(),list=[];const occ={};const entries={};
   const add=(k,why,item)=>{if(item.appr){const st=apprOf(week,item.appr);item.st=st;if(st==="ok"){list.push(item);return}}
     if(!flags.has(k))flags.set(k,[]);flags.get(k).push(why);list.push(item)};
   const put=(cat,key,s,e,v)=>{for(let x=s;x<e;x+=15)(((occ[cat]=occ[cat]||{})[key]=occ[cat][key]||{})[x]=occ[cat][key][x]||[]).push(v)};
@@ -2585,6 +2632,7 @@ function dayIssues(week,dow){
             if(t!=="cer")put(r.t,b.sd+"|"+r.n,s,e,{ap,g,i,v:unit});
             if(r.t==="comedor")((entries[b.sd+"|"+r.n]=entries[b.sd+"|"+r.n]||{})[s]=entries[b.sd+"|"+r.n][s]||[]).push({ap,g,i})}
           else if(b.u&&t!=="cer")err(i,"none","Instalación «"+b.u+"» no existe esta semana")}
+        if(NAC)return; // nacionales: solo reglas de instalaciones, capacidad y solapes
         // entrenamientos y partidos
         if(b.c==="fut"){
           if(dur(b)!==60&&!(fri&&isMJ(ap)&&dur(b)===45))err(i,"dur","Entrenamientos y partidos duran 1 h");
@@ -2636,6 +2684,7 @@ function dayIssues(week,dow){
           if(!isInt(ap)&&!(b.sd==="vbb"&&b.u==="Campo 9"))err(i,"cer","La clausura se hace en el Campo 9");
           if(isInt(ap)){const want=cfg.resi==="UEM"?"Campo UEM":"Pabellón UAM";if(b.u!==want)err(i,"cer","Internos: clausura en "+want)}}
       });
+      if(NAC)return;
       // desplazamientos: tiempo de trayecto entre sedes y 15 min en los cambios indicados
       let last=null;bl.forEach((b,i)=>{const L=locOf(cfg,b);if(!L)return;
         if(last){const tr=travel(last.L,L);const gap=tm(b.s)-tm(last.b.e);
@@ -2692,11 +2741,11 @@ function dayIssues(week,dow){
   Object.values(over).forEach(o=>list.push(o));
   // comedor: como máximo 2 grupos entrando a la vez
   Object.entries(entries).forEach(([key,byS])=>Object.entries(byS).forEach(([s0,arr])=>{if(arr.length>2){arr.forEach(a=>{const k=a.ap+"|"+a.g+"|"+a.i;if(!flags.has(k))flags.set(k,[]);flags.get(k).push("Más de 2 grupos entrando a la vez al comedor")});list.push({k:"stag",r:key.split("|")[1],gs:arr.map(a=>a.g),s:+s0,e:+s0+15,txt:"Más de 2 grupos entrando a la vez"})}}));
-  try{dayBusPlan(cfg,week,dow).problems.forEach(x=>list.push(x))}catch(e){}
+  if(!NAC)try{dayBusPlan(cfg,week,dow).problems.forEach(x=>list.push(x))}catch(e){}
   return {flags,list,occ,cfg};
 }
 /* reglas semanales */
-function weekIssues(week){const out=[];const days=weekDays(week);const DOCS=H.sim?H.simDocs:H.docs;if(!days.some(d=>APARTADOS.some(([p,m])=>DOCS[hKey(week,d,p+"|"+m)])))return out;
+function weekIssues(week){const out=[];if(hNac(week))return out;const days=weekDays(week);const DOCS=H.sim?H.simDocs:H.docs;if(!days.some(d=>APARTADOS.some(([p,m])=>DOCS[hKey(week,d,p+"|"+m)])))return out;
   APARTADOS.forEach(([p,m])=>{const ap=p+"|"+m;if(!apCount(week,ap))return;
     apGroups(week,ap).forEach(g=>{let vbb=0,bnb=0;MODDAYS[ap].forEach(d=>{const bl=schedOf(week,d,ap)[g]||[];if(bl.some(b=>b.c==="fut"&&b.sd==="vbb"))vbb++;if(bl.some(b=>b.a==="Tour BNB"))bnb++});
       if(vbb<2)out.push({ap,g,txt:"Debe entrenar en Valdebebas al menos 2 días (lleva "+vbb+")"});
@@ -3005,13 +3054,13 @@ async function hSaveAp(week,dow,ap,groups){
 }
 async function hSaveMany(jobs,msg){renderHorarios();if(!S.db){setStatus("No se puede guardar en esta vista");return}
   setStatus("Guardando…");try{await Promise.all(jobs.map(j=>hSaveAp(...j)));setStatus(msg||"Guardado")}catch(e){setStatus(e&&e.code==="permission_denied"?"No tienes permiso para guardar horarios":"No se pudo guardar. Vuelve a intentarlo.")}renderHorarios()}
-async function hSaveCfg(week,cfg){cfg.v=4;if(H.sim){H.simCfg["w"+week]=cfg;return hSaveSim(week)}cfg.updatedAt=new Date().toISOString();if(S.me)cfg.updatedBy=S.me;H.wk["w"+week]=cfg;renderHorarios();
+async function hSaveCfg(week,cfg){cfg.v=4;if(H.sim){H.simCfg[hw(week)]=cfg;return hSaveSim(week)}cfg.updatedAt=new Date().toISOString();if(S.me)cfg.updatedBy=S.me;H.wk[hw(week)]=cfg;renderHorarios();
   if(!S.db){setStatus("No se puede guardar en esta vista");return}
-  setStatus("Guardando…");try{await S.db.collection("hweek").doc("w"+week).set(cfg);setStatus("Guardado")}catch(e){setStatus(e&&e.code==="permission_denied"?"No tienes permiso para cambiar instalaciones":"No se pudo guardar. Vuelve a intentarlo.")}}
-async function hSaveAppr(week,k,v){if(H.sim){const d=Object.assign({},H.simAppr["w"+week]||{});if(v)d[k]=v;else delete d[k];H.simAppr["w"+week]=d;setStatus(v==="ok"?"Aprobado":v==="no"?"Rechazado":"Guardado");return hSaveSim(week)}const d=clone(H.appr["w"+week]||{items:{}});d.items=d.items||{};if(v)d.items[k]=v;else delete d.items[k];d.updatedAt=new Date().toISOString();if(S.me)d.updatedBy=S.me;H.appr["w"+week]=d;renderHorarios();
+  setStatus("Guardando…");try{await S.db.collection("hweek").doc(hw(week)).set(cfg);setStatus("Guardado")}catch(e){setStatus(e&&e.code==="permission_denied"?"No tienes permiso para cambiar instalaciones":"No se pudo guardar. Vuelve a intentarlo.")}}
+async function hSaveAppr(week,k,v){if(H.sim){const d=Object.assign({},H.simAppr[hw(week)]||{});if(v)d[k]=v;else delete d[k];H.simAppr[hw(week)]=d;setStatus(v==="ok"?"Aprobado":v==="no"?"Rechazado":"Guardado");return hSaveSim(week)}const d=clone(H.appr[hw(week)]||{items:{}});d.items=d.items||{};if(v)d.items[k]=v;else delete d.items[k];d.updatedAt=new Date().toISOString();if(S.me)d.updatedBy=S.me;H.appr[hw(week)]=d;renderHorarios();
   if(!S.db){setStatus("No se puede guardar en esta vista");return}
-  try{await S.db.collection("happr").doc("w"+week).set(d);setStatus(v==="ok"?"Aprobado":v==="no"?"Rechazado":"Guardado")}catch(e){setStatus("No se pudo guardar. Vuelve a intentarlo.")}}
-async function hSaveSim(week){renderHorarios();if(!S.db)return;try{await S.db.collection("hsim").doc("w"+week).set({teams:H.simTeams["w"+week]||{},cfg:H.simCfg["w"+week]||null,appr:H.simAppr["w"+week]||{},bus:Object.fromEntries(Object.entries(H.simBus).filter(([k])=>k.startsWith("w"+week+"-"))),updatedAt:new Date().toISOString()})}catch(e){}}
+  try{await S.db.collection("happr").doc(hw(week)).set(d);setStatus(v==="ok"?"Aprobado":v==="no"?"Rechazado":"Guardado")}catch(e){setStatus("No se pudo guardar. Vuelve a intentarlo.")}}
+async function hSaveSim(week){renderHorarios();if(!S.db)return;try{await S.db.collection("hsim").doc(hw(week)).set({teams:H.simTeams[hw(week)]||{},cfg:H.simCfg[hw(week)]||null,appr:H.simAppr[hw(week)]||{},bus:Object.fromEntries(Object.entries(H.simBus).filter(([k])=>k.startsWith(hw(week)+"-"))),updatedAt:new Date().toISOString()})}catch(e){}}
 function hAuto(dows){if(H.sim){const t0=performance.now();dows.forEach(d=>{const g=genDay(CW(),d);Object.entries(g).forEach(([ap,groups])=>{H.simDocs[hKey(CW(),d,ap)]={groups}})});H.simGen=CW();setStatus("Simulación generada");renderHorarios();return}
   const jobs=[];dows.forEach(d=>{const g=genDay(CW(),d);Object.entries(g).forEach(([ap,groups])=>{jobs.push([CW(),d,ap,groups]);H.docs[hKey(CW(),d,ap)]={groups}})});hSaveMany(jobs,dows.length>1?"Semana creada":"Horario creado")}
 async function hClear(dows){if(H.sim){Object.keys(H.simDocs).forEach(k=>{if(k.startsWith("w"+CW()+"-"))delete H.simDocs[k]});setStatus("Simulación borrada");renderHorarios();return}const keys=[];dows.forEach(d=>APARTADOS.forEach(([p,m])=>{const k=hKey(CW(),d,p+"|"+m);if(H.docs[k])keys.push(k)}));
@@ -3026,14 +3075,18 @@ function timeCol(mn,mx,RH){let h='<div class="hcol htime"><div class="hhead"></d
 function gridLines(mn,mx,RH){let h="";for(let t=mn;t<mx;t+=15)h+='<i class="hrline'+(t%60?" q":"")+'" style="top:'+((t-mn)/15*RH)+'px"></i>';return h}
 function renderHorarios(){try{sbSync()}catch(e){}
   if($("view-horarios").hidden)return;
-  H.sim=H.view==="sim";if(H.sim&&!H.simWeek)H.simWeek=H.week||1;
+  if(hNac(H.week)&&(H.view==="buses"||H.view==="sim"))H.view="grid";H.sim=H.view==="sim";if(H.sim&&!H.simWeek)H.simWeek=(typeof H.week==="number"&&H.week)||1;
   const L0=!H.week;
-  $("hWeekGrid").hidden=!L0;$("hBody").hidden=L0;$("hMode").hidden=L0;
+  $("hWeekGrid").hidden=!L0;$("hBody").hidden=L0;$("hMode").hidden=L0;$("hMode").classList.toggle("nac",hNac(CW()));
   const VL={inst:"Instalaciones",buses:"Buses"};
-  $("hCrumbs").innerHTML=L0?"":'<button type="button" data-hback>Semanas</button><span class="sep">›</span><span class="cur">'+(H.sim?"Simulador · Week "+CW()+(VW()==="inst"?" · Instalaciones":" · "+DOWS[H.dow]+" "+dayDate(CW(),H.dow)):"Week "+CW()+(VW()==="inst"?" · Instalaciones":" · "+DOWS[H.dow]+" "+dayDate(CW(),H.dow)+({buses:" · Buses",res:" · Ocupación"}[VW()]||"")))+"</span>";
+  $("hCrumbs").innerHTML=L0?"":'<button type="button" data-hback>Semanas</button><span class="sep">›</span><span class="cur">'+(H.sim?"Simulador · Week "+CW()+(VW()==="inst"?" · Instalaciones":" · "+DOWS[H.dow]+" "+dayDate(CW(),H.dow)):esc(hWL(CW()))+(VW()==="inst"?" · Instalaciones":" · "+DOWS[H.dow]+" "+dayDate(CW(),H.dow)+({buses:" · Buses",res:" · Ocupación"}[VW()]||"")))+"</span>";
   $("hMode").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.hview===H.view?"true":"false"));
   if(L0){let h="";for(let n=1;n<=9;n++){const days=weekDays(n);const done=days.filter(d=>dayComplete(n,d)).length;const ok=S.rows.length&&hWeekComplete(n);
       h+='<button class="wkbox hwk'+(ok?" done":"")+'" type="button" data-hweek="'+n+'">'+(ok?'<span class="okc" aria-label="Semana completa" title="Horarios completos y sin avisos">✓</span>':"")+'<span class="wd">'+(weekDates(n)||"&nbsp;")+'</span><span class="wt">Week '+n+'</span><span class="wteams">'+(S.rows.length?(days.length?done+" de "+days.length+" días listos":"Sin inscritos"):"&nbsp;")+"</span></button>"}
+    if(!hCan("horarios.semanas"))h="";
+    if(hCan("horarios.campus")){const AR=S.allRows||[];const cs=CAMPS.filter(c=>c.kind==="nac");if(cs.length)h+='<span class="wsec">Nacionales</span>';
+      cs.forEach(c=>{const wk="c:"+c.id;const rs=AR.filter(r=>r.camp===c.id);const days=weekDays(wk);const done=days.filter(d=>dayComplete(wk,d)).length;const ok=rs.length&&hWeekComplete(wk);
+        h+='<button class="wkbox hwk wc-nac'+(ok?" done":"")+'" type="button" data-hweek="'+wk+'">'+(ok?'<span class="okc" aria-label="Campus completo" title="Horarios completos y sin avisos">✓</span>':"")+'<span class="wd">'+(campDates(c.id)||"&nbsp;")+'</span><span class="wt">'+esc(c.n)+'</span><span class="wteams">'+(AR.length?(rs.length?(days.length?done+" de "+days.length+" días listos":"Sin equipos"):"Sin inscritos"):"&nbsp;")+"</span></button>"})}
     $("hWeekGrid").innerHTML=h;hEditClose();return}
   const cfg=wkCfg(CW());
   $("hSim").hidden=!H.sim;if(H.sim)renderSimPanel();
@@ -3051,11 +3104,11 @@ function renderHorarios(){try{sbSync()}catch(e){}
   const iss=dayIssues(CW(),H.dow);
   const has=aps.some(ap=>Object.values(schedOf(CW(),H.dow,ap)).some(x=>x.length));
   $("hManual").setAttribute("aria-pressed",H.manual?"true":"false");$("hManual").textContent=H.manual?"Terminar edición":"Editar horario";
-  $("hManual").hidden=!aps.length;$("hDl").hidden=!(H.sim&&S.dl&&simHasGen());renderDl();$("hAuto").textContent=H.sim?"Generar horario":"Crear horario automáticamente";$("hDel").textContent=H.sim?"Borrar simulación":"Borrar todo";$("hDel").hidden=!weekDays(CW()).some(d=>APARTADOS.some(([p,m])=>(H.sim?H.simDocs:H.docs)[hKey(CW(),d,p+"|"+m)]));
+  $("hManual").hidden=!aps.length;$("hDl").hidden=!(H.sim&&S.dl&&simHasGen());renderDl();$("hAuto").textContent=H.sim?"Generar horario":"Crear horario automáticamente";$("hAuto").hidden=hNac(CW());{const NAC=hNac(CW()),od=weekDays(CW()).filter(d=>d!==H.dow);$("hRep").hidden=!(NAC&&has&&od.length);$("hRep").innerHTML=NAC&&has&&od.length?'<span class="mlab">Replicar el '+DOWS[H.dow].toLowerCase()+' a</span>'+od.map(d=>'<button type="button" class="btn mini" data-cday="'+d+'">'+DOWS[d].slice(0,3)+"</button>").join("")+(od.length>1?'<button type="button" class="btn mini" data-cday="all">Todos</button>':""):""}$("hDel").textContent=H.sim?"Borrar simulación":"Borrar todo";$("hDel").hidden=!weekDays(CW()).some(d=>APARTADOS.some(([p,m])=>(H.sim?H.simDocs:H.docs)[hKey(CW(),d,p+"|"+m)]));
   const cf=$("hConfirm");cf.hidden=!H.confirm;const nDays=weekDays(CW()).length;
-  if(H.confirm==="auto")cf.innerHTML='<span>Crear el horario automáticamente (se sustituye lo que haya):</span><button class="btn primary" type="button" data-hc="auto-day">Solo el '+DOWS[H.dow].toLowerCase()+'</button><button class="btn primary" type="button" data-hc="auto-week">Toda la Week '+CW()+' ('+nDays+' días)</button><button class="btn" type="button" data-hc="no">Cancelar</button>';
-  if(/^cday-/.test(H.confirm)){const d=+H.confirm.slice(5);cf.innerHTML='<span>¿Copiar el horario del '+DOWS[H.dow].toLowerCase()+' de todos los grupos al '+DOWS[d].toLowerCase()+'? Se sustituye lo que haya ese día.</span><button class="btn primary" type="button" data-hc="docday-'+d+'">Copiar</button><button class="btn" type="button" data-hc="no">Cancelar</button>'}
-  if(H.confirm==="del")cf.innerHTML='<span>¿Borrar todo y empezar de cero?</span><button class="btn primary" type="button" data-hc="del-day">Solo el '+DOWS[H.dow].toLowerCase()+'</button><button class="btn primary" type="button" data-hc="del-week">Toda la Week '+CW()+'</button><button class="btn" type="button" data-hc="no">Cancelar</button>';
+  if(H.confirm==="auto")cf.innerHTML='<span>Crear el horario automáticamente (se sustituye lo que haya):</span><button class="btn primary" type="button" data-hc="auto-day">Solo el '+DOWS[H.dow].toLowerCase()+'</button><button class="btn primary" type="button" data-hc="auto-week">Toda la '+esc(hWL(CW()))+' ('+nDays+' días)</button><button class="btn" type="button" data-hc="no">Cancelar</button>';
+  if(/^cday-/.test(H.confirm)){const d0=H.confirm.slice(5);const all=d0==="all";cf.innerHTML='<span>¿Copiar el horario del '+DOWS[H.dow].toLowerCase()+' de todos los grupos '+(all?"a todos los demás días":"al "+DOWS[+d0].toLowerCase())+'? Se sustituye lo que haya'+(all?" esos días":" ese día")+'.</span><button class="btn primary" type="button" data-hc="docday-'+d0+'">Copiar</button><button class="btn" type="button" data-hc="no">Cancelar</button>'}
+  if(H.confirm==="del")cf.innerHTML='<span>¿Borrar todo y empezar de cero?</span><button class="btn primary" type="button" data-hc="del-day">Solo el '+DOWS[H.dow].toLowerCase()+'</button><button class="btn primary" type="button" data-hc="del-week">'+(hNac(CW())?"Todo el campus":"Toda la Week "+CW())+'</button><button class="btn" type="button" data-hc="no">Cancelar</button>';
   renderAlerts(iss,aps);
   if(VW()==="res"){$("hPal").hidden=true;hEditClose();renderHRes(iss);return}
   if(VW()==="buses"){$("hPal").hidden=true;hEditClose();renderBuses(iss.cfg);return}
@@ -3195,7 +3248,7 @@ async function simDownload(){const w=CW();const f=H.dlFmt;if(!f||!S.dl)return;H.
   finally{H.dlBusy=false;renderDl()}}
 /* ---------- SIMULADOR ---------- */
 function simStatus(w){return H.simGen===w&&weekDays(w).some(d=>APARTADOS.some(([p,m])=>H.simDocs[hKey(w,d,p+"|"+m)]))?'Simulación generada con los datos actuales':'<b>Pulsa «Generar horario»</b> para crear la simulación de la Week '+w+"."}
-function renderSimPanel(){const w=CW();const T=H.simTeams["w"+w]||{};const el=$("hSim");
+function renderSimPanel(){const w=CW();const T=H.simTeams[hw(w)]||{};const el=$("hSim");
   if(el.dataset.w===String(w)&&el.querySelector("[data-simt]")){ // actualiza sin reconstruir: no se pierde lo que se está escribiendo
     el.querySelectorAll("[data-simt]").forEach(i=>{if(i!==document.activeElement)i.value=+T[i.dataset.simt]||0});
     el.querySelectorAll("[data-simw]").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.simw===w)));
@@ -3294,7 +3347,7 @@ function renderAlerts(iss,aps){
 function renderModPanel(cfg){
   const box=$("hModPanel");if(!H.open||!CW()){box.hidden=true;return}box.hidden=false;
   const ap=H.open,k=apKey(ap);const cur=cfg.mods[k]||[];
-  let h='<div class="ih"><h3>Instalaciones de '+esc(apLabel(...ap.split("|")))+'</h3><span class="sub">En campos se llena primero Valdebebas; si no cabe, pasa a la siguiente sede activa.</span><button class="btn" type="button" data-mclose>Cerrar</button></div><div class="msl">';
+  let h='<div class="ih"><h3>Instalaciones de '+esc(apLabel(...ap.split("|")))+'</h3><span class="sub">'+(hNac(CW())?"Instalaciones del campus que usa esta modalidad.":"En campos se llena primero Valdebebas; si no cabe, pasa a la siguiente sede activa.")+'</span><button class="btn" type="button" data-mclose>Cerrar</button></div><div class="msl">';
   cfg.sedes.slice().sort((a,b)=>(a.id==="vbb"?0:1)-(b.id==="vbb"?0:1)).forEach(s=>{const m=cur.find(x=>x.id===s.id);const pos=modSedes(cfg,ap).findIndex(x=>x.id===s.id);
     const has=s.res.map(r=>r.n).join(" · ")||"sin instalaciones";
     h+='<div class="msr'+(m?" on":"")+'"><button type="button" class="it" data-msede="'+esc(s.id)+'" aria-pressed="'+!!m+'"><i class="tg">'+(m?"✓":"")+'</i>'+(m?'<b class="pr">'+(pos+1)+"</b>":"")+esc(s.n)+' <small>'+esc(s.full||"")+'</small></button><span class="mh">'+esc(has)+'</span>'+(m?'<select data-mfr="'+esc(s.id)+'" aria-label="Franja en '+esc(s.n)+'">'+Object.entries(FR_LBL).map(([v,l])=>'<option value="'+v+'"'+(m.fr===v?" selected":"")+">"+l+"</option>").join("")+"</select>":"")+"</div>"});
@@ -3304,10 +3357,11 @@ function vbbExpFree(s){const def=SEDES_DEF.find(d=>d.id==="vbb");const campos=ne
   return def.res.filter(r=>r.t==="exp"&&!have.has(r.n)&&(!r.req||!r.req.length||r.req.some(c=>campos.has(c))))}
 function renderInst(cfg){
   const board=$("hBoard");
-  let h='<div class="instv"><div class="ih"><h3>Instalaciones · Week '+CW()+'</h3><span class="sub">Capacidad y días de cada instalación esta semana.</span>'+(CW()>1?'<button class="btn" type="button" data-icopy>Copiar de la Week '+(CW()-1)+"</button>":"")+'<button class="btn" type="button" data-iall>Aplicar a todas las semanas</button></div>';
-  h+='<div class="resi"><span class="il2">Residencia de los internos esta semana</span><div class="seg">'+["RESA","UEM"].map(x=>'<button type="button" data-iresi="'+x+'" aria-pressed="'+(cfg.resi===x)+'">'+x+"</button>").join("")+'</div><span class="sub">Decide su comedor, piscina, velada y clausura.</span></div><div class="icards">';
+  const NAC=hNac(CW());
+  let h='<div class="instv"><div class="ih"><h3>Instalaciones · '+esc(hWL(CW()))+'</h3><span class="sub">'+(NAC?"Las instalaciones propias de este campus: sus espacios, capacidad y días.":"Capacidad y días de cada instalación esta semana.")+'</span>'+(NAC?"":(CW()>1?'<button class="btn" type="button" data-icopy>Copiar de la Week '+(CW()-1)+"</button>":"")+'<button class="btn" type="button" data-iall>Aplicar a todas las semanas</button>')+'</div>';
+  if(NAC)h+='<div class="icards">';else h+='<div class="resi"><span class="il2">Residencia de los internos esta semana</span><div class="seg">'+["RESA","UEM"].map(x=>'<button type="button" data-iresi="'+x+'" aria-pressed="'+(cfg.resi===x)+'">'+x+"</button>").join("")+'</div><span class="sub">Decide su comedor, piscina, velada y clausura.</span></div><div class="icards">';
   cfg.sedes.forEach((s,si)=>{
-    h+='<div class="icard"><div class="ich"><span class="isn">'+esc(s.n)+'</span><span class="sfull">'+esc(s.full||"")+"</span>"+(s.id==="vbb"?'<span class="prio">Prioridad</span>':"")+'<button class="btn idel" type="button" data-idel="'+si+'">Quitar instalación</button></div>';
+    h+='<div class="icard"><div class="ich">'+(NAC?'<input class="isn isnin" value="'+esc(s.n)+'" data-sn="'+si+'" aria-label="Nombre de la instalación" maxlength="40">':'<span class="isn">'+esc(s.n)+'</span>')+'<span class="sfull">'+esc(s.full||"")+"</span>"+(s.id==="vbb"?'<span class="prio">Prioridad</span>':"")+'<button class="btn idel" type="button" data-idel="'+si+'">Quitar instalación</button></div>';
     if(!s.res.length)h+='<span class="sub">Sin espacios esta semana.</span>';
     if(s.res.length)h+='<div class="rlist">'+s.res.map((r,ri)=>{const id=si+"."+ri;const open=H.winOpen===id;
       return '<div class="rrow"><div class="rtop"><input class="rn" value="'+esc(r.n)+'" data-rn="'+id+'" aria-label="Nombre" maxlength="30"><span class="rt">'+esc(TYPE_LBL[r.t]||r.t)+(r.f?" "+r.f:"")+'</span><button type="button" class="tx" data-rdel="'+id+'" aria-label="Quitar espacio" title="Quitar espacio">×</button></div><div class="rbot">'+(UNIT[r.t]?'<span class="rc"><input type="number" min="0" max="999" value="'+(+r.cap||0)+'" data-rc="'+id+'" aria-label="Capacidad"> '+UNIT[r.t]+"</span>":'<span class="rc"></span>')+
@@ -3317,7 +3371,8 @@ function renderInst(cfg){
     h+='<div class="radd"><select data-ratype="'+si+'" aria-label="Tipo de espacio">'+Object.entries(TYPE_LBL).map(([t,l])=>'<option value="'+t+'"'+(t===ty?" selected":"")+'>'+l+"</option>").join("")+'</select>'+
       (vx?(vx.length?'<select data-raexp="'+si+'" aria-label="Espacio Experience de Valdebebas">'+vx.map(r=>'<option value="'+esc(r.n)+'">'+esc(r.n)+"</option>").join("")+"</select>":'<span class="sub">No quedan espacios Experience disponibles para los campos añadidos.</span>'):"")+
       '<button class="btn" type="button" data-radd="'+si+'"'+(vx&&!vx.length?" disabled":"")+'>Añadir espacio</button></div></div>'});
-  const miss=SEDES_DEF.filter(d=>!findSede(cfg,d.id));
+  if(NAC)h+='<div class="icard iadd2 inew"><input class="rn" data-inewn placeholder="Nueva instalación" aria-label="Nombre de la nueva instalación" maxlength="40"><button class="btn primary" type="button" data-inew>Añadir instalación</button>'+(cfg.sedes.length?"":'<span class="sub">Empieza por las instalaciones del campus (por ejemplo, la ciudad deportiva y el colegio). Dentro de cada una añades sus campos, comedor, piscina y espacios.</span>')+"</div>";
+  const miss=NAC?[]:SEDES_DEF.filter(d=>!findSede(cfg,d.id));
   if(miss.length)h+='<div class="icard iadd2"><select class="iaddsel" data-iaddsel aria-label="Añadir instalación"><option value="">Añadir instalación ▾</option>'+miss.map(d=>'<option value="'+esc(d.id)+'">'+esc(d.n)+" · "+esc(d.full||"")+"</option>").join("")+"</select></div>";
   h+='</div></div>';
   board.innerHTML=h;
@@ -3384,7 +3439,7 @@ function dayTrips(cfg,week,dow){const trips=[];
 /* ---------- BUSES: trayectos manuales, reparto con cambios a mano y comprobaciones ---------- */
 const isBusBlk=b=>/^Bus|· Bus/.test(b.a||"");
 const tripKey=t=>t.ap+"|"+t.g+"|"+t.from+"|"+t.to+"|"+t.dep;
-const busKey=(w,d)=>"w"+w+"-d"+d;
+const busKey=(w,d)=>hw(w)+"-d"+d;
 function busOv(w,d){const o=(H.sim?H.simBus:H.busOv)[busKey(w,d)]||{};return {buses:o.buses||{},assign:o.assign||{},removed:o.removed||{}}}
 async function saveBusOv(w,d,ov,msg){const k=busKey(w,d);ov.updatedAt=new Date().toISOString();
   if(H.sim){H.simBus[k]=ov;setStatus(msg||"Guardado");return hSaveSim(w)}
@@ -3498,7 +3553,7 @@ function hPlace(ci,s,it,res){const c=H.cols[ci];const targets=H.palAll?H.cols.fi
   const groups=hDocGroups(H.dow,c.ap);targets.forEach(tc=>{const g=groups.find(x=>x.name===tc.n);if(g)g.blocks.push(...palBlocks(it,s,res))});
   H.pick=null;hCommit([[H.dow,c.ap,groups]],targets.length>1?"Añadido a "+targets.length+" grupos":"Añadido")}
 /* copiar un día: del lunes a otro día (o al revés) se cambian los check-in de los externos */
-function adaptDay(bl,from,to,ap){let out=bl.map(b=>Object.assign({},b));if(isInt(ap)||from===to||(from!==1&&to!==1))return out;
+function adaptDay(bl,from,to,ap){let out=bl.map(b=>Object.assign({},b));if(hNac(CW())||isInt(ap)||from===to||(from!==1&&to!==1))return out;
   out=out.filter(b=>!/Check-in|Welcome|^Bus a VBB$/.test(b.a));return preExterno(to,ap).concat(out)}
 function renderHPal(cfg,aps){
   const box=$("hPal");if(!H.manual||!aps.length){box.hidden=true;H.tool="";return}box.hidden=false;
@@ -3506,7 +3561,7 @@ function renderHPal(cfg,aps){
   let h='<div class="mrow"><span class="pl1">Editar horario</span><button type="button" class="pc pc-ed" data-tool="" aria-pressed="'+(!tool)+'">Mover y editar</button><span class="msep"></span>'+
     PAL.map(p=>{const c=ACT_CAT[p.a]||"log";return '<button type="button" class="pc pk" data-tool="'+p.k+'" aria-pressed="'+(tool===p.k)+'"><i class="dot c-'+c+(p.a==="FUN"?" c-fun":"")+'"></i>'+esc(p.l)+'<small>'+durL(p.pool?90:p.d)+"</small></button>"}).join("")+"</div>";
   h+='<div class="mrow m2"><label class="mchk"><input type="checkbox" id="hPalAll"'+(H.palAll?" checked":"")+'> En todos los grupos de la modalidad</label><button type="button" class="btn mini" data-hundo'+((H.undo||[]).length?"":" disabled")+'>Deshacer</button>'+
-    (days.length?'<span class="mlab">Copiar este día a</span>'+days.map(d=>'<button type="button" class="btn mini" data-cday="'+d+'">'+DOWS[d].slice(0,3)+"</button>").join(""):"")+"</div>";
+    (days.length?'<span class="mlab">Copiar este día a</span>'+days.map(d=>'<button type="button" class="btn mini" data-cday="'+d+'">'+DOWS[d].slice(0,3)+"</button>").join("")+(days.length>1?'<button type="button" class="btn mini" data-cday="all">Todos</button>':""):"")+"</div>";
   if(H.clip){const cl=H.clip;h+='<div class="mrow m3"><span class="mlab">Copiado: <b>'+esc(cl.n)+"</b> · "+DOWS[cl.dow].toLowerCase()+'</span><span class="mlab">Pulsa «Pegar» en otro grupo, o</span><button type="button" class="btn mini" data-pasteall>Pegar en todos los de '+esc(MODSHORT(cl.ap))+"</button>"+
     weekDays(CW()).filter(d=>d!==cl.dow).map(d=>'<button type="button" class="btn mini" data-pasteday="'+d+'">Pegar el '+DOWS[d].slice(0,3).toLowerCase()+"</button>").join("")+'<button type="button" class="btn mini" data-clipx>Quitar</button></div>'}
   h+='<p class="ihint">'+(tool?"Pulsa en la columna de un grupo, a la hora en que empieza.":"Arrastra un bloque para moverlo (también a otro grupo); estira su borde de abajo para cambiar la duración; púlsalo para editarlo.")+"</p>";
@@ -3544,22 +3599,23 @@ function renderHEdit(){
 function hEditClose(){H.edit=null;const b=$("hEdit");if(b)b.hidden=true}
 (function(){
   $("hActs").innerHTML=Object.keys(ACT_CAT).concat(["Bus","Bus Fleming","Check-in Fleming","Check-in Sede","Vestuario","Check-out Sede","Check-out Fleming","Welcome Pack"]).map(a=>'<option value="'+esc(a)+'">').join("");
-  $("hWeekGrid").addEventListener("click",e=>{const b=e.target.closest("[data-hweek]");if(!b)return;H.week=+b.dataset.hweek;const d=weekDays(CW())[0];H.dow=d==null?1:d;H.view="grid";H.open="";H.confirm="";hEditClose();renderHorarios();window.scrollTo(0,0)});
+  $("hWeekGrid").addEventListener("click",e=>{const b=e.target.closest("[data-hweek]");if(!b)return;const hv=b.dataset.hweek;H.week=isCampKey(hv)?hv:+hv;const d=weekDays(CW())[0];H.dow=d==null?1:d;H.view="grid";H.open="";H.confirm="";hEditClose();renderHorarios();window.scrollTo(0,0)});
   $("hCrumbs").addEventListener("click",e=>{if(e.target.closest("[data-hback]")){H.week=0;H.manual=false;H.open="";hEditClose();renderHorarios();window.scrollTo(0,0)}});
   $("hDays").addEventListener("click",e=>{const b=e.target.closest("[data-hdow]");if(!b||b.disabled)return;H.dow=+b.dataset.hdow;H.confirm="";hEditClose();renderHorarios()});
   $("hMode").addEventListener("click",e=>{const b=e.target.closest("[data-hview]");if(!b)return;H.view=b.dataset.hview;hEditClose();renderHorarios()});
   $("hSim").addEventListener("click",e=>{let b;if((b=e.target.closest("[data-simw]"))){H.simWeek=+b.dataset.simw;const d=weekDays(H.simWeek)[0];H.dow=d==null?1:d;renderHorarios();return}
     if((b=e.target.closest("[data-simv]"))){H.simView=b.dataset.simv;renderHorarios();return}});
-  $("hSim").addEventListener("input",e=>{const el=e.target.closest("[data-simt]");if(!el||el.value==="")return;const w=CW();const T=(H.simTeams["w"+w]=H.simTeams["w"+w]||{});T[el.dataset.simt]=Math.max(0,parseInt(el.value,10)||0);H.simDirty=Date.now()});
-  $("hSim").addEventListener("change",e=>{const el=e.target.closest("[data-simt]");if(!el)return;const w=CW();const T=(H.simTeams["w"+w]=H.simTeams["w"+w]||{});T[el.dataset.simt]=Math.max(0,parseInt(el.value,10)||0);H.simDirty=Date.now();
-    Object.keys(H.simDocs).forEach(k=>{if(k.startsWith("w"+w+"-"))delete H.simDocs[k]});H.simGen=0;const d=weekDays(w);if(d.length&&!d.includes(H.dow))H.dow=d[0];hSaveSim(w)});
+  $("hSim").addEventListener("input",e=>{const el=e.target.closest("[data-simt]");if(!el||el.value==="")return;const w=CW();const T=(H.simTeams[hw(w)]=H.simTeams[hw(w)]||{});T[el.dataset.simt]=Math.max(0,parseInt(el.value,10)||0);H.simDirty=Date.now()});
+  $("hSim").addEventListener("change",e=>{const el=e.target.closest("[data-simt]");if(!el)return;const w=CW();const T=(H.simTeams[hw(w)]=H.simTeams[hw(w)]||{});T[el.dataset.simt]=Math.max(0,parseInt(el.value,10)||0);H.simDirty=Date.now();
+    Object.keys(H.simDocs).forEach(k=>{if(k.startsWith(hw(w)+"-"))delete H.simDocs[k]});H.simGen=0;const d=weekDays(w);if(d.length&&!d.includes(H.dow))H.dow=d[0];hSaveSim(w)});
   $("hOccTabs").addEventListener("click",e=>{const b=e.target.closest("[data-occ]");if(!b)return;H.occ=b.dataset.occ;renderHorarios()});
   $("hProg").addEventListener("click",e=>{const b=e.target.closest("[data-hmod]");if(!b||b.disabled)return;H.open=H.open===b.dataset.hmod?"":b.dataset.hmod;renderHorarios()});
   $("hModPanel").addEventListener("click",e=>{
     if(e.target.closest("[data-mclose]")){H.open="";renderHorarios();return}
     const b=e.target.closest("[data-msede]");if(!b)return;const cfg=wkCfg(CW()),k=apKey(H.open),id=b.dataset.msede;const L=(cfg.mods[k]=cfg.mods[k]||[]);const i=L.findIndex(x=>x.id===id);if(i>=0)L.splice(i,1);else L.push({id,fr:"all"});hSaveCfg(CW(),cfg)});
   $("hModPanel").addEventListener("change",e=>{const s=e.target.closest("[data-mfr]");if(!s)return;const cfg=wkCfg(CW()),k=apKey(H.open);const m=(cfg.mods[k]||[]).find(x=>x.id===s.dataset.mfr);if(m){m.fr=s.value;hSaveCfg(CW(),cfg)}});
-  $("hAuto").addEventListener("click",()=>{if(H.sim){setStatus("Generando…");setTimeout(()=>hAuto(weekDays(CW())),30);return}H.confirm=H.confirm==="auto"?"":"auto";hEditClose();renderHorarios()});
+  $("hRep").addEventListener("click",e=>{const b=e.target.closest("[data-cday]");if(!b)return;H.confirm="cday-"+b.dataset.cday;renderHorarios()});
+  $("hAuto").addEventListener("click",()=>{if(hNac(CW()))return;if(H.sim){setStatus("Generando…");setTimeout(()=>hAuto(weekDays(CW())),30);return}H.confirm=H.confirm==="auto"?"":"auto";hEditClose();renderHorarios()});
   $("hDl").addEventListener("click",()=>{H.dlOpen=true;H.dlMsg="";renderDl()});
   $("hDlModal").addEventListener("click",e=>{let b;if(e.target===$("hDlModal")||e.target.closest("#hDlX")){if(!H.dlBusy){H.dlOpen=false;renderDl()}return}
     if((b=e.target.closest("[data-dlf]"))){H.dlFmt=b.dataset.dlf;H.dlMsg="";renderDl();return}
@@ -3568,7 +3624,7 @@ function hEditClose(){H.edit=null;const b=$("hEdit");if(b)b.hidden=true}
   $("hDel").addEventListener("click",()=>{if(H.sim){hClear([0,1,2,3,4,5,6]);return}H.confirm=H.confirm==="del"?"":"del";hEditClose();renderHorarios()});
   $("hConfirm").addEventListener("click",e=>{const b=e.target.closest("[data-hc]");if(!b)return;const k=b.dataset.hc;H.confirm="";
     if(k==="auto-day")return hAuto([H.dow]);if(k==="auto-week")return hAuto(weekDays(CW()));
-    if(/^docday-/.test(k)){const d=+k.slice(7);const ch=[];dayAps(CW(),H.dow).forEach(ap=>{if(!dayAps(CW(),d).includes(ap))return;const src=hDocGroups(H.dow,ap);const dst=hDocGroups(d,ap);dst.forEach(g=>{const sg=src.find(x=>x.name===g.name);if(sg)g.blocks=adaptDay(sg.blocks,H.dow,d,ap)});ch.push([d,ap,dst])});if(ch.length)hCommit(ch,"Copiado al "+DOWS[d].toLowerCase());return}
+    if(/^docday-/.test(k)){const d0=k.slice(7);const ds=d0==="all"?weekDays(CW()).filter(x=>x!==H.dow):[+d0];const ch=[];ds.forEach(d=>dayAps(CW(),H.dow).forEach(ap=>{if(!dayAps(CW(),d).includes(ap))return;const src=hDocGroups(H.dow,ap);const dst=hDocGroups(d,ap);dst.forEach(g=>{const sg=src.find(x=>x.name===g.name);if(sg)g.blocks=adaptDay(sg.blocks,H.dow,d,ap)});ch.push([d,ap,dst])}));if(ch.length)hCommit(ch,d0==="all"?"Copiado a todos los días":"Copiado al "+DOWS[+d0].toLowerCase());return}
     if(k==="del-day")return hClear([H.dow]);if(k==="del-week")return hClear([0,1,2,3,4,5,6]);renderHorarios()});
   $("hManual").addEventListener("click",()=>{H.manual=!H.manual;H.brush="";H.tool="";H.pick=null;if(!H.manual)hEditClose();renderHorarios()});
   $("hPal").addEventListener("change",e=>{if(e.target.id==="hPalAll"){H.palAll=e.target.checked}});
@@ -3626,11 +3682,16 @@ function hEditClose(){H.edit=null;const b=$("hEdit");if(b)b.hidden=true}
     const gs2=hDocGroups(H.dow,tc.ap);const tg=gs2.find(x=>x.name===tc.n);if(tg)tg.blocks.push(...pack);hCommit([[H.dow,c.ap,gs],[H.dow,tc.ap,gs2]],"Movido a "+tc.n)};
   B.addEventListener("pointerup",dragEnd);B.addEventListener("pointercancel",e=>{if(H.drag){H.drag=null;renderHorarios()}});
   const edit=fn=>{const cfg=wkCfg(CW());fn(cfg);hSaveCfg(CW(),cfg)};
+  /* nacionales: cada campus crea sus instalaciones; se activan para todas sus modalidades */
+  const addNacSede=()=>{const inp=B.querySelector("[data-inewn]");const n=inp?inp.value.trim():"";if(!n){if(inp)inp.focus();return}
+    edit(cfg=>{if(cfg.sedes.some(x=>x.n.toLowerCase()===n.toLowerCase()))return;const id="s"+Date.now().toString(36);cfg.sedes.push({id,n,full:"",res:[]});APARTADOS.forEach(([p,m])=>{const k=apKey(p+"|"+m);(cfg.mods[k]=cfg.mods[k]||[]).push({id,fr:"all"})})})};
+  B.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.matches("[data-inewn]")){e.preventDefault();addNacSede()}});
   const R2=v=>v.split(".").map(Number);
   B.addEventListener("change",e=>{const el=e.target;
     if(el.dataset.ratype!=null){const s=wkCfg(CW()).sedes[+el.dataset.ratype];if(s){H.raType=H.raType||{};H.raType[s.id]=el.value;renderHorarios()}return}
     if(el.dataset.iaddsel!=null){const id=el.value;if(!id)return;const def=SEDES_DEF.find(d=>d.id===id);if(!def)return;
       edit(cfg=>{if(findSede(cfg,id))return;const ord=x=>SEDES_DEF.findIndex(d=>d.id===x.id);const ns=clone(def);ns.res=ns.res.map(r=>Object.assign({cap:0},r,{off:[],win:{}}));cfg.sedes.push(ns);cfg.sedes.sort((a,b)=>ord(a)-ord(b))});return}
+    if(el.dataset.sn!=null){const si=+el.dataset.sn;edit(cfg=>{const x=cfg.sedes[si];if(x)x.n=el.value.trim()||x.n});return}
     if(el.dataset.rn){const [si,ri]=R2(el.dataset.rn);edit(cfg=>{const r=cfg.sedes[si].res[ri];if(r)r.n=el.value.trim()||r.n});return}
     if(el.dataset.rc){const [si,ri]=R2(el.dataset.rc);edit(cfg=>{const r=cfg.sedes[si].res[ri];if(r)r.cap=Math.max(0,parseInt(el.value,10)||0)});return}
     if(el.dataset.rws||el.dataset.rwe){const [si,ri]=R2(el.dataset.rws||el.dataset.rwe),d=+el.dataset.d,f=el.dataset.rws?"s":"e";edit(cfg=>{const r=cfg.sedes[si].res[ri];r.win=r.win||{};const w=r.win[d]||{};w[f]=el.value;if(!w.s&&!w.e)delete r.win[d];else r.win[d]=w})}});
@@ -3647,6 +3708,7 @@ function hEditClose(){H.edit=null;const b=$("hEdit");if(b)b.hidden=true}
       if(B.querySelector('[data-ratype="'+si+'"]')&&wkCfg(CW()).sedes[si].id==="vbb"&&t==="exp")return;
       edit(cfg=>{const s=cfg.sedes[si];const n=TYPE_LBL[t]+" "+s.n+" "+(s.res.filter(r=>r.t===t).length+1);s.res.push(RS(n,t,t==="campo"?6:t==="exp"||t==="prep"?1:0,Object.assign(t==="campo"?{f:"F11"}:{},{off:[],win:{}})))});return}
 
+    if(e.target.closest("[data-inew]")){addNacSede();return}
     if(e.target.closest("[data-icopy]")){const prev=wkCfg(CW()-1);hSaveCfg(CW(),{sedes:prev.sedes,mods:prev.mods,resi:prev.resi});return}
     if(e.target.closest("[data-iall]")){const cur=wkCfg(CW());for(let n=1;n<=9;n++)if(n!==CW())hSaveCfg(n,{sedes:clone(cur.sedes),mods:clone(cur.mods),resi:cur.resi});setStatus("Aplicado a todas las semanas");return}
     if(VW()!=="grid"||!H.manual||!H.cols)return;
@@ -3733,6 +3795,83 @@ function renderPagos(){
 $("accTabs").addEventListener("click",e=>{const b=e.target.closest("[data-acc]");if(!b)return;const k=b.dataset.acc;
   $("accTabs").querySelectorAll("[data-acc]").forEach(x=>{const on=x.dataset.acc===k;x.setAttribute("aria-selected",String(on));x.setAttribute("aria-pressed",String(on))});
   $("accPagos").hidden=k!=="pagos";$("accDev").hidden=k!=="dev";$("accCan").hidden=k!=="can";if(k==="pagos")renderPagos();try{sbSync()}catch(e){}});
+/* ===== FACTURAS: comprobación entre el CRM (lo pagado) y Zoho Books (lo facturado) =====
+   En Books se crea una factura por cada pago, serie C-2027, con la referencia «<fecha>-<id de la inscripción>».
+   Las reservas de 50 € antiguas no llevan el id: se enlazan por el email de la familia. */
+var INV={f:"err",q:"",list:null,busy:false,err:"",at:null};
+const BOOKS_ORG="20110950454",INV_PREFIX="C-2027";
+/* series: Madrid C-2027; los nacionales numeran por campus (VAL27.01, …): se leen todas las que contienen «27.» */
+const INV_SERIES=[["invoice_number_startswith",INV_PREFIX],["invoice_number_contains","27."]];
+const invSeries=n=>{n=String(n||"");return n.startsWith(INV_PREFIX)?INV_PREFIX:((/^([A-Z]+)\d*27\./.exec(n)||/^([A-Z]+)/.exec(n)||[,"—"])[1]+"27")};
+const r2=n=>Math.round((+n||0)*100)/100;
+async function loadBooks(force){
+  if(!S.mcp||INV.busy)return;
+  if(window.CE_ACL&&!(window.CE_ACL.admin||(window.CE_ACL.perms||{})["contabilidad.facturas"]))return;INV.busy=true;INV.err="";renderFacturas();
+  try{const all=[],seen=new Set();
+    for(const [qk,qv] of INV_SERIES)for(let page=1;page<=25;page++){
+      const res=await S.mcp.callTool("Zoho Books","list_invoices",{query_params:{organization_id:BOOKS_ORG,[qk]:qv,per_page:200,page}},{cache:{staleTime:60000,gcTime:600000,refresh:!!force}});
+      let p=res&&res.payload;if(typeof p==="string"){try{p=JSON.parse(p)}catch(e){p=null}}
+      const d=p&&(p.data&&Array.isArray(p.data.invoices)?p.data:p);
+      if(!d||!Array.isArray(d.invoices))throw {code:"shape",message:"respuesta no reconocida"};
+      d.invoices.forEach(i=>{const k=i.invoice_id||i.invoice_number;if(!seen.has(k)){seen.add(k);all.push(i)}});if(!d.page_context||!d.page_context.has_more_page)break}
+    INV.list=all;INV.at=new Date()}
+  catch(e){const c=e&&e.code;
+    INV.err=c==="server_not_connected"?"Zoho Books no está conectado. Añádelo en claude.ai → Configuración → Conectores.":c==="needs_reauth"?"Vuelve a conectar Zoho Books en claude.ai → Configuración → Conectores.":c==="not_in_manifest"||c==="approval_required"?"Falta dar permiso a esta página para leer Zoho Books.":c==="blocked_by_policy"?"Tu organización no permite leer Zoho Books desde aquí.":"No se han podido leer las facturas de Zoho Books"+(e&&e.message?" ("+e.message+")":"")+"."}
+  INV.busy=false;renderFacturas();try{sbSync()}catch(e){}}
+function invCheck(){
+  const AR=S.allRows||[],L=(INV.list||[]).filter(i=>i.status!=="void"&&i.status!=="draft");
+  const ids=new Set(AR.map(r=>String(r.id))),byDeal={},byEmail={},orph=[];
+  L.forEach(i=>{const m=/-(\d{12,})$/.exec(i.reference_number||"");
+    if(m&&ids.has(m[1]))(byDeal[m[1]]=byDeal[m[1]]||[]).push(i);
+    else if(m)orph.push({i,why:"La inscripción no está activa en el software (baja, devolución o borrada)"});
+    else{const e=String(i.email||"").toLowerCase();(byEmail[e]=byEmail[e]||[]).push(i)}});
+  const used=new Set();const eq=(a,b)=>Math.abs(a-b)<0.01;
+  const paidOf=r=>{const d=r.d;if(d.Paid!=null)return r2(d.Paid);try{const s=payState(r);return s.k==="paid"?r2(d.Total):r2(s.inst.filter(x=>x.st==="Paid").reduce((a,x)=>a+(+x.amt||0),0))}catch(e){return 0}};
+  /* las facturas de reserva (sin código) se reparten entre las inscripciones de la misma familia: cada una a una sola inscripción, solo si falta ese importe */
+  const rows=AR.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(r=>{const d=r.d;
+    const inv=(byDeal[r.id]||[]).slice().sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+    const paid=paidOf(r),total=r2(d.Total),sum=r2(inv.reduce((a,i)=>a+(+i.total||0),0));
+    const res=[];const need=r2(paid-sum);
+    if(need>0.01){const c=[];[d.Email,d.Email_persona].map(x=>String(x||"").toLowerCase()).filter(Boolean).forEach(e=>(byEmail[e]||[]).forEach(i=>{if(!used.has(i)&&!c.includes(i))c.push(i)}));
+      c.sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+      c.forEach(i=>{if(r2(res.reduce((a,x)=>a+(+x.total||0),0)+(+i.total||0))<=need+0.01){res.push(i);used.add(i)}})}
+    const tot=r2(sum+res.reduce((a,i)=>a+(+i.total||0),0));const unpaid=inv.concat(res).filter(i=>+i.balance>0);
+    let k;if(!paid&&!inv.length&&!res.length)k="none";else if(!inv.length&&!res.length)k="sin";else if(eq(tot,paid))k=unpaid.length?"cobro":"ok";else k="dif";
+    return {r,inv,res,resIn:true,paid,total,sum:tot,k,diff:r2(tot-paid),unpaid}});
+  Object.values(byEmail).flat().forEach(i=>{if(!used.has(i))orph.push({i,why:Math.abs(+i.total-50)<.01?"Reserva de 50 € sin inscripción activa con ese email":"Factura sin el código de la inscripción en la referencia"})});
+  return {rows,orph}}
+const INV_BOX=[["err","Con error","Sin factura, no cuadra o sin cobrar"],["sin","Sin factura","Ha pagado y no hay factura"],["dif","No cuadra","Facturado distinto de lo pagado"],["ok","Correctas","Facturado igual a lo pagado"],["none","Sin pagos","Aún no ha pagado nada"],["all","Todos",""]];
+const INV_LBL={ok:"Correcta",sin:"Sin factura",dif:"No cuadra",cobro:"Sin cobrar",none:"Sin pagos"};
+const INV_ERR=k=>k==="sin"||k==="dif"||k==="cobro";
+function invErrCount(){if(!INV.list||!(S.allRows||[]).length)return null;try{const c=invCheck();return c.rows.filter(x=>INV_ERR(x.k)).length}catch(e){return null}}
+const booksUrl=i=>"https://books.zoho.eu/app/"+BOOKS_ORG+"#/invoices/"+encodeURIComponent(i.invoice_id);
+function renderFacturas(){
+  if($("view-facturas").hidden)return;
+  $("invSub").textContent=INV.busy?"Leyendo Zoho Books…":INV.at?"Comprobado con Zoho Books a las "+INV.at.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})+" · series "+([...new Set((INV.list||[]).map(i=>invSeries(i.invoice_number)))].sort().join(", ")||INV_PREFIX):"Comprobación con Zoho Books";
+  $("invRefresh").disabled=INV.busy;
+  const AR=S.allRows||[];
+  if(INV.err&&!INV.list){$("invBoxes").innerHTML="";$("invCount").textContent="";$("invList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Sin facturas</h3><p>'+esc(INV.err)+"</p></div>";$("invOrph").innerHTML="";return}
+  if(!INV.list||!AR.length){$("invBoxes").innerHTML="";$("invList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">'+(INV.busy||!AR.length?"Cargando facturas…":"Sin datos")+"</h3></div>";$("invOrph").innerHTML="";return}
+  const {rows,orph}=invCheck();const cnt={all:rows.length,ok:0,sin:0,dif:0,cobro:0,none:0};rows.forEach(x=>cnt[x.k]++);cnt.err=cnt.sin+cnt.dif+cnt.cobro;
+  $("invBoxes").innerHTML=INV_BOX.map(([k,t,sub])=>'<button type="button" class="pbx ib-'+k+'" data-if="'+k+'" aria-pressed="'+(INV.f===k)+'"><span class="pt2">'+t+'</span><span class="pc2">'+cnt[k]+'</span><span class="ps2">'+sub+"</span></button>").join("");
+  const nrm=t=>String(t).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();const q=nrm(INV.q.trim());
+  let it=rows.filter(x=>INV.f==="all"||(INV.f==="err"?INV_ERR(x.k):x.k===INV.f));
+  if(q)it=it.filter(x=>nrm(x.r.hay+" "+x.r.name+" "+x.r.code+" "+((campById(x.r.camp||"mad")||{}).n||"")+" "+x.inv.map(i=>i.invoice_number).join(" ")).includes(q));
+  const ord={sin:0,dif:1,cobro:2,ok:3,none:4};it.sort((a,b)=>ord[a.k]-ord[b.k]||a.r.name.localeCompare(b.r.name));
+  $("invCount").textContent=it.length+" jugadores";
+  const chip=(i,extra)=>'<a class="ichip'+(+i.balance>0?" ko":"")+'" href="'+booksUrl(i)+'" target="_blank" rel="noopener" title="Abrir en Zoho Books · '+esc(i.date||"")+(+i.balance>0?" · pendiente "+eur(i.balance):"")+'">'+esc(i.invoice_number)+" <b>"+eur(i.total)+"</b>"+(extra||"")+"</a>";
+  $("invList").innerHTML=it.length?it.map(x=>{
+    const amt=x.k==="none"?'<span class="pnx muted">Sin pagos todavía'+(x.total?" · total "+eur(x.total):"")+"</span>"
+      :'<span class="pnx'+(INV_ERR(x.k)?" ko":"")+'">Facturado <b>'+eur(x.sum)+"</b> · Pagado <b>"+eur(x.paid)+"</b>"+(x.total?" · Total "+eur(x.total):"")+(x.k==="dif"?" · <b>"+(x.diff>0?"+":"")+eur(x.diff)+"</b>":"")+(x.k==="cobro"?" · factura sin cobrar":"")+"</span>";
+    const chips=x.inv.map(i=>chip(i)).concat(x.res.map(i=>chip(i,' <i>reserva</i>'))).join("");
+    return '<div class="prow frow is-'+x.k+'" data-pid="'+esc(x.r.id)+'"><span class="pnm"><b>'+esc(x.r.name)+vipTag(x.r)+campTag(x.r)+'</b><span class="code">'+esc(x.r.code)+'</span></span><span class="pst ist-'+x.k+'">'+INV_LBL[x.k]+"</span>"+amt+'<span class="fchips">'+(chips||(x.k==="none"?"":'<span class="ichip none">Ninguna factura</span>'))+"</span></div>"}).join("")
+    :'<div class="eqempty"><h3 class="wide" style="margin:0">'+(INV.f==="err"?"Ningún error: todo cuadra":"Nadie en este estado")+"</h3></div>";
+  $("invOrph").innerHTML=orph.length?'<details class="iorph"><summary><b>Facturas sin inscripción activa</b><span>'+orph.length+'</span><small>Reservas sin inscripción, bajas o devoluciones. Revisa si necesitan factura rectificativa.</small></summary><div class="paylist">'+orph.sort((a,b)=>String(b.i.date).localeCompare(String(a.i.date))).map(o=>'<div class="prow frow is-orph"><span class="pnm"><b>'+esc(o.i.customer_name||"—")+'</b><span class="code">'+esc(o.i.email||"")+'</span></span><span class="pst ist-sin">Revisar</span><span class="pnx ko">'+esc(o.why)+'</span><span class="fchips">'+chip(o.i)+"</span></div>").join("")+"</div></details>":"";
+}
+$("invBoxes").addEventListener("click",e=>{const b=e.target.closest("[data-if]");if(!b)return;INV.f=b.dataset.if;renderFacturas()});
+$("invQ").addEventListener("input",e=>{INV.q=e.target.value;renderFacturas()});
+$("invRefresh").addEventListener("click",()=>loadBooks(true));
+$("invList").addEventListener("click",e=>{if(e.target.closest("a"))return;const row=e.target.closest("[data-pid]");if(!row)return;if(typeof openDrawer==="function")openDrawer(row.dataset.pid)});
 $("payBoxes").addEventListener("click",e=>{const b=e.target.closest("[data-pf]");if(!b)return;PAY.f=b.dataset.pf;renderPagos()});
 $("payQ").addEventListener("input",e=>{PAY.q=e.target.value;renderPagos()});
 $("payList").addEventListener("click",e=>{const row=e.target.closest("[data-pid]");if(!row)return;const r=(S.allRows||S.rows).find(x=>x.id===row.dataset.pid);if(r&&typeof openDrawer==="function")openDrawer(r.id)});
@@ -3788,29 +3927,30 @@ Object.assign(SB_IC,{
   rrhh:SVG('<circle cx="9" cy="8" r="3.2"/><path d="M3 19.5c.6-3.2 2.9-5 6-5s5.4 1.8 6 5"/><circle cx="17.2" cy="9.2" r="2.5"/><path d="M16.2 14.6c2.4.3 4.2 1.9 4.8 4.4"/>'),
   horarios:SVG('<rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/><circle cx="12" cy="15.5" r="3.1"/><path d="M12 14v1.7l1.1.8"/>'),
   equipos:SVG('<path d="M8.2 3.5 4 6 2.5 10.5l3.2 1.3V20.5h12.6v-8.7l3.2-1.3L20 6l-4.2-2.5C15.2 5.1 13.8 6 12 6s-3.2-.9-3.8-2.5z"/><path d="M12 9.5v4"/>'),
-  pagos:SVG('<circle cx="12" cy="12" r="8.5"/><path d="M15.3 8.9a4.1 4.1 0 1 0 0 6.2M7.6 11h6.2M7.6 13.1h6.2"/>')});
+  pagos:SVG('<circle cx="12" cy="12" r="8.5"/><path d="M15.3 8.9a4.1 4.1 0 1 0 0 6.2M7.6 11h6.2M7.6 13.1h6.2"/>'),
+  facturas:SVG('<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 11.5h6"/><path d="m9.3 15.4 1.7 1.6 3.4-3.4"/>')});
 const BK_TXT={registros:"Madrid, nacionales e institucionales",operativa:"El día a día del campus",administracion:"Contabilidad y gestión económica",atencion:"Consultas y comunicación con las familias",marketing:"Campañas y comunicación",rrhh:"El equipo de trabajo del campus",
   horarios:"Semanas, simulador, buses e instalaciones",equipos:"Equipos por semana y por campus",pagos:"Pagos, devoluciones y cancelaciones"};
 const CHEV=SVG('<path d="m9 6 6 6-6 6"/>');
-const SB_LBL={inicio:"Inicio",temporada:"Campus Experience 2027",registros:"Registros",operativa:"Operativa",horarios:"Horarios",equipos:"Equipos",administracion:"Administración",pagos:"Contabilidad",atencion:"Atención al público",marketing:"Marketing",rrhh:"Recursos Humanos",admin:"Usuarios y accesos"};
+const SB_LBL={inicio:"Inicio",temporada:"Campus Experience 2027",registros:"Registros",operativa:"Operativa",horarios:"Horarios",equipos:"Equipos",administracion:"Administración",pagos:"Contabilidad",facturas:"Facturas",atencion:"Atención al público",marketing:"Marketing",rrhh:"Recursos Humanos",admin:"Usuarios y accesos"};
 /* bloques de la temporada y a qué bloque pertenece cada pantalla */
 const SEASON=2027;
-const GRP_OF={inicio:"inicio",temporada:"temporada",registros:"registros",operativa:"operativa",horarios:"operativa",equipos:"operativa",administracion:"administracion",pagos:"administracion",atencion:"atencion",marketing:"marketing",rrhh:"rrhh",admin:"admin"};
-const BLOCKS=[["registros",[]],["operativa",["horarios","equipos"]],["administracion",["pagos"]],["atencion",[]],["marketing",[]],["rrhh",[]]];
+const GRP_OF={inicio:"inicio",temporada:"temporada",registros:"registros",operativa:"operativa",horarios:"operativa",equipos:"operativa",administracion:"administracion",pagos:"administracion",facturas:"administracion",atencion:"atencion",marketing:"marketing",rrhh:"rrhh",admin:"admin"};
+const BLOCKS=[["registros",[]],["operativa",["horarios","equipos"]],["administracion",["pagos","facturas"]],["atencion",[]],["marketing",[]],["rrhh",[]]];
 const SOON=new Set(["atencion","marketing","rrhh"]);
 /* ===== ACCESOS: solo cuando el software corre en el servidor propio (window.CE_ACL) ===== */
 const ACL=window.CE_ACL||null;
 const CAN=(k,min)=>!ACL||!!ACL.admin||(((ACL.perms||{})[k]||0)>=(min||1));
 const ANY=(a,min)=>!ACL||!!ACL.admin||Object.keys(ACL.perms||{}).some(k=>k.startsWith(a+".")&&ACL.perms[k]>=(min||1));
 const VIEW_AP={registros:"registros",horarios:"horarios",equipos:"equipos",pagos:"contabilidad",atencion:"atencion",marketing:"marketing",rrhh:"rrhh"};
-const viewOk=v=>v==="inicio"||v==="temporada"||(v==="admin"?!!(ACL&&ACL.admin):v==="operativa"?(viewOk("horarios")||viewOk("equipos")):v==="administracion"?viewOk("pagos"):!VIEW_AP[v]||ANY(VIEW_AP[v]));
+const viewOk=v=>v==="inicio"||v==="temporada"||(v==="admin"?!!(ACL&&ACL.admin):v==="operativa"?(viewOk("horarios")||viewOk("equipos")):v==="administracion"?(viewOk("pagos")||viewOk("facturas")):v==="facturas"?CAN("contabilidad.facturas"):v==="pagos"?(CAN("contabilidad.pagos")||CAN("contabilidad.devoluciones")||CAN("contabilidad.cancelaciones")):!VIEW_AP[v]||ANY(VIEW_AP[v]));
 const regKey=w=>w===WALL||w==="99"?"registros.todos":isCampKey(w)?"registros.campus":(w&&w!=="0")?"registros.madrid":null;
 const eqKeyOf=w=>isCampKey(w)?"equipos.campus":"equipos.madrid";
 const ACC_K={pagos:"contabilidad.pagos",dev:"contabilidad.devoluciones",can:"contabilidad.cancelaciones"};
 function subOk(v,ss){if(!ACL)return true;
   if(v==="registros"){const k=regKey(ss==="0"?0:ss==="99"?WALL:isCampKey(ss)?ss:+ss);return k?CAN(k):true}
   if(v==="equipos")return ss==="0"?true:CAN(eqKeyOf(ss));
-  if(v==="horarios")return ss==="sim"?CAN("horarios.simulador"):CAN("horarios.semanas");
+  if(v==="horarios")return ss==="sim"?CAN("horarios.simulador"):isCampKey(ss)?CAN("horarios.campus"):(ss==="0"||ss==="")?(CAN("horarios.semanas")||CAN("horarios.campus")):CAN("horarios.semanas");
   if(v==="pagos")return ACC_K[ss]?CAN(ACC_K[ss]):true;
   return true}
 let TOAST_T=0;
@@ -3830,7 +3970,7 @@ function sbCur(v){
   return "";}
 function aclClasses(v){if(!ACL)return false;const r=document.documentElement;
   (ACL.catalog||[]).forEach(a=>{a.subs.forEach(s=>r.classList.toggle("no-"+a.k+"-"+s[0],!CAN(a.k+"."+s[0])));r.classList.toggle("no-ap-"+a.k,!ANY(a.k))});
-  const roR=!ANY("registros",2),roE=!CAN(eqKeyOf(EQ.week||0),2),roH=H.view==="sim"?!CAN("horarios.simulador",2):!CAN("horarios.semanas",2);
+  const roR=!ANY("registros",2),roE=!CAN(eqKeyOf(EQ.week||0),2),roH=H.view==="sim"?!CAN("horarios.simulador",2):!CAN(isCampKey(H.week)?"horarios.campus":"horarios.semanas",2);
   r.classList.toggle("ro-r",roR);r.classList.toggle("ro-e",roE);r.classList.toggle("ro-h",roH);
   return v==="registros"?roR:v==="equipos"?roE:v==="horarios"?roH:false}
 function sbSub(v){
@@ -3841,33 +3981,36 @@ function sbSub(v){
   const cap=t=>subOk(v,"1")?'<div class="sscap">'+t+"</div>":"";
   if(v==="registros")return ss(0,"Resumen")+ss(WALL,"Todos los registros",has?AR.length:null)+cap("Madrid")+wk(n=>({sm:has?weekItems(n).length:null}))+camps();
   if(v==="equipos")return cap("Madrid")+wk(n=>{let ok=false;try{ok=!!(S.rows.length&&weekComplete(n))}catch(e){}return {cl:ok?"ok":""}})+camps();
-  if(v==="horarios")return ss("sim","Simulador")+cap("Madrid")+wk(n=>{let ok=false;try{ok=!!(S.rows.length&&hWeekComplete(n))}catch(e){}return {cl:ok?"ok":""}});
+  if(v==="horarios")return ss("sim","Simulador")+cap("Madrid")+wk(n=>{let ok=false;try{ok=!!(S.rows.length&&hWeekComplete(n))}catch(e){}return {cl:ok?"ok":""}})+camps().replace(/<div class="sscap">Institucionales<\/div>[\s\S]*$/,"");
   if(v==="pagos")return ss("pagos","Pagos")+ss("dev","Devoluciones")+ss("can","Cancelaciones");
   return "";}
 function renderSide(){
   const AR=S.allRows||[];let late=0;try{late=AR.filter(r=>payState(r).k==="late").length}catch(e){}
   const regN=ACL&&!CAN("registros.campus")&&!CAN("registros.todos")?(S.rows||[]).length:AR.length;if(ACL&&!CAN("contabilidad.pagos"))late=0;
   const bd={registros:regN?'<span class="sbdg">'+regN+"</span>":"",pagos:late?'<span class="sbdg hot" title="'+late+' impagos">'+late+"</span>":""};
-  const modH=(m,ss)=>viewOk(m)?'<button type="button" class="ss ssm" data-sv="'+m+'" data-ss="'+ss+'"><span class="ic">'+SB_IC[m]+"</span><span>"+SB_LBL[m]+"</span>"+(m==="pagos"&&late?'<span class="n" style="color:var(--sb-pink)">'+late+" impagos</span>":"")+"</button>":"";
-  const subOfG=g=>g==="operativa"?(viewOk("horarios")?modH("horarios","0")+sbSub("horarios"):"")+(viewOk("equipos")?modH("equipos","0")+sbSub("equipos"):""):g==="administracion"?(viewOk("pagos")?modH("pagos","")+sbSub("pagos"):""):g==="registros"?sbSub("registros"):"";
-  const bdg={registros:bd.registros,administracion:bd.pagos};
+  const modH=(m,ss)=>viewOk(m)?'<button type="button" class="ss ssm" data-sv="'+m+'" data-ss="'+ss+'"><span class="ic">'+SB_IC[m]+"</span><span>"+SB_LBL[m]+"</span>"+(m==="pagos"&&late?'<span class="n" style="color:var(--sb-pink)">'+late+" impagos</span>":"")+(m==="facturas"&&invErr?'<span class="n" style="color:var(--sb-pink)">'+invErr+" errores</span>":"")+"</button>":"";
+  const subOfG=g=>g==="operativa"?(viewOk("horarios")?modH("horarios","0")+sbSub("horarios"):"")+(viewOk("equipos")?modH("equipos","0")+sbSub("equipos"):""):g==="administracion"?(viewOk("pagos")?modH("pagos","")+sbSub("pagos"):"")+(viewOk("facturas")?modH("facturas",""):""):g==="registros"?sbSub("registros"):"";
+  const invErr=viewOk("facturas")?invErrCount():null;
+  const bdg={registros:bd.registros,administracion:(late||invErr)?'<span class="sbdg hot" title="'+(late||0)+" impagos · "+(invErr||0)+' errores de facturas">'+((late||0)+(invErr||0))+"</span>":""};
   const grp=(v)=>{if(!viewOk(v))return "";const sub=subOfG(v);const open=SB_OPEN.has(v);
     return '<div class="sg'+(sub&&open?" open":"")+'" data-g="'+v+'"><button type="button" class="si" data-sv="'+v+'" title="'+SB_LBL[v]+'"><span class="ic">'+SB_IC[v]+'</span><span class="sl">'+SB_LBL[v]+"</span>"+(bdg[v]||"")+(SOON.has(v)?'<span class="soon">Pronto</span>':"")+(sub?'<span class="chev" data-sx="'+v+'" role="button" aria-label="Desplegar '+SB_LBL[v]+'">'+CHEV+"</span>":"")+"</button>"
       +(sub?'<div class="ssub"><div class="ssin"><div class="ssbox"><div class="sfh">'+SB_LBL[v]+"</div>"+sub+"</div></div></div>":"")+"</div>"};
   const capIf=(t,h)=>h?'<div class="sb-cap">'+t+"</div>"+h:"";
   const season='<button type="button" class="sb-season" data-sv="temporada" title="Campus Experience '+SEASON+'"><span class="yy"><span class="y4">'+SEASON+'</span><span class="y2">'+String(SEASON).slice(2)+'</span></span><span class="tt"><small>Temporada</small><b>Campus Experience</b></span><span class="sw" data-sv="inicio" title="Cambiar de temporada" aria-label="Cambiar de temporada">'+SVG('<path d="M7 7h11l-3-3M17 17H6l3 3"/>')+'</span></button>';
-  $("sbNav").innerHTML=grp("inicio")+season+BLOCKS.map(b=>grp(b[0])).join("")+(ACL&&ACL.admin?capIf("Sistema",grp("admin")):"");
+  /* acceso al dashboard de registros: solo en la versión Catalyst (client/dashboard.html) */
+  const dash=window.CE_API_BASE&&ACL?'<a class="si sb-dash" href="dashboard.html" title="Dashboard de registros"><span class="ic">'+SVG('<path d="M3 20h18"/><path d="M6 16v-5M11 16V6M16 16v-8M21 16v-3"/>')+'</span><span class="sl">Dashboard</span></a>':"";
+  $("sbNav").innerHTML=grp("inicio")+season+dash+BLOCKS.map(b=>grp(b[0])).join("")+(ACL&&ACL.admin?capIf("Sistema",grp("admin")):"");
   sbMark()}
 function sbMark(){
   const v=curView(),c=sbCur(v);
   $("sbNav").querySelectorAll(".si").forEach(b=>b.classList.toggle("on",b.dataset.sv===GRP_OF[v]));
   const se=$("sbNav").querySelector(".sb-season");if(se)se.classList.toggle("on",v==="temporada");
   $("sbNav").querySelectorAll("[data-ss]").forEach(b=>{const on=b.dataset.sv===v&&b.dataset.ss===c;b.classList.toggle("on",on);if(on)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
-  let sub="";if(v==="registros"&&R.week)sub=wLabel(R.week);else if(v==="equipos"&&EQ.week)sub=wLabel(EQ.week);else if(v==="horarios")sub=H.view==="sim"?"Simulador":H.week?"Week "+H.week:"";else if(v==="pagos")sub={pagos:"Pagos",dev:"Devoluciones",can:"Cancelaciones"}[accKey()];
+  let sub="";if(v==="registros"&&R.week)sub=wLabel(R.week);else if(v==="equipos"&&EQ.week)sub=wLabel(EQ.week);else if(v==="horarios")sub=H.view==="sim"?"Simulador":H.week?hWL(H.week):"";else if(v==="pagos")sub={pagos:"Pagos",dev:"Devoluciones",can:"Cancelaciones"}[accKey()];
   const ro=aclClasses(v);
   const blk=GRP_OF[v]&&GRP_OF[v]!==v&&SB_LBL[GRP_OF[v]]?"<small>"+SB_LBL[GRP_OF[v]]+" ›</small>":"";
   $("tbWhere").innerHTML=blk+"<b>"+SB_LBL[v]+"</b>"+(sub?"<span>"+esc(sub)+"</span>":"")+(ro?'<em class="tb-ro" title="Puedes ver pero no modificar">Solo lectura</em>':"");}
-function sbSync(){if(!SBR||SB_RAF)return;SB_RAF=requestAnimationFrame(()=>{SB_RAF=0;const AR=S.allRows||[];const sig=AR.length+"|"+(S.weeks?1:0)+"|"+Object.keys(EQ.docs||{}).length+"|"+Object.keys(H.docs||{}).length+"|"+Object.keys(H.wk||{}).length;if(sig!==SB_SIG){SB_SIG=sig;renderSide();try{hubRender(curView())}catch(e){}}else sbMark()})}
+function sbSync(){if(!SBR||SB_RAF)return;SB_RAF=requestAnimationFrame(()=>{SB_RAF=0;const AR=S.allRows||[];const sig=AR.length+"|"+(S.weeks?1:0)+"|"+Object.keys(EQ.docs||{}).length+"|"+Object.keys(H.docs||{}).length+"|"+Object.keys(H.wk||{}).length+"|"+(INV.list?INV.list.length:0)+"|"+(INV.at?+INV.at:0);if(sig!==SB_SIG){SB_SIG=sig;renderSide();try{hubRender(curView())}catch(e){}}else sbMark()})}
 /* páginas de inicio, temporada y bloques */
 function hubCard(v,o){o=o||{};const soon=SOON.has(v);
   return '<a class="bk'+(soon?" soon":" live")+'" href="#'+v+'" data-sv="'+v+'"><span class="bk-top"><span class="bk-ic" aria-hidden="true">'+(SB_IC[v]||"")+'</span><span class="bk-st">'+(soon?"Próximamente":"En uso")+'</span></span><span class="bk-tx"><span class="bk-t">'+esc(o.l||SB_LBL[v])+"</span></span>"
@@ -3878,7 +4021,7 @@ function hubRender(v){
     $("hubSeasons").innerHTML='<button type="button" class="season" data-sv="temporada"><span class="sy">'+SEASON+'</span><span class="sn">Campus Experience '+SEASON+'</span><span class="sst"><span><b>'+(AR.length||"—")+'</b>participantes</span><span><b>9</b>semanas en Madrid</span><span><b>'+camps+'</b>campus nacionales</span></span><span class="sgo">Entrar</span></button>'}
   if(v==="temporada")$("hubBlocks").innerHTML=BLOCKS.filter(b=>viewOk(b[0])).map(([b,mods])=>hubCard(b,{mods:b==="registros"?(AR.length?[AR.length+" participantes"]:[]):mods.filter(viewOk).map(m=>SB_LBL[m])})).join("");
   if(v==="operativa")$("hubOperativa").innerHTML=["horarios","equipos"].filter(viewOk).map(m=>hubCard(m)).join("");
-  if(v==="administracion")$("hubAdministracion").innerHTML=["pagos"].filter(viewOk).map(m=>hubCard(m,{mods:["Pagos","Devoluciones","Cancelaciones"].filter((x,i)=>subOk("pagos",["pagos","dev","can"][i]))})).join("");
+  if(v==="administracion")$("hubAdministracion").innerHTML=["pagos","facturas"].filter(viewOk).map(m=>m==="pagos"?hubCard(m,{mods:["Pagos","Devoluciones","Cancelaciones"].filter((x,i)=>subOk("pagos",["pagos","dev","can"][i]))}):hubCard(m,{mods:(()=>{const n=invErrCount();return n==null?["Zoho Books"]:[n?n+" errores":"Todo cuadra"]})()})).join("");
 }
 window.__hub=hubRender;
 document.querySelector("main").addEventListener("click",e=>{const b=e.target.closest(".hub [data-sv]");if(!b)return;e.preventDefault();sbGo(b.dataset.sv)});
@@ -3888,7 +4031,7 @@ function sbGo(v,ss){
   if(!viewOk(v)){toast("No tienes acceso a este apartado");return}
   if(ss!=null&&!subOk(v,String(ss))){toast("No tienes acceso a esta sección");return}
   if(v==="horarios"){H.manual=false;H.edit=null;H.open="";H.confirm="";const he=$("hEdit");if(he)he.hidden=true;
-    if(ss==="sim")H.view="sim";else{H.view="grid";H.week=ss?+ss:0;if(H.week){const d=weekDays(CW())[0];H.dow=d==null?1:d}}}
+    if(ss==="sim")H.view="sim";else{H.view="grid";H.week=ss?(isCampKey(ss)?ss:+ss):0;if(H.week){const d=weekDays(CW())[0];H.dow=d==null?1:d}}}
   if(v==="equipos"){EQ.week=ss==null||ss==="0"?0:isCampKey(ss)?ss:+ss;EQ.mode="board";EQ.manual=false;EQ.sel.clear();EQ.confirm=false}
   if(location.hash!=="#"+v)history.pushState(null,"","#"+v);
   show(v);
@@ -3909,7 +4052,7 @@ function sbMe(){
   if(ACL){$("sbKey").remove();const ini=String(ACL.name||"?").split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0].toUpperCase()).join("");
     $("sbMe").innerHTML='<span class="ad-av" style="width:32px;height:32px;font-size:11px;flex:none">'+esc(ini)+'</span><span><b>'+esc(ACL.name||"")+"</b><small>"+(ACL.admin?"Administrador":esc(ACL.email||""))+"</small></span>";
     $("sbMe").insertAdjacentHTML("afterend",'<div class="sb-acts"><button type="button" id="sbPw" title="Cambiar mi contraseña" aria-label="Cambiar mi contraseña">'+SVG('<rect x="5" y="10.5" width="14" height="10" rx="2.2"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/>')+'</button><button type="button" id="sbOut" title="Cerrar sesión" aria-label="Cerrar sesión">'+SVG('<path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/><path d="M10 16l-4-4 4-4M6 12h10"/>')+"</button></div>");
-    $("sbOut").addEventListener("click",async()=>{try{await window.CE_API("POST","/api/logout",{})}catch(e){}location.href="/login"});
+    $("sbOut").addEventListener("click",async()=>{try{await window.CE_API("POST","/api/logout",{})}catch(e){}if(window.CE_DEMO){location.hash="";location.reload()}else location.href=window.CE_LOGIN_URL||"/login"});
     $("sbPw").addEventListener("click",()=>{["mePw0","mePw1","mePw2"].forEach(i=>$(i).value="");$("mePwE").hidden=true;$("mePw").hidden=false;$("mePw0").focus()});
     return}
   $("sbMe").innerHTML='<img alt=""><span><b>ISL Agency</b><small>Campus Experience</small></span>';
@@ -3924,7 +4067,7 @@ if(ACL){
     if(v==="admin")adOpenView()};
   const _regGo=regGo;regGo=function(w,ap,hl){const k=regKey(w);if(k&&!CAN(k)){toast("No tienes acceso a "+wLabel(w));return}return _regGo(w,ap,hl)};
   const _rE=renderEquipos;renderEquipos=function(){if(EQ.week&&!CAN(eqKeyOf(EQ.week))){EQ.week=0;toast("No tienes acceso a esa semana o campus")}return _rE.apply(this,arguments)};
-  const _rH=renderHorarios;renderHorarios=function(){if(H.view==="sim"&&!CAN("horarios.simulador"))H.view="grid";else if(H.view!=="sim"&&!CAN("horarios.semanas")&&CAN("horarios.simulador"))H.view="sim";return _rH.apply(this,arguments)};
+  const _rH=renderHorarios;renderHorarios=function(){if(H.view==="sim"&&!CAN("horarios.simulador"))H.view="grid";if(H.view!=="sim"&&H.week&&!CAN(isCampKey(H.week)?"horarios.campus":"horarios.semanas")){H.week=0;toast("No tienes acceso a esa semana o campus")}else if(H.view!=="sim"&&!H.week&&!CAN("horarios.semanas")&&!CAN("horarios.campus")&&CAN("horarios.simulador"))H.view="sim";return _rH.apply(this,arguments)};
   $("accTabs").addEventListener("click",e=>{const b=e.target.closest("[data-acc]");if(b&&!CAN(ACC_K[b.dataset.acc])){e.stopImmediatePropagation();e.preventDefault();toast("No tienes acceso a "+b.textContent)}},true);
   $("mePwX").addEventListener("click",()=>{$("mePw").hidden=true});
   $("mePwF").addEventListener("submit",async e=>{e.preventDefault();const er=m=>{$("mePwE").textContent=m;$("mePwE").hidden=!m};
