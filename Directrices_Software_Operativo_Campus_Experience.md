@@ -4,13 +4,16 @@ Documento vivo con las decisiones tomadas con Pau (director de Campus Experience
 
 - Última actualización: 27/10/2026
 - Software operativo: artifact «Operativa Campus Experience» → https://claude.ai/artifact/WGfoJZ9KMWvPQkm2J4Pg54
-- Dashboard de registros: artifact «Campus Experience 2027 · Dashboard de registros» → https://claude.ai/artifact/EQ3ML11Bgm2A5yX5K5DMKi
+- Dashboard de registros: **dentro del software en Catalyst** → `/app/dashboard.html` (menú lateral «Dashboard»). El artefacto de claude.ai está retirado desde el 11/11.
 - Especificación funcional de referencia: `Software_Operativo_Campus_Experience.docx` (esta misma carpeta)
-- Instrucciones de actualización del dashboard: `instrucciones_actualizacion_dashboard.md` (esta misma carpeta)
+- Dashboard de registros: `dashboard/README.md` (cómo funciona y qué archivos son).
 
 ---
 
 ## 1. Forma de trabajar
+
+- **El dashboard de registros es parte del software y NO se puede perder al publicar.** Vive en archivos propios que no hay que tocar al cambiar la aplicación: `client/dashboard.html`, `client/dashboard-menu.js` (acceso del menú), `functions/dashboard_api/` (sus datos) y `dashboard/`. No va en `index.html` ni en `campus_api`.
+- **Antes de empezar a cambiar nada: `git pull origin main`.** Para publicar, usar siempre `./publicar.sh "qué ha cambiado"`: trae lo último de GitHub y comprueba que el dashboard sigue incluido; si falta, no publica.
 
 - Avanzar fase a fase. Antes de construir, analizar, validar los datos reales en Zoho y proponer; Pau decide y después se construye.
 - Cuando Pau pida solo análisis, no tocar la herramienta.
@@ -275,7 +278,8 @@ Documento vivo con las decisiones tomadas con Pau (director de Campus Experience
   - Incluidas por modalidad: ONE MJ/JC = 1 blanca; ONE Interno = 2 blancas; MAX = 1 blanca + 1 light blue.
   - Las extra y las de portero se cuentan en la primera semana del niño.
 - **Canal de origen:** a partir de *utm_source* / *utm_medium* (Email/newsletter, Meta Ads, Instagram/Facebook, Google Ads, Google orgánico, TikTok, ChatGPT, YouTube, LinkedIn, X, Directo/sin dato).
-- **Actualización:** tarea programada (ver `instrucciones_actualizacion_dashboard.md`); si algo falla, no se publica a medias.
+- **Dónde vive:** en el software (Catalyst), página `/app/dashboard.html`, función `dashboard_api`. Detalle en `dashboard/README.md`.
+- **Actualización:** sola cada 15 minutos y con el botón «Actualizar»; si Zoho falla, se muestran los últimos datos guardados.
 - **Diseño del dashboard:** es la referencia de diseño del software (ver apartado 3).
 
 ## 6. Registro de decisiones
@@ -550,3 +554,4 @@ Se asignan automáticamente en este orden, un equipo por nombre y sin repetir de
   - `build.js` genera `client/` y `selfhost/app/` a partir de `index.html`.
   - La guía para el equipo técnico está en `CATALYST.md`: tablas, variables, credenciales de Zoho y despliegue.
   - `selfhost/` se mantiene como alternativa.
+- 12/11: El dashboard de registros pasa a una función propia (`dashboard_api`) y a un acceso de menú propio (`client/dashboard-menu.js`), separados de `index.html` y `campus_api`, porque dos publicaciones lo borraron sin querer. `publicar.sh` trae lo último de GitHub y comprueba el dashboard antes de publicar.

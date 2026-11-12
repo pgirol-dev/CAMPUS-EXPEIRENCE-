@@ -15,7 +15,9 @@ const BASE_CSS = '<style>body{margin:0}img{max-width:100%}[hidden]{display:none!
 /* Catalyst: la app pide sus accesos a la función antes de arrancar */
 const catalystHead = HEAD + BASE_CSS +
   '<script>window.CE_API_BASE="/server/campus_api";window.CE_LOGIN_URL="login.html";window.CE_POLL=true;</script>\n' +
-  '<script src="/server/campus_api/acl.js"></script>\n<script src="ce-shim.js"></script>\n<link rel="icon" href="favicon.svg">\n</head>\n<body>\n';
+  '<script src="/server/campus_api/acl.js"></script>\n<script src="ce-shim.js"></script>\n' +
+  /* acceso al dashboard de registros en el menú: archivo aparte (client/dashboard-menu.js) para que no se pierda al cambiar index.html */
+  '<script src="dashboard-menu.js" defer></script>\n<link rel="icon" href="favicon.svg">\n</head>\n<body>\n';
 fs.mkdirSync(R("client"), { recursive: true });
 fs.writeFileSync(R("client", "index.html"), catalystHead + app + "\n</body>\n</html>\n");
 for (const f of shared) {
