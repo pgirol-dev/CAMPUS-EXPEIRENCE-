@@ -2172,7 +2172,7 @@ function listItems(){
   const nrm=t=>String(t).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();const q=nrm(R.q.trim());if(q)it=it.filter(x=>nrm(x.r.hay).includes(q));
   return it.map(x=>{const r=x.r,w=x.w,d=r.d;const inc=KITS_INC[w.prog+"|"+w.mod]||{b:0,lb:0};const fw=firstWeek(r);const here=fw===w.n;
     const ext=here?r.kitExtra:0,gk=here?r.gkExtra:0;
-    return {r,w,d,inc,here,fw,ext,gk,tot:inc.b+inc.lb+ext,team:teamOf(r,w),year:d.A_o_de_nacimiento?d.A_o_de_nacimiento.slice(0,4):"",
+    return {r,w,d,inc,here,fw,ext,gk,tot:inc.b+inc.lb+ext+gk,team:teamOf(r,w),year:d.A_o_de_nacimiento?d.A_o_de_nacimiento.slice(0,4):"",
       gen:d.Gender==="Male"?"Masculino":d.Gender==="Female"?"Femenino":(d.Gender||""),img:d.Consentimientos_imagen_fotos_voz_RM||""}});
 }
 function cellF(r,k){const f=FIELDS.find(x=>x.k===k);if(!f||f.pend)return '<span class="muted">—</span>';return fieldHtml(r,f)}
@@ -2279,7 +2279,7 @@ function drawBody(r){
     '<div class="kbox"><span class="kl">Incluidas</span><span class="kv2">'+(incB+incLB)+'</span><span class="kd">'+[incB?incB+" blanca"+(incB>1?"s":""):"",incLB?incLB+" light blue":""].filter(Boolean).join(" · ")+'</span></div>'+
     '<div class="kbox"><span class="kl">Extra</span><span class="kv2">'+r.kitExtra+'</span><span class="kd">'+(r.kitExtra?r.kitExtra+" blanca"+(r.kitExtra>1?"s":""):"Ninguna")+'</span></div>'+
     '<div class="kbox"><span class="kl">Portero</span><span class="kv2">'+r.gkExtra+'</span><span class="kd">'+(r.gkExtra?"Camiseta portero":"Ninguna")+'</span></div>'+
-    '<div class="kbox tot"><span class="kl">Total equipaciones</span><span class="kv2">'+(incB+incLB+r.kitExtra)+'</span><span class="kd">Incluidas + extra</span></div></div>'+
+    '<div class="kbox tot"><span class="kl">Total equipaciones</span><span class="kv2">'+(incB+incLB+r.kitExtra+r.gkExtra)+'</span><span class="kd">Incluidas + extra + portero</span></div></div>'+
     (r.extras.length?'<p class="sub" style="margin:8px 0 0">Productos extra en Zoho: '+esc(r.extras.join(" · "))+"</p>":"");
   const al=(S.auth&&S.auth[r.id])||[];
   const auth=!S.authOk?'<p class="muted" style="margin:0">No se han podido leer los autorizados de Zoho. Pulsa Actualizar para reintentar.</p>':

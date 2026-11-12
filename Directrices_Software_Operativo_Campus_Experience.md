@@ -437,6 +437,7 @@ Documento vivo con las decisiones tomadas con Pau (director de Campus Experience
     - Se puede mover un cobro a otro día. Queda marcado como «Movido», con el historial completo (de qué día a qué día, quién y cuándo) y la opción de devolverlo a su día. Si el día ya estaba cuadrado, pasa a «Revisar». Pueden moverlo quienes tienen edición en Ingresos (Olivia y Pau).
   - **Credenciales.** El 12/11 se renovaron las credenciales de Zoho (Self Client) con el permiso `ZohoBooks.creditnotes.READ`. Variables nuevas del servidor: `ZOHO_REFRESH_TOKEN` (nuevo) y `ZOHO_BOOKS_ORG_AND=20112628138`.
   - Colecciones nuevas en el servidor: `ingmv` (cobros movidos) y `dev` (revisión de devoluciones).
+- 12/11: **Total de equipaciones**: ahora suma también la equipación de portero extra (antes contaba solo incluidas + extra blancas). Afecta a la ficha, al listado de Registros y a la exportación. Los datos del CRM se leían bien; solo fallaba la suma.
 
 ## Lista de equipos · Nacionales e Institucionales (oficial, 04/11/2026)
 Se asignan automáticamente en este orden, un equipo por nombre y sin repetir dentro de un mismo campus:
