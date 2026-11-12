@@ -52,6 +52,16 @@ jobs:
             exit 1
           fi
 
+      - name: Comprobar que el dashboard sigue incluido
+        if: env.CATALYST_TOKEN != ''
+        run: |
+          ok=1
+          grep -q '"/dashboard.js"' functions/campus_api/index.js || { echo "::error::functions/campus_api/index.js ya no tiene la ruta /dashboard.js del dashboard."; ok=0; }
+          grep -q '"/api/dashboard/refresh"' functions/campus_api/index.js || { echo "::error::functions/campus_api/index.js ya no tiene la ruta /api/dashboard/refresh."; ok=0; }
+          grep -q 'sb-dash' client/index.html || { echo "::error::El menú del software ya no tiene el acceso «Dashboard» (index.html)."; ok=0; }
+          test -f client/dashboard.html || { echo "::error::Falta client/dashboard.html."; ok=0; }
+          if [ "$ok" = 0 ]; then echo "Probablemente se ha trabajado sobre una copia antigua: haz git pull origin main antes de cambiar nada."; exit 1; fi
+
       - name: Desplegar (web y función)
         if: env.CATALYST_TOKEN != ''
         run: catalyst deploy --project "$CATALYST_PROJECT" --org "$CATALYST_ORG" --dc eu --token "$CATALYST_TOKEN"
