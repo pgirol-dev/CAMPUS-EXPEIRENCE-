@@ -939,6 +939,79 @@ table.oplist th .fsel.on{background:var(--pink);border-color:var(--pink);color:v
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .drawer{--inc-navy:#9fb4e6}:root:not([data-theme="light"]) .incstp.s-resp{color:#12203f}}
 :root[data-theme="dark"] .drawer{--inc-navy:#9fb4e6} :root[data-theme="dark"] .incstp.s-resp{color:#12203f}
 html.no-inc-edit [data-incnewp],html.no-inc-edit .incact .ic-btns,html.no-inc-edit [data-incnew],html.no-inc-edit .inctl .ic-ed,html.no-inc-edit .ipfoot{display:none!important}
+/* sedes, devoluciones y cancelaciones */
+.sedebar{--inc-navy:var(--navy)}
+.sedebar .incpill[aria-pressed="true"]{background:var(--navy);color:var(--navy-ink)}
+.ingbanks{align-self:flex-start;flex-wrap:wrap}
+.ingbanks button{display:inline-flex;align-items:center;gap:7px}
+.ingbanks .n{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;box-sizing:border-box;border-radius:96px;background:var(--bad);color:var(--on-hot);font-size:10px}
+.ingbanks .n.z{background:color-mix(in srgb,currentColor 18%,transparent);color:inherit}
+.ingbanks small{font-weight:600;text-transform:none;letter-spacing:0;opacity:.75}
+.devgrid{grid-template-columns:repeat(5,minmax(0,1fr))}
+@media (max-width:900px){.devgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.pbx.db-pend::before{background:var(--pink)} .pbx.db-err::before{background:var(--bad)} .pbx.db-ok::before{background:var(--green)} .pbx.db-sum::before,.pbx.cb-sum::before{background:var(--navy)}
+.pbx.cb-saldo::before{background:var(--pink)} .pbx.cb-dev::before{background:var(--green)} .pbx.cb-none::before{background:var(--ink-3)}
+.pbx.db-sum,.pbx.cb-sum{cursor:default} .pbx.db-sum:hover,.pbx.cb-sum:hover{transform:none;box-shadow:none} .pbx.db-sum .pc2,.pbx.cb-sum .pc2{font-size:1.5rem}
+.devmsg{padding:10px 14px;border-radius:6px;background:var(--warn-soft);font-size:12.5px;font-weight:600;max-width:1100px}
+.devsec{margin:14px 0 2px;font-family:var(--f-wide);font-style:italic;font-weight:900;font-stretch:125%;text-transform:uppercase;font-size:.9rem;display:flex;gap:10px;align-items:baseline}
+.devsec span{font-family:var(--f-body);font-style:normal;font-weight:600;font-stretch:100%;text-transform:none;font-size:12px;color:var(--ink-3)}
+.devh{display:grid;grid-template-columns:28px minmax(180px,1.4fr) 120px 96px 96px minmax(120px,1fr);gap:12px;align-items:center;padding:10px 14px 10px 16px;cursor:pointer}
+.devh:hover{background:color-mix(in srgb,var(--ink) 5%,transparent)}
+.devh .chev{all:unset;cursor:pointer;display:grid;place-items:center;width:24px;height:24px;border-radius:6px;transition:transform .2s}
+.ingd.open .devh .chev{transform:rotate(90deg)}
+.devh .pnm{display:flex;flex-direction:column;min-width:0}
+.devh .pnm .code{font-family:var(--f-mono);font-size:11px;color:var(--ink-3)}
+.devh .lbl{display:flex;flex-direction:column;font-size:12.5px;font-weight:800;text-align:right}
+.devh .lbl small{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3)}
+.devh .lbl.big{font-family:var(--f-serif);font-style:italic;font-weight:400;font-size:1.4rem;line-height:1}
+.devh .mot{font-size:12px;color:var(--ink-2);min-width:0;overflow:hidden;text-overflow:ellipsis}
+.devh .mot.muted{color:var(--ink-3);font-style:italic}
+.dst{justify-self:start;font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:4px 9px;border-radius:96px;white-space:nowrap;background:color-mix(in srgb,var(--ink) 10%,transparent);color:var(--ink-2)}
+.dst.paid{background:var(--green);color:var(--on-green)} .dst.can{background:var(--navy);color:var(--navy-ink)} .dst.ko{background:var(--bad);color:var(--on-hot)}
+.devalloc{border-top:1px solid var(--line);padding:6px 10px 12px 56px;display:none}
+.ingd.open .devalloc{display:block}
+.devalloc .dar{display:grid;grid-template-columns:minmax(150px,1fr) 100px 96px 120px;gap:10px;align-items:center;padding:6px 0;border-bottom:1px dashed var(--line);font-size:12.5px}
+.devalloc .dar:last-of-type{border-bottom:0}
+.devalloc .dar .am{text-align:right}
+.devalloc .dar .give{text-align:right;font-weight:800}
+.devalloc .dar.zero{opacity:.5}
+.devalloc .dar.head{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-3)}
+.devalloc .dnote{font-size:12px;color:var(--ink-3);margin-top:6px}
+.devalloc .dnote.ko{color:var(--bad);font-weight:700}
+.devr{display:grid;grid-template-columns:minmax(180px,1.4fr) 96px 96px 110px minmax(160px,1.4fr);gap:10px;align-items:center;padding:8px 6px;border-bottom:1px dashed var(--line);font-size:12.5px}
+.devr:last-child{border-bottom:0}
+.devr.ko{background:var(--bad-soft);box-shadow:inset 3px 0 0 var(--bad);padding-left:9px}
+.devr .who{display:flex;flex-direction:column;min-width:0;cursor:pointer}
+.devr .who small{color:var(--ink-3)}
+.devr .am{text-align:right;font-weight:800}
+.devr .am small{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3)}
+.devr .why{grid-column:1/-1;font-size:11.5px;font-weight:700;color:var(--bad)}
+.devr .why.soft{color:var(--ink-3);font-weight:600}
+.prow.crow{grid-template-columns:minmax(190px,1.3fr) 100px repeat(4,minmax(80px,.5fr)) minmax(0,1.3fr)}
+.prow.crow.is-saldo{box-shadow:inset 4px 0 0 var(--pink)}
+.crow .cam{text-align:right;font-size:12.5px;font-weight:800;display:flex;flex-direction:column}
+.crow .cam small{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3)}
+.crow .cam.ko{color:var(--bad)}
+.ichip.cn{background:color-mix(in srgb,var(--pink) 16%,transparent)}
+.ingmvt{display:inline-block;margin-left:6px;font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:96px;background:var(--pink);color:var(--on-hot);vertical-align:1px}
+.ingmvb{all:unset;cursor:pointer;font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:4px 8px;border-radius:96px;box-shadow:inset 0 0 0 1px var(--line);color:var(--ink-2);white-space:nowrap}
+.ingmvb:hover{background:var(--navy);color:var(--navy-ink)}
+.ingmvb:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+.ingmvf{grid-column:2/-1;display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12px;padding:4px 0}
+.ingmvf input{border:1px solid var(--line);background:var(--field);color:var(--ink);border-radius:96px;padding:5px 10px;font:600 12.5px var(--f-body)}
+html.no-ing-edit .ingmvb{display:none}
+html.no-dev-edit [data-devok]{pointer-events:none}
+@media (max-width:900px){
+  .devh{grid-template-columns:24px 1fr auto;row-gap:6px}
+  .devh .dst,.devh .mot{grid-column:2}
+  .devalloc{padding-left:12px}
+  .devalloc .dar{grid-template-columns:1fr auto auto}
+  .devalloc .dar .dt{display:none}
+  .devr{grid-template-columns:1fr auto auto}
+  .devr .chips{grid-column:1/-1}
+  .prow.crow{grid-template-columns:1fr 1fr 1fr}
+  .prow.crow .pnm,.prow.crow .fchips{grid-column:1/-1}
+}
 /* ingresos */
 .inggrid{grid-template-columns:repeat(5,minmax(0,1fr))}
 @media (max-width:900px){.inggrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -976,7 +1049,7 @@ html.no-inc-edit [data-incnewp],html.no-inc-edit .incact .ic-btns,html.no-inc-ed
 .ingrev{padding:0 16px 10px 56px;font-size:12px;font-weight:600;color:var(--bad)}
 .ingp{display:none;border-top:1px solid var(--line);padding:6px 10px 10px 50px}
 .ingd.open .ingp{display:block}
-.ingr{display:grid;grid-template-columns:62px minmax(180px,1.6fr) 96px 100px minmax(140px,1fr) 96px;gap:10px;align-items:center;padding:7px 6px;border-bottom:1px dashed var(--line);font-size:12.5px}
+.ingr{display:grid;grid-template-columns:62px minmax(180px,1.6fr) 96px 100px minmax(140px,1fr) 96px auto;gap:10px;align-items:center;padding:7px 6px;border-bottom:1px dashed var(--line);font-size:12.5px}
 .ingr:last-child{border-bottom:0}
 .ingr .hr{font-family:var(--f-mono);font-size:12px}
 .ingr .hr.n23{color:var(--pink);font-weight:800}
@@ -1772,6 +1845,7 @@ html.sb-min .sfh{display:block;font-family:var(--f-wide);font-style:italic;font-
   </section>
   <section id="view-facturas" class="stack" hidden>
     <div class="eqhead"><div class="eqtitlebox"><h2 class="eqtitle">Facturas</h2><span class="sub" id="invSub"></span></div><button class="btn" type="button" id="invRefresh">Actualizar facturas</button></div>
+    <div class="incscope sedebar" id="invSede" role="group" aria-label="Sede"></div>
     <div class="paygrid" id="invBoxes" role="group" aria-label="Estado de las facturas"></div>
     <div class="filters"><input type="search" id="invQ" placeholder="Buscar jugador, código o número de factura" aria-label="Buscar"><span class="count" id="invCount"></span></div>
     <div class="paylist" id="invList"></div>
@@ -1788,6 +1862,7 @@ html.sb-min .sfh{display:block;font-family:var(--f-wide);font-style:italic;font-
   </section>
   <section id="view-ingresos" class="stack" hidden>
     <div class="eqhead"><div class="eqtitlebox"><h2 class="eqtitle">Ingresos</h2><span class="sub" id="ingSub"></span></div><button class="btn" type="button" id="ingRefresh">Actualizar</button></div>
+    <div class="seg ingbanks" id="ingBank" role="tablist" aria-label="Banco"></div>
     <div class="paygrid inggrid" id="ingBoxes" role="group" aria-label="Estado de los días"></div>
     <div class="filters"><input type="search" id="ingQ" placeholder="Buscar familia, jugador o factura" aria-label="Buscar"><select id="ingCamp" aria-label="Campus"></select><span class="count" id="ingCount"></span></div>
     <div id="ingList" class="inglist"></div>
@@ -1797,12 +1872,24 @@ html.sb-min .sfh{display:block;font-family:var(--f-wide);font-style:italic;font-
     <div class="eqhead"><div class="eqtitlebox"><h2 class="eqtitle">Contabilidad</h2><span class="sub" id="payToday"></span></div>
       <div class="seg" id="accTabs" role="tablist" aria-label="Contabilidad"><button type="button" role="tab" data-acc="pagos" aria-selected="true" aria-pressed="true">Pagos</button><button type="button" role="tab" data-acc="dev" aria-selected="false" aria-pressed="false">Devoluciones</button><button type="button" role="tab" data-acc="can" aria-selected="false" aria-pressed="false">Cancelaciones</button></div></div>
     <div class="stack" id="accPagos">
+    <div class="incscope sedebar" id="paySede" role="group" aria-label="Sede"></div>
     <div class="paygrid" id="payBoxes" role="group" aria-label="Estado de pago"></div>
     <div class="filters"><input type="search" id="payQ" placeholder="Buscar jugador por nombre o código" aria-label="Buscar jugador"><span class="count" id="payCount"></span></div>
     <div class="paylist" id="payList"></div>
     </div>
-    <div class="stack" id="accDev" hidden><div class="eqempty"><h3 class="wide" style="margin:0">Devoluciones</h3><p>Apartado en preparación.</p></div></div>
-    <div class="stack" id="accCan" hidden><div class="eqempty"><h3 class="wide" style="margin:0">Cancelaciones</h3><p>Apartado en preparación.</p></div></div>
+    <div class="stack" id="accDev" hidden>
+      <div class="incscope sedebar" id="devSede" role="group" aria-label="Sede"></div>
+      <div class="paygrid devgrid" id="devBoxes" role="group" aria-label="Estado de las devoluciones"></div>
+      <div class="filters"><input type="search" id="devQ" placeholder="Buscar jugador, código o rectificativa" aria-label="Buscar"><button class="btn" type="button" id="devRefresh">Actualizar</button><span class="count" id="devCount"></span></div>
+      <div id="devMsg"></div>
+      <div id="devList" class="inglist"></div>
+    </div>
+    <div class="stack" id="accCan" hidden>
+      <div class="incscope sedebar" id="canSede" role="group" aria-label="Sede"></div>
+      <div class="paygrid devgrid" id="canBoxes" role="group" aria-label="Cancelaciones"></div>
+      <div class="filters"><input type="search" id="canQ" placeholder="Buscar jugador o código" aria-label="Buscar"><span class="count" id="canCount"></span></div>
+      <div class="paylist" id="canList"></div>
+    </div>
   </div>
 </section>
 </main>
@@ -1903,10 +1990,13 @@ const FIELDS=[
  {k:"obs",l:"Observaciones",sec:"otros",z:"Observaciones"}
 ];
 const SECTIONS=[["part","Participante"],["semanas","Semanas contratadas"],["equip","Equipaciones"],["serv","Servicios"],["salud","Salud y dieta"],["cons","Consentimientos"],["fam","Familia y contacto"],["auth","Autorizados para recogida"],["pago","Pago"],["docu","Documentación"],["seg","Seguimiento del equipo"],["otros","Otros"]];
-const BASE_FIELDS=["Deal_Name","Player","Tipo_Modalidad","Weeks","Modified_Time","Event_Name"];
+const BASE_FIELDS=["Deal_Name","Player","Tipo_Modalidad","Weeks","Modified_Time","Event_Name","Refund"];
 const DEAL_FIELDS=[...new Set(BASE_FIELDS.concat(FIELDS.flatMap(f=>(f.z?[f.z]:[]).concat(f.zz||[]))))];
 const DEAL_WHERE=" from Deals where Event_Name.Name in "+EVS+" and Stage not in "+STAGES_OUT;
 const Q_DEALS_PARTS=[];for(let i=0;i<DEAL_FIELDS.length;i+=40)Q_DEALS_PARTS.push("select "+DEAL_FIELDS.slice(i,i+40).join(", ")+DEAL_WHERE);
+/* canceladas y con importe de devolución (Refund amount): para Devoluciones y Cancelaciones. No son inscripciones activas */
+const X_FIELDS=["Deal_Name","Player","Event_Name","Stage","Total","Paid","Refund","Reservation_Code","Email","Email_persona","Forma_de_pago","Balance_Due1","Modified_Time","Contact_Name","Account_Name","Telefono_Tutor_legal","A_o_de_nacimiento","Gender","Codigo_descuento","First_Instalment_Amount","First_Instalment_Status","First_Instalment_Due_Date","Second_Instalment_Amount","Second_Instalment_Status","Second_Instalment_Due_Date","Third_Instalment_Amount","Third_Instalment_Status","Third_Instalment_Due_Date"];
+const Q_X="select "+X_FIELDS.join(", ")+" from Deals where Event_Name.Name in "+EVS+" and (Stage = 'Cancelled' or Refund is not null)";
 const Q_WEEKS="select Parent_Id, Producto, Semana1, Fecha_inicio, Fecha_fin from Campus_y_servicios_extra where Parent_Id.Event_Name.Name in "+EVS+" and Parent_Id.Stage not in "+STAGES_OUT;
 const Q_AUTH="select Name, Email, DNI_o_Pasaporte, Application from Personas_Autorizadas where Application.Event_Name.Name in "+EVS;
 function plazo(r,p){const d=r.d,a=d[p+"_Instalment_Amount"];if(a==null)return "";if(p!=="First"&&/totalidad|pago total/i.test(String(d.Forma_de_pago||"")))return "";const st=d[p+"_Instalment_Status"],due=d[p+"_Instalment_Due_Date"];return eur(a)+(st?" · "+(st==="Paid"?"Pagado":st):"")+(due?" · vence "+fmtDL(due):"")}
@@ -1970,7 +2060,10 @@ function build(){
       tutor:txt(d.Contact_Name),hay:(name+" "+(d.Reservation_Code||"")).toLowerCase(),camp:campOf(d.Event_Name&&d.Event_Name.name)};
   });
   S.rows=S.allRows.filter(r=>r.camp==="mad");
-  render();
+  const act=new Set(S.allRows.map(r=>String(r.id)));
+  S.xRows=(S.xDeals||[]).filter(d=>!act.has(String(d.id))).map(d=>{const name=(d.Player&&d.Player.name)||String(d.Deal_Name||"").split(" - ").slice(1).join(" - ")||d.Deal_Name;
+    return {id:d.id,d,name,code:d.Reservation_Code||"",age:null,weeks:[],extras:[],kitExtra:0,gkExtra:0,health:[],tutor:txt(d.Contact_Name),hay:(name+" "+(d.Reservation_Code||"")).toLowerCase(),camp:campOf(d.Event_Name&&d.Event_Name.name),x:true}});
+  render();try{renderDev();renderCan()}catch(e){}
 }
 function opsOf(id){return S.ops[id]||{}}
 
@@ -2154,7 +2247,7 @@ function render(){try{renderPagos()}catch(e){}renderRegistros();renderFind();try
 /* drawer */
 let draft=null;
 function openDrawer(id){
-  const r=(S.allRows||S.rows).find(x=>x.id===id);if(!r)return;S.open=id;
+  const r=(S.allRows||S.rows).find(x=>x.id===id)||(S.xRows||[]).find(x=>x.id===id);if(!r)return;S.open=id;
   draft=Object.assign({llamada:"pendiente",llamadaNota:"",whatsapp:false,docs:false,notas:""},opsOf(id));
   const d=r.d;
   $("dCode").textContent=r.code;
@@ -2258,7 +2351,8 @@ async function load(fresh){
   const opt={cache:fresh?{staleTime:60000,gcTime:600000,refresh:true}:{staleTime:60000,gcTime:600000}};
   try{
     const parts=await Promise.all(Q_DEALS_PARTS.map(q=>fetchAll(q,opt)));
-    const [b,c]=await Promise.all([fetchAll(Q_WEEKS,opt),fetchAll(Q_AUTH,opt).catch(()=>({rows:null}))]);
+    const [b,c,xx]=await Promise.all([fetchAll(Q_WEEKS,opt),fetchAll(Q_AUTH,opt).catch(()=>({rows:null})),fetchAll(Q_X,opt).catch(()=>({rows:null}))]);
+    if(xx&&xx.rows)S.xDeals=xx.rows;
     const byId={};parts.forEach(pt=>pt.rows.forEach(x=>{byId[x.id]=Object.assign(byId[x.id]||{},x)}));
     const a={rows:Object.values(byId),first:parts[0].first};
     S.auth={};if(c.rows)c.rows.forEach(x=>{const id=x.Application&&x.Application.id;if(id)(S.auth[id]=S.auth[id]||[]).push(x)});S.authOk=!!c.rows;
@@ -2296,7 +2390,7 @@ function show(v){
   VIEWS.forEach(n=>{$("view-"+n).hidden=n!==v});
   if(v==="horarios")try{renderHorarios()}catch(e){}
   if(v==="equipos")try{renderEquipos()}catch(e){}
-  if(v==="pagos")try{renderPagos()}catch(e){}
+  if(v==="pagos")try{renderPagos();renderDev();renderCan()}catch(e){}
   if(v==="facturas")try{renderFacturas();if(!INV.list&&!INV.busy)loadBooks(false)}catch(e){}
   if(v==="incidencias")try{renderIncidencias()}catch(e){}
   if(v==="ingresos")try{renderIngresos();if(!INV.list&&!INV.busy)loadBooks(false)}catch(e){}
@@ -4005,10 +4099,23 @@ function payState(r){const d=r.d,t=todayISO();
   return {k:late?"late":(paidN>=2?"f2":"f1"),inst,next,paidN,days,pend:inst.filter(x=>x.st!=="Paid").reduce((a,x)=>a+(+x.amt||0),0)};
 }
 const PAY_BOX=[["pend","Pendientes","Fase 1, fase 2 e impagos"],["late","Impago","Fecha del siguiente plazo pasada"],["f1","Fase 1","1er plazo pagado"],["f2","Fase 2","1º y 2º plazo pagados"],["paid","Pagado total","Todo pagado"],["all","Todos",""]];
+/* ===== SEDES: Madrid / Nacionales (por campus) / Institucionales ===== */
+const SEDE={};const SEDES=[["mad","Madrid"],["nac","Nacionales"],["inst","Institucionales"],["all","Todas"]];
+const sedeOfCamp=id=>{const c=campById(id||"mad");return !c||c.kind==="madrid"?"mad":c.kind};
+const sedeSt=k=>SEDE[k]||(SEDE[k]={s:"mad",c:""});
+function sedeOk(k,camp){const st=sedeSt(k);if(st.s==="all")return true;if(sedeOfCamp(camp)!==st.s)return false;return !st.c||camp===st.c}
+function sedeBar(k,camps){const st=sedeSt(k);const n={mad:0,nac:0,inst:0,all:camps.length},nc={};camps.forEach(c=>{n[sedeOfCamp(c)]++;nc[c]=(nc[c]||0)+1});
+  let h=SEDES.map(([s,l])=>'<button type="button" class="incpill'+(n[s]?"":" zero")+'" data-sede="'+k+"|"+s+'" aria-pressed="'+(st.s===s)+'">'+l+'<span class="n">'+n[s]+"</span></button>").join("");
+  if(st.s==="nac"||st.s==="inst"){const cs=CAMPS.filter(c=>c.kind===st.s);if(cs.length)h+='<span class="sep"></span><button type="button" class="incpill" data-sedec="'+k+'|" aria-pressed="'+(!st.c)+'">Todos</button>'+cs.map(c=>'<button type="button" class="incpill'+(nc[c.id]?"":" zero")+'" data-sedec="'+k+"|"+c.id+'" aria-pressed="'+(st.c===c.id)+'">'+esc(c.n)+'<span class="n">'+(nc[c.id]||0)+"</span></button>").join("")}
+  return h}
+const SEDE_R={pay:()=>renderPagos(),inv:()=>renderFacturas(),dev:()=>renderDev(),can:()=>renderCan()};
+document.addEventListener("click",e=>{const b=e.target.closest("[data-sede],[data-sedec]");if(!b)return;
+  if(b.dataset.sede){const [k,s]=b.dataset.sede.split("|");sedeSt(k).s=s;sedeSt(k).c=""}else{const [k,c]=b.dataset.sedec.split("|");sedeSt(k).c=c}
+  const [k]=(b.dataset.sede||b.dataset.sedec).split("|");try{SEDE_R[k]()}catch(err){}});
 function renderPagos(){
   if($("view-pagos").hidden)return;
   $("payToday").textContent="Hoy "+fmtDL(todayISO());
-  const AR=S.allRows||S.rows;const all=AR.map(r=>({r,s:payState(r)}));
+  const AR0=S.allRows||S.rows;$("paySede").innerHTML=sedeBar("pay",AR0.map(r=>r.camp||"mad"));const AR=AR0.filter(r=>sedeOk("pay",r.camp||"mad"));const all=AR.map(r=>({r,s:payState(r)}));
   const cnt={all:all.length,paid:0,f1:0,f2:0,late:0};all.forEach(x=>cnt[x.s.k]++);cnt.pend=cnt.f1+cnt.f2+cnt.late;
   $("payBoxes").innerHTML=PAY_BOX.map(([k,t,sub])=>'<button type="button" class="pbx pb-'+k+'" data-pf="'+k+'" aria-pressed="'+(PAY.f===k)+'"><span class="pt2">'+t+'</span><span class="pc2">'+(AR.length?cnt[k]:"—")+'</span><span class="ps2">'+sub+"</span></button>").join("");
   const nrm=t=>String(t).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();const q=nrm(PAY.q.trim());
@@ -4017,7 +4124,7 @@ function renderPagos(){
   const ord={late:0,f1:1,f2:2,paid:3};
   it.sort((a,b)=>ord[a.s.k]-ord[b.s.k]||String(a.s.next&&a.s.next.due||"9").localeCompare(String(b.s.next&&b.s.next.due||"9"))||a.r.name.localeCompare(b.r.name));
   $("payCount").textContent=AR.length?it.length+" jugadores":"";
-  if(!AR.length){$("payList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Cargando pagos</h3></div>';return}
+  if(!AR0.length){$("payList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Cargando pagos</h3></div>';return}
   if(!it.length){$("payList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Nadie en este estado</h3></div>';return}
   const LBL={paid:"Pagado total",f1:"Fase 1",f2:"Fase 2",late:"Impago"};
   $("payList").innerHTML=it.map(({r,s})=>{
@@ -4027,30 +4134,39 @@ function renderPagos(){
 }
 $("accTabs").addEventListener("click",e=>{const b=e.target.closest("[data-acc]");if(!b)return;const k=b.dataset.acc;
   $("accTabs").querySelectorAll("[data-acc]").forEach(x=>{const on=x.dataset.acc===k;x.setAttribute("aria-selected",String(on));x.setAttribute("aria-pressed",String(on))});
-  $("accPagos").hidden=k!=="pagos";$("accDev").hidden=k!=="dev";$("accCan").hidden=k!=="can";if(k==="pagos")renderPagos();try{sbSync()}catch(e){}});
+  $("accPagos").hidden=k!=="pagos";$("accDev").hidden=k!=="dev";$("accCan").hidden=k!=="can";if(k==="pagos")renderPagos();if(k==="dev")renderDev();if(k==="can")renderCan();try{sbSync()}catch(e){}});
 /* ===== FACTURAS: comprobación entre el CRM (lo pagado) y Zoho Books (lo facturado) =====
    En Books se crea una factura por cada pago, serie C-2027, con la referencia «<fecha>-<id de la inscripción>».
    Las reservas de 50 € antiguas no llevan el id: se enlazan por el email de la familia. */
 var INV={f:"err",q:"",list:null,busy:false,err:"",at:null};
 const BOOKS_ORG="20110950454",INV_PREFIX="C-2027";
+/* Andorra factura en otra organización de Books (ISL Agency), serie AND27.nn */
+const BOOKS_ORG_AND="20112628138",INV_AND_PREFIX="AND27";
 /* series: Madrid C-2027; los nacionales numeran por campus (VAL27.01, …): se leen todas las que contienen «27.» */
 const INV_SERIES=[["invoice_number_startswith",INV_PREFIX],["invoice_number_contains","27."]];
 const invSeries=n=>{n=String(n||"");return n.startsWith(INV_PREFIX)?INV_PREFIX:((/^([A-Z]+)\d*27\./.exec(n)||/^([A-Z]+)/.exec(n)||[,"—"])[1]+"27")};
 const r2=n=>Math.round((+n||0)*100)/100;
 async function loadBooks(force){
   if(!S.mcp||INV.busy)return;
-  if(window.CE_ACL&&!(window.CE_ACL.admin||(window.CE_ACL.perms||{})["contabilidad.facturas"]||(window.CE_ACL.perms||{})["contabilidad.ingresos"]))return;INV.busy=true;INV.err="";renderFacturas();try{renderIngresos()}catch(e){}
+  if(window.CE_ACL&&!(window.CE_ACL.admin||["facturas","ingresos","devoluciones","cancelaciones"].some(k=>(window.CE_ACL.perms||{})["contabilidad."+k])))return;INV.busy=true;INV.err="";renderFacturas();try{renderIngresos();renderDev();renderCan()}catch(e){}
   try{const all=[],seen=new Set();
     for(const [qk,qv] of INV_SERIES)for(let page=1;page<=25;page++){
       const res=await S.mcp.callTool("Zoho Books","list_invoices",{query_params:{organization_id:BOOKS_ORG,[qk]:qv,per_page:200,page}},{cache:{staleTime:60000,gcTime:600000,refresh:!!force}});
       let p=res&&res.payload;if(typeof p==="string"){try{p=JSON.parse(p)}catch(e){p=null}}
       const d=p&&(p.data&&Array.isArray(p.data.invoices)?p.data:p);
       if(!d||!Array.isArray(d.invoices))throw {code:"shape",message:"respuesta no reconocida"};
-      d.invoices.forEach(i=>{const k=i.invoice_id||i.invoice_number;if(!seen.has(k)){seen.add(k);all.push(i)}});if(!d.page_context||!d.page_context.has_more_page)break}
+      d.invoices.forEach(i=>{const k=i.invoice_id||i.invoice_number;if(!seen.has(k)){seen.add(k);i._org=BOOKS_ORG;all.push(i)}});if(!d.page_context||!d.page_context.has_more_page)break}
+    INV.andErr="";
+    try{for(let page=1;page<=10;page++){
+      const res=await S.mcp.callTool("Zoho Books","list_invoices",{query_params:{organization_id:BOOKS_ORG_AND,invoice_number_startswith:INV_AND_PREFIX,per_page:200,page}},{cache:{staleTime:60000,gcTime:600000,refresh:!!force}});
+      let p=res&&res.payload;if(typeof p==="string"){try{p=JSON.parse(p)}catch(e){p=null}}
+      const d=p&&(p.data&&Array.isArray(p.data.invoices)?p.data:p);if(!d||!Array.isArray(d.invoices))break;
+      d.invoices.forEach(i=>{const k="and:"+(i.invoice_id||i.invoice_number);if(!seen.has(k)){seen.add(k);i._org=BOOKS_ORG_AND;all.push(i)}});if(!d.page_context||!d.page_context.has_more_page)break}}
+    catch(e){INV.andErr="No se han podido leer las facturas de Andorra (ISL Agency)"+(e&&e.message?": "+e.message:"")}
     INV.list=all;INV.at=new Date()}
   catch(e){const c=e&&e.code;
     INV.err=c==="server_not_connected"?"Zoho Books no está conectado. Añádelo en claude.ai → Configuración → Conectores.":c==="needs_reauth"?"Vuelve a conectar Zoho Books en claude.ai → Configuración → Conectores.":c==="not_in_manifest"||c==="approval_required"?"Falta dar permiso a esta página para leer Zoho Books.":c==="blocked_by_policy"?"Tu organización no permite leer Zoho Books desde aquí.":"No se han podido leer las facturas de Zoho Books"+(e&&e.message?" ("+e.message+")":"")+"."}
-  INV.busy=false;renderFacturas();try{renderIngresos()}catch(e){}try{sbSync()}catch(e){}}
+  INV.busy=false;renderFacturas();try{renderIngresos()}catch(e){}try{renderDev();renderCan()}catch(e){}try{sbSync()}catch(e){}}
 function invCheck(){
   const AR=S.allRows||[],L=(INV.list||[]).filter(i=>i.status!=="void"&&i.status!=="draft");
   const ids=new Set(AR.map(r=>String(r.id))),byDeal={},byEmail={},orph=[];
@@ -4077,15 +4193,18 @@ const INV_BOX=[["err","Con error","Sin factura, no cuadra o sin cobrar"],["sin",
 const INV_LBL={ok:"Correcta",sin:"Sin factura",dif:"No cuadra",cobro:"Sin cobrar",none:"Sin pagos"};
 const INV_ERR=k=>k==="sin"||k==="dif"||k==="cobro";
 function invErrCount(){if(!INV.list||!(S.allRows||[]).length)return null;try{const c=invCheck();return c.rows.filter(x=>INV_ERR(x.k)).length}catch(e){return null}}
-const booksUrl=i=>"https://books.zoho.eu/app/"+BOOKS_ORG+"#/invoices/"+encodeURIComponent(i.invoice_id);
+const booksUrl=i=>"https://books.zoho.eu/app/"+(i._org||BOOKS_ORG)+"#/invoices/"+encodeURIComponent(i.invoice_id);
+const cnUrl=c=>"https://books.zoho.eu/app/"+(c._org||BOOKS_ORG)+"#/creditnotes/"+encodeURIComponent(c.creditnote_id);
 function renderFacturas(){
   if($("view-facturas").hidden)return;
   $("invSub").textContent=INV.busy?"Leyendo Zoho Books…":INV.at?"Comprobado con Zoho Books a las "+INV.at.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})+" · series "+([...new Set((INV.list||[]).map(i=>invSeries(i.invoice_number)))].sort().join(", ")||INV_PREFIX):"Comprobación con Zoho Books";
   $("invRefresh").disabled=INV.busy;
   const AR=S.allRows||[];
-  if(INV.err&&!INV.list){$("invBoxes").innerHTML="";$("invCount").textContent="";$("invList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Sin facturas</h3><p>'+esc(INV.err)+"</p></div>";$("invOrph").innerHTML="";return}
+  if(INV.err&&!INV.list){$("invSede").innerHTML="";$("invBoxes").innerHTML="";$("invCount").textContent="";$("invList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Sin facturas</h3><p>'+esc(INV.err)+"</p></div>";$("invOrph").innerHTML="";return}
   if(!INV.list||!AR.length){$("invBoxes").innerHTML="";$("invList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">'+(INV.busy||!AR.length?"Cargando facturas…":"Sin datos")+"</h3></div>";$("invOrph").innerHTML="";return}
-  const {rows,orph}=invCheck();const cnt={all:rows.length,ok:0,sin:0,dif:0,cobro:0,none:0};rows.forEach(x=>cnt[x.k]++);cnt.err=cnt.sin+cnt.dif+cnt.cobro;
+  const ck=invCheck();const invCamp=i=>{if(i._org===BOOKS_ORG_AND)return "and";const se=invSeries(i.invoice_number);return se===INV_PREFIX?"mad":(ING_SER[se.replace(/27$/,"")]||"mad")};
+  $("invSede").innerHTML=sedeBar("inv",ck.rows.map(x=>x.r.camp||"mad"));
+  const rows=ck.rows.filter(x=>sedeOk("inv",x.r.camp||"mad")),orph=ck.orph.filter(o=>sedeOk("inv",invCamp(o.i)));const cnt={all:rows.length,ok:0,sin:0,dif:0,cobro:0,none:0};rows.forEach(x=>cnt[x.k]++);cnt.err=cnt.sin+cnt.dif+cnt.cobro;
   $("invBoxes").innerHTML=INV_BOX.map(([k,t,sub])=>'<button type="button" class="pbx ib-'+k+'" data-if="'+k+'" aria-pressed="'+(INV.f===k)+'"><span class="pt2">'+t+'</span><span class="pc2">'+cnt[k]+'</span><span class="ps2">'+sub+"</span></button>").join("");
   const nrm=t=>String(t).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();const q=nrm(INV.q.trim());
   let it=rows.filter(x=>INV.f==="all"||(INV.f==="err"?INV_ERR(x.k):x.k===INV.f));
@@ -4105,6 +4224,168 @@ $("invBoxes").addEventListener("click",e=>{const b=e.target.closest("[data-if]")
 $("invQ").addEventListener("input",e=>{INV.q=e.target.value;renderFacturas()});
 $("invRefresh").addEventListener("click",()=>loadBooks(true));
 $("invList").addEventListener("click",e=>{if(e.target.closest("a"))return;const row=e.target.closest("[data-pid]");if(!row)return;if(typeof openDrawer==="function")openDrawer(row.dataset.pid)});
+/* ===== DEVOLUCIONES =====
+   Pendiente: la inscripción tiene «Refund amount» (Refund) en el CRM y aún no hay rectificativa.
+   Reparto sugerido: se devuelve desde la última factura hacia atrás (150 € con dos de 100 → 100 de la última y 50 de la anterior).
+   Hecha: Olivia crea en Books la nota de crédito desde la factura original. Si la suma coincide con el importe a devolver → correcta; si no → error en rojo.
+   Las hechas se agrupan por la fecha de la rectificativa y se marcan como revisadas (como en Ingresos). */
+var CN={list:null,busy:false,err:"",at:null};
+var DEV={f:"pend",q:"",open:new Set(),docs:{}};
+const DEV_OK_ST=["Paid","1st Payment","2nd Payment","3rd Payment","Cancelled","Refund","Partially refunded"];
+const DEV_ST_LBL={"Paid":"Pagado","1st Payment":"1er pago","2nd Payment":"2º pago","3rd Payment":"3er pago","Cancelled":"Cancelado","Refund":"Devuelto","Partially refunded":"Devolución parcial"};
+const devEdit=()=>!window.CE_ACL||!!window.CE_ACL.admin||(((window.CE_ACL.perms||{})["contabilidad.devoluciones"]||0)>=2);
+const accCan=k=>!window.CE_ACL||!!window.CE_ACL.admin||!!(window.CE_ACL.perms||{})["contabilidad."+k];
+async function loadCN(force){
+  if(!S.mcp||CN.busy)return;if(!accCan("devoluciones")&&!accCan("cancelaciones"))return;
+  CN.busy=true;try{renderDev();renderCan()}catch(e){}
+  try{const all=[];
+    for(const org of [BOOKS_ORG,BOOKS_ORG_AND])for(let page=1;page<=10;page++){
+      let res;try{res=await S.mcp.callTool("Zoho Books","list_creditnotes",{query_params:{organization_id:org,per_page:200,page}},{cache:{staleTime:60000,gcTime:600000,refresh:!!force}})}
+      catch(e){if(org===BOOKS_ORG)throw e;break}
+      let p=res&&res.payload;if(typeof p==="string"){try{p=JSON.parse(p)}catch(e){p=null}}
+      const d=p&&(p.data&&Array.isArray(p.data.creditnotes)?p.data:p);if(!d||!Array.isArray(d.creditnotes))throw {code:"shape",message:"respuesta no reconocida"};
+      d.creditnotes.forEach(c=>{c._org=org;all.push(c)});if(!d.page_context||!d.page_context.has_more_page)break}
+    CN.list=all;CN.err="";CN.at=new Date()}
+  catch(e){const c=e&&e.code;CN.err=(c==="not_in_manifest"||c==="server_not_connected"||c==="approval_required"||c==="tool_error"||c==="unknown_tool")?"Las rectificativas (notas de crédito de Zoho Books) solo se leen desde el software operativo: aquí se ven las devoluciones pendientes, pero no si ya están hechas.":"No se han podido leer las rectificativas de Zoho Books"+(e&&e.message?" ("+e.message+")":"")+"."}
+  CN.busy=false;try{renderDev();renderCan()}catch(e){}}
+function accDeals(){const m=new Map();(S.allRows||[]).concat(S.xRows||[]).forEach(r=>{if(!m.has(String(r.id)))m.set(String(r.id),r)});return [...m.values()]}
+/* facturas y rectificativas de cada inscripción */
+function accIndex(){
+  const deals=accDeals(),ids=new Set(deals.map(r=>String(r.id)));
+  const L=(INV.list||[]).filter(i=>i.status!=="void"&&i.status!=="draft");
+  const invByDeal={},invDeal={},noRefByEmail={};
+  L.forEach(i=>{const m=/-(\d{12,})$/.exec(i.reference_number||"");
+    if(m&&ids.has(m[1])){(invByDeal[m[1]]=invByDeal[m[1]]||[]).push(i);invDeal[(i._org||BOOKS_ORG)+":"+i.invoice_id]=m[1]}
+    else if(!m){const e=String(i.email||"").toLowerCase();if(e)(noRefByEmail[e]=noRefByEmail[e]||[]).push(i)}});
+  /* sin referencia (Andorra, reservas antiguas): por el email de la familia, solo si esa inscripción no tiene otras */
+  const byEmailDeals={};deals.forEach(r=>[r.d.Email,r.d.Email_persona].map(x=>String(x||"").toLowerCase()).filter(Boolean).forEach(e=>{(byEmailDeals[e]=byEmailDeals[e]||new Set()).add(String(r.id))}));
+  Object.entries(noRefByEmail).forEach(([e,list])=>{const ds=byEmailDeals[e];if(!ds||ds.size!==1)return;const id=[...ds][0];if(invByDeal[id]&&invByDeal[id].some(i=>!i._em))return;
+    list.forEach(i=>{i._em=true;(invByDeal[id]=invByDeal[id]||[]).push(i);invDeal[(i._org||BOOKS_ORG)+":"+i.invoice_id]=id})});
+  const cnByDeal={},cnFree=[];
+  (CN.list||[]).filter(c=>c.status!=="void"&&c.status!=="draft").forEach(c=>{let id=null;
+    if(c.invoice_id)id=invDeal[c._org+":"+c.invoice_id]||null;
+    if(!id&&Array.isArray(c.applied))for(const a of c.applied){id=invDeal[c._org+":"+a.invoice_id];if(id)break}
+    if(!id){const m=/-(\d{12,})$/.exec(c.reference_number||"");if(m&&ids.has(m[1]))id=m[1]}
+    if(!id){const ds=byEmailDeals[String(c.email||"").toLowerCase()];if(ds&&ds.size===1)id=[...ds][0]}
+    if(id)(cnByDeal[id]=cnByDeal[id]||[]).push(c);else cnFree.push(c)});
+  return {deals,invByDeal,cnByDeal,cnFree}}
+function devAlloc(invs,amount){const out=invs.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))||String(b.invoice_number).localeCompare(String(a.invoice_number),"es",{numeric:true}));
+  let left=r2(amount);return {rows:out.map(i=>{const g=r2(Math.max(0,Math.min(+i.total||0,left)));left=r2(left-g);return {i,give:g}}),left}}
+function devRows(){const X=accIndex();const eq=(a,b)=>Math.abs(a-b)<0.01;const out=[];
+  X.deals.forEach(r=>{const d=r.d,refund=r2(d.Refund),cns=X.cnByDeal[r.id]||[];if(!(refund>0)&&!cns.length)return;
+    const invs=X.invByDeal[r.id]||[];const al=devAlloc(invs,refund);const cnSum=r2(cns.reduce((a,c)=>a+(+c.total||0),0));
+    const why=[],soft=[];let k;
+    if(!cns.length)k="pend";else if(!(refund>0)){k="err";why.push("Hay rectificativa pero en el CRM no hay importe de devolución")}
+    else if(eq(cnSum,refund))k="ok";else{k="err";why.push("Rectificado "+eur(cnSum)+" y hay que devolver "+eur(refund)+" ("+(cnSum>refund?"+":"")+eur(r2(cnSum-refund))+")")}
+    if(d.Stage&&!DEV_OK_ST.includes(d.Stage))why.push("Estado «"+d.Stage+"»: una devolución debería estar pagada, en fase de pago o cancelada");
+    if(refund>0&&al.left>0.01)why.push("Las facturas encontradas ("+eur(r2(refund-al.left))+") no cubren el importe a devolver");
+    if(k!=="pend"&&cns.length)cns.forEach(c=>{if(!c.invoice_id)return;const a=al.rows.find(x=>String(x.i.invoice_id)===String(c.invoice_id)&&(x.i._org||BOOKS_ORG)===c._org);if(a&&!eq(a.give,+c.total))soft.push(c.creditnote_number+" sobre "+a.i.invoice_number+": "+eur(c.total)+" (el reparto sugerido era "+eur(a.give)+")")});
+    const day=cns.map(c=>c.date||"").sort().pop()||"";
+    out.push({r,refund,invs,al,cns,cnSum,k,why,soft,day,total:r2(d.Total),paid:r2(d.Paid)})});
+  X.cnFree.forEach(c=>out.push({r:null,c,refund:0,invs:[],al:{rows:[],left:0},cns:[c],cnSum:r2(c.total),k:"err",why:["Rectificativa sin inscripción identificada ("+(c.customer_name||"sin cliente")+")"],soft:[],day:c.date||"",camp:c._org===BOOKS_ORG_AND?"and":"mad"}));
+  return out}
+const devCamp=x=>x.r?(x.r.camp||"mad"):(x.camp||"mad");
+function devDays(rows){const by={};rows.filter(x=>x.k!=="pend").forEach(x=>{(by[x.day]=by[x.day]||[]).push(x)});
+  return Object.entries(by).map(([day,xs])=>{const total=r2(xs.reduce((a,x)=>a+x.cnSum,0));const sig=xs.flatMap(x=>x.cns.map(c=>c.creditnote_number+":"+r2(c.total))).sort().join(",");const doc=DEV.docs["d"+day]||null;
+    let st="pend";if(doc&&doc.ok)st=doc.sig===sig?"ok":"rev";return {day,xs,total,sig,doc,st,err:xs.filter(x=>x.k==="err").length}}).sort((a,b)=>b.day.localeCompare(a.day))}
+const stagePill=st=>'<span class="dst'+(st==="Paid"?" paid":st==="Cancelled"?" can":DEV_OK_ST.includes(st)?"":" ko")+'">'+esc(DEV_ST_LBL[st]||st||"—")+"</span>";
+function renderDev(){
+  if($("view-pagos").hidden||$("accDev").hidden)return;
+  document.documentElement.classList.toggle("no-dev-edit",!devEdit());
+  if(!INV.list&&!INV.busy&&S.mcp)loadBooks(false);if(!CN.list&&!CN.busy&&!CN.err&&S.mcp)loadCN(false);
+  $("devRefresh").disabled=INV.busy||CN.busy;
+  const AR=S.allRows||[];
+  if(!AR.length||!INV.list){$("devSede").innerHTML="";$("devBoxes").innerHTML="";$("devCount").textContent="";$("devMsg").innerHTML="";$("devList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">'+(INV.err&&!INV.list?"Sin facturas":"Cargando devoluciones…")+"</h3>"+(INV.err&&!INV.list?"<p>"+esc(INV.err)+"</p>":"")+"</div>";return}
+  const all=devRows();$("devSede").innerHTML=sedeBar("dev",all.map(devCamp));
+  const rows=all.filter(x=>sedeOk("dev",devCamp(x)));
+  const cnt={pend:0,err:0,ok:0,all:rows.length};rows.forEach(x=>cnt[x.k]++);const pendSum=r2(rows.filter(x=>x.k==="pend").reduce((a,x)=>a+x.refund,0));
+  const BX=[["pend","Pendientes","Sin rectificativa"],["err","Con error","No cuadran o falta dato"],["ok","Correctas","Rectificativa = devolución"],["all","Todas",""]];
+  $("devBoxes").innerHTML=BX.map(([k,t,sub])=>'<button type="button" class="pbx db-'+k+'" data-df="'+k+'" aria-pressed="'+(DEV.f===k)+'"><span class="pt2">'+t+'</span><span class="pc2">'+cnt[k]+'</span><span class="ps2">'+sub+"</span></button>").join("")+
+    '<div class="pbx db-sum"><span class="pt2">Por devolver</span><span class="pc2">'+eur(pendSum)+'</span><span class="ps2">'+cnt.pend+" pendientes</span></div>";
+  $("devMsg").innerHTML=(CN.err?'<div class="devmsg">'+esc(CN.err)+"</div>":CN.busy&&!CN.list?'<div class="devmsg">Leyendo las rectificativas de Zoho Books…</div>':"")+(INV.andErr?'<div class="devmsg">'+esc(INV.andErr)+"</div>":"");
+  const nrm=t=>String(t).normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();const q=nrm(DEV.q.trim());
+  let it=rows.filter(x=>DEV.f==="all"||x.k===DEV.f);
+  if(q)it=it.filter(x=>nrm((x.r?x.r.hay+" "+x.r.name:"")+" "+x.cns.map(c=>c.creditnote_number+" "+(c.customer_name||"")).join(" ")+" "+x.invs.map(i=>i.invoice_number).join(" ")).includes(q));
+  $("devCount").textContent=it.length+" devoluciones";
+  if(!it.length){$("devList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">'+(DEV.f==="pend"?"Ninguna devolución pendiente":DEV.f==="err"?"Ningún error":"Nada en este estado")+"</h3><p>"+(DEV.f==="pend"?"Aparecen aquí cuando la inscripción tiene «Refund amount» en el CRM.":"")+"</p></div>";return}
+  const chip=i=>'<a class="ichip" href="'+booksUrl(i)+'" target="_blank" rel="noopener" title="Abrir la factura en Zoho Books">'+esc(i.invoice_number)+" <b>"+eur(i.total)+"</b></a>";
+  const cchip=c=>'<a class="ichip cn" href="'+cnUrl(c)+'" target="_blank" rel="noopener" title="Abrir la rectificativa en Zoho Books · '+esc(c.date||"")+'">'+esc(c.creditnote_number)+" <b>"+eur(c.total)+"</b></a>";
+  let h="";
+  const pend=it.filter(x=>x.k==="pend");
+  if(pend.length){if(DEV.f==="all")h+='<div class="devsec">Pendientes<span>'+pend.length+" · "+eur(r2(pend.reduce((a,x)=>a+x.refund,0)))+"</span></div>";
+    pend.sort((a,b)=>String(b.r.d.Modified_Time||"").localeCompare(String(a.r.d.Modified_Time||""))||a.r.name.localeCompare(b.r.name));
+    h+=pend.map(x=>{const r=x.r,d=r.d,open=DEV.open.has(String(r.id));
+      return '<div class="ingd st-pend'+(open?" open":"")+'"><div class="devh" data-devtog="'+esc(r.id)+'"><button type="button" class="chev" aria-label="Ver de qué facturas devolver" aria-expanded="'+open+'"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>'+
+        '<span class="pnm"><b class="nmrow"><span class="nmt" title="'+esc(r.name)+'">'+esc(r.name)+"</span>"+campTag(r)+'</b><span class="code">'+esc(r.code)+"</span></span>"+stagePill(d.Stage)+
+        '<span class="lbl"><small>Total</small>'+eur(x.total)+'</span><span class="lbl big"><small>A devolver</small>'+eur(x.refund)+"</span>"+
+        '<span class="mot muted" title="Se rellenará cuando exista el campo «Motivo de devolución» en el CRM">Motivo: pendiente del CRM</span></div>'+
+        (x.why.length?'<div class="ingrev">'+esc(x.why.join(" · "))+"</div>":"")+
+        '<div class="devalloc"><div class="dar head"><span>Factura</span><span class="dt">Fecha</span><span class="am">Importe</span><span class="give">Devolver</span></div>'+
+        (x.al.rows.length?x.al.rows.map(a=>'<div class="dar'+(a.give?"":" zero")+'"><span>'+chip(a.i)+(a.i._em?' <i class="muted" title="Factura sin código de inscripción: encontrada por el email">por email</i>':"")+'</span><span class="dt">'+esc(a.i.date?fmtDL(a.i.date):"")+'</span><span class="am">'+eur(a.i.total)+'</span><span class="give">'+(a.give?eur(a.give):"—")+"</span></div>").join(""):'<div class="dnote ko">No se ha encontrado ninguna factura de esta inscripción en Zoho Books.</div>')+
+        '<div class="dnote">Se devuelve empezando por la última factura. Crea en Books la rectificativa desde cada factura con el importe indicado.</div><div class="dnote"><button type="button" class="btn" data-devpid="'+esc(r.id)+'">Abrir ficha</button></div></div></div>'}).join("")}
+  if(DEV.f!=="pend"){const days=devDays(it);const ed=devEdit();
+    if(days.length&&DEV.f==="all")h+='<div class="devsec">Hechas<span>por fecha de la rectificativa</span></div>';
+    h+=days.map(g=>{const open=!DEV.open.has("x"+g.day);
+      const who=g.doc&&g.doc.ok?'<span class="ingwho">'+(g.st==="rev"?"Revisado antes por ":"Revisado por ")+"<b>"+esc(g.doc.byName||"—")+"</b><br>"+esc(g.doc.at?new Date(g.doc.at).toLocaleString("es-ES",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}):"")+"</span>":"";
+      const btn=g.st==="ok"?'<button type="button" class="ingok done" data-devok="'+g.day+'"'+(ed?' title="Quitar la marca"':" disabled")+">✓ Correcto</button>":g.st==="rev"?'<button type="button" class="ingok rev" data-devok="'+g.day+'"'+(ed?"":" disabled")+">Volver a revisar</button>":(ed?'<button type="button" class="ingok" data-devok="'+g.day+'">Marcar correcto</button>':'<span class="ingwho">Sin revisar</span>');
+      return '<div class="ingd st-'+(g.err?"rev":g.st)+(open?" open":"")+'"><div class="ingh" data-devday="'+g.day+'"><button type="button" class="chev" aria-label="Ver las rectificativas" aria-expanded="'+open+'"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>'+
+        '<span class="dd2"><b>'+esc(g.day?ingDate(g.day,{weekday:"long",day:"numeric",month:"short",year:"numeric"}):"Sin fecha")+"</b><small>Fecha de la rectificativa</small></span>"+
+        '<span class="np">'+g.xs.length+(g.xs.length>1?" devoluciones":" devolución")+(g.err?'<br><small style="color:var(--bad);font-weight:800">'+g.err+(g.err>1?" con error":" con error")+"</small>":"")+'</span><span class="tot">'+eur(g.total)+'</span><span></span><span class="ingact">'+who+btn+"</span></div>"+
+        (g.st==="rev"?'<div class="ingrev">Ha cambiado desde que se revisó: hay rectificativas nuevas o con otro importe.</div>':"")+
+        '<div class="ingp">'+g.xs.map(x=>'<div class="devr'+(x.k==="err"?" ko":"")+'"><span class="who"'+(x.r?' data-devpid="'+esc(x.r.id)+'"':"")+"><b>"+esc(x.r?x.r.name:(x.c.customer_name||"—"))+"</b><small>"+(x.r?esc(x.r.code)+" ":"")+(x.r?campTag(x.r):"")+'</small></span><span class="am"><small>A devolver</small>'+(x.refund?eur(x.refund):"—")+'</span><span class="am"><small>Rectificado</small>'+eur(x.cnSum)+"</span>"+
+          '<span><span class="pst '+(x.k==="ok"?"ist-ok":"ist-dif")+'">'+(x.k==="ok"?"Correcta":"Error")+'</span></span><span class="fchips chips">'+x.cns.map(cchip).join("")+"</span>"+
+          (x.why.length?'<span class="why">'+esc(x.why.join(" · "))+"</span>":"")+(x.soft.length?'<span class="why soft">'+esc(x.soft.join(" · "))+"</span>":"")+"</div>").join("")+"</div></div>"}).join("")}
+  $("devList").innerHTML=h;
+}
+async function devMark(day){if(!devEdit()||!S.db){toast("No se puede guardar en esta vista");return}
+  const g=devDays(devRows()).find(x=>x.day===day);if(!g)return;const k="d"+day;
+  const doc=g.st==="ok"?Object.assign({},DEV.docs[k]||{},{ok:false}):{ok:true,sig:g.sig,total:g.total,n:g.xs.length,at:new Date().toISOString(),by:S.me||null,byName:(await ingMe()).name||""};
+  doc.updatedAt=new Date().toISOString();DEV.docs[k]=doc;renderDev();
+  try{await S.db.collection("dev").doc(k).set(doc);toast(doc.ok?"Marcado como correcto":"Marca quitada")}catch(e){toast(e&&e.code==="permission_denied"?"No tienes permiso para revisar devoluciones":"No se pudo guardar. Vuelve a intentarlo.")}}
+$("devBoxes").addEventListener("click",e=>{const b=e.target.closest("[data-df]");if(!b)return;DEV.f=b.dataset.df;renderDev()});
+$("devQ").addEventListener("input",e=>{DEV.q=e.target.value;renderDev()});
+$("devRefresh").addEventListener("click",()=>{CN.err="";loadBooks(true);loadCN(true)});
+$("devList").addEventListener("click",e=>{let b;if(e.target.closest("a"))return;
+  if((b=e.target.closest("[data-devok]"))){if(!b.disabled)devMark(b.dataset.devok);return}
+  if((b=e.target.closest("[data-devpid]"))){if(typeof openDrawer==="function")openDrawer(b.dataset.devpid);return}
+  if((b=e.target.closest("[data-devtog]"))){const id=b.dataset.devtog;if(DEV.open.has(id))DEV.open.delete(id);else DEV.open.add(id);renderDev();return}
+  if((b=e.target.closest("[data-devday]"))){const id="x"+b.dataset.devday;if(DEV.open.has(id))DEV.open.delete(id);else DEV.open.add(id);renderDev()}});
+
+/* ===== CANCELACIONES: inscripciones en «Cancelled» con lo pagado, lo devuelto y el saldo ===== */
+var CANX={f:"all",q:""};
+function canRows(){const X=accIndex();
+  return X.deals.filter(r=>r.d.Stage==="Cancelled").map(r=>{const d=r.d,cns=X.cnByDeal[r.id]||[],invs=X.invByDeal[r.id]||[];
+    const paid=r2(d.Paid),total=r2(d.Total),cnSum=r2(cns.reduce((a,c)=>a+(+c.total||0),0)),refund=r2(d.Refund);
+    const dev=cns.length?cnSum:0,saldo=r2(paid-dev);
+    const k=!(paid>0)?"none":saldo>0.01?"saldo":"dev";
+    return {r,paid,total,refund,cns,invs,dev,saldo,k,when:String(d.Modified_Time||"").slice(0,10)}})}
+function renderCan(){
+  if($("view-pagos").hidden||$("accCan").hidden)return;
+  if(!INV.list&&!INV.busy&&S.mcp)loadBooks(false);if(!CN.list&&!CN.busy&&!CN.err&&S.mcp)loadCN(false);
+  if(!(S.allRows||[]).length){$("canSede").innerHTML="";$("canBoxes").innerHTML="";$("canList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Cargando cancelaciones…</h3></div>';return}
+  const all=canRows();$("canSede").innerHTML=sedeBar("can",all.map(x=>x.r.camp||"mad"));
+  const rows=all.filter(x=>sedeOk("can",x.r.camp||"mad"));const cnt={all:rows.length,saldo:0,dev:0,none:0};rows.forEach(x=>cnt[x.k]++);
+  const sp=r2(rows.reduce((a,x)=>a+x.paid,0)),sd=r2(rows.reduce((a,x)=>a+x.dev,0));
+  const BX=[["all","Todas","Inscripciones canceladas"],["saldo","Con saldo","Pagado y sin devolver"],["dev","Devueltas","Rectificado todo lo pagado"],["none","Sin pagos","No pagaron nada"]];
+  $("canBoxes").innerHTML=BX.map(([k,t,sub])=>'<button type="button" class="pbx cb-'+k+'" data-cf="'+k+'" aria-pressed="'+(CANX.f===k)+'"><span class="pt2">'+t+'</span><span class="pc2">'+cnt[k]+'</span><span class="ps2">'+sub+"</span></button>").join("")+
+    '<div class="pbx cb-sum"><span class="pt2">Saldo retenido</span><span class="pc2">'+eur(r2(sp-sd))+'</span><span class="ps2">Pagado '+eur(sp)+(CN.list?" · devuelto "+eur(sd):"")+"</span></div>";
+  const nrm=t=>String(t).normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();const q=nrm(CANX.q.trim());
+  let it=rows.filter(x=>CANX.f==="all"||x.k===CANX.f);if(q)it=it.filter(x=>nrm(x.r.hay+" "+x.r.name+" "+x.invs.map(i=>i.invoice_number).join(" ")).includes(q));
+  it.sort((a,b)=>b.when.localeCompare(a.when)||a.r.name.localeCompare(b.r.name));
+  $("canCount").textContent=it.length+" cancelaciones";
+  if(!it.length){$("canList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Ninguna cancelación en este estado</h3></div>';return}
+  const chip=i=>'<a class="ichip" href="'+booksUrl(i)+'" target="_blank" rel="noopener" title="Factura · '+esc(i.date||"")+'">'+esc(i.invoice_number)+" <b>"+eur(i.total)+"</b></a>";
+  const cchip=c=>'<a class="ichip cn" href="'+cnUrl(c)+'" target="_blank" rel="noopener" title="Rectificativa · '+esc(c.date||"")+'">'+esc(c.creditnote_number)+" <b>"+eur(c.total)+"</b></a>";
+  $("canList").innerHTML=it.map(x=>{const d=x.r.d;
+    return '<div class="prow crow is-'+x.k+'" data-pid="'+esc(x.r.id)+'"><span class="pnm"><b class="nmrow"><span class="nmt" title="'+esc(x.r.name)+'">'+esc(x.r.name)+"</span>"+campTag(x.r)+'</b><span class="code">'+esc(x.r.code)+(x.when?" · cancelada "+esc(fmtDL(x.when)):"")+(d.Forma_de_pago?" · "+esc(d.Forma_de_pago):"")+"</span></span>"+
+      '<span class="pst '+(x.k==="saldo"?"ist-dif":x.k==="dev"?"ist-ok":"ist-none")+'">'+(x.k==="saldo"?"Con saldo":x.k==="dev"?"Devuelta":"Sin pagos")+"</span>"+
+      '<span class="cam"><small>Total</small>'+eur(x.total)+'</span><span class="cam"><small>Pagado</small>'+eur(x.paid)+'</span><span class="cam"><small>Devuelto</small>'+(CN.list?eur(x.dev):"—")+(x.refund?'<small title="Refund amount del CRM">CRM '+eur(x.refund)+"</small>":"")+'</span><span class="cam'+(x.saldo>0.01?" ko":"")+'"><small>Saldo</small>'+eur(x.saldo)+"</span>"+
+      '<span class="fchips">'+x.invs.map(chip).concat(x.cns.map(cchip)).join("")+"</span></div>"}).join("")+
+    (CN.err?'<p class="ingnote">'+esc(CN.err)+" Lo devuelto se mostrará al leer las rectificativas.</p>":"");
+}
+$("canBoxes").addEventListener("click",e=>{const b=e.target.closest("[data-cf]");if(!b)return;CANX.f=b.dataset.cf;renderCan()});
+$("canQ").addEventListener("input",e=>{CANX.q=e.target.value;renderCan()});
+$("canList").addEventListener("click",e=>{if(e.target.closest("a"))return;const row=e.target.closest("[data-pid]");if(row&&typeof openDrawer==="function")openDrawer(row.dataset.pid)});
 /* ===== INCIDENCIAS =====
    Cualquiera con acceso de edición a Incidencias crea y responde.
    Flujo: Por responder → (respuesta: ¿contacto con la familia? sí/no, vía y texto) → Por validar →
@@ -4266,7 +4547,11 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-incfrom]")
    (un cobro a las 23:01 del lunes cuenta en el martes). La hora del cobro sale de la referencia de la factura
    (aaaammddhhmm, en UTC); si no la trae, se usa la hora en que Books registró la factura y se marca como aproximada.
    Cuadrar un día guarda quién y cuándo, el total y las facturas de ese momento: si después cambia, el día pasa a «Revisar». */
-var ING={f:"pend",q:"",camp:"",open:new Set(),docs:{},me:null};
+var ING={f:"pend",q:"",camp:"",open:new Set(),docs:{},me:null,bank:"san",mv:{},mvOpen:null};
+/* bancos: Santander (Madrid y nacionales), Sabadell (institucionales), LaCaixa (Andorra, que factura en ISL Agency) */
+const ING_BANKS=[["san","Santander","Madrid y nacionales"],["sab","Sabadell","Institucionales"],["cai","LaCaixa","Andorra"]];
+const ingBankOf=o=>o.i._org===BOOKS_ORG_AND?"cai":sedeOfCamp(o.camp)==="inst"?"sab":"san";
+const ingDocKey=(bank,day)=>bank==="san"?"d"+day:"d"+day+"-"+bank;
 const ING_TZ=new Intl.DateTimeFormat("en-GB",{timeZone:"Europe/Madrid",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"});
 function ingLocal(d){const p={};ING_TZ.formatToParts(d).forEach(x=>{p[x.type]=x.value});return {y:+p.year,m:+p.month,d:+p.day,h:+p.hour%24,mi:+p.minute}}
 const ingKey=(y,m,d)=>new Date(Date.UTC(y,m-1,d)).toISOString().slice(0,10);
@@ -4278,30 +4563,35 @@ function ingWhen(i){const m=/^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})/.exec(String(i
   return {d,day:late?ingKey(L.y,L.m,L.d+1):ingKey(L.y,L.m,L.d),hm:String(L.h).padStart(2,"0")+":"+String(L.mi).padStart(2,"0"),late,exact}}
 const ING_SER={VAL:"val",MAL:"mal",AND:"and",ALM:"alm",ALI:"ali"};
 function ingRows(){const byId={};(S.allRows||[]).forEach(r=>{byId[String(r.id)]=r});const perDeal={};
-  const out=(INV.list||[]).filter(i=>i.status!=="void"&&i.status!=="draft").map(i=>{const w=ingWhen(i);const dm=/-(\d{12,})$/.exec(i.reference_number||"");const r=dm?byId[dm[1]]||null:null;
+  const out=(INV.list||[]).filter(i=>i.status!=="void"&&i.status!=="draft").map(i=>{let w=ingWhen(i);
+    /* cobro movido a otro día a mano: se respeta el día elegido y se guarda el historial */
+    const mv=ING.mv["i"+i.invoice_id];const mvh=(mv&&Array.isArray(mv.hist))?mv.hist:[];
+    if(w&&mv&&mv.day&&mv.day!==w.day)w=Object.assign({},w,{day:mv.day,moved:true,orig:w.day});else if(w)w=Object.assign({},w,{orig:w.day});const dm=/-(\d{12,})$/.exec(i.reference_number||"");const r=dm?byId[dm[1]]||null:null;
     const ser=invSeries(i.invoice_number);const camp=r?(r.camp||"mad"):ser===INV_PREFIX?"mad":(ING_SER[ser.replace(/27$/,"")]||"");
-    const o={i,w,r,deal:dm?dm[1]:null,camp,player:i.cf_jugador||i.cf_player_name||(r&&r.name)||"",fam:i.customer_name||"",amt:r2(i.total)};
+    const o={i,w,mvh,r,deal:dm?dm[1]:null,camp,player:i.cf_jugador||i.cf_player_name||(r&&r.name)||"",fam:i.customer_name||"",amt:r2(i.total)};
     if(o.deal)(perDeal[o.deal]=perDeal[o.deal]||[]).push(o);return o});
   Object.values(perDeal).forEach(a=>{a.sort((x,y)=>(x.w?+x.w.d:0)-(y.w?+y.w.d:0));a.forEach((o,k)=>{o.n=k+1;o.of=a.length})});
   out.forEach(o=>{o.cp=!o.deal?(Math.abs(o.amt-50)<.01?"Reserva":"Pago"):(o.of===1&&o.r&&o.r.d&&Math.abs(r2(o.r.d.Total)-o.amt)<.01)?"Pago completo":(["1er","2º","3er"][o.n-1]||o.n+"º")+" pago"});
   return out}
-function ingDays(rows){const by={};rows.forEach(o=>{if(o.w)(by[o.w.day]=by[o.w.day]||[]).push(o)});
-  return Object.entries(by).map(([day,ps])=>{ps.sort((a,b)=>a.w.d-b.w.d);const total=r2(ps.reduce((a,o)=>a+o.amt,0));const doc=ING.docs["d"+day]||null;const sig=ps.map(o=>o.i.invoice_number).sort().join(",");
+function ingDays(rows,bank){bank=bank||ING.bank;const by={};rows.forEach(o=>{if(o.w&&ingBankOf(o)===bank)(by[o.w.day]=by[o.w.day]||[]).push(o)});
+  return Object.entries(by).map(([day,ps])=>{ps.sort((a,b)=>a.w.d-b.w.d);const total=r2(ps.reduce((a,o)=>a+o.amt,0));const doc=ING.docs[ingDocKey(bank,day)]||null;const sig=ps.map(o=>o.i.invoice_number).sort().join(",");
     let st="pend",chg=null;if(doc&&doc.ok){if(Math.abs(r2(doc.total)-total)<.01&&doc.sig===sig)st="ok";else{st="rev";const A=new Set(String(doc.sig||"").split(",").filter(Boolean)),B=new Set(sig.split(","));chg={add:[...B].filter(x=>!A.has(x)),del:[...A].filter(x=>!B.has(x)),was:r2(doc.total)}}}
     return {day,ps,total,doc,sig,st,chg}}).sort((a,b)=>b.day.localeCompare(a.day))}
 const ingEdit=()=>!window.CE_ACL||!!window.CE_ACL.admin||(((window.CE_ACL.perms||{})["contabilidad.ingresos"]||0)>=2);
 const ingDate=(k,o)=>new Date(k+"T12:00:00Z").toLocaleDateString("es-ES",Object.assign({timeZone:"UTC"},o));
 const ingNum=v=>{v=String(v||"").replace(/[\s€]/g,"");if(!v)return null;if(v.includes(","))v=v.replace(/\./g,"").replace(",",".");const n=+v;return isNaN(n)?NaN:r2(n)};
-function ingPendCount(){if(!INV.list)return null;try{return ingDays(ingRows()).filter(d=>d.st!=="ok").length}catch(e){return null}}
+function ingPendCount(){if(!INV.list)return null;try{const R=ingRows();return ING_BANKS.reduce((a,[b])=>a+ingDays(R,b).filter(d=>d.st!=="ok").length,0)}catch(e){return null}}
 function renderIngresos(){
   if($("view-ingresos").hidden)return;
   document.documentElement.classList.toggle("no-ing-edit",!ingEdit());
   $("ingSub").textContent=INV.busy?"Leyendo Zoho Books…":"Cobros de Zoho Books por día de la plataforma de pago (de 23:00 a 22:59)"+(INV.at?" · actualizado a las "+INV.at.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"}):"");
   $("ingRefresh").disabled=INV.busy;
   const cs=CAMPS.filter(c=>c.kind!=="inst");$("ingCamp").innerHTML='<option value="">Todos los campus</option>'+cs.map(c=>'<option value="'+c.id+'"'+(ING.camp===c.id?" selected":"")+">"+esc(c.n)+"</option>").join("");
-  if(INV.err&&!INV.list){$("ingBoxes").innerHTML="";$("ingCount").textContent="";$("ingList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Sin datos de Zoho Books</h3><p>'+esc(INV.err)+"</p></div>";return}
+  if(INV.err&&!INV.list){$("ingBank").innerHTML="";$("ingBoxes").innerHTML="";$("ingCount").textContent="";$("ingList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Sin datos de Zoho Books</h3><p>'+esc(INV.err)+"</p></div>";return}
   if(!INV.list){$("ingBoxes").innerHTML="";$("ingCount").textContent="";$("ingList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Cargando cobros…</h3></div>';return}
-  const days=ingDays(ingRows());const cnt={pend:0,rev:0,ok:0,all:days.length};days.forEach(d=>cnt[d.st]++);
+  const R=ingRows();
+  $("ingBank").innerHTML=ING_BANKS.map(([b,l,sub])=>{const n=ingDays(R,b).filter(d=>d.st!=="ok").length;return '<button type="button" role="tab" data-ingbk="'+b+'" aria-pressed="'+(ING.bank===b)+'" aria-selected="'+(ING.bank===b)+'">'+l+" <small>"+sub+'</small><span class="n'+(n?"":" z")+'" title="Días por cuadrar o revisar">'+n+"</span></button>"}).join("");
+  const days=ingDays(R);const cnt={pend:0,rev:0,ok:0,all:days.length};days.forEach(d=>cnt[d.st]++);
   const tot=r2(days.reduce((a,d)=>a+d.total,0)),np=days.reduce((a,d)=>a+d.ps.length,0);const first=days.length?days[days.length-1].day:null;
   const BX=[["pend","Por cuadrar","Días sin marcar"],["rev","Revisar","Han cambiado después de cuadrar"],["ok","Cuadrados","Marcados como correctos"],["all","Todos","Todos los días con cobros"]];
   $("ingBoxes").innerHTML=BX.map(([k,t,sub])=>'<button type="button" class="pbx gb-'+k+'" data-gf="'+k+'" aria-pressed="'+(ING.f===k)+'"><span class="pt2">'+t+'</span><span class="pc2">'+cnt[k]+'</span><span class="ps2">'+sub+"</span></button>").join("")+
@@ -4311,7 +4601,7 @@ function renderIngresos(){
   const filt=!!(q||ING.camp);
   let list=days.filter(d=>ING.f==="all"||d.st===ING.f);if(filt)list=list.filter(d=>d.ps.some(match));
   $("ingCount").textContent=list.length+" días";
-  if(!list.length){$("ingList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">'+(ING.f==="pend"&&!filt?"Todo cuadrado":ING.f==="rev"&&!filt?"Nada que revisar":"Ningún día")+"</h3></div>";return}
+  if(!list.length){$("ingList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">'+(ING.f==="pend"&&!filt?"Todo cuadrado":ING.f==="rev"&&!filt?"Nada que revisar":"Ningún día")+"</h3>"+(ING.bank==="cai"&&INV.andErr?"<p>"+esc(INV.andErr)+"</p>":ING.bank==="cai"?"<p>Cobros de Andorra (Zoho Books · ISL Agency, serie "+INV_AND_PREFIX+").</p>":"")+"</div>";return}
   const ed=ingEdit();let h="",curM="";
   const mt={};list.forEach(d=>{const m=d.day.slice(0,7);mt[m]=mt[m]||{n:0,t:0};mt[m].n++;mt[m].t=r2(mt[m].t+d.total)});
   list.forEach(d=>{const m=d.day.slice(0,7);
@@ -4331,17 +4621,22 @@ function renderIngresos(){
     h+='<div class="ingp">'+shown.map(o=>{const c=campById(o.camp);const fl=[];
         if(o.deal&&!o.r)fl.push("La inscripción no está activa en el software (baja, devolución o borrada)");
         if(+o.i.balance>0)fl.push("Books no tiene registrado el cobro de esta factura (pendiente "+eur(o.i.balance)+")");
-        const soft=[];if(o.w.late)soft.push("Pagado después de las 23:00: cuenta en este día");
+        const soft=[];if(o.w.late&&!o.w.moved)soft.push("Pagado después de las 23:00: cuenta en este día");
+        const fmtS=k=>ingDate(k,{day:"numeric",month:"short"});
+        const hist=o.mvh.map(x=>"Movido del "+fmtS(x.from)+" al "+fmtS(x.to)+" por "+(x.byName||"—")+" · "+new Date(x.at).toLocaleString("es-ES",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}));
+        const mvOpen=ING.mvOpen===String(o.i.invoice_id);
         return '<div class="ingr"><span class="hr'+(o.w.late?" n23":"")+'" title="'+(o.w.exact?"Hora del cobro":"Hora aproximada: la referencia no trae la hora del cobro; es la hora en que Books registró la factura")+(o.w.late?" · después de las 23:00: cuenta en el día siguiente":"")+'">'+(o.w.exact?"":"≈")+o.w.hm+'</span>'+
           '<span class="who"'+(o.r?' data-ingpid="'+esc(o.r.id)+'"':"")+'><b>'+esc(o.player||o.fam||"—")+"</b><small>"+esc(o.player&&o.fam&&o.fam!==o.player?o.fam:(o.i.email||""))+"</small></span>"+
-          '<span class="cmp">'+(c?'<span class="ctag ct-'+c.kind+'">'+esc(c.n)+"</span>":"")+'</span><span class="cp">'+esc(o.cp)+"</span>"+
+          '<span class="cmp">'+(c?'<span class="ctag ct-'+c.kind+'">'+esc(c.n)+"</span>":"")+'</span><span class="cp">'+esc(o.cp)+(o.w.moved?'<span class="ingmvt" title="'+esc("Su día real es el "+fmtS(o.w.orig))+'">Movido</span>':"")+"</span>"+
           '<a class="ichip'+(+o.i.balance>0?" ko":"")+'" href="'+booksUrl(o.i)+'" target="_blank" rel="noopener" title="Abrir la factura en Zoho Books">'+esc(o.i.invoice_number)+"</a>"+
-          '<span class="am">'+eur(o.amt)+"</span>"+(fl.length?'<span class="fl">'+esc(fl.join(" · "))+"</span>":"")+(soft.length?'<span class="fl soft">'+esc(soft.join(" · "))+"</span>":"")+"</div>"}).join("")+"</div></div>"});
+          '<span class="am">'+eur(o.amt)+"</span>"+'<span>'+(ed?'<button type="button" class="ingmvb" data-ingmv="'+esc(o.i.invoice_id)+'" aria-expanded="'+mvOpen+'" title="Mover este cobro a otro día">Mover</button>':"")+"</span>"+
+          (mvOpen?'<span class="ingmvf">Mover al día <input type="date" data-ingmvd="'+esc(o.i.invoice_id)+'" value="'+o.w.day+'" aria-label="Nuevo día del cobro">'+(o.w.moved?'<button type="button" class="ingmvb" data-ingmvback="'+esc(o.i.invoice_id)+'">Volver al '+esc(fmtS(o.w.orig))+"</button>":"")+'<button type="button" class="ingmvb" data-ingmv="'+esc(o.i.invoice_id)+'">Cerrar</button></span>':"")+
+          (hist.length?'<span class="fl soft">'+esc(hist.join(" · "))+"</span>":"")+(fl.length?'<span class="fl">'+esc(fl.join(" · "))+"</span>":"")+(soft.length?'<span class="fl soft">'+esc(soft.join(" · "))+"</span>":"")+"</div>"}).join("")+"</div></div>"});
   h+='<p class="ingnote">El día de la plataforma va de las 23:00 del día anterior a las 22:59 (hora de España). La hora sale de la referencia de cada factura; «≈» indica hora aproximada.</p>';
   $("ingList").innerHTML=h;
 }
 async function ingSave(day,patch,msg){if(!S.db){toast("No se puede guardar en esta vista");return}
-  const k="d"+day;const doc=Object.assign({},ING.docs[k]||{},patch,{updatedAt:new Date().toISOString()});if(S.me)doc.updatedBy=S.me;
+  const k=ingDocKey(ING.bank,day);const doc=Object.assign({},ING.docs[k]||{},patch,{updatedAt:new Date().toISOString()});if(S.me)doc.updatedBy=S.me;
   ING.docs[k]=doc;renderIngresos();
   try{await S.db.collection("ing").doc(k).set(doc);if(msg)toast(msg)}catch(e){toast(e&&e.code==="permission_denied"?"No tienes permiso para cuadrar ingresos":"No se pudo guardar. Vuelve a intentarlo.")}}
 async function ingMe(){if(ING.me)return ING.me;try{ING.me=S.user?await S.user.me():null}catch(e){}return ING.me||{}}
@@ -4351,12 +4646,23 @@ $("ingCamp").addEventListener("change",e=>{ING.camp=e.target.value;renderIngreso
 $("ingRefresh").addEventListener("click",()=>loadBooks(true));
 $("ingList").addEventListener("click",async e=>{let b;
   if(e.target.closest("a")||e.target.closest("input")||e.target.closest("label"))return;
+  if((b=e.target.closest("[data-ingmvback]"))){ingMove(b.dataset.ingmvback,null);return}
+  if((b=e.target.closest("[data-ingmv]"))){const id=b.dataset.ingmv;ING.mvOpen=ING.mvOpen===id?null:id;renderIngresos();return}
   if((b=e.target.closest("[data-ingok]"))){if(b.disabled||!ingEdit())return;const day=b.dataset.ingok;const d=ingDays(ingRows()).find(x=>x.day===day);if(!d)return;
     if(d.st==="ok"){ingSave(day,{ok:false},"Marca quitada");return}
     const me=await ingMe();ingSave(day,{ok:true,total:d.total,n:d.ps.length,sig:d.sig,at:new Date().toISOString(),by:S.me||null,byName:me.name||""},"Día cuadrado");return}
   if((b=e.target.closest("[data-ingpid]"))){if(typeof openDrawer==="function")openDrawer(b.dataset.ingpid);return}
   if((b=e.target.closest("[data-ingtog]"))){const day=b.dataset.ingtog;if(ING.open.has(day))ING.open.delete(day);else ING.open.add(day);renderIngresos()}});
-$("ingList").addEventListener("change",e=>{const el=e.target.closest("[data-ingbank]");if(!el)return;if(!ingEdit()){renderIngresos();return}const v=ingNum(el.value);if(Number.isNaN(v)){toast("Importe no válido");renderIngresos();return}
+$("ingBank").addEventListener("click",e=>{const b=e.target.closest("[data-ingbk]");if(!b)return;ING.bank=b.dataset.ingbk;ING.mvOpen=null;renderIngresos()});
+/* mover un cobro de día: guarda el día elegido y todo el historial (quién, cuándo, de qué día a qué día) */
+async function ingMove(invId,toDay){if(!ingEdit()||!S.db){toast("No se puede guardar en esta vista");return}
+  const o=ingRows().find(x=>String(x.i.invoice_id)===String(invId));if(!o||!o.w)return;
+  const orig=o.w.orig,cur=o.w.day;toDay=toDay||orig;if(!/^\d{4}-\d{2}-\d{2}$/.test(toDay)||toDay===cur){ING.mvOpen=null;renderIngresos();return}
+  const me=await ingMe();const k="i"+invId;const prev=ING.mv[k]||{};
+  const doc={inv:String(invId),num:o.i.invoice_number,orig,day:toDay,hist:(prev.hist||[]).concat([{from:cur,to:toDay,by:S.me||null,byName:me.name||"",at:new Date().toISOString()}]),updatedAt:new Date().toISOString()};
+  ING.mv[k]=doc;ING.mvOpen=null;renderIngresos();
+  try{await S.db.collection("ingmv").doc(k).set(doc);toast(toDay===orig?"Cobro devuelto a su día":"Cobro movido al "+ingDate(toDay,{day:"numeric",month:"short"}))}catch(e){toast(e&&e.code==="permission_denied"?"No tienes permiso para mover cobros":"No se pudo guardar. Vuelve a intentarlo.")}}
+$("ingList").addEventListener("change",e=>{const mv=e.target.closest("[data-ingmvd]");if(mv){ingMove(mv.dataset.ingmvd,mv.value);return}const el=e.target.closest("[data-ingbank]");if(!el)return;if(!ingEdit()){renderIngresos();return}const v=ingNum(el.value);if(Number.isNaN(v)){toast("Importe no válido");renderIngresos();return}
   ingSave(el.dataset.ingbank,{bank:v},v==null?"Importe del banco borrado":"Importe del banco guardado")});
 $("ingList").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.matches("[data-ingbank]"))e.target.blur()});
 $("payBoxes").addEventListener("click",e=>{const b=e.target.closest("[data-pf]");if(!b)return;PAY.f=b.dataset.pf;renderPagos()});
@@ -4377,12 +4683,14 @@ renderRegistros();
     db.collection("happr").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});H.appr=m;renderHorarios()},()=>{});
     db.collection("hweek").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});H.wk=m;renderHorarios()},()=>{});
     db.collection("inc").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});INC.docs=m;try{renderIncidencias()}catch(e){}try{renderSide()}catch(e){}},()=>{});
+    db.collection("ingmv").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});ING.mv=m;try{renderIngresos()}catch(e){}},()=>{});
+    db.collection("dev").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});DEV.docs=m;try{renderDev()}catch(e){}},()=>{});
     db.collection("ing").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});ING.docs=m;try{renderIngresos()}catch(e){}},()=>{});
     db.collection("hor").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});H.docs=m;renderHorarios()},()=>{});
     db.collection("ops").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});S.ops=m;if(S.rows.length)render();
       if(S.open&&draft&&m[S.open]&&m[S.open].updatedAt!==draft.updatedAt&&$("dMeta")){$("dMeta").textContent="Otra persona ha actualizado este seguimiento. Cierra y vuelve a abrir la ficha para verlo."}
     },()=>{});
-    if(S.open){const r=(S.allRows||S.rows).find(x=>x.id===S.open);if(r)drawBody(r)}
+    if(S.open){const r=(S.allRows||S.rows).find(x=>x.id===S.open)||(S.xRows||[]).find(x=>x.id===S.open);if(r)drawBody(r)}
   });
   C.use("downloads").then(d=>{S.dl=d||null;renderHorarios()}).catch(()=>{});
   C.use("user").then(async u=>{if(!u)return;S.user=u;try{S.me=await u.id()}catch(e){}});
@@ -4489,9 +4797,7 @@ function renderSide(){
       +(sub?'<div class="ssub"><div class="ssin"><div class="ssbox"><div class="sfh">'+SB_LBL[v]+"</div>"+sub+"</div></div></div>":"")+"</div>"};
   const capIf=(t,h)=>h?'<div class="sb-cap">'+t+"</div>"+h:"";
   const season='<button type="button" class="sb-season" data-sv="temporada" title="Campus Experience '+SEASON+'"><span class="yy"><span class="y4">'+SEASON+'</span><span class="y2">'+String(SEASON).slice(2)+'</span></span><span class="tt"><small>Temporada</small><b>Campus Experience</b></span><span class="sw" data-sv="inicio" title="Cambiar de temporada" aria-label="Cambiar de temporada">'+SVG('<path d="M7 7h11l-3-3M17 17H6l3 3"/>')+'</span></button>';
-  /* acceso al dashboard de registros: solo en la versión Catalyst (client/dashboard.html) */
-  const dash=window.CE_API_BASE&&ACL?'<a class="si sb-dash" href="dashboard.html" title="Dashboard de registros"><span class="ic">'+SVG('<path d="M3 20h18"/><path d="M6 16v-5M11 16V6M16 16v-8M21 16v-3"/>')+'</span><span class="sl">Dashboard</span></a>':"";
-  $("sbNav").innerHTML=grp("inicio")+season+dash+BLOCKS.map(b=>grp(b[0])).join("")+(ACL&&ACL.admin?capIf("Sistema",grp("admin")):"");
+  $("sbNav").innerHTML=grp("inicio")+season+BLOCKS.map(b=>grp(b[0])).join("")+(ACL&&ACL.admin?capIf("Sistema",grp("admin")):"");
   sbMark()}
 function sbMark(){
   const v=curView(),c=sbCur(v);

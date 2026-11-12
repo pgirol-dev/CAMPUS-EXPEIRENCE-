@@ -72,6 +72,7 @@
   const mcp = {
     async callTool(server, tool, args, opt) {
       if (server === "Zoho Books" && tool === "list_invoices") return api("POST", "/api/books/invoices", { query_params: (args && args.query_params) || {} });
+      if (server === "Zoho Books" && tool === "list_creditnotes") return api("POST", "/api/books/creditnotes", { query_params: (args && args.query_params) || {} });
       if (server !== "Zoho CRM") { const e = new Error("Conector no disponible en este servidor: " + server); e.code = "server_not_connected"; throw e; }
       const q = args && args.body && args.body.select_query;
       return api("POST", "/api/zoho/coql", { select_query: q, refresh: !!(opt && opt.cache && opt.cache.refresh) });

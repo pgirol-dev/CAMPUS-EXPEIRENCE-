@@ -420,6 +420,22 @@ Documento vivo con las decisiones tomadas con Pau (director de Campus Experience
   - Pago: con «Totalidad del importe», el 2º y 3er plazo salen vacíos (el CRM los rellena igualmente).
   - Documentación: sección nueva, pendiente del formulario 2. Incidencias al final, con su estado.
 - 12/11: Los nombres largos se recortan y la etiqueta de la sede (y Premium) no desaparece nunca.
+- 12/11: **Revisión de Contabilidad** (decisiones de Pau).
+  - **Sedes.** Pagos, Facturas, Devoluciones y Cancelaciones se separan por sede: Madrid, Nacionales (con chips por campus), Institucionales y Todas. Por defecto se abre Madrid. Ingresos no se separa por sede.
+  - **Andorra** factura en otra organización de Books: «ISL Agency», id 20112628138, serie AND27.nn. El software la lee junto a la de RMF (20110950454). Sus facturas casi nunca llevan la referencia de la inscripción, así que se asocian por el email de la familia (solo si ese email tiene una única inscripción).
+  - **Devoluciones.**
+    - Pendiente: la inscripción tiene «Refund amount» (campo `Refund`) en el CRM y todavía no tiene rectificativa. Se ignoran las inscripciones en «Refund» sin importe.
+    - Se muestra el jugador, la sede, el estado (aviso en rojo si no está pagado, en fase de pago, cancelado o devuelto), el total, el importe a devolver y el motivo (pendiente de un campo nuevo en el CRM).
+    - Al abrirla se ve de qué facturas devolver, empezando por la última. Ejemplo: 150 € con dos facturas de 100 € → 100 € de la última y 50 € de la anterior. Cada factura tiene su enlace a Books.
+    - Hechas: Olivia crea en Books la rectificativa como nota de crédito desde la factura original. Si la suma coincide con el importe a devolver, la devolución es correcta; si no, sale en rojo con la diferencia. También sale en rojo una rectificativa que no se puede asociar a ninguna inscripción.
+    - Las hechas se agrupan por la fecha de la rectificativa y se marcan como correctas, como en Ingresos. Si después cambian, el día pasa a «Volver a revisar». Permiso de edición: Contabilidad › Devoluciones.
+    - Las rectificativas solo se leen desde el software operativo (Catalyst): el conector de Books de claude.ai no tiene notas de crédito.
+  - **Cancelaciones.** Todas las inscripciones en «Cancelled», con fecha, forma de pago, total, pagado, devuelto (según las rectificativas), saldo y enlaces a las facturas y rectificativas. Filtros: con saldo, devueltas y sin pagos.
+  - **Ingresos.**
+    - Pestañas por banco: Santander (Madrid y nacionales), Sabadell (institucionales) y LaCaixa (Andorra). Cada banco se cuadra por separado.
+    - Se puede mover un cobro a otro día. Queda marcado como «Movido», con el historial completo (de qué día a qué día, quién y cuándo) y la opción de devolverlo a su día. Si el día ya estaba cuadrado, pasa a «Revisar». Pueden moverlo quienes tienen edición en Ingresos (Olivia y Pau).
+  - **Credenciales.** El 12/11 se renovaron las credenciales de Zoho (Self Client) con el permiso `ZohoBooks.creditnotes.READ`. Variables nuevas del servidor: `ZOHO_REFRESH_TOKEN` (nuevo) y `ZOHO_BOOKS_ORG_AND=20112628138`.
+  - Colecciones nuevas en el servidor: `ingmv` (cobros movidos) y `dev` (revisión de devoluciones).
 
 ## Lista de equipos · Nacionales e Institucionales (oficial, 04/11/2026)
 Se asignan automáticamente en este orden, un equipo por nombre y sin repetir dentro de un mismo campus:

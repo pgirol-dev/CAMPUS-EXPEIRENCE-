@@ -80,6 +80,8 @@ const COLS = {
   hbus:  { read: u => anyOf(u, "horarios"), write: (u, id) => lvl(u, String(id).startsWith("c-") ? "horarios.campus" : "horarios.semanas") >= 2 },
   inc:   { read: u => lvl(u, "incidencias.general") >= 1, write: u => lvl(u, "incidencias.general") >= 2 },
   ing:   { read: u => lvl(u, "contabilidad.ingresos") >= 1, write: u => lvl(u, "contabilidad.ingresos") >= 2 },
+  ingmv: { read: u => lvl(u, "contabilidad.ingresos") >= 1, write: u => lvl(u, "contabilidad.ingresos") >= 2 },
+  dev:   { read: u => lvl(u, "contabilidad.devoluciones") >= 1, write: u => lvl(u, "contabilidad.devoluciones") >= 2 },
   hsim:  { read: u => lvl(u, "horarios.simulador") >= 1, write: u => lvl(u, "horarios.simulador") >= 2 },
 };
 const canZoho = u => ["registros", "equipos", "horarios", "contabilidad", "incidencias"].some(a => anyOf(u, a));
@@ -220,11 +222,41 @@ async function zohoGate(u) {
 }
 
 /* Zoho Books: listado de facturas de una serie (solo lectura) */
-const BOOKS = { org: env("ZOHO_BOOKS_ORG", "20110950454"), url: env("ZOHO_BOOKS_URL", "https://www.zohoapis.eu/books/v3").replace(/\/$/, "") };
-async function booksInvoices(prefix, page, mode) {
-  if (MOCK) { const pages = MOCK.invoices || []; return pages[page - 1] || { invoices: [], page_context: { has_more_page: false } }; }
+const BOOKS = { org: env("ZOHO_BOOKS_ORG", "20110950454"), orgAnd: env("ZOHO_BOOKS_ORG_AND", ""), url: env("ZOHO_BOOKS_URL", "https://www.zohoapis.eu/books/v3").replace(/\/$/, "") };
+/* organizaciones de Books permitidas: RMF (Madrid y nacionales) y, si está configurada, Andorra */
+const booksOrg = o => { o = String(o || BOOKS.org); return o === BOOKS.org || (BOOKS.orgAnd && o === BOOKS.orgAnd) ? o : null; };
+async function booksGet(path) {
   const t = await zohoToken();
-  const u = BOOKS.url + "/invoices?organization_id=" + encodeURIComponent(BOOKS.org) + "&invoice_number_" + (mode === "contains" ? "contains" : "startswith") + "=" + encodeURIComponent(prefix) + "&per_page=200&page=" + page;
+  const r = await fetch(BOOKS.url + path, { headers: { Authorization: "Zoho-oauthtoken " + t }, signal: AbortSignal.timeout(30000) });
+  const j = await r.json().catch(() => null);
+  if (!r.ok || !j) throw Object.assign(new Error((j && j.message) || "Error de Zoho Books " + r.status), { status: 502 });
+  return j;
+}
+/* notas de crédito (rectificativas): el listado no trae la factura de origen; se completa con el detalle (en memoria) */
+const CN_MEM = new Map();
+async function booksCreditNotes(org, page) {
+  if (MOCK) { const pages = (MOCK.creditnotes || {})[org] || []; return pages[page - 1] || { creditnotes: [], page_context: { has_more_page: false } }; }
+  const j = await booksGet("/creditnotes?organization_id=" + encodeURIComponent(org) + "&per_page=200&page=" + page + "&sort_column=date&sort_order=D");
+  const list = j.creditnotes || [];
+  for (const c of list) {
+    const k = org + ":" + c.creditnote_id + ":" + (c.last_modified_time || "");
+    let x = CN_MEM.get(k);
+    if (!x) {
+      try { const d = (await booksGet("/creditnotes/" + encodeURIComponent(c.creditnote_id) + "?organization_id=" + encodeURIComponent(org))).creditnote || {};
+        x = { invoice_id: d.invoice_id || "", invoice_number: d.invoice_number || "", email: d.email || (d.contact_persons_details && d.contact_persons_details[0] && d.contact_persons_details[0].email) || "",
+          applied: (d.invoices || []).map(i => ({ invoice_id: i.invoice_id, invoice_number: i.invoice_number, amount: i.amount_applied })), refunds: (d.creditnote_refunds || []).map(r => ({ date: r.date, amount: r.amount })) };
+        CN_MEM.set(k, x); if (CN_MEM.size > 3000) CN_MEM.delete(CN_MEM.keys().next().value);
+      } catch (e) { x = null; }
+    }
+    if (x) Object.assign(c, x);
+  }
+  return j;
+}
+async function booksInvoices(prefix, page, mode, org) {
+  org = org || BOOKS.org;
+  if (MOCK) { const pages = org === BOOKS.org ? (MOCK.invoices || []) : ((MOCK.invoicesByOrg || {})[org] || []); return pages[page - 1] || { invoices: [], page_context: { has_more_page: false } }; }
+  const t = await zohoToken();
+  const u = BOOKS.url + "/invoices?organization_id=" + encodeURIComponent(org) + "&invoice_number_" + (mode === "contains" ? "contains" : "startswith") + "=" + encodeURIComponent(prefix) + "&per_page=200&page=" + page;
   const r = await fetch(u, { headers: { Authorization: "Zoho-oauthtoken " + t }, signal: AbortSignal.timeout(30000) });
   const j = await r.json().catch(() => null);
   if (!r.ok || !j) throw Object.assign(new Error((j && j.message) || "Error de Zoho Books " + r.status), { status: 502 });
@@ -398,12 +430,22 @@ async function handle(req, res) {
 
   /* --- Zoho Books (solo lectura): facturas para el control de facturación --- */
   if (p === "/api/books/invoices" && M === "POST") {
-    if (lvl(U, "contabilidad.facturas") < 1 && lvl(U, "contabilidad.ingresos") < 1) return fail(res, 403, "Sin acceso a las facturas.");
+    if (!["facturas", "ingresos", "devoluciones", "cancelaciones"].some(k => lvl(U, "contabilidad." + k) >= 1)) return fail(res, 403, "Sin acceso a las facturas.");
     const b = await readBody(req, 5000); const qp = b.query_params || {};
     const mode = qp.invoice_number_contains != null ? "contains" : "startswith";
     const prefix = String((mode === "contains" ? qp.invoice_number_contains : qp.invoice_number_startswith) || ""); const page = Math.max(1, Math.min(50, +qp.page || 1));
     if (!/^[A-Z0-9.\-]{1,20}$/.test(prefix) || prefix.length < 3) return fail(res, 400, "Serie de facturas no válida.");
-    try { return send(res, 200, { payload: await booksInvoices(prefix, page, mode) }); }
+    const org = booksOrg(qp.organization_id); if (!org) return fail(res, 400, "Organización de Books no permitida.");
+    try { return send(res, 200, { payload: await booksInvoices(prefix, page, mode, org) }); }
+    catch (e) { return fail(res, e.status || 502, e.message || "Error al consultar Zoho Books"); }
+  }
+  /* --- Zoho Books (solo lectura): notas de crédito (rectificativas) para devoluciones y cancelaciones --- */
+  if (p === "/api/books/creditnotes" && M === "POST") {
+    if (lvl(U, "contabilidad.devoluciones") < 1 && lvl(U, "contabilidad.cancelaciones") < 1) return fail(res, 403, "Sin acceso a las rectificativas.");
+    const b = await readBody(req, 5000); const qp = b.query_params || {};
+    const org = booksOrg(qp.organization_id); if (!org) return fail(res, 400, "Organización de Books no permitida.");
+    const page = Math.max(1, Math.min(20, +qp.page || 1));
+    try { return send(res, 200, { payload: await booksCreditNotes(org, page) }); }
     catch (e) { return fail(res, e.status || 502, e.message || "Error al consultar Zoho Books"); }
   }
   /* --- Zoho (solo lectura) --- */
