@@ -31,6 +31,7 @@ const CATALOG = [
   { k: "registros", b: "Registros", l: "Registros", subs: [["madrid", "Madrid (semanas)"], ["campus", "Nacionales e institucionales"], ["todos", "Todos los registros"]] },
   { k: "horarios", b: "Operativa", l: "Horarios", subs: [["semanas", "Horarios de las semanas"], ["campus", "Nacionales"], ["simulador", "Simulador"]] },
   { k: "equipos", b: "Operativa", l: "Equipos", subs: [["madrid", "Madrid (semanas)"], ["campus", "Nacionales e institucionales"]] },
+  { k: "incidencias", b: "Operativa", l: "Incidencias", subs: [["general", "Incidencias"]] },
   { k: "contabilidad", b: "Administración", l: "Contabilidad", subs: [["pagos", "Pagos"], ["devoluciones", "Devoluciones"], ["cancelaciones", "Cancelaciones"], ["facturas", "Control de facturas"], ["ingresos", "Ingresos"]] },
   { k: "atencion", b: "Atención al público", l: "Atención al público", subs: [["general", "Atención al público"]] },
   { k: "marketing", b: "Marketing", l: "Marketing", subs: [["general", "Marketing"]] },
@@ -49,10 +50,11 @@ const COLS = {
   hweek: { read: u => anyOf(u, "horarios"), write: (u, id) => lvl(u, String(id).startsWith("c-") ? "horarios.campus" : "horarios.semanas") >= 2 },
   happr: { read: u => anyOf(u, "horarios"), write: (u, id) => lvl(u, String(id).startsWith("c-") ? "horarios.campus" : "horarios.semanas") >= 2 },
   hbus:  { read: u => anyOf(u, "horarios"), write: (u, id) => lvl(u, String(id).startsWith("c-") ? "horarios.campus" : "horarios.semanas") >= 2 },
+  inc:   { read: u => lvl(u, "incidencias.general") >= 1, write: u => lvl(u, "incidencias.general") >= 2 },
   ing:   { read: u => lvl(u, "contabilidad.ingresos") >= 1, write: u => lvl(u, "contabilidad.ingresos") >= 2 },
   hsim:  { read: u => lvl(u, "horarios.simulador") >= 1, write: u => lvl(u, "horarios.simulador") >= 2 },
 };
-const canZoho = u => ["registros", "equipos", "horarios", "contabilidad"].some(a => anyOf(u, a));
+const canZoho = u => ["registros", "equipos", "horarios", "contabilidad", "incidencias"].some(a => anyOf(u, a));
 const DOC_ID = /^[A-Za-z0-9_.:|\-]{1,200}$/;
 const EMAIL = /^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$/;
 
@@ -160,8 +162,24 @@ const pubUser = u => ({ id: u.id, email: u.email, name: u.name, zohoRole: u.zoho
 const aclFor = u => ({ id: "u" + u.id, name: u.name, email: u.email, admin: u.is_admin, perms: u.is_admin ? Object.fromEntries(PERM_KEYS.map(k => [k, 2])) : u.permsObj, mustChange: u.must_change, catalog: CATALOG });
 
 /* ---------- la petición ---------- */
+/* memoria de la instancia: evita leer el Data Store en cada petición (el plan cobra por lectura).
+   Sesión y usuario se guardan 2 minutos; los avisos de cambios, 20 segundos. Cualquier cambio de usuario o sesión los borra. */
+const MEM = { sess: new Map(), changes: null, changesAt: 0 };
+const SESS_TTL = 2 * 60000, CHANGES_TTL = 20000;
+const forget = pred => { for (const [k, v] of MEM.sess) if (pred(v)) MEM.sess.delete(k); };
+function withMemory(st) {
+  const uu = st.users.update, ur = st.users.remove, sr = st.sessions.remove, sru = st.sessions.removeByUser, mset = st.meta.set;
+  st.users.update = async (id, f) => { forget(v => String(v.u.id) === String(id)); return uu(id, f); };
+  st.users.remove = async id => { forget(v => String(v.u.id) === String(id)); return ur(id); };
+  st.sessions.remove = async id => { forget(v => String(v.s.id) === String(id)); return sr(id); };
+  st.sessions.removeByUser = async (uid, except) => { forget(v => String(v.u.id) === String(uid) && v.th !== except); return sru(uid, except); };
+  st.meta.set = async (k, v) => { if (k === "changes") { MEM.changes = { v: String(v) }; MEM.changesAt = Date.now(); } return mset(k, v); };
+  const mget = st.meta.get;
+  st.meta.get = async k => { if (k === "changes" && MEM.changes && Date.now() - MEM.changesAt < CHANGES_TTL) return MEM.changes; const r = await mget(k); if (k === "changes") { MEM.changes = r; MEM.changesAt = Date.now(); } return r; };
+  return st;
+}
 async function handle(req, res) {
-  const st = makeStore(req);
+  const st = withMemory(makeStore(req));
   const url = new URL(req.url, "http://x");
   let p = url.pathname.replace(/^\/server\/campus_api/, "") || "/";
   const M = req.method, ip = ipOf(req);
@@ -177,16 +195,21 @@ async function handle(req, res) {
   };
   const sessionOf = async () => {
     const tok = cookies(req)[COOKIE]; if (!tok || tok.length < 40) return null;
-    const th = sha(tok); const s = await st.sessions.get(th); if (!s) return null;
-    const now = Date.now();
+    const th = sha(tok); const now = Date.now();
+    const hit = MEM.sess.get(th); let s, u;
+    if (hit && now - hit.t < SESS_TTL) { s = hit.s; u = hit.u; }
+    else {
+      s = await st.sessions.get(th); if (!s) { MEM.sess.delete(th); return null; }
+      u = hydrate(await st.users.byId(s.user_id)); if (!u || !u.active) { await st.sessions.remove(s.id); return null; }
+      MEM.sess.set(th, { s, u, th, t: now }); if (MEM.sess.size > 500) MEM.sess.delete(MEM.sess.keys().next().value);
+    }
     if (now - s.last_seen > CFG.idleMin * 60000 || now - s.created_at > CFG.maxHours * 3600000) { await st.sessions.remove(s.id); return null; }
-    const u = hydrate(await st.users.byId(s.user_id)); if (!u || !u.active) { await st.sessions.remove(s.id); return null; }
     if (now - s.zoho_checked_at > CFG.zohoRecheckMin * 60000) {
       const g = await zohoGate(u);
       if (!g.ok) { await st.sessions.removeByUser(u.id); await audit(u, "sesion_cerrada_zoho", g.msg); return null; }
-      await st.sessions.update(s.id, { zoho_checked_at: now });
+      await st.sessions.update(s.id, { zoho_checked_at: now }); s.zoho_checked_at = now;
     }
-    if (now - s.last_seen > 60000) await st.sessions.update(s.id, { last_seen: now });
+    if (now - s.last_seen > 10 * 60000) { await st.sessions.update(s.id, { last_seen: now }); s.last_seen = now; }
     if (Math.random() < 0.02) st.sessions.gc(now - CFG.idleMin * 60000, now - CFG.maxHours * 3600000).catch(() => {});
     return { u, th, sid: s.id };
   };

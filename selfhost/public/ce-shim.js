@@ -50,7 +50,7 @@
         Object.keys(j.cols || {}).forEach(col => { if (listeners[col]) refresh(col); });
       } catch (e) {} finally { busy = false; }
     };
-    setInterval(tick, 15000); document.addEventListener("visibilitychange", () => { if (!document.hidden) tick(); }); tick();
+    setInterval(tick, 30000); document.addEventListener("visibilitychange", () => { if (!document.hidden) tick(); }); tick();
   }
   const writeErr = e => { if (window.CE_SOLO_LECTURA) window.CE_SOLO_LECTURA(e.message); throw e; };
   const db = {

@@ -398,6 +398,29 @@ Documento vivo con las decisiones tomadas con Pau (director de Campus Experience
   - Lo cuadra **Olivia**. Permiso propio: «Contabilidad › Ingresos» (ver, o editar para poder cuadrar).
   - Pendiente: devoluciones (refunds), que restarán en su día.
 
+- 12/11: **Caída por el límite gratuito de Catalyst.** El software dejó de funcionar porque se agotó la cuota gratuita mensual de lecturas del Data Store. Cada petición leía la sesión y el usuario, y cada pestaña abierta preguntaba por cambios cada 15 segundos.
+  - Solución: añadir un método de pago en Catalyst (pago por uso).
+  - Optimización: el servidor guarda en memoria la sesión y el usuario (2 minutos) y los avisos de cambios (20 segundos), y solo actualiza «última actividad» cada 10 minutos. La app pregunta por cambios cada 30 segundos y nunca con la pestaña en segundo plano. Las lecturas bajan a una fracción de las anteriores.
+
+- 12/11: **Incidencias** (Operativa › Incidencias).
+  - Se crea desde el jugador (buscador por nombre o código, o «+ Nueva incidencia»): tipo (Salud, Salida, Queja, Cambios, Otros), semana si tiene varias, «Grave / urgente» y explicación. Se guardan quién y cuándo.
+  - Tablero de tres columnas: Por responder, Por validar y Cerradas. Filtros en una línea por semana (W1–W9), campus nacionales e institucionales, y por modalidad, con número de pendientes (rojo si hay urgentes).
+  - Responder: «¿Has contactado con la familia?» Sí/No; si es Sí, cómo (Teléfono, WhatsApp, Email, En persona, Otros); después el texto. Pasa a «Por validar».
+  - Quien la creó la valida: Solucionada (se cierra) o No solucionada con comentario (vuelve a Reabierta). Una cerrada se puede reabrir siempre.
+  - Historial completo; cada texto se puede corregir solo durante 10 minutos.
+  - Avisos (barra lateral y «Te tocan») solo para incidencias en las que estás implicado. Sin avisos fuera del software.
+  - Urgente sin respuesta 2 h o normal sin respuesta 24 h: se marca en rojo. En las de Salida se muestran los autorizados para recoger.
+  - Permiso «Incidencias»: ver, o editar para crear y responder. Quien tiene acceso ve todos los datos, también los de salud.
+- 12/11: **Ficha del jugador (Registros)**. Solo cambia lo que se ve en el software; el CRM no se toca y los campos ocultos se siguen leyendo para otros apartados.
+  - Participante: sin documento ni «ha participado antes».
+  - Equipaciones: «Portero» en vez de «Portero/a extra».
+  - Servicios: Bus ida, Bus vuelta, Noches extra, Transfer (pendiente) y un único campo «Solicitud de ir con alguien»; sin «viaja solo».
+  - Salud y dieta: tipo de dieta, alergias o intolerancias y condiciones médicas del CRM.
+  - Familia: sin «persona que inscribe» (coincide con el tutor); «Segunda persona de contacto» pendiente del formulario 2.
+  - Pago: con «Totalidad del importe», el 2º y 3er plazo salen vacíos (el CRM los rellena igualmente).
+  - Documentación: sección nueva, pendiente del formulario 2. Incidencias al final, con su estado.
+- 12/11: Los nombres largos se recortan y la etiqueta de la sede (y Premium) no desaparece nunca.
+
 ## Lista de equipos · Nacionales e Institucionales (oficial, 04/11/2026)
 Se asignan automáticamente en este orden, un equipo por nombre y sin repetir dentro de un mismo campus:
 1. Mbappé · 2. Vini Jr. · 3. Bellingham · 4. Courtois · 5. Valverde · 6. Diomande · 7. Cucurella · 8. Trent · 9. Arda Güler · 10. Tchouaméni · 11. Camavinga · 12. E. Militão · 13. Bernardo Silva · 14. Endrick · 15. Huijsen · 16. Brahim · 17. Konaté · 18. Rüdiger · 19. Dumfries · 20. F. Mendy · 21. Á. Carreras · 22. Lunin · 23. Asencio · 24. Rodrygo · 25. Espí · 26. Thiago
