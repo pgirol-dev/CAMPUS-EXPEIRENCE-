@@ -338,6 +338,7 @@ async function handle(req, res) {
     const col = m[1], id = decodeURIComponent(m[2]); if (!COLS[col]) return fail(res, 404, "Colección desconocida");
     if (!DOC_ID.test(id)) return fail(res, 400, "Identificador no válido");
     if (!COLS[col].write(U, id)) return fail(res, 403, "Solo lectura: no tienes permiso para modificar esto.");
+    if (M === "DELETE" && col === "inc" && !U.is_admin) return fail(res, 403, "Solo un administrador puede borrar incidencias.");
     if (M === "PUT") { const b = await readBody(req); await st.docs.put(col, id, b.data, U.id); } else await st.docs.remove(col, id);
     await touch(col); return send(res, 200, { ok: true });
   }

@@ -418,6 +418,7 @@ async function handle(req, res) {
   if ((m = /^\/api\/db\/([a-z]+)\/([A-Za-z0-9_.:|\-]{1,200})$/.exec(p)) && (M === "PUT" || M === "DELETE")) {
     const col = m[1], id = m[2]; if (!COLS[col]) return fail(res, 404, "Colección desconocida");
     if (!COLS[col].write(U, id)) return fail(res, 403, "Solo lectura: no tienes permiso para modificar esto.");
+    if (M === "DELETE" && col === "inc" && !U.is_admin) return fail(res, 403, "Solo un administrador puede borrar incidencias.");
     if (M === "PUT") { const b = await readBody(req); Q.docPut.run(col, id, JSON.stringify(b.data === undefined ? null : b.data), nowISO(), U.id); }
     else Q.docDel.run(col, id);
     broadcast(col, "u" + U.id); return send(res, 200, { ok: true });

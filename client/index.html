@@ -927,6 +927,9 @@ table.oplist th .fsel.on{background:var(--pink);border-color:var(--pink);color:v
 .incact .ic-q{font-weight:800;font-size:13px}
 .incact .ic-note{font-size:12.5px;color:var(--ink-3)}
 .ipfoot{border-top:1px solid var(--line);padding:12px 20px;background:var(--bg)}
+.incdelbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.btn.incdel{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 45%,transparent)}
+.btn.incdel.on{background:var(--bad);color:var(--on-hot);border-color:var(--bad)}
 .incboard,.incpanel,.incscope{--inc-navy:var(--navy)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .incboard,:root:not([data-theme="light"]) .incpanel,:root:not([data-theme="light"]) .incscope{--inc-navy:#9fb4e6}}
 :root[data-theme="dark"] .incboard,:root[data-theme="dark"] .incpanel,:root[data-theme="dark"] .incscope{--inc-navy:#9fb4e6}
@@ -4473,7 +4476,8 @@ function incPanelHtml(){const P=INC.panel;if(!P)return "";const X='<button type=
     return h}
   const d=INC.docs[P.id];if(!d)return "";const r=incRow(d.pid);
   return '<div class="ipx inct-'+d.tipo+'"><span class="ico">'+(INC_TI[d.tipo]||"")+'</span><span class="tt"><b>'+esc(d.name||"—")+"</b><small>"+esc(d.code||"")+" · "+esc(INC_TL[d.tipo]||"")+" · "+esc(incWkS(d.wk))+(d.ap?" · "+esc(MODSHORT(d.ap)):"")+'</small><span class="tags">'+incTags(d,true)+(r?campTag(r):"")+"</span>"+(r?'<button type="button" class="bk" data-incplayer="'+esc(r.id)+'">← Ver jugador y sus incidencias</button>':"")+"</span>"+X+'</div>'+
-    '<div class="ipb">'+incTimeline(d)+(d.tipo==="salida"&&r?incAuth(r):"")+incActions(d)+"</div>"}
+    '<div class="ipb">'+incTimeline(d)+(d.tipo==="salida"&&r?incAuth(r):"")+incActions(d)+"</div>"+
+    (incAdmin()&&S.db?'<div class="ipfoot incdelbar">'+(INC.delAsk===d.id?'<span class="ic-who">¿Borrar esta incidencia para siempre? No se puede deshacer.</span><button class="btn incdel on" type="button" data-incdelok="'+esc(d.id)+'">Sí, borrar</button><button class="btn" type="button" data-incdelno>Cancelar</button>':'<button class="btn incdel" type="button" data-incdel="'+esc(d.id)+'">Borrar incidencia</button><span class="ic-who">Solo administradores</span>')+"</div>":"")}
 function incResHtml(q0,big){const q=incNrm(String(q0||"").trim());if(!q)return big?'<span class="inclab">Escribe al menos una letra</span>':"";
   const rs=(S.allRows||[]).filter(r=>incNrm(r.name+" "+r.code).includes(q)).slice(0,8);
   return rs.length?rs.map(r=>'<button type="button" data-incpick="'+esc(r.id)+'"'+(big?' class="incard" style="grid-template-columns:1fr auto"':"")+'><b class="nmrow"><span class="nmt">'+esc(r.name)+"</span></b>"+campTag(r)+"<small>"+esc(r.code)+" · "+esc(incOpts(r).map(o=>o.l).join(" · "))+"</small></button>").join(""):'<div class="ic-none">Ningún jugador con «'+esc(q0)+"»</div>"}
@@ -4520,7 +4524,12 @@ function incPick(id){INC.q="";$("incQ").value="";$("incRes").hidden=true;INC.for
   V.addEventListener("click",async e=>{let b;
     if((b=e.target.closest("[data-incpick]"))){INC.pq="";incPick(b.dataset.incpick);return}
     if(e.target.closest("[data-incnewp]")){INC.pq="";incOpenPanel({mode:"new"});return}
-    if(e.target.closest("[data-incpclose]")){INC.panel=null;INC.act=null;INC.form=null;renderIncidencias();return}
+    if(e.target.closest("[data-incpclose]")){INC.panel=null;INC.act=null;INC.form=null;INC.delAsk=null;renderIncidencias();return}
+    if((b=e.target.closest("[data-incdel]"))){INC.delAsk=b.dataset.incdel;renderIncidencias();return}
+    if(e.target.closest("[data-incdelno]")){INC.delAsk=null;renderIncidencias();return}
+    if((b=e.target.closest("[data-incdelok]"))){const id=b.dataset.incdelok;if(!incAdmin()||!S.db)return;INC.delAsk=null;
+      try{await S.db.collection("inc").doc(id).delete();delete INC.docs[id];INC.panel=null;INC.act=null;renderIncidencias();try{renderSide()}catch(e2){}toast("Incidencia borrada")}
+      catch(err){toast(err&&err.code==="permission_denied"?"Solo un administrador puede borrar incidencias":"No se pudo borrar. Vuelve a intentarlo.");renderIncidencias()}return}
     if((b=e.target.closest("[data-incplayer]"))){incOpenPanel({mode:"player",pid:b.dataset.incplayer});return}
     if((b=e.target.closest("[data-incopen]"))){incOpenPanel({mode:"inc",id:b.dataset.incopen});return}
     if(e.target.closest("[data-incnew]")){const r=incRow(INC.panel&&INC.panel.pid);const o=incOpts(r);INC.form={tipo:"",urg:false,txt:"",oi:o.length===1?0:null};renderIncidencias();return}
