@@ -1,0 +1,11 @@
+{
+  "name": "dashboard_api",
+  "version": "1.0.0",
+  "description": "Datos del dashboard de registros Campus Experience (independiente de campus_api)",
+  "main": "index.js",
+  "private": true,
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "zcatalyst-sdk-node": "^2.5.0"
+  }
+}

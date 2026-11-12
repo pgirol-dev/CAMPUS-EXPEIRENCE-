@@ -37,9 +37,11 @@ jobs:
         if: env.CATALYST_TOKEN != ''
         run: npm install -g zcatalyst-cli
 
-      - name: Dependencias de la función campus_api
+      - name: Dependencias de las funciones (campus_api y dashboard_api)
         if: env.CATALYST_TOKEN != ''
-        run: cd functions/campus_api && npm ci --omit=dev
+        run: |
+          (cd functions/campus_api && npm ci --omit=dev)
+          (cd functions/dashboard_api && npm ci --omit=dev)
 
       - name: Comprobar que la aplicación está regenerada (node build.js)
         if: env.CATALYST_TOKEN != ''
@@ -54,13 +56,7 @@ jobs:
 
       - name: Comprobar que el dashboard sigue incluido
         if: env.CATALYST_TOKEN != ''
-        run: |
-          ok=1
-          grep -q '"/dashboard.js"' functions/campus_api/index.js || { echo "::error::functions/campus_api/index.js ya no tiene la ruta /dashboard.js del dashboard."; ok=0; }
-          grep -q '"/api/dashboard/refresh"' functions/campus_api/index.js || { echo "::error::functions/campus_api/index.js ya no tiene la ruta /api/dashboard/refresh."; ok=0; }
-          grep -q 'sb-dash' client/index.html || { echo "::error::El menú del software ya no tiene el acceso «Dashboard» (index.html)."; ok=0; }
-          test -f client/dashboard.html || { echo "::error::Falta client/dashboard.html."; ok=0; }
-          if [ "$ok" = 0 ]; then echo "Probablemente se ha trabajado sobre una copia antigua: haz git pull origin main antes de cambiar nada."; exit 1; fi
+        run: bash scripts/comprobar_dashboard.sh
 
       - name: Desplegar (web y función)
         if: env.CATALYST_TOKEN != ''

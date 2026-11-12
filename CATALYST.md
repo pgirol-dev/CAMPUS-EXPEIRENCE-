@@ -18,14 +18,17 @@ client/                       → Web Client Hosting
   ce-shim.js                  puente entre la aplicación y la API
   favicon.svg
   dashboard.html              dashboard de registros (ver dashboard/README.md)
+  dashboard-menu.js           acceso «Dashboard» en el menú (independiente de index.html)
   cover.jpg                   imagen de portada del dashboard
 functions/campus_api/         → función Advanced I/O (Node.js): login, permisos, datos y Zoho CRM
   catalyst-config.json
   package.json                dependencia: zcatalyst-sdk-node
   index.js                    API
   store.js                    acceso al Data Store (todo lo específico de Catalyst está aquí)
-  dashboard.js, ce_engine.js  datos del dashboard de registros
+functions/dashboard_api/      → función Advanced I/O aparte: datos del dashboard de registros (dashboard.js, ce_engine.js)
 dashboard/                    fuente del dashboard de registros y su README
+scripts/comprobar_dashboard.sh comprueba que el dashboard sigue incluido antes de publicar
+publicar.sh                   publicar desde el Mac (commit, git pull, comprobación, catalyst deploy, push)
 index.html                    la aplicación: AQUÍ se hacen los cambios (client/index.html se genera a partir de ella)
 build.js                      regenera client/ y selfhost/app/ a partir de index.html
 selfhost/                     alternativa: servidor propio (Node + SQLite). No se usa en Catalyst.
@@ -33,7 +36,7 @@ selfhost/                     alternativa: servidor propio (Node + SQLite). No s
 
 **Al cambiar la aplicación:** se edita `index.html` (nunca `client/index.html` directamente), se ejecuta `node build.js` y se suben los cambios a GitHub. El despliegue comprueba que `client/` está regenerado y, si no, se para.
 
-**Al cambiar el dashboard:** se edita `dashboard/` y se regenera `client/dashboard.html` (ver `dashboard/README.md`). Los datos salen de `functions/campus_api/dashboard.js` y `ce_engine.js`.
+**Al cambiar el dashboard:** se edita `dashboard/` y se regenera `client/dashboard.html` (ver `dashboard/README.md`). Los datos salen de `functions/dashboard_api/dashboard.js` y `ce_engine.js`.
 
 ## Publicar cambios en Catalyst
 
@@ -185,9 +188,10 @@ Se configuran en la consola (Serverless → Functions → campus_api → Configu
 Catalyst publica primero en el entorno de Development. Desde la consola desplegad a **Production** para que lo use el equipo y, si queréis, configurad un dominio propio.
 
 ## Dashboard de registros
-- Página `/app/dashboard.html`; acceso desde el menú lateral («Dashboard»). La ven **todos los usuarios con sesión**.
-- `GET /server/campus_api/dashboard.js`: cifras agregadas de las inscripciones **con pago** (Zoho CRM, solo lectura). Se guardan en el Data Store (`CEDocs` col `dash`; marca `dash_ts` en `CEMeta`) y se reutilizan 15 minutos.
-- `POST /server/campus_api/api/dashboard/refresh`: botón «Actualizar» (máximo una lectura de Zoho por minuto; queda en el registro de actividad).
+- Página `/app/dashboard.html`; acceso desde el menú lateral («Dashboard», `client/dashboard-menu.js`). La ven **todos los usuarios con sesión**.
+- Función propia **`dashboard_api`**, separada de `campus_api` para que una versión nueva del software no la borre. Usa la misma cookie de sesión y las tablas CESessions/CEUsers. **Variables de entorno:** las mismas de Zoho que `campus_api` (`ZOHO_CLIENT_ID`, `ZOHO_CLIENT_SECRET`, `ZOHO_REFRESH_TOKEN`, `ZOHO_ACCOUNTS_URL`, `ZOHO_API_URL`) y, opcionales, `CE_LOGIN_URL`, `CE_DASH_TTL_MIN`.
+- `GET /server/dashboard_api/dashboard.js`: cifras agregadas de las inscripciones **con pago** (Zoho CRM, solo lectura). Se guardan en el Data Store (`CEDocs` col `dash`; marca `dash_ts` en `CEMeta`) y se reutilizan 15 minutos.
+- `POST /server/dashboard_api/api/dashboard/refresh`: botón «Actualizar» (máximo una lectura de Zoho por minuto; queda en el registro de actividad).
 - Detalle en `dashboard/README.md`.
 
 ## Seguridad: resumen

@@ -17,7 +17,7 @@ rep('.ce .pill.live-tag{',css+'''
 .ce .pill.live-tag{''')
 rep('const DATA=/*DATA_START*/__DATA__/*DATA_END*/;','const DATA=window.CE_DATA||{};')
 head='''<script src="/server/campus_api/acl.js"></script>
-<script src="/server/campus_api/dashboard.js"></script>
+<script src="/server/dashboard_api/dashboard.js"></script>
 <script>if(!window.CE_DATA)document.addEventListener('DOMContentLoaded',function(){var d=document.createElement('div');d.style.cssText='font:15px/1.5 system-ui,sans-serif;max-width:640px;margin:15vh auto;padding:24px';d.innerHTML='<h2>No se han podido cargar los datos del dashboard</h2><p></p><p><a href="dashboard.html">Volver a intentarlo</a> · <a href="index.html">Ir al software operativo</a></p>';d.querySelector('p').textContent=window.CE_DATA_ERR||'Error desconocido';document.body.replaceChildren(d);});</script>
 <link rel="icon" href="favicon.svg">
 '''

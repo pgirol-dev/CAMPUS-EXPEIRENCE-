@@ -15,7 +15,7 @@ btn.addEventListener('click',async function(){
   if(busy)return;busy=true;btn.disabled=true;btn.textContent='Actualizando…';
   say('Leyendo las inscripciones de Zoho CRM…');
   try{
-    var r=await fetch('/server/campus_api/api/dashboard/refresh',{method:'POST',headers:{'X-CE':'1'},credentials:'same-origin'});
+    var r=await fetch('/server/dashboard_api/api/dashboard/refresh',{method:'POST',headers:{'X-CE':'1'},credentials:'same-origin'});
     var j=await r.json().catch(function(){return {};});
     if(r.status===401){location.replace('login.html');return;}
     if(!r.ok)throw new Error(j.error||('error '+r.status));

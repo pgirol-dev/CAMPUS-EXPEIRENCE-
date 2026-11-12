@@ -1,6 +1,9 @@
 {
   "functions": {
-    "targets": ["campus_api"],
+    "targets": [
+      "campus_api",
+      "dashboard_api"
+    ],
     "ignore": [],
     "source": "functions"
   },
