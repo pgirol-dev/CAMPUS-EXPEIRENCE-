@@ -4235,12 +4235,15 @@ const DEV_OK_ST=["Paid","1st Payment","2nd Payment","3rd Payment","Cancelled","R
 const DEV_ST_LBL={"Paid":"Pagado","1st Payment":"1er pago","2nd Payment":"2º pago","3rd Payment":"3er pago","Cancelled":"Cancelado","Refund":"Devuelto","Partially refunded":"Devolución parcial"};
 const devEdit=()=>!window.CE_ACL||!!window.CE_ACL.admin||(((window.CE_ACL.perms||{})["contabilidad.devoluciones"]||0)>=2);
 const accCan=k=>!window.CE_ACL||!!window.CE_ACL.admin||!!(window.CE_ACL.perms||{})["contabilidad."+k];
+/* solo la campaña 2027: rectificativas desde la primera factura de la campaña, y solo de facturas de las series 2027 */
+const is2027Inv=n=>{n=String(n||"");return n.startsWith(INV_PREFIX)||n.startsWith(INV_AND_PREFIX)||/^[A-Z]+\d*27\./.test(n)};
+function cnFrom(){const ds=(INV.list||[]).map(i=>i.date).filter(Boolean).sort();return ds[0]||"2026-06-01"}
 async function loadCN(force){
   if(!S.mcp||CN.busy)return;if(!accCan("devoluciones")&&!accCan("cancelaciones"))return;
   CN.busy=true;try{renderDev();renderCan()}catch(e){}
   try{const all=[];
     for(const org of [BOOKS_ORG,BOOKS_ORG_AND])for(let page=1;page<=10;page++){
-      let res;try{res=await S.mcp.callTool("Zoho Books","list_creditnotes",{query_params:{organization_id:org,per_page:200,page}},{cache:{staleTime:60000,gcTime:600000,refresh:!!force}})}
+      let res;try{res=await S.mcp.callTool("Zoho Books","list_creditnotes",{query_params:{organization_id:org,per_page:200,page,date_start:cnFrom()}},{cache:{staleTime:60000,gcTime:600000,refresh:!!force}})}
       catch(e){if(org===BOOKS_ORG)throw e;break}
       let p=res&&res.payload;if(typeof p==="string"){try{p=JSON.parse(p)}catch(e){p=null}}
       const d=p&&(p.data&&Array.isArray(p.data.creditnotes)?p.data:p);if(!d||!Array.isArray(d.creditnotes))throw {code:"shape",message:"respuesta no reconocida"};
@@ -4267,7 +4270,7 @@ function accIndex(){
     if(!id&&Array.isArray(c.applied))for(const a of c.applied){id=invDeal[c._org+":"+a.invoice_id];if(id)break}
     if(!id){const m=/-(\d{12,})$/.exec(c.reference_number||"");if(m&&ids.has(m[1]))id=m[1]}
     if(!id){const ds=byEmailDeals[String(c.email||"").toLowerCase()];if(ds&&ds.size===1)id=[...ds][0]}
-    if(id)(cnByDeal[id]=cnByDeal[id]||[]).push(c);else cnFree.push(c)});
+    if(id)(cnByDeal[id]=cnByDeal[id]||[]).push(c);else if(is2027Inv(c.invoice_number)||(c.applied||[]).some(a=>is2027Inv(a.invoice_number)))cnFree.push(c)});
   return {deals,invByDeal,cnByDeal,cnFree}}
 function devAlloc(invs,amount){const out=invs.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))||String(b.invoice_number).localeCompare(String(a.invoice_number),"es",{numeric:true}));
   let left=r2(amount);return {rows:out.map(i=>{const g=r2(Math.max(0,Math.min(+i.total||0,left)));left=r2(left-g);return {i,give:g}}),left}}
@@ -4292,7 +4295,7 @@ const stagePill=st=>'<span class="dst'+(st==="Paid"?" paid":st==="Cancelled"?" c
 function renderDev(){
   if($("view-pagos").hidden||$("accDev").hidden)return;
   document.documentElement.classList.toggle("no-dev-edit",!devEdit());
-  if(!INV.list&&!INV.busy&&S.mcp)loadBooks(false);if(!CN.list&&!CN.busy&&!CN.err&&S.mcp)loadCN(false);
+  if(!INV.list&&!INV.busy&&S.mcp)loadBooks(false);if(INV.list&&!CN.list&&!CN.busy&&!CN.err&&S.mcp)loadCN(false);
   $("devRefresh").disabled=INV.busy||CN.busy;
   const AR=S.allRows||[];
   if(!AR.length||!INV.list){$("devSede").innerHTML="";$("devBoxes").innerHTML="";$("devCount").textContent="";$("devMsg").innerHTML="";$("devList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">'+(INV.err&&!INV.list?"Sin facturas":"Cargando devoluciones…")+"</h3>"+(INV.err&&!INV.list?"<p>"+esc(INV.err)+"</p>":"")+"</div>";return}
@@ -4361,7 +4364,7 @@ function canRows(){const X=accIndex();
     return {r,paid,total,refund,cns,invs,dev,saldo,k,when:String(d.Modified_Time||"").slice(0,10)}})}
 function renderCan(){
   if($("view-pagos").hidden||$("accCan").hidden)return;
-  if(!INV.list&&!INV.busy&&S.mcp)loadBooks(false);if(!CN.list&&!CN.busy&&!CN.err&&S.mcp)loadCN(false);
+  if(!INV.list&&!INV.busy&&S.mcp)loadBooks(false);if(INV.list&&!CN.list&&!CN.busy&&!CN.err&&S.mcp)loadCN(false);
   if(!(S.allRows||[]).length){$("canSede").innerHTML="";$("canBoxes").innerHTML="";$("canList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Cargando cancelaciones…</h3></div>';return}
   const all=canRows();$("canSede").innerHTML=sedeBar("can",all.map(x=>x.r.camp||"mad"));
   const rows=all.filter(x=>sedeOk("can",x.r.camp||"mad"));const cnt={all:rows.length,saldo:0,dev:0,none:0};rows.forEach(x=>cnt[x.k]++);

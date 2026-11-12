@@ -430,6 +430,7 @@ Documento vivo con las decisiones tomadas con Pau (director de Campus Experience
     - Hechas: Olivia crea en Books la rectificativa como nota de crédito desde la factura original. Si la suma coincide con el importe a devolver, la devolución es correcta; si no, sale en rojo con la diferencia. También sale en rojo una rectificativa que no se puede asociar a ninguna inscripción.
     - Las hechas se agrupan por la fecha de la rectificativa y se marcan como correctas, como en Ingresos. Si después cambian, el día pasa a «Volver a revisar». Permiso de edición: Contabilidad › Devoluciones.
     - Las rectificativas solo se leen desde el software operativo (Catalyst): el conector de Books de claude.ai no tiene notas de crédito.
+    - Solo cuenta la campaña 2027: se leen las rectificativas desde la fecha de la primera factura de la campaña y, si no se pueden asociar a una inscripción, solo se muestran las que rectifican facturas de las series 2027 (C-2027, XXX27.nn, AND27). Las de 2026 no aparecen.
   - **Cancelaciones.** Todas las inscripciones en «Cancelled», con fecha, forma de pago, total, pagado, devuelto (según las rectificativas), saldo y enlaces a las facturas y rectificativas. Filtros: con saldo, devueltas y sin pagos.
   - **Ingresos.**
     - Pestañas por banco: Santander (Madrid y nacionales), Sabadell (institucionales) y LaCaixa (Andorra). Cada banco se cuadra por separado.

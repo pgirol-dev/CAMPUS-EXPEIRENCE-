@@ -234,9 +234,9 @@ async function booksGet(path) {
 }
 /* notas de crédito (rectificativas): el listado no trae la factura de origen; se completa con el detalle (en memoria) */
 const CN_MEM = new Map();
-async function booksCreditNotes(org, page) {
+async function booksCreditNotes(org, page, from) {
   if (MOCK) { const pages = (MOCK.creditnotes || {})[org] || []; return pages[page - 1] || { creditnotes: [], page_context: { has_more_page: false } }; }
-  const j = await booksGet("/creditnotes?organization_id=" + encodeURIComponent(org) + "&per_page=200&page=" + page + "&sort_column=date&sort_order=D");
+  const j = await booksGet("/creditnotes?organization_id=" + encodeURIComponent(org) + "&per_page=200&page=" + page + (from ? "&date_start=" + from : "") + "&sort_column=date&sort_order=D");
   const list = j.creditnotes || [];
   for (const c of list) {
     const k = org + ":" + c.creditnote_id + ":" + (c.last_modified_time || "");
@@ -445,7 +445,8 @@ async function handle(req, res) {
     const b = await readBody(req, 5000); const qp = b.query_params || {};
     const org = booksOrg(qp.organization_id); if (!org) return fail(res, 400, "Organización de Books no permitida.");
     const page = Math.max(1, Math.min(20, +qp.page || 1));
-    try { return send(res, 200, { payload: await booksCreditNotes(org, page) }); }
+    const from = /^\d{4}-\d{2}-\d{2}$/.test(String(qp.date_start || "")) ? qp.date_start : "2026-06-01";
+    try { return send(res, 200, { payload: await booksCreditNotes(org, page, from) }); }
     catch (e) { return fail(res, e.status || 502, e.message || "Error al consultar Zoho Books"); }
   }
   /* --- Zoho (solo lectura) --- */
