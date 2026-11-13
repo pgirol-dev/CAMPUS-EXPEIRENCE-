@@ -793,8 +793,66 @@ table.oplist th .fsel.on{background:var(--pink);border-color:var(--pink);color:v
 
 /* pagos */
 .paygrid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
-#payBoxes{grid-template-columns:repeat(7,minmax(0,1fr))}
-@media (max-width:1100px){#payBoxes{grid-template-columns:repeat(4,minmax(0,1fr))}}
+/* pagos (rediseño) */
+.psearch{position:relative;max-width:1100px}
+.psearch input{width:100%;box-sizing:border-box;border:1px solid var(--line);background:var(--field);color:var(--ink);border-radius:96px;padding:12px 18px;font:600 14px var(--f-body)}
+.psearch input:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+.pres{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:30;background:var(--bg);border-radius:12px;box-shadow:var(--shadow),0 0 0 1px var(--line);padding:6px;display:flex;flex-direction:column;gap:2px;max-height:420px;overflow:auto}
+.pres button{all:unset;cursor:pointer;display:grid;grid-template-columns:1fr auto;align-items:center;gap:2px 10px;padding:9px 12px;border-radius:8px}
+.pres button:hover,.pres button:focus-visible{background:var(--surface-2)}
+.pres button small{grid-column:1;font-size:11.5px;color:var(--ink-3)}
+.pres button .pflag{grid-row:1/3;grid-column:2}
+.ptabs{display:grid;grid-template-columns:1fr 1fr minmax(220px,.8fr);gap:10px;max-width:1100px}
+.ptab{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:4px;padding:16px 18px;border-radius:12px;background:var(--surface-2);position:relative;overflow:hidden}
+.ptab::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--line)}
+.ptab:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+.ptab .pt2{font-family:var(--f-wide);font-style:italic;font-weight:900;font-stretch:125%;font-variation-settings:"wdth" 125;text-transform:uppercase;font-size:.85rem}
+.ptab .pc2{font-family:var(--f-serif);font-style:italic;font-size:2.6rem;line-height:1;color:var(--pink)}
+.ptab .ps2{font-size:12px;color:var(--ink-3)}
+.ptab.on{background:var(--navy);color:var(--navy-ink)} .ptab.on .ps2{color:color-mix(in srgb,var(--navy-ink) 75%,transparent)} .ptab.on::before{background:var(--pink)}
+.ptab.sum{cursor:default} .ptab.sum .pc2{font-size:1.9rem;color:var(--ink)}
+.pko{color:var(--bad);font-weight:800;font-style:normal}
+.ptab.on .pko{color:#ff8aa5}
+.pphase{display:flex;flex-direction:column;gap:4px;max-width:1100px;margin-top:6px}
+.pph{display:grid;grid-template-columns:auto 1fr auto auto;align-items:baseline;gap:4px 14px;padding:10px 4px 6px;border-bottom:1px solid var(--line);margin-bottom:4px}
+.pph b{font-family:var(--f-wide);font-style:italic;font-weight:900;font-stretch:125%;text-transform:uppercase;font-size:1.05rem}
+.pph span{font-size:12px;color:var(--ink-3)}
+.pph em{font-style:normal;font-size:12px;font-weight:700;color:var(--ink-2)}
+.pph strong{font-family:var(--f-serif);font-style:italic;font-weight:400;font-size:1.3rem;display:flex;align-items:baseline;gap:6px}
+.pph strong small{font-family:var(--f-body);font-style:normal;font-size:11px;color:var(--ink-3)}
+.prow2{display:grid;grid-template-columns:minmax(200px,1.4fr) 110px minmax(0,1.6fr) 74px;gap:12px;align-items:center;padding:10px 14px 10px 18px;border-radius:10px;background:var(--surface-2);cursor:pointer;position:relative}
+.prow2:hover{background:color-mix(in srgb,var(--ink) 9%,var(--bg))}
+.prow2:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+.prow2 .pnm{display:flex;flex-direction:column;min-width:0}
+.prow2 .pnm b{font-weight:700}
+.prow2 .code{font-size:11.5px;color:var(--ink-3)}
+.prow2.ko{background:var(--bad-soft)}
+.prow2.ko::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:4px;border-radius:4px;background:var(--bad)}
+.prow2 .pwhy{grid-column:1/-1;font-size:12px;font-weight:700;color:var(--bad);line-height:1.45}
+.prow2 .pwhy.soft{color:var(--ink);font-weight:700}
+.prow2.sf{background:color-mix(in srgb,var(--ink) 18%,var(--bg))}
+.prow2.sf::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:4px;border-radius:4px;background:var(--ink-2)}
+.psteps .st.ex{background:var(--pink);color:var(--on-hot)}
+.pflag{justify-self:end;font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:4px 9px;border-radius:96px;background:var(--bad);color:var(--on-hot)}
+.prow2.phl{animation:payhl 2.4s ease-out}
+@keyframes payhl{0%,30%{box-shadow:0 0 0 3px var(--pink)}100%{box-shadow:0 0 0 0 transparent}}
+@media (prefers-reduced-motion:reduce){.prow2.phl{animation:none;box-shadow:0 0 0 3px var(--pink)}}
+.pempty{padding:14px;font-size:13px;color:var(--ink-3)}
+.pphtabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:1100px;margin-top:6px}
+.pphtab{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:auto 1fr auto;align-items:baseline;gap:2px 12px;padding:12px 16px;border-radius:10px;background:var(--surface-2);box-shadow:inset 0 -3px 0 transparent}
+.pphtab:hover{background:color-mix(in srgb,var(--ink) 9%,var(--bg))}
+.pphtab:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+.pphtab b{font-family:var(--f-wide);font-style:italic;font-weight:900;font-stretch:125%;text-transform:uppercase;font-size:1rem}
+.pphtab span{font-size:12px;color:var(--ink-3)}
+.pphtab em{grid-column:1/3;font-style:normal;font-size:12px;font-weight:700;color:var(--ink-2)}
+.pphtab strong{grid-column:3;grid-row:1/3;align-self:center;font-family:var(--f-serif);font-style:italic;font-weight:400;font-size:1.35rem;display:flex;flex-direction:column;align-items:flex-end;line-height:1}
+.pphtab strong small{font-family:var(--f-body);font-style:normal;font-size:10.5px;color:var(--ink-3);margin-top:3px}
+.pphtab.on{background:var(--bg);box-shadow:inset 0 -3px 0 var(--pink),0 0 0 1px var(--line)}
+@media (max-width:900px){
+  .ptabs{grid-template-columns:1fr 1fr} .ptab.sum{grid-column:1/-1}
+  .prow2{grid-template-columns:1fr auto;row-gap:6px} .prow2 .pnx{grid-column:1/-1}
+  .pph{grid-template-columns:auto 1fr} .pph em,.pph strong{grid-column:1/-1}
+}
 @media (max-width:900px){.paygrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:520px){.paygrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .pbx{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:2px;padding:12px 14px;border-radius:6px;background:var(--surface-2);color:var(--ink);position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;min-width:0}
@@ -1159,7 +1217,7 @@ html.no-ing-edit .ingbank input{pointer-events:none;border-color:transparent;bac
 .prow.frow{grid-template-columns:minmax(190px,1.3fr) 110px minmax(0,1.7fr) minmax(0,1.6fr)}
 .prow.frow.is-sin,.prow.frow.is-dif,.prow.frow.is-cobro,.prow.frow.is-orph{background:var(--bad-soft);box-shadow:inset 4px 0 0 var(--bad)}
 .prow.frow.is-orph{cursor:default}
-.ist-ok{background:color-mix(in srgb,var(--green) 22%,transparent);color:var(--ink)} .ist-sin,.ist-dif,.ist-cobro{background:var(--bad);color:var(--on-hot)} .ist-none{background:color-mix(in srgb,var(--ink) 10%,transparent);color:var(--ink-2)}
+.ist-ok{background:color-mix(in srgb,var(--green) 22%,transparent);color:var(--ink)} .ist-sin,.ist-dif,.ist-cobro,.ist-none{background:var(--bad)!important;color:var(--on-hot)!important} .ist-none{background:color-mix(in srgb,var(--ink) 10%,transparent);color:var(--ink-2)}
 .fchips{display:flex;gap:5px;flex-wrap:wrap;min-width:0}
 .iorph{margin-top:14px}
 .iorph summary{cursor:pointer;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;padding:12px 14px;border-radius:6px;background:var(--surface-2);list-style:none}
@@ -1939,9 +1997,9 @@ html.sb-min .sfh{display:block;font-family:var(--f-wide);font-style:italic;font-
     <div class="eqhead"><div class="eqtitlebox"><h2 class="eqtitle">Contabilidad</h2><span class="sub" id="payToday"></span></div>
       <div class="seg" id="accTabs" role="tablist" aria-label="Contabilidad"><button type="button" role="tab" data-acc="pagos" aria-selected="true" aria-pressed="true">Pagos</button><button type="button" role="tab" data-acc="dev" aria-selected="false" aria-pressed="false">Devoluciones</button><button type="button" role="tab" data-acc="can" aria-selected="false" aria-pressed="false">Cancelaciones</button></div></div>
     <div class="stack" id="accPagos">
+    <div class="psearch"><input type="search" id="payQ" placeholder="Buscar cualquier inscripción por nombre o código" aria-label="Buscar inscripción" autocomplete="off"><div class="pres" id="payRes" hidden></div></div>
     <div class="incscope sedebar" id="paySede" role="group" aria-label="Sede"></div>
-    <div class="paygrid" id="payBoxes" role="group" aria-label="Estado de pago"></div>
-    <div class="filters"><input type="search" id="payQ" placeholder="Buscar jugador por nombre o código" aria-label="Buscar jugador"><span class="count" id="payCount"></span></div>
+    <div class="ptabs" id="payBoxes" role="group" aria-label="Apartados de pago"></div>
     <div class="paylist" id="payList"></div>
     </div>
     <div class="stack" id="accDev" hidden>
@@ -2058,7 +2116,7 @@ const FIELDS=[
  {k:"obs",l:"Observaciones",sec:"otros",z:"Observaciones"}
 ];
 const SECTIONS=[["part","Participante"],["semanas","Semanas contratadas"],["equip","Equipaciones"],["serv","Servicios"],["salud","Salud y dieta"],["cons","Consentimientos"],["fam","Familia y contacto"],["auth","Autorizados para recogida"],["pago","Pago"],["docu","Documentación"],["otros","Otros"]];
-const BASE_FIELDS=["Deal_Name","Player","Tipo_Modalidad","Weeks","Modified_Time","Event_Name","Refund"];
+const BASE_FIELDS=["Deal_Name","Player","Tipo_Modalidad","Weeks","Modified_Time","Event_Name","Refund","First_Instalment_Paid_At","Second_Instalment_Paid_At","Third_Instalment_Paid_At"];
 const DEAL_FIELDS=[...new Set(BASE_FIELDS.concat(FIELDS.flatMap(f=>(f.z?[f.z]:[]).concat(f.zz||[]))))];
 const DEAL_WHERE=" from Deals where Event_Name.Name in "+EVS+" and Stage not in "+STAGES_OUT;
 const Q_DEALS_PARTS=[];for(let i=0;i<DEAL_FIELDS.length;i+=40)Q_DEALS_PARTS.push("select "+DEAL_FIELDS.slice(i,i+40).join(", ")+DEAL_WHERE);
@@ -4154,7 +4212,6 @@ function hEditClose(){H.edit=null;const b=$("hEdit");if(b)b.hidden=true}
    - Pagado total: Stage = Paid, o todos los plazos con importe pagados.
    - Fase 1 / Fase 2: pagados el 1º (y el 2º) y el siguiente plazo aún en fecha.
    - Impago: el siguiente plazo sin pagar ha pasado su fecha (o Zoho lo marca Expired). */
-const PAY={f:"pend",q:""};
 const PAY_PH=[["First","1º"],["Second","2º"],["Third","3º"]];
 const todayISO=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
 function payState(r){const d=r.d,t=todayISO();
@@ -4167,12 +4224,8 @@ function payState(r){const d=r.d,t=todayISO();
   const days=next.due?Math.round((new Date(t+"T12:00:00")-new Date(next.due+"T12:00:00"))/864e5):0;
   return {k:late?"late":(paidN>=2?"f2":"f1"),inst,next,paidN,days,pend:inst.filter(x=>x.st!=="Paid").reduce((a,x)=>a+(+x.amt||0),0)};
 }
-/* «Pagado sin factura»: el CRM da un plazo por pagado pero en Books no hay factura de ese importe.
-   Un cobro real siempre genera factura, así que suele ser un cobro rechazado en Redsys que el CRM ha marcado como pagado. */
-function payNoInv(){const m={};if(!INV.list)return m;try{invCheck().rows.forEach(x=>{if(x.paid>0.01&&x.paid-x.sum>0.01)m[String(x.r.id)]=r2(x.paid-x.sum)})}catch(e){}return m}
-const PAY_BOX=[["pend","Pendientes","Fase 1, fase 2 e impagos"],["late","Impago","Fecha del siguiente plazo pasada"],["f1","Fase 1","1er plazo pagado"],["f2","Fase 2","1º y 2º plazo pagados"],["paid","Pagado total","Todo pagado"],["all","Todos",""]];
 /* ===== SEDES: Madrid / Nacionales (por campus) / Institucionales ===== */
-const SEDE={};const SEDES=[["mad","Madrid"],["nac","Nacionales"],["inst","Institucionales"],["all","Todas"]];
+const SEDE={};const SEDES=[["all","Todas"],["mad","Madrid"],["nac","Nacionales"],["inst","Institucionales"]];
 const sedeOfCamp=id=>{const c=campById(id||"mad");return !c||c.kind==="madrid"?"mad":c.kind};
 const sedeSt=k=>SEDE[k]||(SEDE[k]={s:"mad",c:""});
 function sedeOk(k,camp){const st=sedeSt(k);if(st.s==="all")return true;if(sedeOfCamp(camp)!==st.s)return false;return !st.c||camp===st.c}
@@ -4184,27 +4237,67 @@ const SEDE_R={pay:()=>renderPagos(),inv:()=>renderFacturas(),dev:()=>renderDev()
 document.addEventListener("click",e=>{const b=e.target.closest("[data-sede],[data-sedec]");if(!b)return;
   if(b.dataset.sede){const [k,s]=b.dataset.sede.split("|");sedeSt(k).s=s;sedeSt(k).c=""}else{const [k,c]=b.dataset.sedec.split("|");sedeSt(k).c=c}
   const [k]=(b.dataset.sede||b.dataset.sedec).split("|");try{SEDE_R[k]()}catch(err){}});
+/* ===== PAGOS (rediseño 13/11) =====
+   Dos apartados: «Pago fraccionado» (aún quedan plazos; dividido en Fase 1 y Fase 2) y «Pagado por completo» (pago único o fraccionado terminado).
+   En rojo, dentro de su sitio y con el motivo: impagos (plazo vencido) y errores detectados con Books (sin factura, no cuadra, factura sin cobrar).
+   El buscador encuentra cualquier inscripción y lleva a su sitio. */
+var PAY={tab:"frac",ph:1,q:"",hl:null};
+function payErrors(){const m={};if(!INV.list)return m;const t=todayISO();try{invCheck().rows.forEach(x=>{const id=String(x.r.id),why=[],soft=[];const d=x.r.d;
+    const lastPaid=[d.First_Instalment_Paid_At,d.Second_Instalment_Paid_At,d.Third_Instalment_Paid_At].filter(Boolean).sort().pop()||"";const today=lastPaid&&lastPaid.slice(0,10)>=t;
+    if(x.k==="sin"){(today?soft:why).push(today?"Cobrado hoy: la factura aún no ha llegado a Books.":"Sin factura en Books: comprueba el cobro en Redsys.")}
+    else if(x.k==="dif"&&x.paid>x.sum){(today?soft:why).push(today?"Cobrado hoy: la factura de "+eur(r2(x.paid-x.sum))+" aún no ha llegado a Books.":"Pagado sin factura: "+eur(r2(x.paid-x.sum))+" sin factura en Books. Comprueba el cobro en Redsys.")}
+    else if(x.k==="dif")why.push("Facturado de más: hay "+eur(r2(x.sum-x.paid))+" facturados que el CRM no da por pagados.");
+    if(x.k==="cobro")why.push("Factura sin cobrar en Books: "+x.unpaid.map(i=>i.invoice_number+" ("+eur(i.balance)+")").join(", ")+".");
+    if(x.k==="none")why.push("Sin pagos: el CRM la da como activa pero no hay nada pagado ni facturado. Revisa la fase o el importe pagado en el CRM.");
+    m[id]={why,soft,invs:x.inv.slice()}})}catch(e){}return m}
+function payItems(){const AR=S.allRows||S.rows||[];const E=payErrors();const t=todayISO();
+  return AR.map(r=>{const s=payState(r);const full=s.k==="paid";const e=E[String(r.id)]||{why:[],soft:[],invs:[]};const why=e.why.slice();let late=false;
+    if(s.k==="late"){late=true;why.unshift("Impago: el "+s.next.l+" plazo ("+eur(s.next.amt)+") "+(s.next.due?"venció el "+fmtDL(s.next.due)+(s.days>0?", hace "+s.days+(s.days===1?" día":" días"):""):"está vencido")+".")}
+    const ph=full?null:(s.paidN>=2?2:1);
+    const fp=String(r.d.Forma_de_pago||"");const unico=full&&(s.inst.length<=1||/totalidad|pago total/i.test(fp));
+    /* extras: facturas de la inscripción más allá de los plazos (se pagan al contado después) */
+    const nPl=unico?1:s.inst.filter(i=>+i.amt>0).length;const invs=e.invs.slice().sort((a,b)=>String(a.date).localeCompare(String(b.date))||String(a.invoice_number).localeCompare(String(b.invoice_number),"es",{numeric:true}));
+    const extras=full&&invs.length>nPl?invs.slice(nPl):[];
+    return {r,s,full,ph,why,soft:e.soft,late,err:why.length>0,unico,extras}})}
+function payRow(x){const {r,s}=x;let steps,nx;
+  if(x.full){const made=x.unico?[{l:"1º",amt:r.d.Total}]:s.inst.filter(i=>+i.amt>0);
+    steps=made.map(i=>'<i class="st ok" title="'+i.l+" pago · "+eur(i.amt)+'">'+(x.unico?"1":i.l)+"</i>").join("");
+    steps+=x.extras.map(i=>'<i class="st ok ex" title="Extra · '+esc(i.invoice_number)+" · "+eur(i.total)+'">+</i>').join("");
+    nx='<span class="pnx">'+(x.unico?"<b>Pago único</b> "+eur(r.d.Total-x.extras.reduce((a,i)=>a+(+i.total||0),0)):made.map(i=>"<b>"+i.l.replace("º","")+"º pago</b> "+eur(i.amt)).join(" · "))+x.extras.map(i=>" · <b>Extra</b> "+eur(i.total)).join("")+(x.unico&&!x.extras.length?"":" · <b>Total</b> "+eur(r.d.Total))+"</span>"}
+  else{steps=s.inst.map(i=>'<i class="st'+(i.st==="Paid"?" ok":(s.next&&i.i===s.next.i&&x.late)?" ko":"")+'" title="'+i.l+" plazo · "+eur(i.amt)+(i.due?" · vence "+fmtDL(i.due):"")+(i.st==="Paid"?" · pagado":"")+'">'+i.l+"</i>").join("");
+    nx='<span class="pnx'+(x.late?" ko":"")+'"><b>'+s.next.l+" plazo</b> "+eur(s.next.amt)+" · "+(x.late?"vencido":"vence "+fmtDL(s.next.due))+"</span>"}
+  return '<div class="prow2'+(x.err?" ko":"")+(x.soft.length&&!x.err?" sf":"")+(PAY.hl===String(r.id)?" phl":"")+'" data-pid="'+esc(r.id)+'" id="pay-'+esc(r.id)+'" tabindex="0"><span class="pnm"><b class="nmrow"><span class="nmt" title="'+esc(r.name)+'">'+esc(r.name)+"</span>"+vipTag(r)+campTag(r)+'</b><span class="code">'+esc(r.code)+"</span></span>"+
+    '<span class="psteps">'+steps+"</span>"+nx+(x.err?'<span class="pflag">'+(x.late?"Impago":"Error")+"</span>":"<span></span>")+
+    (x.why.length?'<span class="pwhy">'+x.why.map(esc).join("<br>")+"</span>":"")+(x.soft.length?'<span class="pwhy soft">'+x.soft.map(esc).join("<br>")+"</span>":"")+"</div>"}
 function renderPagos(){
   if($("view-pagos").hidden)return;
   $("payToday").textContent="Hoy "+fmtDL(todayISO());
-  const AR0=S.allRows||S.rows;$("paySede").innerHTML=sedeBar("pay",AR0.map(r=>r.camp||"mad"));const AR=AR0.filter(r=>sedeOk("pay",r.camp||"mad"));const NI=payNoInv();const all=AR.map(r=>({r,s:payState(r),ni:NI[String(r.id)]||0}));
-  const cnt={all:all.length,paid:0,f1:0,f2:0,late:0,ni:0};all.forEach(x=>{cnt[x.s.k]++;if(x.ni)cnt.ni++});cnt.pend=cnt.f1+cnt.f2+cnt.late;
-  $("payBoxes").innerHTML=PAY_BOX.map(([k,t,sub])=>'<button type="button" class="pbx pb-'+k+'" data-pf="'+k+'" aria-pressed="'+(PAY.f===k)+'"><span class="pt2">'+t+'</span><span class="pc2">'+(AR.length?cnt[k]:"—")+'</span><span class="ps2">'+sub+"</span></button>").join("")+(INV.list?'<button type="button" class="pbx pb-ni'+(cnt.ni?" on":"")+'" data-pf="ni" aria-pressed="'+(PAY.f==="ni")+'"><span class="pt2">Pagado sin factura</span><span class="pc2">'+cnt.ni+'</span><span class="ps2">Comprueba el cobro en Redsys</span></button>':"");
-  const nrm=t=>String(t).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();const q=nrm(PAY.q.trim());
-  let it=all.filter(x=>PAY.f==="all"||(PAY.f==="ni"?x.ni>0:PAY.f==="pend"?x.s.k!=="paid":x.s.k===PAY.f));
-  if(q)it=it.filter(x=>nrm(x.r.hay+" "+((campById(x.r.camp||"mad")||{}).n||"")).includes(q));
-  const ord={late:0,f1:1,f2:2,paid:3};
-  it.sort((a,b)=>ord[a.s.k]-ord[b.s.k]||String(a.s.next&&a.s.next.due||"9").localeCompare(String(b.s.next&&b.s.next.due||"9"))||a.r.name.localeCompare(b.r.name));
-  $("payCount").textContent=AR.length?it.length+" jugadores":"";
-  if(!AR0.length){$("payList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Cargando pagos</h3></div>';return}
-  if(!it.length){$("payList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Nadie en este estado</h3></div>';return}
-  const LBL={paid:"Pagado total",f1:"Fase 1",f2:"Fase 2",late:"Impago"};
-  $("payList").innerHTML=it.map(x=>{const {r,s}=x;
-    const steps=s.inst.map(x=>'<i class="st'+(s.k==="paid"||x.st==="Paid"?" ok":(s.next&&x.i===s.next.i&&s.k==="late")?" ko":"")+'" title="'+x.l+' plazo · '+eur(x.amt)+(x.due?" · vence "+fmtDL(x.due):"")+(x.st==="Paid"||s.k==="paid"?" · pagado":"")+'">'+x.l+"</i>").join("");
-    const nx=s.k==="paid"?'<span class="pnx muted">—</span>':'<span class="pnx'+(s.k==="late"?" ko":"")+'"><b>'+s.next.l+" plazo</b> "+eur(s.next.amt)+" · "+(s.k==="late"?(s.days>0?"vencido hace "+s.days+(s.days===1?" día":" días"):"vencido"):"vence "+fmtDL(s.next.due))+"</span>";
-    const niTxt=x.ni?'<span class="pni">Pagado sin factura: el CRM da por cobrados '+eur(x.ni)+' que no tienen factura en Books. Comprueba el cobro en Redsys; si fue rechazado, corrígelo en el CRM.</span>':"";
-    return '<div class="prow ps-'+s.k+(x.ni?" ps-ni":"")+'" data-pid="'+esc(r.id)+'"><span class="pnm"><b class="nmrow"><span class="nmt" title="'+esc(r.name)+'">'+esc(r.name)+'</span>'+vipTag(r)+campTag(r)+'</b><span class="code">'+esc(r.code)+'</span></span><span class="pst st-'+s.k+'">'+LBL[s.k]+'</span><span class="psteps">'+steps+"</span>"+nx+niTxt+"</div>"}).join("");
+  const AR0=S.allRows||S.rows;$("paySede").innerHTML=sedeBar("pay",AR0.map(r=>r.camp||"mad"));
+  if(!AR0.length){$("payBoxes").innerHTML="";$("payList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Cargando pagos</h3></div>';return}
+  const all=payItems().filter(x=>sedeOk("pay",x.r.camp||"mad"));
+  const frac=all.filter(x=>!x.full),full=all.filter(x=>x.full);
+  const pendSum=r2(frac.reduce((a,x)=>a+(x.s.pend||0),0));const nextDue=frac.filter(x=>!x.late&&x.s.next&&x.s.next.due).map(x=>x.s.next.due).sort()[0];
+  const ko=a=>a.filter(x=>x.err).length;
+  const box=(k,t,a,sub)=>'<button type="button" class="ptab'+(PAY.tab===k?" on":"")+'" data-ptab="'+k+'" aria-pressed="'+(PAY.tab===k)+'"><span class="pt2">'+t+'</span><span class="pc2">'+a.length+'</span><span class="ps2">'+sub+(ko(a)?' <b class="pko">'+ko(a)+(ko(a)>1?" con aviso":" con aviso")+"</b>":"")+"</span></button>";
+  $("payBoxes").innerHTML=box("frac","Pago fraccionado",frac,"Quedan plazos por cobrar")+box("full","Pagado por completo",full,"Pago único o todos los plazos")+
+    '<div class="ptab sum"><span class="pt2">Pendiente de cobro</span><span class="pc2">'+eur(pendSum)+'</span><span class="ps2">'+(INV.list?"En los pagos fraccionados":"Comprobando facturas…")+"</span></div>";
+  const ordE=(a,b)=>((b.soft.length>0)-(a.soft.length>0))||(b.err-a.err)||(b.late-a.late)||String(a.s.next&&a.s.next.due||"9").localeCompare(String(b.s.next&&b.s.next.due||"9"))||a.r.name.localeCompare(b.r.name);
+  let h="";
+  if(PAY.tab==="frac"){const PH=[[1,"Fase 1","1er plazo pagado"],[2,"Fase 2","1º y 2º plazo pagados"]];
+    h+='<div class="pphtabs" role="tablist" aria-label="Fase">'+PH.map(([n,t,sub])=>{const a=frac.filter(x=>x.ph===n);return '<button type="button" role="tab" class="pphtab'+(PAY.ph===n?" on":"")+'" data-pph="'+n+'" aria-selected="'+(PAY.ph===n)+'"><b>'+t+"</b><span>"+sub+"</span><em>"+a.length+(ko(a)?' · <i class="pko">'+ko(a)+" en rojo</i>":"")+"</em><strong>"+eur(r2(a.reduce((s,x)=>s+(x.s.pend||0),0)))+"<small>por cobrar</small></strong></button>"}).join("")+"</div>";
+    const a=frac.filter(x=>x.ph===PAY.ph).sort(ordE);
+    h+='<section class="pphase">'+(a.length?a.map(payRow).join(""):'<div class="pempty">Nadie en Fase '+PAY.ph+"</div>")+"</section>"}
+  else{const a=full.slice().sort(ordE);h='<section class="pphase"><div class="pph"><b>Pagado por completo</b><span>'+full.filter(x=>x.unico).length+" pago único · "+full.filter(x=>!x.unico).length+" fraccionado terminado</span><em>"+a.length+" inscripciones"+(ko(a)?' · <i class="pko">'+ko(a)+" en rojo</i>":"")+"</em></div>"+a.map(payRow).join("")+"</section>"}
+  $("payList").innerHTML=h;
+  renderPayRes();
+  if(PAY.hl){const el=$("pay-"+PAY.hl);if(el){el.scrollIntoView({behavior:"smooth",block:"center"});setTimeout(()=>{PAY.hl=null;const e2=$("pay-"+(el.dataset.pid));if(e2)e2.classList.remove("phl")},2600)}}
 }
+function renderPayRes(){const box=$("payRes");if(!box)return;const nrm=t=>String(t).normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();const q=nrm(PAY.q.trim());
+  if(!q){box.hidden=true;box.innerHTML="";return}
+  const all=payItems().filter(x=>nrm(x.r.hay+" "+x.r.name).includes(q)).slice(0,8);
+  box.hidden=false;box.innerHTML=all.length?all.map(x=>'<button type="button" data-paygo="'+esc(x.r.id)+'"><b class="nmrow"><span class="nmt">'+esc(x.r.name)+"</span>"+campTag(x.r)+"</b><small>"+esc(x.r.code)+" · "+(x.full?"Pagado por completo":"Pago fraccionado · Fase "+x.ph)+"</small>"+(x.err?'<span class="pflag">'+(x.late?"Impago":"Error")+"</span>":"")+"</button>").join(""):'<div class="pempty">Ninguna inscripción con «'+esc(PAY.q)+"»</div>"}
+function payGo(id){const x=payItems().find(y=>String(y.r.id)===String(id));if(!x)return;PAY.tab=x.full?"full":"frac";if(!x.full)PAY.ph=x.ph;PAY.hl=String(id);PAY.q="";$("payQ").value="";
+  const st=sedeSt("pay");if(!sedeOk("pay",x.r.camp||"mad")){st.s="all";st.c=""}renderPagos()}
 $("accTabs").addEventListener("click",e=>{const b=e.target.closest("[data-acc]");if(!b)return;const k=b.dataset.acc;
   $("accTabs").querySelectorAll("[data-acc]").forEach(x=>{const on=x.dataset.acc===k;x.setAttribute("aria-selected",String(on));x.setAttribute("aria-pressed",String(on))});
   $("accPagos").hidden=k!=="pagos";$("accDev").hidden=k!=="dev";$("accCan").hidden=k!=="can";if(k==="pagos")renderPagos();if(k==="dev")renderDev();if(k==="can")renderCan();try{sbSync()}catch(e){}});
@@ -4262,9 +4355,9 @@ function invCheck(){
     return {r,inv,res,resIn:true,paid,total,sum:tot,k,diff:r2(tot-paid),unpaid}});
   Object.values(byEmail).flat().forEach(i=>{if(!used.has(i))orph.push({i,why:Math.abs(+i.total-50)<.01?"Reserva de 50 € sin inscripción activa con ese email":"Factura sin el código de la inscripción en la referencia"})});
   return {rows,orph}}
-const INV_BOX=[["err","Con error","Sin factura, no cuadra o sin cobrar"],["sin","Sin factura","Ha pagado y no hay factura"],["dif","No cuadra","Facturado distinto de lo pagado"],["ok","Correctas","Facturado igual a lo pagado"],["none","Sin pagos","Aún no ha pagado nada"],["all","Todos",""]];
+const INV_BOX=[["err","Con error","Sin factura, no cuadra o sin cobrar"],["sin","Sin factura","Ha pagado y no hay factura"],["dif","No cuadra","Facturado distinto de lo pagado"],["ok","Correctas","Facturado igual a lo pagado"],["all","Todos",""]];
 const INV_LBL={ok:"Correcta",sin:"Sin factura",dif:"No cuadra",cobro:"Sin cobrar",none:"Sin pagos"};
-const INV_ERR=k=>k==="sin"||k==="dif"||k==="cobro";
+const INV_ERR=k=>k==="sin"||k==="dif"||k==="cobro"||k==="none";
 function invErrCount(){if(!INV.list||!(S.allRows||[]).length)return null;try{const c=invCheck();return c.rows.filter(x=>INV_ERR(x.k)).length}catch(e){return null}}
 const booksUrl=i=>"https://books.zoho.eu/app/"+(i._org||BOOKS_ORG)+"#/invoices/"+encodeURIComponent(i.invoice_id);
 const cnUrl=c=>"https://books.zoho.eu/app/"+(c._org||BOOKS_ORG)+"#/creditnotes/"+encodeURIComponent(c.creditnote_id);
@@ -4286,7 +4379,7 @@ function renderFacturas(){
   $("invCount").textContent=it.length+" jugadores";
   const chip=(i,extra)=>'<a class="ichip'+(+i.balance>0?" ko":"")+'" href="'+booksUrl(i)+'" target="_blank" rel="noopener" title="Abrir en Zoho Books · '+esc(i.date||"")+(+i.balance>0?" · pendiente "+eur(i.balance):"")+'">'+esc(i.invoice_number)+" <b>"+eur(i.total)+"</b>"+(extra||"")+"</a>";
   $("invList").innerHTML=it.length?it.map(x=>{
-    const amt=x.k==="none"?'<span class="pnx muted">Sin pagos todavía'+(x.total?" · total "+eur(x.total):"")+"</span>"
+    const amt=x.k==="none"?'<span class="pnx ko">Sin pagos: el CRM la da como activa pero no hay nada pagado ni facturado'+(x.total?" · total "+eur(x.total):"")+"</span>"
       :'<span class="pnx'+(INV_ERR(x.k)?" ko":"")+'">Facturado <b>'+eur(x.sum)+"</b> · Pagado <b>"+eur(x.paid)+"</b>"+(x.total?" · Total "+eur(x.total):"")+(x.k==="dif"?" · <b>"+(x.diff>0?"+":"")+eur(x.diff)+"</b>":"")+(x.k==="cobro"?" · factura sin cobrar":"")+"</span>";
     const chips=x.inv.map(i=>chip(i)).concat(x.res.map(i=>chip(i,' <i>reserva</i>'))).join("");
     return '<div class="prow frow is-'+x.k+'" data-pid="'+esc(x.r.id)+'"><span class="pnm"><b class="nmrow"><span class="nmt" title="'+esc(x.r.name)+'">'+esc(x.r.name)+'</span>'+vipTag(x.r)+campTag(x.r)+'</b><span class="code">'+esc(x.r.code)+'</span></span><span class="pst ist-'+x.k+'">'+INV_LBL[x.k]+"</span>"+amt+'<span class="fchips">'+(chips||(x.k==="none"?"":'<span class="ichip none">Ninguna factura</span>'))+"</span></div>"}).join("")
@@ -4771,8 +4864,12 @@ async function ingMove(invId,toDay){if(!ingEdit()||!S.db){toast("No se puede gua
 $("ingList").addEventListener("change",e=>{const mv=e.target.closest("[data-ingmvd]");if(mv){ingMove(mv.dataset.ingmvd,mv.value);return}const el=e.target.closest("[data-ingbank]");if(!el)return;if(!ingEdit()){renderIngresos();return}const v=ingNum(el.value);if(Number.isNaN(v)){toast("Importe no válido");renderIngresos();return}
   ingSave(el.dataset.ingbank,{bank:v},v==null?"Importe del banco borrado":"Importe del banco guardado")});
 $("ingList").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.matches("[data-ingbank]"))e.target.blur()});
-$("payBoxes").addEventListener("click",e=>{const b=e.target.closest("[data-pf]");if(!b)return;PAY.f=b.dataset.pf;renderPagos()});
-$("payQ").addEventListener("input",e=>{PAY.q=e.target.value;renderPagos()});
+$("payBoxes").addEventListener("click",e=>{const b=e.target.closest("[data-ptab]");if(!b)return;PAY.tab=b.dataset.ptab;renderPagos()});
+$("payList").addEventListener("click",e=>{const b=e.target.closest("[data-pph]");if(!b)return;e.stopPropagation();PAY.ph=+b.dataset.pph;renderPagos()},true);
+$("payQ").addEventListener("input",e=>{PAY.q=e.target.value;renderPayRes()});
+$("payQ").addEventListener("keydown",e=>{if(e.key==="Enter"){const b=$("payRes").querySelector("[data-paygo]");if(b){e.preventDefault();payGo(b.dataset.paygo)}}if(e.key==="Escape"){PAY.q="";e.target.value="";renderPayRes()}});
+$("payRes").addEventListener("click",e=>{const b=e.target.closest("[data-paygo]");if(b)payGo(b.dataset.paygo)});
+$("payList").addEventListener("keydown",e=>{if(e.key!=="Enter")return;const row=e.target.closest("[data-pid]");if(row&&typeof openDrawer==="function")openDrawer(row.dataset.pid)});
 $("payList").addEventListener("click",e=>{const row=e.target.closest("[data-pid]");if(!row)return;const r=(S.allRows||S.rows).find(x=>x.id===row.dataset.pid);if(r&&typeof openDrawer==="function")openDrawer(r.id)});
 
 /* boot */
