@@ -8,8 +8,8 @@ const CE = require("./ce_engine.js");
 const STG = "('Unpaid','Cancelled','Refund','Trash','Reservation Payment Completed')";
 const LAYOUT = "695370000036704653"; // ISL - Real Madrid
 const FIELDS = "id, Created_Time, Stage, Tipo_Modalidad, Gender, Nationality, Weeks, utm_source, utm_medium, utm_campaign, utm_content, Total, Paid, Balance_Due1, Posicion_participante, Forma_de_pago, A_o_de_nacimiento, Codigo_descuento, Deal_Name, Talla_equipacion, referrername, GCLID, ga_gclid, FBClid, Ad_Campaign_Name, Colectivos, Numero_socio, Numero_empleado_RM_FRM, Numero_carnet_madridista";
-/* clave del dashboard → valor de Ubicacion en Zoho. Torrevieja aún no existe en Zoho: sale a 0. */
-const SEDES = [["madrid", "Madrid"], ["andorra", "Andorra"], ["valencia", "Valencia"], ["malaga", "Malaga"], ["alicante", "Alicante"], ["almeria", "Almeria"]];
+/* clave del dashboard → valor de Ubicacion en Zoho */
+const SEDES = [["madrid", "Madrid"], ["andorra", "Andorra"], ["valencia", "Valencia"], ["malaga", "Malaga"], ["alicante", "Alicante"], ["almeria", "Almeria"], ["torrevieja", "Torrevieja"]];
 
 module.exports = function makeDashboard(zohoCoql) {
   async function coql(q, lim) {
