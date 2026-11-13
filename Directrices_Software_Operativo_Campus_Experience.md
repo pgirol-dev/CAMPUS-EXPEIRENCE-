@@ -4,13 +4,16 @@ Documento vivo con las decisiones tomadas con Pau (director de Campus Experience
 
 - Última actualización: 27/10/2026
 - Software operativo: artifact «Operativa Campus Experience» → https://claude.ai/artifact/WGfoJZ9KMWvPQkm2J4Pg54
-- Dashboard de registros: artifact «Campus Experience 2027 · Dashboard de registros» → https://claude.ai/artifact/EQ3ML11Bgm2A5yX5K5DMKi
+- Dashboard de registros: **dentro del software en Catalyst** → `/app/dashboard.html` (menú lateral «Dashboard»). El artefacto de claude.ai está retirado desde el 11/11. Detalle en `dashboard/README.md`.
 - Especificación funcional de referencia: `Software_Operativo_Campus_Experience.docx` (esta misma carpeta)
-- Instrucciones de actualización del dashboard: `instrucciones_actualizacion_dashboard.md` (esta misma carpeta)
 
 ---
 
 ## 1. Forma de trabajar
+
+- **El dashboard de registros es parte del software y NO se puede perder al publicar.** Vive en archivos propios: `client/dashboard.html`, `client/dashboard-menu.js` (acceso del menú), `functions/dashboard_api/` (sus datos) y `dashboard/`. **`client/index.html` debe cargar `dashboard-menu.js`**: se genera siempre con `node build.js` (nunca a mano ni copiándolo de otra carpeta), y build.js ya añade esa línea.
+- **Este documento, `index.html`, `functions/campus_api/index.js` y el resto: se trabaja siempre sobre la copia del repositorio, después de `git pull origin main`.** No copiar encima versiones guardadas en otra carpeta: borran lo que otros han subido (ha pasado el 11, el 12 y el 13/11 con el dashboard).
+- **Publicar siempre con `./publicar.sh "qué ha cambiado"`** (nunca `catalyst deploy` a mano): trae lo último de GitHub y comprueba que el dashboard sigue incluido; si falta, no publica.
 
 - Avanzar fase a fase. Antes de construir, analizar, validar los datos reales en Zoho y proponer; Pau decide y después se construye.
 - Cuando Pau pida solo análisis, no tocar la herramienta.
@@ -248,6 +251,9 @@ Documento vivo con las decisiones tomadas con Pau (director de Campus Experience
 
 ## 5. Dashboard de registros (reglas acordadas)
 
+- **Conceptos:** **jugador** = cada persona física inscrita (con pago). **Registro** = cada semana contratada. Un jugador con 3 semanas cuenta como 1 jugador y 3 registros.
+- **Dónde vive:** en el software (Catalyst), página `/app/dashboard.html`, función `dashboard_api`. Sedes nacionales abiertas: Andorra, Valencia, Málaga, Alicante y Torrevieja; próximamente Almería.
+
 - Fuente: Zoho CRM, módulo *Applications/Deals*, Ano_Campus = 2027 (Campus Experience Madrid 2027).
 - **Se excluyen las pruebas:**
   - *utm_source* que empieza por «qa_».
@@ -275,7 +281,7 @@ Documento vivo con las decisiones tomadas con Pau (director de Campus Experience
   - Incluidas por modalidad: ONE MJ/JC = 1 blanca; ONE Interno = 2 blancas; MAX = 1 blanca + 1 light blue.
   - Las extra y las de portero se cuentan en la primera semana del niño.
 - **Canal de origen:** a partir de *utm_source* / *utm_medium* (Email/newsletter, Meta Ads, Instagram/Facebook, Google Ads, Google orgánico, TikTok, ChatGPT, YouTube, LinkedIn, X, Directo/sin dato).
-- **Actualización:** tarea programada (ver `instrucciones_actualizacion_dashboard.md`); si algo falla, no se publica a medias.
+- **Actualización:** sola cada 15 minutos y con el botón «Actualizar»; si Zoho falla, se muestran los últimos datos guardados.
 - **Diseño del dashboard:** es la referencia de diseño del software (ver apartado 3).
 
 ## 6. Registro de decisiones
@@ -565,3 +571,4 @@ Se asignan automáticamente en este orden, un equipo por nombre y sin repetir de
   - `build.js` genera `client/` y `selfhost/app/` a partir de `index.html`.
   - La guía para el equipo técnico está en `CATALYST.md`: tablas, variables, credenciales de Zoho y despliegue.
   - `selfhost/` se mantiene como alternativa.
+- 13/11 (tarde): El acceso «Dashboard» volvió a desaparecer porque `client/index.html` se publicó sin la línea `<script src="dashboard-menu.js" defer>` (no se generó con `build.js`) y este documento se sobrescribió con una copia anterior. Se restaura, se añade **Torrevieja** al dashboard (abierta, Ubicacion = Torrevieja) y se refuerzan las reglas del apartado 1.

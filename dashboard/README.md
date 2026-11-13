@@ -5,7 +5,7 @@ Versión del dashboard que antes vivía en claude.ai, ahora dentro del software 
 - **Acceso en el menú:** `client/dashboard-menu.js`, que `build.js` enlaza en `client/index.html`. No depende de `index.html`: aunque se publique una versión nueva de la aplicación, el acceso sigue.
 - **Página:** `client/dashboard.html` (se sirve en `/app/dashboard.html`; en el menú lateral del software, «Dashboard»). Usa el mismo login que el resto del software; la ven **todos los usuarios con sesión**.
 - **Datos:** los sirve una función propia, **`dashboard_api`** (independiente de `campus_api`), en `/server/dashboard_api/dashboard.js`:
-  - lee de Zoho CRM (solo lectura) las inscripciones **con pago** de Madrid, Andorra, Valencia, Málaga, Alicante y Almería (Torrevieja sale a 0 hasta que exista como Ubicacion en Zoho);
+  - lee de Zoho CRM (solo lectura) las inscripciones **con pago** de Madrid, Andorra, Valencia, Málaga, Alicante, Almería y Torrevieja;
   - calcula las cifras con `functions/dashboard_api/ce_engine.js` (el mismo motor que el dashboard de claude.ai);
   - guarda el resultado en el Data Store (`CEDocs`, col `dash`, y la marca `dash_ts` en `CEMeta`) y lo reutiliza durante 15 minutos (`CE_DASH_TTL_MIN`).
   - Si Zoho falla, se muestran los últimos datos guardados con un aviso. Si los registros de Madrid bajan más de un 10 % de golpe, no se aceptan los datos nuevos.
@@ -36,8 +36,7 @@ Después de cualquier cambio: subir a GitHub (`main`). Se despliega solo en Cata
 - Solo inscripciones con pago: se excluyen Unpaid, Cancelled, Refund, Trash y Reservation Payment Completed. Layout ISL - Real Madrid y Ano_Campus = 2027.
 - Modalidad y semanas: de las líneas del subformulario «Campus y servicios extra», no de los campos Weeks/Tipo_Modalidad.
 - Sedes nacionales: cada inscripción es una semana; los productos llevan la ciudad al final («… Jornada Completa Andorra»).
-- Sedes: abiertas Andorra, Valencia, Málaga y Alicante (desde el 11 nov); próximamente Almería y Torrevieja (la lista `OPEN` está en `template_natv.html`). Para abrir una sede, añadirla a `OPEN` y regenerar.
-- Torrevieja aún no existe como Ubicacion en Zoho: cuando exista, añadirla a `SEDES` en `functions/dashboard_api/dashboard.js`.
+- Sedes: abiertas Andorra, Valencia, Málaga, Alicante (desde el 11 nov) y Torrevieja (desde el 13 nov); próximamente Almería (la lista `OPEN` está en `template_natv.html`). Para abrir una sede, añadirla a `OPEN` y regenerar.
 
 ## Por qué está separado del resto del software
 El software operativo se edita a menudo partiendo de copias propias (el artefacto «Operativa Campus Experience»). Dos veces (11 y 12 nov) una publicación borró el dashboard porque vivía dentro de `index.html` y de `campus_api`. Desde el 12 nov:
