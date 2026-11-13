@@ -7,7 +7,6 @@
 <script>window.CE_API_BASE="/server/campus_api";window.CE_LOGIN_URL="login.html";window.CE_POLL=true;</script>
 <script src="/server/campus_api/acl.js"></script>
 <script src="ce-shim.js"></script>
-<script src="dashboard-menu.js" defer></script>
 <link rel="icon" href="favicon.svg">
 </head>
 <body>
@@ -907,6 +906,7 @@ table.oplist th .fsel.on{background:var(--pink);border-color:var(--pink);color:v
 .incurg{display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:800;font-size:13px;padding:12px 14px;border-radius:12px;background:var(--surface-2)}
 .incurg input{width:18px;height:18px;accent-color:var(--bad)}
 .incurg small{font-weight:600;color:var(--ink-3);margin-left:auto;font-size:11.5px}
+.incurg .incurgt{font-family:var(--f-wide);font-style:italic;font-weight:900;font-stretch:125%;font-variation-settings:"wdth" 125;letter-spacing:.02em;font-size:13px}
 .incurg.on{background:var(--bad);color:var(--on-hot)} .incurg.on small{color:inherit;opacity:.85}
 .inctxt{width:100%;box-sizing:border-box;min-height:110px;resize:vertical;border:1px solid var(--line);background:var(--field);color:var(--ink);border-radius:12px;padding:11px 13px;font:500 13.5px/1.45 var(--f-body)}
 .incbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -966,7 +966,17 @@ html.no-inc-edit [data-incnewp],html.no-inc-edit .incact .ic-btns,html.no-inc-ed
 .devgrid{grid-template-columns:repeat(5,minmax(0,1fr))}
 @media (max-width:900px){.devgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .pbx.db-pend::before{background:var(--pink)} .pbx.db-err::before{background:var(--bad)} .pbx.db-ok::before{background:var(--green)} .pbx.db-sum::before,.pbx.cb-sum::before{background:var(--navy)}
-.pbx.cb-saldo::before{background:var(--pink)} .pbx.cb-dev::before{background:var(--green)} .pbx.cb-none::before{background:var(--ink-3)}
+.cangrid{grid-template-columns:repeat(6,minmax(0,1fr))}
+@media (max-width:1100px){.cangrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:600px){.cangrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.pbx.cb-saldo::before{background:var(--gold)} .pbx.cb-pend::before{background:var(--pink)} .pbx.cb-can::before{background:var(--green)} .pbx.cb-err::before{background:var(--bad)}
+.cst{display:flex;flex-direction:column;gap:3px;align-items:flex-start}
+.cst small{font-size:10.5px;font-weight:700;color:var(--ink-3);white-space:nowrap}
+.cs-saldo{background:color-mix(in srgb,var(--gold) 22%,transparent);color:var(--ink)} .cs-pend{background:var(--pink);color:var(--on-hot)} .cs-can{background:var(--green);color:var(--on-green)} .cs-err{background:var(--bad);color:var(--on-hot);box-shadow:inset 0 0 0 2px var(--on-hot)}
+.prow.crow.is-pend{box-shadow:inset 4px 0 0 var(--pink)}
+.prow.crow.is-err{background:var(--bad-soft);box-shadow:inset 4px 0 0 var(--bad)}
+.crow .cwhy{grid-column:1/-1;font-size:12px;font-weight:700;color:var(--bad);line-height:1.4}
+.devsec.cerr{color:var(--bad)}
 .pbx.db-sum,.pbx.cb-sum{cursor:default} .pbx.db-sum:hover,.pbx.cb-sum:hover{transform:none;box-shadow:none} .pbx.db-sum .pc2,.pbx.cb-sum .pc2{font-size:1.5rem}
 .devmsg{padding:10px 14px;border-radius:6px;background:var(--warn-soft);font-size:12.5px;font-weight:600;max-width:1100px}
 .devsec{margin:14px 0 2px;font-family:var(--f-wide);font-style:italic;font-weight:900;font-stretch:125%;text-transform:uppercase;font-size:.9rem;display:flex;gap:10px;align-items:baseline}
@@ -1003,8 +1013,8 @@ html.no-inc-edit [data-incnewp],html.no-inc-edit .incact .ic-btns,html.no-inc-ed
 .devr .am small{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3)}
 .devr .why{grid-column:1/-1;font-size:11.5px;font-weight:700;color:var(--bad)}
 .devr .why.soft{color:var(--ink-3);font-weight:600}
-.prow.crow{grid-template-columns:minmax(190px,1.3fr) 100px repeat(4,minmax(80px,.5fr)) minmax(0,1.3fr)}
-.prow.crow.is-saldo{box-shadow:inset 4px 0 0 var(--pink)}
+.prow.crow{grid-template-columns:minmax(180px,1.2fr) 190px repeat(4,minmax(78px,.5fr)) minmax(0,1.2fr)}
+.prow.crow.is-saldo{box-shadow:inset 4px 0 0 var(--gold)}
 .crow .cam{text-align:right;font-size:12.5px;font-weight:800;display:flex;flex-direction:column}
 .crow .cam small{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3)}
 .crow .cam.ko{color:var(--bad)}
@@ -1902,7 +1912,7 @@ html.sb-min .sfh{display:block;font-family:var(--f-wide);font-style:italic;font-
     </div>
     <div class="stack" id="accCan" hidden>
       <div class="incscope sedebar" id="canSede" role="group" aria-label="Sede"></div>
-      <div class="paygrid devgrid" id="canBoxes" role="group" aria-label="Cancelaciones"></div>
+      <div class="paygrid cangrid" id="canBoxes" role="group" aria-label="Cancelaciones"></div>
       <div class="filters"><input type="search" id="canQ" placeholder="Buscar jugador o código" aria-label="Buscar"><span class="count" id="canCount"></span></div>
       <div class="paylist" id="canList"></div>
     </div>
@@ -1934,7 +1944,8 @@ const CAMPS=[{id:"mad",n:"Madrid",kind:"madrid",ev:[EVENT]},
   {id:"mal",n:"Málaga",kind:"nac",ev:["Campus Experience Málaga 2027","Campus Experience Malaga 2027"]},
   {id:"and",n:"Andorra",kind:"nac",ev:["Campus Experience Andorra 2027"]},
   {id:"alm",n:"Almería",kind:"nac",ev:["Campus Experience Almería 2027","Campus Experience Almeria 2027"]},
-  {id:"ali",n:"Alicante",kind:"nac",ev:["Campus Experience Alicante 2027"]}
+  {id:"ali",n:"Alicante",kind:"nac",ev:["Campus Experience Alicante 2027"]},
+  {id:"tor",n:"Torrevieja",kind:"nac",ev:["Campus Experience Torrevieja 2027"]}
   // institucionales: {id:"seg",n:"Segovia",kind:"inst",ev:["<nombre del evento en Zoho>"]}
 ];
 const EVS="("+CAMPS.flatMap(c=>c.ev).map(e=>"'"+e.replace(/'/g,"\\'")+"'").join(",")+")";
@@ -2005,7 +2016,7 @@ const FIELDS=[
  // Otros
  {k:"obs",l:"Observaciones",sec:"otros",z:"Observaciones"}
 ];
-const SECTIONS=[["part","Participante"],["semanas","Semanas contratadas"],["equip","Equipaciones"],["serv","Servicios"],["salud","Salud y dieta"],["cons","Consentimientos"],["fam","Familia y contacto"],["auth","Autorizados para recogida"],["pago","Pago"],["docu","Documentación"],["seg","Seguimiento del equipo"],["otros","Otros"]];
+const SECTIONS=[["part","Participante"],["semanas","Semanas contratadas"],["equip","Equipaciones"],["serv","Servicios"],["salud","Salud y dieta"],["cons","Consentimientos"],["fam","Familia y contacto"],["auth","Autorizados para recogida"],["pago","Pago"],["docu","Documentación"],["otros","Otros"]];
 const BASE_FIELDS=["Deal_Name","Player","Tipo_Modalidad","Weeks","Modified_Time","Event_Name","Refund"];
 const DEAL_FIELDS=[...new Set(BASE_FIELDS.concat(FIELDS.flatMap(f=>(f.z?[f.z]:[]).concat(f.zz||[]))))];
 const DEAL_WHERE=" from Deals where Event_Name.Name in "+EVS+" and Stage not in "+STAGES_OUT;
@@ -2103,7 +2114,8 @@ function rowsItems(rows){const out=[];rows.forEach(r=>{const w=r.weeks[0]||{n:nu
 function allItems(){return rowsItems(S.allRows||[])}
 const uniqR=it=>{const seen=new Set();return it.filter(x=>!seen.has(x.r.id)&&seen.add(x.r.id))};
 function weekItems(n){if(n===WALL)return allItems();if(isCampKey(n))return rowsItems((S.allRows||[]).filter(r=>r.camp===n.slice(2)));const out=[];S.rows.forEach(r=>r.weeks.forEach(w=>{if(w.n===n)out.push({r,w})}));return out}
-function campDates(id){let s=null,e=null;(S.allRows||[]).forEach(r=>{if(r.camp!==id)return;r.weeks.forEach(w=>{if(w.start&&(!s||w.start<s))s=w.start;if(w.end&&(!e||w.end>e))e=w.end})});return s?fmtD(s)+" – "+fmtD(e):""}
+function campDates(id){let s=null,e=null;(S.allRows||[]).forEach(r=>{if(r.camp!==id)return;r.weeks.forEach(w=>{if(w.start&&(!s||w.start<s))s=w.start;if(w.end&&(!e||w.end>e))e=w.end})});
+  return s?fmtD(s)+" – "+fmtD(e):""}
 function weekDates(n){if(isCampKey(n))return campDates(n.slice(2));if(n===WALL){const a=[];for(let k=1;k<=9;k++){const d=weekDates(k);if(d)a.push(d)}return a.length?a[0].split(" – ")[0]+" – "+a[a.length-1].split(" – ")[1]:""}let s=null,e=null;S.rows.forEach(r=>r.weeks.forEach(w=>{if(w.n===n&&w.mod!=="Interno"&&w.start){if(!s||w.start<s)s=w.start;if(!e||w.end>e)e=w.end}}));return s?fmtD(s)+" – "+fmtD(e):""}
 function apKey(ap){const [p,m]=ap.split("|");return p+"-"+(MOD_SHORT[m]||m.replace(/\W/g,""))}
 function teamOf(r,w){const camp=r.camp&&r.camp!=="mad";const d=EQ.docs&&EQ.docs[camp?"c-"+r.camp+"-"+apKey(w.prog+"|"+w.mod):"w"+w.n+"-"+apKey(w.prog+"|"+w.mod)];if(!d||!d.groups)return "";for(const g of d.groups){const t=(g.teams||[]).findIndex(x=>x&&x.includes(r.id));if(t>=0)return camp&&(g.teams||[]).length<=1?(g.name||"Equipo"):(g.name||"Grupo")+" "+(t+1)}return ""}
@@ -4370,36 +4382,56 @@ $("devList").addEventListener("click",e=>{let b;if(e.target.closest("a"))return;
   if((b=e.target.closest("[data-devtog]"))){const id=b.dataset.devtog;if(DEV.open.has(id))DEV.open.delete(id);else DEV.open.add(id);renderDev();return}
   if((b=e.target.closest("[data-devday]"))){const id="x"+b.dataset.devday;if(DEV.open.has(id))DEV.open.delete(id);else DEV.open.add(id);renderDev()}});
 
-/* ===== CANCELACIONES: inscripciones en «Cancelled» con lo pagado, lo devuelto y el saldo ===== */
+/* ===== CANCELACIONES: inscripciones en «Cancelled» =====
+   Estado según «Refund amount» (no se muestra) y lo devuelto (rectificativas de Books):
+   - Refund amount vacío → Con saldo (falta decidir; aunque no haya pagado nada).
+   - Refund amount 0 → Cancelado: todo lo pagado queda como no reembolsado.
+   - Refund amount con importe → Pendiente de devolución (importe − devuelto). Cuando lo devuelto llega al importe → Cancelado; lo pagado que no se devuelve queda como no reembolsado.
+   - Cualquier incoherencia → grupo Errores, con la explicación. */
 var CANX={f:"all",q:""};
-function canRows(){const X=accIndex();
+const CAN_LBL={saldo:"Con saldo",pend:"Pendiente de devolución",can:"Cancelado",err:"Error de cancelación"};
+function canRows(){const X=accIndex();const eq=(a,b)=>Math.abs(a-b)<0.01;
   return X.deals.filter(r=>r.d.Stage==="Cancelled").map(r=>{const d=r.d,cns=X.cnByDeal[r.id]||[],invs=X.invByDeal[r.id]||[];
-    const paid=r2(d.Paid),total=r2(d.Total),cnSum=r2(cns.reduce((a,c)=>a+(+c.total||0),0)),refund=r2(d.Refund);
-    const dev=cns.length?cnSum:0,saldo=r2(paid-dev);
-    const k=!(paid>0)?"none":saldo>0.01?"saldo":"dev";
-    return {r,paid,total,refund,cns,invs,dev,saldo,k,when:String(d.Modified_Time||"").slice(0,10)}})}
+    const paid=r2(d.Paid),total=r2(d.Total),has=d.Refund!=null&&d.Refund!=="",refund=has?r2(d.Refund):null;
+    const dev=r2(cns.reduce((a,c)=>a+(+c.total||0),0));const why=[];
+    if(dev>0&&!has)why.push("Hay rectificativas por "+eur(dev)+" pero el Refund amount está vacío. Escribe en el CRM el importe a devolver.");
+    if(dev>0&&has&&refund===0)why.push("Hay rectificativas por "+eur(dev)+" pero el Refund amount es 0 (no se iba a devolver nada). Revisa cuál de los dos es correcto.");
+    if(has&&refund<0)why.push("El Refund amount es negativo ("+eur(refund)+").");
+    if(has&&refund>paid+0.01)why.push("El Refund amount ("+eur(refund)+") es mayor que lo pagado ("+eur(paid)+").");
+    if(has&&refund>0&&dev>refund+0.01)why.push("Se ha devuelto "+eur(dev)+", más que el Refund amount ("+eur(refund)+"). Sobran "+eur(r2(dev-refund))+".");
+    let k,pend=null,noReemb=null;
+    if(why.length)k="err";
+    else if(!has)k="saldo";
+    else if(refund===0){k="can";noReemb=r2(paid-dev)}
+    else if(eq(dev,refund)||dev>refund){k="can";pend=0;noReemb=r2(paid-refund)}
+    else{k="pend";pend=r2(refund-dev)}
+    return {r,paid,total,refund,has,cns,invs,dev,pend,noReemb,k,why,when:String(d.Modified_Time||"").slice(0,10)}})}
 function renderCan(){
   if($("view-pagos").hidden||$("accCan").hidden)return;
   if(!INV.list&&!INV.busy&&S.mcp)loadBooks(false);if(INV.list&&!CN.list&&!CN.busy&&!CN.err&&S.mcp)loadCN(false);
   if(!(S.allRows||[]).length){$("canSede").innerHTML="";$("canBoxes").innerHTML="";$("canList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Cargando cancelaciones…</h3></div>';return}
   const all=canRows();$("canSede").innerHTML=sedeBar("can",all.map(x=>x.r.camp||"mad"));
-  const rows=all.filter(x=>sedeOk("can",x.r.camp||"mad"));const cnt={all:rows.length,saldo:0,dev:0,none:0};rows.forEach(x=>cnt[x.k]++);
-  const sp=r2(rows.reduce((a,x)=>a+x.paid,0)),sd=r2(rows.reduce((a,x)=>a+x.dev,0));
-  const BX=[["all","Todas","Inscripciones canceladas"],["saldo","Con saldo","Pagado y sin devolver"],["dev","Devueltas","Rectificado todo lo pagado"],["none","Sin pagos","No pagaron nada"]];
+  const rows=all.filter(x=>sedeOk("can",x.r.camp||"mad"));const cnt={all:rows.length,saldo:0,pend:0,can:0,err:0};rows.forEach(x=>cnt[x.k]++);
+  const sPend=r2(rows.reduce((a,x)=>a+(x.k==="pend"?x.pend:0),0)),sNo=r2(rows.reduce((a,x)=>a+(x.noReemb>0?x.noReemb:0),0));
+  const BX=[["saldo","Con saldo","Falta el Refund amount"],["pend","Pendiente de devolución","Hay que devolver"],["can","Cancelado","Cerradas"],["err","Errores","Revisar"],["all","Todas","Inscripciones canceladas"]];
   $("canBoxes").innerHTML=BX.map(([k,t,sub])=>'<button type="button" class="pbx cb-'+k+'" data-cf="'+k+'" aria-pressed="'+(CANX.f===k)+'"><span class="pt2">'+t+'</span><span class="pc2">'+cnt[k]+'</span><span class="ps2">'+sub+"</span></button>").join("")+
-    '<div class="pbx cb-sum"><span class="pt2">Saldo retenido</span><span class="pc2">'+eur(r2(sp-sd))+'</span><span class="ps2">Pagado '+eur(sp)+(CN.list?" · devuelto "+eur(sd):"")+"</span></div>";
+    '<div class="pbx cb-sum"><span class="pt2">Por devolver</span><span class="pc2">'+eur(sPend)+'</span><span class="ps2">No reembolsado '+eur(sNo)+"</span></div>";
   const nrm=t=>String(t).normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();const q=nrm(CANX.q.trim());
   let it=rows.filter(x=>CANX.f==="all"||x.k===CANX.f);if(q)it=it.filter(x=>nrm(x.r.hay+" "+x.r.name+" "+x.invs.map(i=>i.invoice_number).join(" ")).includes(q));
-  it.sort((a,b)=>b.when.localeCompare(a.when)||a.r.name.localeCompare(b.r.name));
+  const ord={err:0,pend:1,saldo:2,can:3};it.sort((a,b)=>ord[a.k]-ord[b.k]||b.when.localeCompare(a.when)||a.r.name.localeCompare(b.r.name));
   $("canCount").textContent=it.length+" cancelaciones";
-  if(!it.length){$("canList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Ninguna cancelación en este estado</h3></div>';return}
+  if(!it.length){$("canList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">'+(CANX.f==="err"?"Ningún error":"Ninguna cancelación en este estado")+"</h3></div>";return}
   const chip=i=>'<a class="ichip" href="'+booksUrl(i)+'" target="_blank" rel="noopener" title="Factura · '+esc(i.date||"")+'">'+esc(i.invoice_number)+" <b>"+eur(i.total)+"</b></a>";
   const cchip=c=>'<a class="ichip cn" href="'+cnUrl(c)+'" target="_blank" rel="noopener" title="Rectificativa · '+esc(c.date||"")+'">'+esc(c.creditnote_number)+" <b>"+eur(c.total)+"</b></a>";
-  $("canList").innerHTML=it.map(x=>{const d=x.r.d;
+  const devTxt=x=>CN.list?(x.dev?eur(x.dev):"—"):"—";
+  const row=x=>{const d=x.r.d;
     return '<div class="prow crow is-'+x.k+'" data-pid="'+esc(x.r.id)+'"><span class="pnm"><b class="nmrow"><span class="nmt" title="'+esc(x.r.name)+'">'+esc(x.r.name)+"</span>"+campTag(x.r)+'</b><span class="code">'+esc(x.r.code)+(x.when?" · cancelada "+esc(fmtDL(x.when)):"")+(d.Forma_de_pago?" · "+esc(d.Forma_de_pago):"")+"</span></span>"+
-      '<span class="pst '+(x.k==="saldo"?"ist-dif":x.k==="dev"?"ist-ok":"ist-none")+'">'+(x.k==="saldo"?"Con saldo":x.k==="dev"?"Devuelta":"Sin pagos")+"</span>"+
-      '<span class="cam"><small>Total</small>'+eur(x.total)+'</span><span class="cam"><small>Pagado</small>'+eur(x.paid)+'</span><span class="cam"><small>Devuelto</small>'+(CN.list?eur(x.dev):"—")+(x.refund?'<small title="Refund amount del CRM">CRM '+eur(x.refund)+"</small>":"")+'</span><span class="cam'+(x.saldo>0.01?" ko":"")+'"><small>Saldo</small>'+eur(x.saldo)+"</span>"+
-      '<span class="fchips">'+x.invs.map(chip).concat(x.cns.map(cchip)).join("")+"</span></div>"}).join("")+
+      '<span class="cst"><span class="pst cs-'+x.k+'">'+CAN_LBL[x.k]+"</span>"+(x.k==="can"&&x.noReemb>0.01?'<small>No reembolsado '+eur(x.noReemb)+"</small>":"")+"</span>"+
+      '<span class="cam"><small>Total</small>'+eur(x.total)+'</span><span class="cam"><small>Pagado</small>'+eur(x.paid)+'</span><span class="cam'+(x.k==="pend"?" ko":"")+'"><small>Pendiente de devolución</small>'+(x.k==="pend"?eur(x.pend):"—")+'</span><span class="cam"><small>Devuelto</small>'+devTxt(x)+"</span>"+
+      '<span class="fchips">'+x.invs.map(chip).concat(x.cns.map(cchip)).join("")+"</span>"+
+      (x.why.length?'<span class="cwhy">'+x.why.map(esc).join("<br>")+"</span>":"")+"</div>"};
+  const errs=it.filter(x=>x.k==="err"),rest=it.filter(x=>x.k!=="err");
+  $("canList").innerHTML=(errs.length?'<div class="devsec cerr">Errores<span>'+errs.length+" · revisa el CRM o Books</span></div>"+errs.map(row).join("")+(rest.length?'<div class="devsec">Cancelaciones<span>'+rest.length+"</span></div>":""):"")+rest.map(row).join("")+
     (CN.err?'<p class="ingnote">'+esc(CN.err)+" Lo devuelto se mostrará al leer las rectificativas.</p>":"");
 }
 $("canBoxes").addEventListener("click",e=>{const b=e.target.closest("[data-cf]");if(!b)return;CANX.f=b.dataset.cf;renderCan()});
@@ -4440,7 +4472,7 @@ function incOpts(r){if(!r)return [];if(r.camp&&r.camp!=="mad"){const seen=new Se
 function incTodo(d){const me=incMe();if(d.st==="resp"&&d.by===me)return "validar";if(d.st==="reab"&&d.log.some(e=>e.k==="resp"&&e.by===me))return "responder";return null}
 function incMyCount(){try{return incList().filter(incTodo).length}catch(e){return 0}}
 function incLate(d){if(!incIsPend(d))return false;const h=(Date.now()-new Date(incLast(d).at||d.at))/3600000;return d.urg?h>=2:h>=24}
-const incTags=(d,full)=>{const t=[];if(d.urg&&d.st!=="closed")t.push('<span class="itag urg">Urgente</span>');if(d.st==="reab")t.push('<span class="itag reab">Reabierta</span>');const td=incTodo(d);if(td)t.push('<span class="itag me">'+(td==="validar"?"Te toca validar":"Te toca responder")+"</span>");if(full)t.push('<span class="itag">'+INC_ST[d.st]+"</span>");return t.join("")};
+const incTags=(d,full)=>{const t=[];if(d.urg&&d.st!=="closed")t.push('<span class="itag urg">URGENTE</span>');if(d.st==="reab")t.push('<span class="itag reab">Reabierta</span>');const td=incTodo(d);if(td)t.push('<span class="itag me">'+(td==="validar"?"Te toca validar":"Te toca responder")+"</span>");if(full)t.push('<span class="itag">'+INC_ST[d.st]+"</span>");return t.join("")};
 function incCardHtml(d){const c0=d.log[0]||{};const last=incLast(d);const late=incLate(d);
   return '<button type="button" class="incard inct-'+d.tipo+(d.urg&&d.st!=="closed"?" urg":"")+'" data-incopen="'+esc(d.id)+'"><span class="ico">'+(INC_TI[d.tipo]||"")+'</span>'+
     '<span class="r1"><b>'+esc(d.name||"—")+'</b><span class="age'+(late?" late":"")+'" title="'+esc(incWhen(last.at))+'">'+(late?"Sin respuesta · ":"")+esc(incAgo(last.at||d.at))+"</span></span>"+
@@ -4471,7 +4503,7 @@ function incPanelHtml(){const P=INC.panel;if(!P)return "";const X='<button type=
     h+='<span class="inclab">1 · Tipo</span><div class="inctypes">'+INC_T.map(([k,l,ic])=>'<button type="button" class="inctype inct-'+k+'" data-inctype="'+k+'" aria-pressed="'+(F.tipo===k)+'"><span class="ico">'+ic+"</span>"+l+"</button>").join("")+"</div>";
     if(opts.length>1)h+='<span class="inclab">2 · Semana</span><div class="incwk">'+opts.map((o,i)=>'<button type="button" class="incopt" data-incwk="'+i+'" aria-pressed="'+(F.oi===i)+'">'+esc(o.l)+"</button>").join("")+"</div>";
     if(F.tipo==="salida")h+=incAuth(r);
-    h+='<label class="incurg'+(F.urg?" on":"")+'"><input type="checkbox" data-incurg'+(F.urg?" checked":"")+'> Grave / urgente<small>Sale la primera, en rojo</small></label>'+
+    h+='<label class="incurg'+(F.urg?" on":"")+'"><input type="checkbox" data-incurg'+(F.urg?" checked":"")+'><span class="incurgt">URGENTE</span><small>Sale la primera, en rojo</small></label>'+
       '<span class="inclab">'+(opts.length>1?"3":"2")+' · Explicación</span><textarea class="inctxt" id="incTxt" placeholder="Qué ha pasado, con quién, qué se necesita…">'+esc(F.txt||"")+"</textarea></div>"+
       '<div class="ipfoot incbar"><button class="btn primary" type="button" data-inccreate>Guardar incidencia</button><button class="btn" type="button" data-incfcancel>Cancelar</button><span class="ic-who">Se guarda a tu nombre, con fecha y hora.</span></div>';
     return h}
@@ -4489,7 +4521,7 @@ function renderIncidencias(){
   if($("view-incidencias").hidden){const p=$("incPanel");if(p&&!p.hidden){p.hidden=true;$("incScrim").hidden=true}return}
   document.documentElement.classList.toggle("no-inc-edit",!incEdit());
   const L=incList();const pend=L.filter(incIsPend),u=pend.filter(d=>d.urg).length,rv=L.filter(d=>d.st==="resp").length;
-  $("incSub").innerHTML=pend.length||rv?[pend.length?pend.length+" por responder":"",u?'<b style="color:var(--bad)">'+u+" urgente"+(u>1?"s":"")+"</b>":"",rv?rv+" por validar":""].filter(Boolean).join(" · "):"Todo al día";
+  $("incSub").innerHTML=pend.length||rv?[pend.length?pend.length+" por responder":"",u?'<b style="color:var(--bad)">'+u+(u>1?" URGENTES":" URGENTE")+"</b>":"",rv?rv+" por validar":""].filter(Boolean).join(" · "):"Todo al día";
   const my=L.filter(incTodo).length;const tc=$("incToca");tc.hidden=!my&&!INC.mine;tc.setAttribute("aria-pressed",INC.mine);tc.innerHTML="Te tocan <b>"+my+"</b>";
   const scopeN=k=>{const a=L.filter(d=>incIsPend(d)&&(k==="all"||String(d.wk)===String(k)));return {n:a.length,u:a.some(d=>d.urg)}};
   const pill=(k,l,t)=>{const c=scopeN(k);return '<button type="button" class="incpill'+(c.n?"":" zero")+'" data-incwkf="'+esc(String(k))+'" aria-pressed="'+(String(INC.wk)===String(k))+'"'+(t?' title="'+esc(t)+'"':"")+">"+esc(l)+(c.n?'<span class="n'+(c.u?" u":"")+'">'+c.n+"</span>":"")+"</button>"};
@@ -4563,7 +4595,7 @@ function incPick(id){INC.q="";$("incQ").value="";$("incRes").hidden=true;INC.for
 })();
 function incDrawerHtml(r){const L=incList().filter(d=>String(d.pid)===String(r.id)).sort((a,b)=>((b.st!=="closed")-(a.st!=="closed"))||String(b.at).localeCompare(String(a.at)));
   const open=L.filter(d=>d.st!=="closed").length;
-  return (L.length?'<p class="sub" style="margin:0 0 8px">'+L.length+" incidencia"+(L.length>1?"s":"")+(open?" · "+open+" abierta"+(open>1?"s":""):" · todas cerradas")+'</p><div class="dinc">'+L.map(d=>'<button type="button" class="dinci inct-'+d.tipo+'" data-incfromid="'+esc(d.id)+'"><span class="ico">'+(INC_TI[d.tipo]||"")+'</span><span class="t"><b>'+esc(INC_TL[d.tipo]||d.tipo)+"</b>"+(d.urg&&d.st!=="closed"?'<span class="itag urg">Urgente</span>':"")+'<small>'+esc(incWkS(d.wk))+" · "+esc(incWhen(d.at))+" · "+esc(d.byName||"—")+'</small><span class="x">'+esc((d.log[0]||{}).txt||"")+'</span></span><span class="incstp s-'+d.st+'">'+esc(INC_ST[d.st])+"</span></button>").join("")+"</div>":'<p class="muted" style="margin:0">Sin incidencias.</p>')+
+  return (L.length?'<p class="sub" style="margin:0 0 8px">'+L.length+" incidencia"+(L.length>1?"s":"")+(open?" · "+open+" abierta"+(open>1?"s":""):" · todas cerradas")+'</p><div class="dinc">'+L.map(d=>'<button type="button" class="dinci inct-'+d.tipo+'" data-incfromid="'+esc(d.id)+'"><span class="ico">'+(INC_TI[d.tipo]||"")+'</span><span class="t"><b>'+esc(INC_TL[d.tipo]||d.tipo)+"</b>"+(d.urg&&d.st!=="closed"?'<span class="itag urg">URGENTE</span>':"")+'<small>'+esc(incWkS(d.wk))+" · "+esc(incWhen(d.at))+" · "+esc(d.byName||"—")+'</small><span class="x">'+esc((d.log[0]||{}).txt||"")+'</span></span><span class="incstp s-'+d.st+'">'+esc(INC_ST[d.st])+"</span></button>").join("")+"</div>":'<p class="muted" style="margin:0">Sin incidencias.</p>')+
     '<p style="margin:10px 0 0"><button class="btn" type="button" data-incfrom="'+esc(r.id)+'">'+(L.length?"Ver o crear en Incidencias":"Crear incidencia")+"</button></p>"}
 document.addEventListener("click",e=>{const b=e.target.closest("[data-incfromid]");if(!b)return;try{closeDrawer()}catch(x){}INC.form=null;INC.panel={mode:"inc",id:b.dataset.incfromid};location.hash="incidencias";setTimeout(()=>{try{renderIncidencias()}catch(x){}},50)});
 document.addEventListener("click",e=>{const b=e.target.closest("[data-incfrom]");if(!b)return;const id=b.dataset.incfrom;try{closeDrawer()}catch(x){}INC.form=null;INC.panel={mode:"player",pid:id};location.hash="incidencias"});
@@ -4586,7 +4618,7 @@ function ingWhen(i){const m=/^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})/.exec(String(i
   if(!d||isNaN(d))return null;
   const L=ingLocal(d);const late=L.h>=23;
   return {d,day:late?ingKey(L.y,L.m,L.d+1):ingKey(L.y,L.m,L.d),hm:String(L.h).padStart(2,"0")+":"+String(L.mi).padStart(2,"0"),late,exact}}
-const ING_SER={VAL:"val",MAL:"mal",AND:"and",ALM:"alm",ALI:"ali"};
+const ING_SER={VAL:"val",MAL:"mal",AND:"and",ALM:"alm",ALI:"ali",TOR:"tor"};
 function ingRows(){const byId={};(S.allRows||[]).forEach(r=>{byId[String(r.id)]=r});const perDeal={};
   const out=(INV.list||[]).filter(i=>i.status!=="void"&&i.status!=="draft").map(i=>{let w=ingWhen(i);
     /* cobro movido a otro día a mano: se respeta el día elegido y se guarda el historial */
@@ -4843,7 +4875,7 @@ function hubRender(v){
   if(v==="inicio"){const camps=CAMPS.filter(c=>c.kind!=="madrid").length;
     $("hubSeasons").innerHTML='<button type="button" class="season" data-sv="temporada"><span class="sy">'+SEASON+'</span><span class="sn">Campus Experience '+SEASON+'</span><span class="sst"><span><b>'+(AR.length||"—")+'</b>participantes</span><span><b>9</b>semanas en Madrid</span><span><b>'+camps+'</b>campus nacionales</span></span><span class="sgo">Entrar</span></button>'}
   if(v==="temporada")$("hubBlocks").innerHTML=BLOCKS.filter(b=>viewOk(b[0])).map(([b,mods])=>hubCard(b,{mods:b==="registros"?(AR.length?[AR.length+" participantes"]:[]):mods.filter(viewOk).map(m=>SB_LBL[m])})).join("");
-  if(v==="operativa")$("hubOperativa").innerHTML=["horarios","equipos","incidencias"].filter(viewOk).map(m=>m==="incidencias"?hubCard(m,{mods:(()=>{const a=incList().filter(d=>d.st!=="closed");const u=a.filter(d=>d.urg).length;return [a.length?a.length+(a.length>1?" abiertas":" abierta"):"Sin abiertas"].concat(u?[u+(u>1?" urgentes":" urgente")]:[])})()}):hubCard(m)).join("");
+  if(v==="operativa")$("hubOperativa").innerHTML=["horarios","equipos","incidencias"].filter(viewOk).map(m=>m==="incidencias"?hubCard(m,{mods:(()=>{const a=incList().filter(d=>d.st!=="closed");const u=a.filter(d=>d.urg).length;return [a.length?a.length+(a.length>1?" abiertas":" abierta"):"Sin abiertas"].concat(u?[u+(u>1?" URGENTES":" URGENTE")]:[])})()}):hubCard(m)).join("");
   if(v==="administracion")$("hubAdministracion").innerHTML=["pagos","facturas","ingresos"].filter(viewOk).map(m=>m==="ingresos"?hubCard(m,{mods:(()=>{const n=ingPendCount();return n==null?["Zoho Books"]:[n?n+" días por cuadrar":"Todo cuadrado"]})()}):m==="pagos"?hubCard(m,{mods:["Pagos","Devoluciones","Cancelaciones"].filter((x,i)=>subOk("pagos",["pagos","dev","can"][i]))}):hubCard(m,{mods:(()=>{const n=invErrCount();return n==null?["Zoho Books"]:[n?n+" errores":"Todo cuadra"]})()})).join("");
 }
 window.__hub=hubRender;

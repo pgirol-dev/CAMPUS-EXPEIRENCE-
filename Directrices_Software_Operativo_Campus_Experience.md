@@ -4,16 +4,13 @@ Documento vivo con las decisiones tomadas con Pau (director de Campus Experience
 
 - Última actualización: 27/10/2026
 - Software operativo: artifact «Operativa Campus Experience» → https://claude.ai/artifact/WGfoJZ9KMWvPQkm2J4Pg54
-- Dashboard de registros: **dentro del software en Catalyst** → `/app/dashboard.html` (menú lateral «Dashboard»). El artefacto de claude.ai está retirado desde el 11/11.
+- Dashboard de registros: artifact «Campus Experience 2027 · Dashboard de registros» → https://claude.ai/artifact/EQ3ML11Bgm2A5yX5K5DMKi
 - Especificación funcional de referencia: `Software_Operativo_Campus_Experience.docx` (esta misma carpeta)
-- Dashboard de registros: `dashboard/README.md` (cómo funciona y qué archivos son).
+- Instrucciones de actualización del dashboard: `instrucciones_actualizacion_dashboard.md` (esta misma carpeta)
 
 ---
 
 ## 1. Forma de trabajar
-
-- **El dashboard de registros es parte del software y NO se puede perder al publicar.** Vive en archivos propios que no hay que tocar al cambiar la aplicación: `client/dashboard.html`, `client/dashboard-menu.js` (acceso del menú), `functions/dashboard_api/` (sus datos) y `dashboard/`. No va en `index.html` ni en `campus_api`.
-- **Antes de empezar a cambiar nada: `git pull origin main`.** Para publicar, usar siempre `./publicar.sh "qué ha cambiado"`: trae lo último de GitHub y comprueba que el dashboard sigue incluido; si falta, no publica.
 
 - Avanzar fase a fase. Antes de construir, analizar, validar los datos reales en Zoho y proponer; Pau decide y después se construye.
 - Cuando Pau pida solo análisis, no tocar la herramienta.
@@ -251,8 +248,6 @@ Documento vivo con las decisiones tomadas con Pau (director de Campus Experience
 
 ## 5. Dashboard de registros (reglas acordadas)
 
-- **Conceptos:** **jugador** = cada persona física inscrita (con pago). **Registro** = cada semana contratada. Un jugador con 3 semanas cuenta como 1 jugador y 3 registros. Se usan estas palabras en todo el dashboard (no «inscripciones», «participantes» ni «semanas contratadas»).
-
 - Fuente: Zoho CRM, módulo *Applications/Deals*, Ano_Campus = 2027 (Campus Experience Madrid 2027).
 - **Se excluyen las pruebas:**
   - *utm_source* que empieza por «qa_».
@@ -280,8 +275,7 @@ Documento vivo con las decisiones tomadas con Pau (director de Campus Experience
   - Incluidas por modalidad: ONE MJ/JC = 1 blanca; ONE Interno = 2 blancas; MAX = 1 blanca + 1 light blue.
   - Las extra y las de portero se cuentan en la primera semana del niño.
 - **Canal de origen:** a partir de *utm_source* / *utm_medium* (Email/newsletter, Meta Ads, Instagram/Facebook, Google Ads, Google orgánico, TikTok, ChatGPT, YouTube, LinkedIn, X, Directo/sin dato).
-- **Dónde vive:** en el software (Catalyst), página `/app/dashboard.html`, función `dashboard_api`. Detalle en `dashboard/README.md`.
-- **Actualización:** sola cada 15 minutos y con el botón «Actualizar»; si Zoho falla, se muestran los últimos datos guardados.
+- **Actualización:** tarea programada (ver `instrucciones_actualizacion_dashboard.md`); si algo falla, no se publica a medias.
 - **Diseño del dashboard:** es la referencia de diseño del software (ver apartado 3).
 
 ## 6. Registro de decisiones
@@ -445,6 +439,18 @@ Documento vivo con las decisiones tomadas con Pau (director de Campus Experience
   - Colecciones nuevas en el servidor: `ingmv` (cobros movidos) y `dev` (revisión de devoluciones).
 - 12/11: **Total de equipaciones**: ahora suma también la equipación de portero extra (antes contaba solo incluidas + extra blancas). Afecta a la ficha, al listado de Registros y a la exportación. Los datos del CRM se leían bien; solo fallaba la suma.
 - 12/11: **Borrar incidencias**: solo el administrador (Pau). En el panel de la incidencia, «Borrar incidencia» y confirmación; se borra para siempre. El servidor rechaza el borrado a cualquier otro usuario, aunque tenga edición en Incidencias.
+- 13/11: **Caída de los datos de Zoho** (los registros y las facturas daban error 502; los datos guardados del equipo seguían bien). Causa probable: cada instancia de la función pedía su propio token de acceso a Zoho, varias a la vez, y Zoho bloquea temporalmente cuando se piden demasiados seguidos. Solución: una sola petición de token a la vez, el token se comparte entre instancias a través del Data Store (CEMeta, clave `zoho_at`) y, si Zoho lo rechaza, se espera 2 minutos antes de reintentar.
+- 13/11: Cambios acordados con Pau (nuevo formato de trabajo: notas → resumen de actuación y dudas → cierre → cambios).
+  - **Torrevieja** pasa a ser campus nacional (evento «Campus Experience Torrevieja 2027», cobra en Santander). Entra sola en Registros, Equipos, Horarios, Incidencias y Contabilidad. Si factura con serie propia (TOR27.nn), se reconoce.
+  - **Ficha del jugador:** se quita la sección «Seguimiento del equipo». Lo que estuviera guardado no se borra; solo deja de verse.
+  - **Incidencias:** una sola palabra, **URGENTE**, en mayúsculas en todas partes (etiqueta, botón al crear y contadores).
+  - **Cancelaciones** (inscripciones en «Cancelled»). El estado depende de «Refund amount», que no se muestra, y de lo devuelto (rectificativas de Books):
+    - Refund amount vacío → **Con saldo**, aunque no haya pagado nada, hasta que alguien escriba 0.
+    - Refund amount 0 → **Cancelado**; lo pagado queda como **No reembolsado**.
+    - Refund amount con importe → **Pendiente de devolución** (importe menos lo devuelto; las devoluciones parciales siguen pendientes). Cuando lo devuelto llega al importe → **Cancelado**, el pendiente pasa a 0 y lo pagado no devuelto queda como No reembolsado.
+    - **Errores**, agrupados arriba y explicados: hay rectificativas con el Refund amount vacío o a 0, el Refund amount es mayor que lo pagado o es negativo, o se ha devuelto más que el Refund amount.
+    - Columnas: Total, Pagado, Pendiente de devolución y Devuelto. «No reembolsado» se ve en pequeño junto al estado Cancelado. Arriba, los totales «Por devolver» y «No reembolsado».
+  - **Fechas de los nacionales**: se muestran en cuanto el campus tiene alguna inscripción activa (sale de las semanas contratadas). Sin inscripciones, la caja va sin fecha (decisión de Pau).
 
 ## Lista de equipos · Nacionales e Institucionales (oficial, 04/11/2026)
 Se asignan automáticamente en este orden, un equipo por nombre y sin repetir dentro de un mismo campus:
@@ -556,5 +562,3 @@ Se asignan automáticamente en este orden, un equipo por nombre y sin repetir de
   - `build.js` genera `client/` y `selfhost/app/` a partir de `index.html`.
   - La guía para el equipo técnico está en `CATALYST.md`: tablas, variables, credenciales de Zoho y despliegue.
   - `selfhost/` se mantiene como alternativa.
-- 12/11: El dashboard de registros pasa a una función propia (`dashboard_api`) y a un acceso de menú propio (`client/dashboard-menu.js`), separados de `index.html` y `campus_api`, porque dos publicaciones lo borraron sin querer. `publicar.sh` trae lo último de GitHub y comprueba el dashboard antes de publicar.
-- 13/11: Dashboard: «jugadores» = personas inscritas; «registros» = semanas contratadas (sustituye a «semanas contratadas»). Solo cambian los textos.
