@@ -251,6 +251,8 @@ Documento vivo con las decisiones tomadas con Pau (director de Campus Experience
 
 ## 5. Dashboard de registros (reglas acordadas)
 
+- **Conceptos:** **jugador** = cada persona física inscrita (con pago). **Registro** = cada semana contratada. Un jugador con 3 semanas cuenta como 1 jugador y 3 registros. Se usan estas palabras en todo el dashboard (no «inscripciones», «participantes» ni «semanas contratadas»).
+
 - Fuente: Zoho CRM, módulo *Applications/Deals*, Ano_Campus = 2027 (Campus Experience Madrid 2027).
 - **Se excluyen las pruebas:**
   - *utm_source* que empieza por «qa_».
@@ -555,3 +557,4 @@ Se asignan automáticamente en este orden, un equipo por nombre y sin repetir de
   - La guía para el equipo técnico está en `CATALYST.md`: tablas, variables, credenciales de Zoho y despliegue.
   - `selfhost/` se mantiene como alternativa.
 - 12/11: El dashboard de registros pasa a una función propia (`dashboard_api`) y a un acceso de menú propio (`client/dashboard-menu.js`), separados de `index.html` y `campus_api`, porque dos publicaciones lo borraron sin querer. `publicar.sh` trae lo último de GitHub y comprueba el dashboard antes de publicar.
+- 13/11: Dashboard: «jugadores» = personas inscritas; «registros» = semanas contratadas (sustituye a «semanas contratadas»). Solo cambian los textos.
