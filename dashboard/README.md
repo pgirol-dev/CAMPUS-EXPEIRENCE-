@@ -36,7 +36,7 @@ Después de cualquier cambio: subir a GitHub (`main`). Se despliega solo en Cata
 - Solo inscripciones con pago: se excluyen Unpaid, Cancelled, Refund, Trash y Reservation Payment Completed. Layout ISL - Real Madrid y Ano_Campus = 2027.
 - Modalidad y semanas: de las líneas del subformulario «Campus y servicios extra», no de los campos Weeks/Tipo_Modalidad.
 - Sedes nacionales: cada inscripción es una semana; los productos llevan la ciudad al final («… Jornada Completa Andorra»).
-- Sedes: abiertas Andorra, Valencia, Málaga, Alicante (desde el 11 nov) y Torrevieja (desde el 13 nov); próximamente Almería (la lista `OPEN` está en `template_natv.html`). Para abrir una sede, añadirla a `OPEN` y regenerar.
+- Sedes: abiertas Andorra, Valencia, Málaga, Alicante (desde el 11 nov), Torrevieja y Almería (desde el 13 nov). Ya no queda ninguna «Próximamente» (la lista `OPEN` está en `template_natv.html`). Para abrir una sede, añadirla a `OPEN` y regenerar.
 
 ## Por qué está separado del resto del software
 El software operativo se edita a menudo partiendo de copias propias (el artefacto «Operativa Campus Experience»). Dos veces (11 y 12 nov) una publicación borró el dashboard porque vivía dentro de `index.html` y de `campus_api`. Desde el 12 nov:
