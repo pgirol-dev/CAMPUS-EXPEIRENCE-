@@ -32,6 +32,7 @@ Después de cualquier cambio: subir a GitHub (`main`). Se despliega solo en Cata
 | `mk_tpl.py` | generador de la versión antigua de claude.ai; aquí solo se usa por el CSS de la barra |
 
 ## Reglas de los datos (validadas)
+- **Conceptos (desde el 13 nov):** **jugador** = persona física inscrita con pago (antes «inscripción», «participante» o «registro de jugador»); **registro** = cada semana contratada (antes «semana contratada»). Un jugador con 3 semanas son 1 jugador y 3 registros. En las sedes nacionales cada inscripción es una semana: 1 jugador = 1 registro.
 - Solo inscripciones con pago: se excluyen Unpaid, Cancelled, Refund, Trash y Reservation Payment Completed. Layout ISL - Real Madrid y Ano_Campus = 2027.
 - Modalidad y semanas: de las líneas del subformulario «Campus y servicios extra», no de los campos Weeks/Tipo_Modalidad.
 - Sedes nacionales: cada inscripción es una semana; los productos llevan la ciudad al final («… Jornada Completa Andorra»).
