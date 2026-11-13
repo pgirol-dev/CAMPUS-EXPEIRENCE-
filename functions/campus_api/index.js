@@ -372,7 +372,7 @@ async function handle(req, res) {
   }
   /* --- Zoho Books (solo lectura): facturas para el control de facturación --- */
   if (p === "/api/books/invoices" && M === "POST") {
-    if (!["facturas", "ingresos", "devoluciones", "cancelaciones"].some(k => lvl(U, "contabilidad." + k) >= 1)) return fail(res, 403, "Sin acceso a las facturas.");
+    if (!["pagos", "facturas", "ingresos", "devoluciones", "cancelaciones"].some(k => lvl(U, "contabilidad." + k) >= 1)) return fail(res, 403, "Sin acceso a las facturas.");
     const b = await readBody(req, 5000); const qp = b.query_params || {};
     const mode = qp.invoice_number_contains != null ? "contains" : "startswith";
     const prefix = String((mode === "contains" ? qp.invoice_number_contains : qp.invoice_number_startswith) || ""); const page = Math.max(1, Math.min(50, +qp.page || 1));

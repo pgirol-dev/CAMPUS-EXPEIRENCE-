@@ -781,10 +781,15 @@ table.oplist th .fsel.on{background:var(--pink);border-color:var(--pink);color:v
 
 /* pagos */
 .paygrid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+#payBoxes{grid-template-columns:repeat(7,minmax(0,1fr))}
+@media (max-width:1100px){#payBoxes{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media (max-width:900px){.paygrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:520px){.paygrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .pbx{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:2px;padding:12px 14px;border-radius:6px;background:var(--surface-2);color:var(--ink);position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;min-width:0}
 .pbx::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--ink-3)}
+.pbx.pb-ni::before{background:var(--ink-3)} .pbx.pb-ni.on::before{background:var(--bad)} .pbx.pb-ni.on .pc2{color:var(--bad)}
+.prow.ps-ni{background:var(--bad-soft);box-shadow:inset 4px 0 0 var(--bad)}
+.prow .pni{grid-column:1/-1;font-size:12px;font-weight:700;color:var(--bad);line-height:1.4}
 .pbx.pb-late::before{background:var(--bad)} .pbx.pb-pend::before{background:var(--pink)} .pbx.pb-f1::before{background:color-mix(in srgb,var(--navy) 55%,var(--bg))} .pbx.pb-f2::before{background:var(--navy)} .pbx.pb-paid::before{background:var(--green)}
 .pbx:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
 .pbx:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
@@ -963,6 +968,42 @@ html.no-inc-edit [data-incnewp],html.no-inc-edit .incact .ic-btns,html.no-inc-ed
 .cs-saldo{background:color-mix(in srgb,var(--gold) 22%,transparent);color:var(--ink)} .cs-pend{background:var(--pink);color:var(--on-hot)} .cs-can{background:var(--green);color:var(--on-green)} .cs-err{background:var(--bad);color:var(--on-hot);box-shadow:inset 0 0 0 2px var(--on-hot)}
 .prow.crow.is-pend{box-shadow:inset 4px 0 0 var(--pink)}
 .prow.crow.is-err{background:var(--bad-soft);box-shadow:inset 4px 0 0 var(--bad)}
+/* cancelaciones: lista con una sola cabecera; importes en serif */
+#canList{display:flex;flex-direction:column;gap:4px;max-width:1240px}
+.crowh,.crow2{display:grid;grid-template-columns:minmax(200px,1.5fr) 168px repeat(4,minmax(84px,.55fr)) minmax(150px,1fr);gap:14px;align-items:center}
+.crowh{padding:6px 16px 4px 20px;font-size:11px;font-weight:700;color:var(--ink-3)}
+.crowh span:nth-child(n+3):nth-child(-n+6){text-align:right}
+.crow2{padding:12px 16px 12px 20px;border-radius:10px;background:var(--surface-2);cursor:pointer;position:relative}
+.crow2::before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:3px;background:var(--line)}
+.crow2.is-pend::before{background:var(--pink)} .crow2.is-saldo::before{background:var(--gold)} .crow2.is-can::before{background:var(--green)} .crow2.is-err::before{background:var(--bad)}
+.crow2.is-err{background:var(--bad-soft)}
+.crow2:hover{background:color-mix(in srgb,var(--ink) 9%,var(--bg))}
+.crow2:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+.cwho{display:flex;flex-direction:column;gap:3px;min-width:0}
+.cwho b{font-weight:700}
+.cmeta{display:flex;flex-wrap:wrap;gap:2px 10px;font-size:11.5px;color:var(--ink-3)}
+.cmeta .cfp{color:var(--ink-2)}
+.cst{display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+.cst small{font-size:11px;font-weight:600;color:var(--ink-3);white-space:nowrap}
+.cdot{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:800;white-space:nowrap;padding:0;background:none!important;color:var(--ink)!important;box-shadow:none!important}
+.cdot::before{content:"";width:9px;height:9px;border-radius:50%;flex:none;background:var(--line)}
+.cdot.cs-pend::before{background:var(--pink)} .cdot.cs-saldo::before{background:var(--gold)} .cdot.cs-can::before{background:var(--green)} .cdot.cs-err::before{background:var(--bad)}
+.cdot.cs-err{color:var(--bad)!important}
+.cv{display:flex;flex-direction:column;align-items:flex-end}
+.cv i{display:none;font-style:normal;font-size:10.5px;font-weight:700;color:var(--ink-3)}
+.cm{font-family:var(--f-serif);font-style:italic;font-size:1.3rem;line-height:1;font-variant-numeric:tabular-nums;white-space:nowrap}
+.cm.hot{color:var(--pink)}
+.cm.none{color:var(--ink-3);opacity:.6}
+.cchips{display:flex;flex-wrap:wrap;gap:5px;justify-content:flex-end;min-width:0}
+.cchips .ichip{font-size:10.5px}
+.crow2 .cwhy{grid-column:1/-1;font-size:12px;font-weight:700;color:var(--bad);line-height:1.4}
+@media (max-width:900px){
+  .crowh{display:none}
+  .crow2{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:10px}
+  .cwho,.cchips{grid-column:1/-1} .cchips{justify-content:flex-start}
+  .cst{grid-column:1/-1}
+  .cv{align-items:flex-start} .cv i{display:block}
+}
 .crow .cwhy{grid-column:1/-1;font-size:12px;font-weight:700;color:var(--bad);line-height:1.4}
 .devsec.cerr{color:var(--bad)}
 .pbx.db-sum,.pbx.cb-sum{cursor:default} .pbx.db-sum:hover,.pbx.cb-sum:hover{transform:none;box-shadow:none} .pbx.db-sum .pc2,.pbx.cb-sum .pc2{font-size:1.5rem}
@@ -2406,7 +2447,7 @@ function show(v){
   VIEWS.forEach(n=>{$("view-"+n).hidden=n!==v});
   if(v==="horarios")try{renderHorarios()}catch(e){}
   if(v==="equipos")try{renderEquipos()}catch(e){}
-  if(v==="pagos")try{renderPagos();renderDev();renderCan()}catch(e){}
+  if(v==="pagos")try{renderPagos();renderDev();renderCan();if(!INV.list&&!INV.busy)loadBooks(false)}catch(e){}
   if(v==="facturas")try{renderFacturas();if(!INV.list&&!INV.busy)loadBooks(false)}catch(e){}
   if(v==="incidencias")try{renderIncidencias()}catch(e){}
   if(v==="ingresos")try{renderIngresos();if(!INV.list&&!INV.busy)loadBooks(false)}catch(e){}
@@ -4114,6 +4155,9 @@ function payState(r){const d=r.d,t=todayISO();
   const days=next.due?Math.round((new Date(t+"T12:00:00")-new Date(next.due+"T12:00:00"))/864e5):0;
   return {k:late?"late":(paidN>=2?"f2":"f1"),inst,next,paidN,days,pend:inst.filter(x=>x.st!=="Paid").reduce((a,x)=>a+(+x.amt||0),0)};
 }
+/* «Pagado sin factura»: el CRM da un plazo por pagado pero en Books no hay factura de ese importe.
+   Un cobro real siempre genera factura, así que suele ser un cobro rechazado en Redsys que el CRM ha marcado como pagado. */
+function payNoInv(){const m={};if(!INV.list)return m;try{invCheck().rows.forEach(x=>{if(x.paid>0.01&&x.paid-x.sum>0.01)m[String(x.r.id)]=r2(x.paid-x.sum)})}catch(e){}return m}
 const PAY_BOX=[["pend","Pendientes","Fase 1, fase 2 e impagos"],["late","Impago","Fecha del siguiente plazo pasada"],["f1","Fase 1","1er plazo pagado"],["f2","Fase 2","1º y 2º plazo pagados"],["paid","Pagado total","Todo pagado"],["all","Todos",""]];
 /* ===== SEDES: Madrid / Nacionales (por campus) / Institucionales ===== */
 const SEDE={};const SEDES=[["mad","Madrid"],["nac","Nacionales"],["inst","Institucionales"],["all","Todas"]];
@@ -4131,11 +4175,11 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-sede],[dat
 function renderPagos(){
   if($("view-pagos").hidden)return;
   $("payToday").textContent="Hoy "+fmtDL(todayISO());
-  const AR0=S.allRows||S.rows;$("paySede").innerHTML=sedeBar("pay",AR0.map(r=>r.camp||"mad"));const AR=AR0.filter(r=>sedeOk("pay",r.camp||"mad"));const all=AR.map(r=>({r,s:payState(r)}));
-  const cnt={all:all.length,paid:0,f1:0,f2:0,late:0};all.forEach(x=>cnt[x.s.k]++);cnt.pend=cnt.f1+cnt.f2+cnt.late;
-  $("payBoxes").innerHTML=PAY_BOX.map(([k,t,sub])=>'<button type="button" class="pbx pb-'+k+'" data-pf="'+k+'" aria-pressed="'+(PAY.f===k)+'"><span class="pt2">'+t+'</span><span class="pc2">'+(AR.length?cnt[k]:"—")+'</span><span class="ps2">'+sub+"</span></button>").join("");
+  const AR0=S.allRows||S.rows;$("paySede").innerHTML=sedeBar("pay",AR0.map(r=>r.camp||"mad"));const AR=AR0.filter(r=>sedeOk("pay",r.camp||"mad"));const NI=payNoInv();const all=AR.map(r=>({r,s:payState(r),ni:NI[String(r.id)]||0}));
+  const cnt={all:all.length,paid:0,f1:0,f2:0,late:0,ni:0};all.forEach(x=>{cnt[x.s.k]++;if(x.ni)cnt.ni++});cnt.pend=cnt.f1+cnt.f2+cnt.late;
+  $("payBoxes").innerHTML=PAY_BOX.map(([k,t,sub])=>'<button type="button" class="pbx pb-'+k+'" data-pf="'+k+'" aria-pressed="'+(PAY.f===k)+'"><span class="pt2">'+t+'</span><span class="pc2">'+(AR.length?cnt[k]:"—")+'</span><span class="ps2">'+sub+"</span></button>").join("")+(INV.list?'<button type="button" class="pbx pb-ni'+(cnt.ni?" on":"")+'" data-pf="ni" aria-pressed="'+(PAY.f==="ni")+'"><span class="pt2">Pagado sin factura</span><span class="pc2">'+cnt.ni+'</span><span class="ps2">Comprueba el cobro en Redsys</span></button>':"");
   const nrm=t=>String(t).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();const q=nrm(PAY.q.trim());
-  let it=all.filter(x=>PAY.f==="all"||(PAY.f==="pend"?x.s.k!=="paid":x.s.k===PAY.f));
+  let it=all.filter(x=>PAY.f==="all"||(PAY.f==="ni"?x.ni>0:PAY.f==="pend"?x.s.k!=="paid":x.s.k===PAY.f));
   if(q)it=it.filter(x=>nrm(x.r.hay+" "+((campById(x.r.camp||"mad")||{}).n||"")).includes(q));
   const ord={late:0,f1:1,f2:2,paid:3};
   it.sort((a,b)=>ord[a.s.k]-ord[b.s.k]||String(a.s.next&&a.s.next.due||"9").localeCompare(String(b.s.next&&b.s.next.due||"9"))||a.r.name.localeCompare(b.r.name));
@@ -4143,10 +4187,11 @@ function renderPagos(){
   if(!AR0.length){$("payList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Cargando pagos</h3></div>';return}
   if(!it.length){$("payList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Nadie en este estado</h3></div>';return}
   const LBL={paid:"Pagado total",f1:"Fase 1",f2:"Fase 2",late:"Impago"};
-  $("payList").innerHTML=it.map(({r,s})=>{
+  $("payList").innerHTML=it.map(x=>{const {r,s}=x;
     const steps=s.inst.map(x=>'<i class="st'+(s.k==="paid"||x.st==="Paid"?" ok":(s.next&&x.i===s.next.i&&s.k==="late")?" ko":"")+'" title="'+x.l+' plazo · '+eur(x.amt)+(x.due?" · vence "+fmtDL(x.due):"")+(x.st==="Paid"||s.k==="paid"?" · pagado":"")+'">'+x.l+"</i>").join("");
     const nx=s.k==="paid"?'<span class="pnx muted">—</span>':'<span class="pnx'+(s.k==="late"?" ko":"")+'"><b>'+s.next.l+" plazo</b> "+eur(s.next.amt)+" · "+(s.k==="late"?(s.days>0?"vencido hace "+s.days+(s.days===1?" día":" días"):"vencido"):"vence "+fmtDL(s.next.due))+"</span>";
-    return '<div class="prow ps-'+s.k+'" data-pid="'+esc(r.id)+'"><span class="pnm"><b class="nmrow"><span class="nmt" title="'+esc(r.name)+'">'+esc(r.name)+'</span>'+vipTag(r)+campTag(r)+'</b><span class="code">'+esc(r.code)+'</span></span><span class="pst st-'+s.k+'">'+LBL[s.k]+'</span><span class="psteps">'+steps+"</span>"+nx+"</div>"}).join("");
+    const niTxt=x.ni?'<span class="pni">Pagado sin factura: el CRM da por cobrados '+eur(x.ni)+' que no tienen factura en Books. Comprueba el cobro en Redsys; si fue rechazado, corrígelo en el CRM.</span>':"";
+    return '<div class="prow ps-'+s.k+(x.ni?" ps-ni":"")+'" data-pid="'+esc(r.id)+'"><span class="pnm"><b class="nmrow"><span class="nmt" title="'+esc(r.name)+'">'+esc(r.name)+'</span>'+vipTag(r)+campTag(r)+'</b><span class="code">'+esc(r.code)+'</span></span><span class="pst st-'+s.k+'">'+LBL[s.k]+'</span><span class="psteps">'+steps+"</span>"+nx+niTxt+"</div>"}).join("");
 }
 $("accTabs").addEventListener("click",e=>{const b=e.target.closest("[data-acc]");if(!b)return;const k=b.dataset.acc;
   $("accTabs").querySelectorAll("[data-acc]").forEach(x=>{const on=x.dataset.acc===k;x.setAttribute("aria-selected",String(on));x.setAttribute("aria-pressed",String(on))});
@@ -4164,7 +4209,7 @@ const invSeries=n=>{n=String(n||"");return n.startsWith(INV_PREFIX)?INV_PREFIX:(
 const r2=n=>Math.round((+n||0)*100)/100;
 async function loadBooks(force){
   if(!S.mcp||INV.busy)return;
-  if(window.CE_ACL&&!(window.CE_ACL.admin||["facturas","ingresos","devoluciones","cancelaciones"].some(k=>(window.CE_ACL.perms||{})["contabilidad."+k])))return;INV.busy=true;INV.err="";renderFacturas();try{renderIngresos();renderDev();renderCan()}catch(e){}
+  if(window.CE_ACL&&!(window.CE_ACL.admin||["pagos","facturas","ingresos","devoluciones","cancelaciones"].some(k=>(window.CE_ACL.perms||{})["contabilidad."+k])))return;INV.busy=true;INV.err="";renderFacturas();try{renderIngresos();renderDev();renderCan()}catch(e){}
   try{const all=[],seen=new Set();
     for(const [qk,qv] of INV_SERIES)for(let page=1;page<=25;page++){
       const res=await S.mcp.callTool("Zoho Books","list_invoices",{query_params:{organization_id:BOOKS_ORG,[qk]:qv,per_page:200,page}},{cache:{staleTime:60000,gcTime:600000,refresh:!!force}});
@@ -4182,7 +4227,7 @@ async function loadBooks(force){
     INV.list=all;INV.at=new Date()}
   catch(e){const c=e&&e.code;
     INV.err=c==="server_not_connected"?"Zoho Books no está conectado. Añádelo en claude.ai → Configuración → Conectores.":c==="needs_reauth"?"Vuelve a conectar Zoho Books en claude.ai → Configuración → Conectores.":c==="not_in_manifest"||c==="approval_required"?"Falta dar permiso a esta página para leer Zoho Books.":c==="blocked_by_policy"?"Tu organización no permite leer Zoho Books desde aquí.":"No se han podido leer las facturas de Zoho Books"+(e&&e.message?" ("+e.message+")":"")+"."}
-  INV.busy=false;renderFacturas();try{renderIngresos()}catch(e){}try{renderDev();renderCan()}catch(e){}try{sbSync()}catch(e){}}
+  INV.busy=false;renderFacturas();try{renderIngresos()}catch(e){}try{renderDev();renderCan();renderPagos()}catch(e){}try{sbSync()}catch(e){}}
 function invCheck(){
   const AR=S.allRows||[],L=(INV.list||[]).filter(i=>i.status!=="void"&&i.status!=="draft");
   const ids=new Set(AR.map(r=>String(r.id))),byDeal={},byEmail={},orph=[];
@@ -4412,19 +4457,23 @@ function renderCan(){
   const chip=i=>'<a class="ichip" href="'+booksUrl(i)+'" target="_blank" rel="noopener" title="Factura · '+esc(i.date||"")+'">'+esc(i.invoice_number)+" <b>"+eur(i.total)+"</b></a>";
   const cchip=c=>'<a class="ichip cn" href="'+cnUrl(c)+'" target="_blank" rel="noopener" title="Rectificativa · '+esc(c.date||"")+'">'+esc(c.creditnote_number)+" <b>"+eur(c.total)+"</b></a>";
   const devTxt=x=>CN.list?(x.dev?eur(x.dev):"—"):"—";
+  const money=(v,cls)=>v==null||v===0?'<span class="cm none">—</span>':'<span class="cm'+(cls?" "+cls:"")+'">'+eur(v)+"</span>";
   const row=x=>{const d=x.r.d;
-    return '<div class="prow crow is-'+x.k+'" data-pid="'+esc(x.r.id)+'"><span class="pnm"><b class="nmrow"><span class="nmt" title="'+esc(x.r.name)+'">'+esc(x.r.name)+"</span>"+campTag(x.r)+'</b><span class="code">'+esc(x.r.code)+(x.when?" · cancelada "+esc(fmtDL(x.when)):"")+(d.Forma_de_pago?" · "+esc(d.Forma_de_pago):"")+"</span></span>"+
-      '<span class="cst"><span class="pst cs-'+x.k+'">'+CAN_LBL[x.k]+"</span>"+(x.k==="can"&&x.noReemb>0.01?'<small>No reembolsado '+eur(x.noReemb)+"</small>":"")+"</span>"+
-      '<span class="cam"><small>Total</small>'+eur(x.total)+'</span><span class="cam"><small>Pagado</small>'+eur(x.paid)+'</span><span class="cam'+(x.k==="pend"?" ko":"")+'"><small>Pendiente de devolución</small>'+(x.k==="pend"?eur(x.pend):"—")+'</span><span class="cam"><small>Devuelto</small>'+devTxt(x)+"</span>"+
-      '<span class="fchips">'+x.invs.map(chip).concat(x.cns.map(cchip)).join("")+"</span>"+
+    return '<div class="crow2 is-'+x.k+'" data-pid="'+esc(x.r.id)+'" tabindex="0">'+
+      '<span class="cwho"><b class="nmrow"><span class="nmt" title="'+esc(x.r.name)+'">'+esc(x.r.name)+"</span>"+campTag(x.r)+'</b><span class="cmeta"><span>'+esc(x.r.code)+"</span>"+(x.when?"<span>Cancelada el "+esc(fmtD(x.when))+"</span>":"")+(d.Forma_de_pago?'<span class="cfp">'+esc(d.Forma_de_pago)+"</span>":"")+"</span></span>"+
+      '<span class="cst"><span class="cdot cs-'+x.k+'">'+CAN_LBL[x.k]+"</span>"+(x.k==="can"&&x.noReemb>0.01?'<small>No reembolsado '+eur(x.noReemb)+"</small>":"")+"</span>"+
+      '<span class="cv"><i>Total</i>'+money(x.total)+'</span><span class="cv"><i>Pagado</i><span class="cm">'+eur(x.paid)+'</span></span><span class="cv"><i>Por devolver</i>'+money(x.k==="pend"?x.pend:null,"hot")+'</span><span class="cv"><i>Devuelto</i>'+(CN.list?money(x.dev):'<span class="cm none">—</span>')+"</span>"+
+      '<span class="cchips">'+x.invs.map(chip).concat(x.cns.map(cchip)).join("")+"</span>"+
       (x.why.length?'<span class="cwhy">'+x.why.map(esc).join("<br>")+"</span>":"")+"</div>"};
+  const head='<div class="crowh" aria-hidden="true"><span>Jugador</span><span>Estado</span><span>Total</span><span>Pagado</span><span>Por devolver</span><span>Devuelto</span><span>Facturas</span></div>';
   const errs=it.filter(x=>x.k==="err"),rest=it.filter(x=>x.k!=="err");
-  $("canList").innerHTML=(errs.length?'<div class="devsec cerr">Errores<span>'+errs.length+" · revisa el CRM o Books</span></div>"+errs.map(row).join("")+(rest.length?'<div class="devsec">Cancelaciones<span>'+rest.length+"</span></div>":""):"")+rest.map(row).join("")+
+  $("canList").innerHTML=(errs.length?'<div class="devsec cerr">Errores<span>'+errs.length+" · revisa el CRM o Books</span></div>"+head+errs.map(row).join("")+(rest.length?'<div class="devsec">Cancelaciones<span>'+rest.length+"</span></div>":""):"")+head+rest.map(row).join("")+
     (CN.err?'<p class="ingnote">'+esc(CN.err)+" Lo devuelto se mostrará al leer las rectificativas.</p>":"");
 }
 $("canBoxes").addEventListener("click",e=>{const b=e.target.closest("[data-cf]");if(!b)return;CANX.f=b.dataset.cf;renderCan()});
 $("canQ").addEventListener("input",e=>{CANX.q=e.target.value;renderCan()});
 $("canList").addEventListener("click",e=>{if(e.target.closest("a"))return;const row=e.target.closest("[data-pid]");if(row&&typeof openDrawer==="function")openDrawer(row.dataset.pid)});
+$("canList").addEventListener("keydown",e=>{if(e.key!=="Enter")return;const row=e.target.closest("[data-pid]");if(row&&typeof openDrawer==="function")openDrawer(row.dataset.pid)});
 /* ===== INCIDENCIAS =====
    Cualquiera con acceso de edición a Incidencias crea y responde.
    Flujo: Por responder → (respuesta: ¿contacto con la familia? sí/no, vía y texto) → Por validar →
