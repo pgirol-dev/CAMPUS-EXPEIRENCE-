@@ -252,7 +252,7 @@ Documento vivo con las decisiones tomadas con Pau (director de Campus Experience
 ## 5. Dashboard de registros (reglas acordadas)
 
 - **Conceptos:** **jugador** = cada persona física inscrita (con pago). **Registro** = cada semana contratada. Un jugador con 3 semanas cuenta como 1 jugador y 3 registros.
-- **Dónde vive:** en el software (Catalyst), página `/app/dashboard.html`, función `dashboard_api`. Sedes nacionales abiertas: Andorra, Valencia, Málaga, Alicante y Torrevieja; próximamente Almería.
+- **Dónde vive:** en el software (Catalyst), página `/app/dashboard.html`, función `dashboard_api`. Sedes nacionales abiertas: Andorra, Valencia, Málaga, Alicante, Torrevieja y Almería.
 
 - Fuente: Zoho CRM, módulo *Applications/Deals*, Ano_Campus = 2027 (Campus Experience Madrid 2027).
 - **Se excluyen las pruebas:**
@@ -581,3 +581,4 @@ Se asignan automáticamente en este orden, un equipo por nombre y sin repetir de
   - La guía para el equipo técnico está en `CATALYST.md`: tablas, variables, credenciales de Zoho y despliegue.
   - `selfhost/` se mantiene como alternativa.
 - 13/11 (tarde): El acceso «Dashboard» volvió a desaparecer porque `client/index.html` se publicó sin la línea `<script src="dashboard-menu.js" defer>` (no se generó con `build.js`) y este documento se sobrescribió con una copia anterior. Se restaura, se añade **Torrevieja** al dashboard (abierta, Ubicacion = Torrevieja) y se refuerzan las reglas del apartado 1.
+- 13/11: **Almería** abierta también en el dashboard (Ubicacion = Almeria; productos «… Almería»).
