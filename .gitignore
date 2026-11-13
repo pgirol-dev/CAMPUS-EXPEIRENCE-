@@ -5,3 +5,6 @@ node_modules/
 selfhost/data/
 .catalystrc
 .DS_Store
+
+# registro interno de la CLI de Catalyst
+catalyst-debug.log

@@ -36,13 +36,34 @@ const makeDashboard = require("./dashboard.js");
 const Z = { token: null, exp: 0 };
 let MOCK = null; if (env("ZOHO_MOCK_FILE", "")) MOCK = JSON.parse(require("fs").readFileSync(env("ZOHO_MOCK_FILE"), "utf8")); // SOLO pruebas locales
 const zohoConfigured = () => !!MOCK || !!(CFG.zoho.clientId && CFG.zoho.clientSecret && CFG.zoho.refreshToken);
+/* token de acceso de Zoho compartido con campus_api (mismas credenciales): se guarda en el Data Store (CEMeta, clave «zoho_at»).
+   Zoho bloquea un rato si se piden demasiados tokens seguidos, así que:
+   1) una sola petición a la vez; 2) se reutiliza el token guardado por cualquier función; 3) si Zoho lo rechaza, se espera 2 minutos. */
+const ZT = { inflight: null, failAt: 0, failMsg: "" };
 async function zohoToken() {
   if (Z.token && Date.now() < Z.exp - 60000) return Z.token;
-  const body = new URLSearchParams({ grant_type: "refresh_token", client_id: CFG.zoho.clientId, client_secret: CFG.zoho.clientSecret, refresh_token: CFG.zoho.refreshToken });
-  const r = await fetch(CFG.zoho.accountsUrl + "/oauth/v2/token", { method: "POST", body, signal: AbortSignal.timeout(15000) });
-  const j = await r.json().catch(() => ({}));
-  if (!r.ok || !j.access_token) throw Object.assign(new Error("No se pudo obtener el token de Zoho: " + (j.error || r.status)), { status: 502 });
-  Z.token = j.access_token; Z.exp = Date.now() + (j.expires_in || 3600) * 1000; return Z.token;
+  if (ZT.inflight) return ZT.inflight;
+  ZT.inflight = (async () => {
+    const st = Z.st;
+    if (st) { try { const r = await st.meta.get("zoho_at"); const o = r && r.v ? JSON.parse(r.v) : null;
+      if (o && o.t && Date.now() < o.exp - 60000) { Z.token = o.t; Z.exp = o.exp; return Z.token; }
+      if (o && o.failAt && Date.now() - o.failAt < 120000) throw Object.assign(new Error("Zoho no da acceso ahora mismo (" + (o.msg || "límite de peticiones") + "). Vuelve a intentarlo en un par de minutos."), { status: 503 });
+    } catch (e) { if (e.status) throw e; } }
+    if (Date.now() - ZT.failAt < 120000) throw Object.assign(new Error("Zoho no da acceso ahora mismo (" + ZT.failMsg + "). Vuelve a intentarlo en un par de minutos."), { status: 503 });
+    const body = new URLSearchParams({ grant_type: "refresh_token", client_id: CFG.zoho.clientId, client_secret: CFG.zoho.clientSecret, refresh_token: CFG.zoho.refreshToken });
+    const r = await fetch(CFG.zoho.accountsUrl + "/oauth/v2/token", { method: "POST", body, signal: AbortSignal.timeout(15000) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok || !j.access_token) {
+      ZT.failAt = Date.now(); ZT.failMsg = String(j.error || j.error_description || r.status);
+      console.log("Token de Zoho rechazado: " + r.status + " " + JSON.stringify(j).slice(0, 300));
+      if (st) { try { await st.meta.set("zoho_at", JSON.stringify({ failAt: ZT.failAt, msg: ZT.failMsg })); } catch (e) {} }
+      throw Object.assign(new Error("No se pudo obtener el token de Zoho: " + ZT.failMsg), { status: 502 });
+    }
+    Z.token = j.access_token; Z.exp = Date.now() + (j.expires_in || 3600) * 1000;
+    if (st) { try { await st.meta.set("zoho_at", JSON.stringify({ t: Z.token, exp: Z.exp })); } catch (e) {} }
+    return Z.token;
+  })();
+  try { return await ZT.inflight; } finally { ZT.inflight = null; }
 }
 async function zohoCoql(q) {
   if (MOCK) { const m = /limit (\d+), (\d+)/i.exec(q); const o = m ? +m[1] : 0, n = m ? +m[2] : 100; const src = q.includes("Campus_y_servicios") ? (MOCK.weeks || []) : (MOCK.deals || []); return { data: src.slice(o, o + n), info: { more_records: o + n < src.length } }; }
@@ -105,6 +126,7 @@ async function sessionOf(req, st) {
 
 async function handle(req, res) {
   const st = makeStore(req);
+  Z.st = st;
   const url = new URL(req.url, "http://x");
   const p = url.pathname.replace(/^\/server\/dashboard_api/, "") || "/";
   const M = req.method;

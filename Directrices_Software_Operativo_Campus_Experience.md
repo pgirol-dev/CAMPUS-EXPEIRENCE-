@@ -451,6 +451,7 @@ Documento vivo con las decisiones tomadas con Pau (director de Campus Experience
     - **Errores**, agrupados arriba y explicados: hay rectificativas con el Refund amount vacío o a 0, el Refund amount es mayor que lo pagado o es negativo, o se ha devuelto más que el Refund amount.
     - Columnas: Total, Pagado, Pendiente de devolución y Devuelto. «No reembolsado» se ve en pequeño junto al estado Cancelado. Arriba, los totales «Por devolver» y «No reembolsado».
   - **Fechas de los nacionales**: se muestran en cuanto el campus tiene alguna inscripción activa (sale de las semanas contratadas). Sin inscripciones, la caja va sin fecha (decisión de Pau).
+- 13/11: La función **dashboard_api** (Dashboard de registros en Catalyst, creada por Pau el 12/11 en otro chat) usa las mismas credenciales de Zoho que campus_api. Se le aplica el mismo arreglo del token: lo comparte con campus_api a través de CEMeta (`zoho_at`), una sola petición a la vez y 2 minutos de espera si Zoho lo rechaza. `catalyst-debug.log` se añade a .gitignore.
 
 ## Lista de equipos · Nacionales e Institucionales (oficial, 04/11/2026)
 Se asignan automáticamente en este orden, un equipo por nombre y sin repetir dentro de un mismo campus:
