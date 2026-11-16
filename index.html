@@ -308,7 +308,7 @@ tbody tr:hover td{background:color-mix(in srgb,var(--ink) 10%,var(--bg))}
 .wkbox:hover,.modbox:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
 .wkbox:focus-visible,.modbox:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
 .wkbox::after{content:"";position:absolute;right:-22px;top:-22px;width:70px;height:70px;border-radius:50%;border:2px solid color-mix(in srgb,var(--pink) 40%,transparent)}
-.wkbox .wt{font-family:var(--f-wide);font-style:italic;font-weight:900;font-stretch:125%;font-variation-settings:"wdth" 125;text-transform:uppercase;font-size:1.05rem;letter-spacing:-.01em}
+.wkbox .wt{min-width:0;max-width:100%;white-space:nowrap;font-family:var(--f-wide);font-style:italic;font-weight:900;font-stretch:125%;font-variation-settings:"wdth" 125;text-transform:uppercase;font-size:1.05rem;letter-spacing:-.01em}
 .wkbox .wd{font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums;font-weight:600}
 .wkbox .wn,.modbox .mn{font-family:var(--f-serif);font-style:italic;font-weight:400;font-size:2.6rem;line-height:.9;color:var(--pink)}
 .wkbox .wbar{display:flex;gap:2px;height:6px;border-radius:3px;overflow:hidden;background:color-mix(in srgb,var(--ink) 10%,transparent)}
@@ -794,7 +794,7 @@ table.oplist th .fsel.on{background:var(--pink);border-color:var(--pink);color:v
 .ptab{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:4px;padding:16px 18px;border-radius:12px;background:var(--surface-2);position:relative;overflow:hidden}
 .ptab::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--line)}
 .ptab:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
-.ptab .pt2{font-family:var(--f-wide);font-style:italic;font-weight:900;font-stretch:125%;font-variation-settings:"wdth" 125;text-transform:uppercase;font-size:.85rem}
+.ptab .pt2{min-width:0;max-width:100%;font-family:var(--f-wide);font-style:italic;font-weight:900;font-stretch:125%;font-variation-settings:"wdth" 125;text-transform:uppercase;font-size:.85rem}
 .ptab .pc2{font-family:var(--f-serif);font-style:italic;font-size:2.6rem;line-height:1;color:var(--pink)}
 .ptab .ps2{font-size:12px;color:var(--ink-3)}
 .ptab.on{background:var(--navy);color:var(--navy-ink)} .ptab.on .ps2{color:color-mix(in srgb,var(--navy-ink) 75%,transparent)} .ptab.on::before{background:var(--pink)}
@@ -851,7 +851,7 @@ table.oplist th .fsel.on{background:var(--pink);border-color:var(--pink);color:v
 .pbx.pb-late::before{background:var(--bad)} .pbx.pb-pend::before{background:var(--pink)} .pbx.pb-f1::before{background:color-mix(in srgb,var(--navy) 55%,var(--bg))} .pbx.pb-f2::before{background:var(--navy)} .pbx.pb-paid::before{background:var(--green)}
 .pbx:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
 .pbx:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
-.pbx .pt2{font-family:var(--f-wide);font-style:italic;font-weight:900;font-stretch:125%;text-transform:uppercase;font-size:.85rem}
+.pbx .pt2{min-width:0;max-width:100%;font-family:var(--f-wide);font-style:italic;font-weight:900;font-stretch:125%;text-transform:uppercase;font-size:.85rem}
 .pbx .pc2{font-family:var(--f-serif);font-style:italic;font-size:2.4rem;line-height:.95;color:var(--pink)}
 .pbx .ps2{font-size:11px;font-weight:600;color:var(--ink-3)}
 .pbx[aria-pressed="true"]{background:var(--navy);color:var(--navy-ink)}
@@ -4977,6 +4977,13 @@ $("payRes").addEventListener("click",e=>{const b=e.target.closest("[data-paygo]"
 $("payList").addEventListener("keydown",e=>{if(e.key!=="Enter")return;const row=e.target.closest("[data-pid]");if(row&&typeof openDrawer==="function")openDrawer(row.dataset.pid)});
 $("payList").addEventListener("click",e=>{const row=e.target.closest("[data-pid]");if(!row)return;const r=(S.allRows||S.rows).find(x=>x.id===row.dataset.pid);if(r&&typeof openDrawer==="function")openDrawer(r.id)});
 
+/* ===== CAJAS: los títulos siempre caben =====
+   Si un título (o una palabra larga) no cabe en su caja, se reduce la letra hasta que quepa. Se aplica a todas las cajas al pintarse y al cambiar el tamaño de la ventana. */
+const FIT_SEL=".wkbox .wt,.pbx .pt2,.ptab .pt2,.season .sn,.bk-t,.modbox .mt";
+function fitOne(el){el.style.fontSize="";const w=el.clientWidth;if(!w||el.scrollWidth<=w+1)return;let s=parseFloat(getComputedStyle(el).fontSize);while(el.scrollWidth>w+1&&s>9){s-=.5;el.style.fontSize=s+"px"}}
+let FIT_RAF=0;const fitAll=()=>{if(FIT_RAF)return;FIT_RAF=requestAnimationFrame(()=>{FIT_RAF=0;document.querySelectorAll(FIT_SEL).forEach(fitOne)})};
+new MutationObserver(fitAll).observe(document.body,{childList:true,subtree:true});window.addEventListener("resize",fitAll);
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitAll);
 /* boot */
 renderRegistros();
 (async()=>{

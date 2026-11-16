@@ -599,3 +599,4 @@ Se asignan automáticamente en este orden, un equipo por nombre y sin repetir de
   - **Check-in y check-out:** en la instalación salen siempre tres sedes: «Fleming», «Valdebebas» y «Residencia» (corregido el 16/11: eran tres, no dos).
   - **Orden de las columnas del horario:** media jornada, jornada completa e internos; dentro de cada una, primero ONE y luego MAX (ONE MJ · ONE JC · MAX JC · ONE INT · MAX INT). También en la fila de modalidades.
   - **Aceptar avisos:** cualquier aviso de conflicto se puede aceptar (personas con edición de Horarios). Queda en gris con quién y cuándo, deja de contar como error y se puede quitar. Si el conflicto cambia, vuelve a avisar.
+- 16/11: **Cajas:** los títulos siempre caben en su caja. Si un nombre largo (p. ej. «Torrevieja») no cabe, la letra se reduce hasta que quepa; se aplica a todas las cajas (semanas, campus, contabilidad, portada) al pintarse y al cambiar el tamaño de la ventana.
