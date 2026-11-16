@@ -36,6 +36,8 @@ const CATALOG = [
   { k: "atencion", b: "Atención al público", l: "Atención al público", subs: [["general", "Atención al público"]] },
   { k: "marketing", b: "Marketing", l: "Marketing", subs: [["general", "Marketing"]] },
   { k: "rrhh", b: "Recursos Humanos", l: "Recursos Humanos", subs: [["general", "Recursos Humanos"]] },
+  // Dashboard › Residencias: todos los usuarios ven el dashboard; «Editar» permite cambiar bloqueos y asignaciones (lo comprueba dashboard_api). No quitar.
+  { k: "dashboard", b: "Dashboard", l: "Residencias", subs: [["residencias", "Bloqueos y asignaciones de residencias"]] },
 ];
 const PERM_KEYS = CATALOG.flatMap(a => a.subs.map(s => a.k + "." + s[0]));
 const cleanPerms = p => { const o = {}; if (p && typeof p === "object") for (const k of PERM_KEYS) { const v = +p[k]; if (v === 1 || v === 2) o[k] = v; } return o; };

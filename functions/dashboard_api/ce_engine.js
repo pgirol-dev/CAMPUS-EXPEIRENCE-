@@ -91,6 +91,9 @@ function build(rs,ex){
   out.money={extras:r2(extrev),prog:r2(Array.from(mrev.m.values()).reduce(function(a,b){return a+b;},0))};
   out.paymod=PAYMOD.most().map(function(e){var p=e[0].split('\u0000');return [p[0],p[1],e[1]];});
   out.tkmod=Array.from(TK.entries()).map(function(e){return [e[0],e[1][0],r2(e[1][1])];});
+  /* residencias: registros internos (ONE Interno y MAX Interno) por semana */
+  var RW={};Object.keys(LN).forEach(function(pid){LN[pid].forEach(function(x){if(x[0]!=='MI'&&x[0]!=='OI')return;var w=+x[1];if(!RW[w])RW[w]={max:0,one:0};RW[w][x[0]==='MI'?'max':'one']+=1;});});
+  out.resid=Object.keys(RW).map(Number).sort(function(a,b){return a-b;}).map(function(w){return {week:w,max:RW[w].max,one:RW[w].one};});
   out.campwk=Array.from(wc.m.entries()).sort(function(a,b){return lastWord(a[0])-lastWord(b[0]);});
   function cat(p,nn){var q=(p||'').toLowerCase();if(q.indexOf('uniforme')===0)return 'Equipaciones';if(q.indexOf('protection')>=0)return 'Campus Protection Plan (CPP)';
     if(q.indexOf('noche')>=0||nn==='Sí'||nn==='Si')return 'Noches extra';if(q.indexOf('bus')>=0||q.indexOf('transfer')>=0||q.indexOf('autob')>=0)return 'Buses y transfers';return null;}
@@ -140,6 +143,7 @@ function conv(d){
   var pr=[];x.cats.forEach(function(c){if(c[4].length)c[4].forEach(function(p){pr.push({product:p[0],category:c[0],units:p[1],amount:p[2]});});else pr.push({product:'(sin ventas todavía)',category:c[0],units:0,amount:0});});
   return {kpis:kp.map(function(e){return {metric:e[0],value:e[1]};}),timeline:t,dims:dm,
     stages:d.stage.map(function(s){return {stage:s[0],n:s[1],total:s[2],paid:s[3]};}),
+    resid:d.resid||[],
     extras_cat:x.cats.map(function(c){return {category:c[0],units:c[1],amount:c[2],inscriptions:c[3],pct_insc:pyRound(c[3]/Math.max(k.n,1)*100)};}),
     extras:pr,
     kits_week:d.kits.week.map(function(e){return {week:e[0],blanca:e[1],light_blue:e[2],portero:e[3]};}),

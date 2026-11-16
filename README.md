@@ -8,7 +8,7 @@ Herramienta del equipo operativo de Campus Experience (Real Madrid, ISL Agency) 
 - **Operativa:** Horarios y Equipos.
 - **Administración:** Contabilidad (pagos, devoluciones y cancelaciones).
 - **Atención al público**, **Marketing** y **Recursos Humanos:** próximamente.
-- **Dashboard** de registros Campus Experience 2027 (solo en Catalyst): `client/dashboard.html`, en el menú lateral.
+- **Dashboard** de registros Campus Experience 2027 (solo en Catalyst): `client/dashboard.html`, en el menú lateral. Incluye **Residencias** (UAM/UEM) en la vista Madrid; el permiso para editarla se da en Administración › Usuarios (Dashboard › Residencias).
 - **Sistema › Usuarios y accesos:** solo en las versiones con login.
 
 ## Dónde funciona

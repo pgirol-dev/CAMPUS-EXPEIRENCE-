@@ -282,7 +282,9 @@ Documento vivo con las decisiones tomadas con Pau (director de Campus Experience
   - Las extra y las de portero se cuentan en la primera semana del niño.
 - **Canal de origen:** a partir de *utm_source* / *utm_medium* (Email/newsletter, Meta Ads, Instagram/Facebook, Google Ads, Google orgánico, TikTok, ChatGPT, YouTube, LinkedIn, X, Directo/sin dato).
 - **Actualización:** sola cada 15 minutos y con el botón «Actualizar»; si Zoho falla, se muestran los últimos datos guardados.
-- **Diseño del dashboard:** es la referencia de diseño del software (ver apartado 3).
+- **Diseño del dashboard:** es la referencia de diseño del software (ver apartado 3). **No se rompe su línea estética:** cualquier apartado nuevo usa sus mismos componentes (encabezados destacados en marino con título en Archivo 900 cursiva, cifra grande rosa en Instrument Serif cursiva y subtítulo en cursiva).
+- **Residencias (Madrid):** UAM y UEM, semanas 2 a 8. Cuentan los jugadores con pago de MAX Interno y ONE Interno (sin noches extra). Por semana: bloqueo editable por residencia, residencia abierta o cerrada, y cada modalidad asignada a una residencia o dividida entre las dos. Plazas contratadas editables por residencia y total combinado arriba. Rojo por debajo del bloqueo, ámbar desde el 80 %, verde con ✓ al cubrirlo.
+- **Permiso de residencias:** editan los administradores y quien tenga **Dashboard › Residencias: Editar** en *Administración › Usuarios*. Esa entrada del catálogo de permisos (`k: "dashboard"` en `campus_api`) **no se quita** al publicar versiones nuevas del software.
 
 ## 6. Registro de decisiones
 
@@ -582,3 +584,4 @@ Se asignan automáticamente en este orden, un equipo por nombre y sin repetir de
   - `selfhost/` se mantiene como alternativa.
 - 13/11 (tarde): El acceso «Dashboard» volvió a desaparecer porque `client/index.html` se publicó sin la línea `<script src="dashboard-menu.js" defer>` (no se generó con `build.js`) y este documento se sobrescribió con una copia anterior. Se restaura, se añade **Torrevieja** al dashboard (abierta, Ubicacion = Torrevieja) y se refuerzan las reglas del apartado 1.
 - 13/11: **Almería** abierta también en el dashboard (Ubicacion = Almeria; productos «… Almería»).
+- 16/11: **Residencias** en el dashboard (vista Madrid): ocupación de la UAM y la UEM con bloqueos semanales, asignación de MAX/ONE Interno y totales contratados. Decisión de Pau: el permiso de edición se da desde Administración › Usuarios del software (Dashboard › Residencias), para Irene Martínez y quien se decida. Se mantiene la línea estética del dashboard.

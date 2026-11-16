@@ -674,6 +674,74 @@ body{margin:0;background:var(--color-bg);color:var(--color-fg);font:14px/1.45 va
 .ce:not([data-nat="1"]) .nat-only{display:none!important}
 .ce main .card.nat-fact{padding:22px 26px 24px}
 .ce main .card.nat-fact .big{font-size:clamp(3rem,6vw,4.6rem)}
+
+/* ===== Residencias ===== */
+.ce .rz-demo{font:700 11px var(--font);border:1px solid color-mix(in srgb,var(--tileink) 30%,transparent);border-radius:96px;background:transparent;color:var(--tileink);padding:4px 10px;cursor:pointer}
+.ce{--rz-uam:#ea456c;--rz-uem:#0f2145;--rz-ok:#2f9a5e;--rz-warn:#d99a1e;--rz-bad:#d93a55}
+:root[data-theme=dark] .ce{--rz-uem:#8fa3cf}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .ce{--rz-uem:#8fa3cf}}
+.ce .rz-sum{padding:22px 24px;margin-bottom:14px}
+.ce .rz-row{display:grid;grid-template-columns:150px minmax(0,1fr) 190px;gap:18px;align-items:center;padding:12px 0}
+.ce .rz-row+.rz-row{border-top:1px solid color-mix(in srgb,var(--tileink) 14%,transparent)}
+.ce .rz-all{display:grid;grid-template-columns:minmax(0,1fr);gap:4px;background:#121f3c;color:#fff;border-radius:12px;padding:26px 30px 24px;margin-bottom:10px}
+.ce .rz-all .k{font-family:Archivo,"Arial Black",Impact,sans-serif;font-style:italic;font-weight:900;font-stretch:125%;text-transform:uppercase;font-size:1.15rem;letter-spacing:.01em;color:#fff}
+.ce .rz-all .p{font-family:"Instrument Serif","Cormorant Garamond",Georgia,serif;font-style:italic;font-weight:400;font-size:clamp(3.4rem,7vw,5rem);line-height:1;color:var(--pink);margin:2px 0 4px}
+.ce .rz-all .c{font-family:"Instrument Serif","Cormorant Garamond",Georgia,serif;font-style:italic;font-size:1.25rem;color:#fff}
+.ce .rz-all .c .bad{color:#ff9db2}
+.ce .rz-all .tr{height:10px;border-radius:5px;background:rgba(255,255,255,.14);overflow:hidden;margin-top:12px;max-width:560px}
+.ce .rz-all .tr i{display:block;height:100%;background:var(--pink);border-radius:5px;transition:width .35s ease}
+.ce .rz-res.st-under{background:color-mix(in srgb,var(--rz-uam) 11%,transparent);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--rz-uam) 30%,transparent)}
+.ce .rz-res.st-ok{background:color-mix(in srgb,#0f2145 11%,transparent);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,#0f2145 30%,transparent)}
+:root[data-theme=dark] .ce .rz-res.st-ok{background:color-mix(in srgb,#8fa3cf 14%,transparent)}
+.ce .rz-nm{display:flex;align-items:baseline;gap:10px}
+.ce .rz-nm b{font-family:Archivo,"Arial Black",Impact,sans-serif;font-style:italic;font-weight:900;font-stretch:125%;font-size:1.25rem;color:var(--rc)}
+.ce .rz-nm small{font:600 11.5px var(--font);color:var(--tileink);opacity:.75}
+.ce .rz-pct{font-family:"Instrument Serif","Cormorant Garamond",Georgia,serif;font-style:italic;font-size:2.4rem;line-height:1;color:var(--rc);text-align:right}
+.ce .rz-row.all .rz-pct{font-size:3rem}
+.ce .rz-track{height:16px;border-radius:8px;background:color-mix(in srgb,var(--rc) 14%,transparent);overflow:hidden;display:flex}
+.ce .rz-track i{display:block;height:100%;transition:width .35s ease}
+.ce .rz-cap{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:6px;font:600 12px var(--font);color:var(--tileink)}
+.ce .rz-cap b{font-weight:800}
+.ce .rz-in{font:700 13px var(--font);height:30px;width:72px;border:1.5px solid color-mix(in srgb,var(--tileink) 28%,transparent);border-radius:8px;background:color-mix(in srgb,var(--tilebg) 60%,#fff);color:var(--tileink);padding:0 8px;text-align:right}
+:root[data-theme=dark] .ce .rz-in{background:transparent}
+.ce .rz-in:focus,.ce .rz-sel:focus{outline:2px solid var(--pink);outline-offset:1px}
+.ce .rz-wk{display:grid;grid-template-columns:64px minmax(0,1.15fr) minmax(0,1fr) minmax(0,1fr);gap:12px;align-items:stretch;padding:12px 0}
+.ce .rz-wk+.rz-wk{border-top:1px solid color-mix(in srgb,var(--tileink) 12%,transparent)}
+.ce .rz-head{padding:0 0 4px}.ce .rz-head>div{font:800 10.5px var(--font);letter-spacing:.06em;color:var(--tileink);opacity:.75;display:flex;align-items:center;gap:6px}
+.ce .rz-head .dot{width:9px;height:9px;border-radius:50%;background:var(--rc)}
+.ce .rz-sem{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-size:2rem;color:var(--pink);line-height:1;padding-top:6px}
+.ce .rz-mods{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ce .rz-mod{border-radius:10px;padding:10px 12px;background:color-mix(in srgb,var(--tileink) 7%,transparent);display:flex;flex-direction:column;gap:6px}
+.ce .rz-mod .t{font:800 11px var(--font);color:var(--tileink);opacity:.8}
+.ce .rz-mod .n{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-size:1.9rem;line-height:1;color:var(--tileink)}
+.ce .rz-mod .n small{font:600 11px var(--font);font-style:normal;opacity:.7;margin-left:4px}
+.ce .rz-sel{appearance:none;-webkit-appearance:none;font:800 11.5px var(--font);height:30px;border:0;border-radius:96px;padding:0 28px 0 12px;color:#fff;background:var(--sc,var(--c5)) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='white' stroke-width='1.6' fill='none'/%3E%3C/svg%3E") no-repeat right 11px center;cursor:pointer;width:100%}
+.ce .rz-to{font:800 11.5px var(--font);border-radius:96px;padding:6px 12px;color:#fff;background:var(--sc,var(--c5));display:inline-block;text-align:center}
+.ce .rz-split{display:flex;align-items:center;gap:6px;font:700 11px var(--font);color:var(--tileink)}
+.ce .rz-split .rz-in{width:52px;height:26px}
+.ce .rz-res{border-radius:10px;padding:10px 12px;background:color-mix(in srgb,var(--rc) 11%,transparent);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--rc) 30%,transparent);display:flex;flex-direction:column;gap:7px;position:relative}
+.ce .rz-res .rz-hd{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.ce .rz-res .who{font:900 11px var(--font);letter-spacing:.04em;color:var(--rc)}
+.ce .rz-v{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;color:var(--tileink)}
+.ce .rz-v .n{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-size:2.2rem;line-height:1;color:var(--rc)}
+.ce .rz-v span{font:600 12px var(--font);opacity:.8}
+.ce .rz-v .rz-in{width:58px;height:28px}
+.ce .rz-meter{height:10px;border-radius:5px;background:color-mix(in srgb,var(--tileink) 12%,transparent);overflow:hidden}
+.ce .rz-meter i{display:block;height:100%;border-radius:5px;transition:width .35s ease}
+.ce .rz-st{white-space:nowrap;display:inline-flex;align-items:center;gap:5px;font:800 11px var(--font);border-radius:96px;padding:3px 9px 3px 6px;color:#fff;align-self:flex-start}
+.ce .rz-st svg{width:14px;height:14px}
+.ce .rz-sw{display:inline-flex;align-items:center;gap:6px;font:700 11px var(--font);color:var(--tileink);cursor:pointer;user-select:none}
+.ce .rz-sw input{appearance:none;-webkit-appearance:none;width:30px;height:17px;border-radius:9px;background:color-mix(in srgb,var(--tileink) 25%,transparent);position:relative;cursor:pointer;transition:background .2s;margin:0}
+.ce .rz-sw input::after{content:"";position:absolute;top:2px;left:2px;width:13px;height:13px;border-radius:50%;background:#fff;transition:left .2s}
+.ce .rz-sw input:checked{background:var(--rc)}.ce .rz-sw input:checked::after{left:15px}
+.ce .rz-sw input:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+.ce .rz-res.closed{background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--tileink) 5%,transparent) 0 8px,transparent 8px 16px);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--tileink) 14%,transparent);justify-content:center}
+.ce .rz-res.closed .msg{display:flex;align-items:center;gap:8px;font:700 12.5px var(--font);color:var(--tileink);opacity:.75}
+.ce .rz-res.closed .msg svg{width:18px;height:18px;flex:none}
+.ce .rz-leg{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font:600 11.5px var(--font);color:var(--tileink);opacity:.85;align-items:center}
+.ce .rz-leg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.ce .rz-msg{font:700 11px var(--font);color:var(--tileink);opacity:.8}
+@media(max-width:900px){.ce .rz-wk{grid-template-columns:48px minmax(0,1fr) minmax(0,1fr)}.ce .rz-wk .rz-mods{grid-column:2/-1}.ce .rz-wk .rz-sem{grid-row:span 2}.ce .rz-head{display:none}.ce .rz-row{grid-template-columns:1fr auto}.ce .rz-row .rz-bw{grid-column:1/-1;grid-row:2}}
 .ce .upd-ts{margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:8px;font:800 12px var(--font);letter-spacing:.08em;text-transform:uppercase;color:var(--color-fg-muted);white-space:nowrap;padding-right:12px}
 .ce .upd-dot{width:9px;height:9px;border-radius:50%;background:#3fbf87;flex:none}
 .ce .upd-ts.old .upd-dot{background:#e0a33a}
@@ -741,7 +809,7 @@ body{margin:0;background:var(--color-bg);color:var(--color-fg);font:14px/1.45 va
     <button class="tab" type="button" data-view="home" aria-pressed="true">Portada</button><button class="tab" type="button" data-view="madrid" aria-pressed="false">Madrid</button><button class="tab" type="button" data-view="nac" aria-pressed="false">Nacionales</button><button class="tab" type="button" data-view="ins" aria-pressed="false">Institucionales</button><span class="navsep" aria-hidden="true"></span><button class="tab" type="button" data-view="aten" aria-pressed="false">Atención al público</button><button class="tab" type="button" data-view="stor" aria-pressed="false">Storage</button>
     <button class="upd-op" type="button" onclick="location.href='index.html'" title="Volver al software operativo">← Operativa</button><span class="upd-ts" id="upd-ts"></span><button class="upd-btn" id="upd-btn" type="button" title="Leer ahora los datos de Zoho CRM">Actualizar</button><button class="theme" id="theme" type="button">Claro / Oscuro</button>
   </div>
-  <div class="sub"><div class="wrap"><a href="#resumen" data-s="resumen">Resumen</a><a href="#ritmo" data-s="ritmo">Ritmo</a><a href="#perfil" data-s="perfil">Perfil</a><a href="#dinero" data-s="dinero">Dinero</a><a href="#extras" data-s="extras">Extras</a><a href="#captacion" data-s="captacion">Captación</a><a href="#kits" data-s="kits">Equipaciones</a></div></div></nav>
+  <div class="sub"><div class="wrap"><a href="#resumen" data-s="resumen">Resumen</a><a href="#ritmo" data-s="ritmo">Ritmo</a><a href="#perfil" data-s="perfil">Perfil</a><a href="#dinero" data-s="dinero">Dinero</a><a href="#extras" data-s="extras">Extras</a><a href="#captacion" data-s="captacion">Captación</a><a href="#kits" data-s="kits">Equipaciones</a><a class="only-mad" href="#resid" data-s="resid">Residencias</a></div></div></nav>
   <div class="upd-msg" id="upd-msg" role="status" hidden></div>
   <div class="top"><div class="wrap">
     <div class="brand"><i></i><span id="eyebrow">Fundación Real Madrid</span><span class="live">Datos en directo</span></div>
@@ -1097,6 +1165,14 @@ body{margin:0;background:var(--color-bg);color:var(--color-fg);font:14px/1.45 va
     <div class="card"><div class="head"><div><h3>Pedido por semana y talla</h3><p class="n" style="margin-top:4px">Cuántas equipaciones hay que tener cada semana, talla a talla. Pasa el ratón para ver la fila y la columna.</p></div>
       <div class="pillrow"><div class="seg" id="seg-kit" role="group" aria-label="Tipo de equipación"><button type="button" data-k="all" aria-pressed="true">Todas</button><button type="button" data-k="blanca" aria-pressed="false">Minikits</button><button type="button" data-k="light_blue" aria-pressed="false">Light blue</button><button type="button" data-k="portero" aria-pressed="false">Portero</button></div><button type="button" class="btn sm" id="mx-copy">Copiar tabla</button></div></div>
       <div id="k-mx" data-source="kits_matrix"></div></div>
+  </section>
+  <section class="blk only-mad" id="resid">
+    <div class="bh"><span class="num">07</span><h2>Residencias</h2><p>Ocupación de la UAM y la UEM en las semanas con programa interno (de la 2 a la 8). Cuentan los jugadores con pago de ONE Interno y MAX Interno.</p></div>
+    <div class="card rz-sum" id="rz-tot"></div>
+    <div class="card"><div class="head"><div><h3>Semana a semana</h3><p class="n">Asigna cada modalidad a una residencia y compara con el bloqueo de esa semana</p></div><div class="rz-msg" id="rz-msg"></div></div>
+      <div id="rz-t"></div>
+      <div class="rz-leg"><span><i style="background:var(--rz-bad)"></i>Por debajo del bloqueo</span><span><i style="background:var(--rz-warn)"></i>Cerca (desde el 80 %)</span><span><i style="background:var(--rz-ok)"></i>Bloqueo cubierto</span><span id="rz-who"></span></div>
+    </div>
   </section>
 
   </div>
@@ -1498,6 +1574,72 @@ function renderAtt(){
   $('#at-met').replaceChildren(band,...tiles);
 }
 try{renderAtt();}catch(e){console.error(e);}
+// ===== Residencias (UAM y UEM, semanas 2 a 8) =====
+const RZ={W:[2,3,4,5,6,7,8],R:['UAM','UEM'],cfg:null,can:false,admin:false,users:[],saveT:0,API:'/server/dashboard_api/api/residencias'};
+const RZC={UAM:'var(--rz-uam)',UEM:'var(--rz-uem)'};
+const RZI={check:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg>',
+ warn:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 4v5"/><circle cx="8" cy="12" r=".6" fill="currentColor"/></svg>',
+ down:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v9M4.5 8.5L8 12l3.5-3.5"/></svg>',
+ lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>'};
+function rzDefault(){const w={};RZ.W.forEach(n=>{w[n]={UAM:{on:true,blk:0},UEM:{on:true,blk:0},MAX:{to:'UAM',n:0},ONE:{to:'UEM',n:0}};});return {weeks:w,totals:{UAM:0,UEM:0}};}
+function rzNorm(c){const d=rzDefault();if(!c||typeof c!=='object')return d;const t=c.totals||{};RZ.R.forEach(r=>d.totals[r]=Math.max(0,Math.round(+t[r]||0)));
+  d.updated_at=c.updated_at||'';d.updated_by=c.updated_by||'';
+  RZ.W.forEach(n=>{const x=(c.weeks||{})[n]||{};RZ.R.forEach(r=>{if(x[r]){d.weeks[n][r].on=x[r].on!==false;d.weeks[n][r].blk=Math.max(0,Math.round(+x[r].blk||0));}});
+    ['MAX','ONE'].forEach(m=>{if(x[m]&&['UAM','UEM','split','-'].includes(x[m].to)){d.weeks[n][m].to=x[m].to;d.weeks[n][m].n=Math.max(0,Math.round(+x[m].n||0));}});});return d;}
+function rzCnt(w,m){const r=(DATA.resid||[]).find(x=>+x.week===+w);return r?(m==='MAX'?+r.max:+r.one)||0:0;}
+function rzPart(w,m,r){const a=RZ.cfg.weeks[w][m],c=rzCnt(w,m);if(a.to==='split'){const n=Math.min(Math.max(a.n,0),c);return r==='UAM'?n:c-n;}return a.to===r?c:0;}
+function rzOcc(w,r){return rzPart(w,'MAX',r)+rzPart(w,'ONE',r);}
+function rzState(n,b){if(!b)return {c:'var(--c5)',t:'Sin bloqueo',i:''};const p=n/b;if(p>=1)return {c:'var(--rz-ok)',t:n>b?'Cubierto · +'+(n-b):'Cubierto',i:RZI.check};if(p>=.8)return {c:'var(--rz-warn)',t:'Faltan '+(b-n),i:RZI.warn};return {c:'var(--rz-bad)',t:'Faltan '+(b-n),i:RZI.down};}
+function rzSave(){if(RZ.demo){rzMsg('Demo: los cambios no se guardan');return;}if(!RZ.can)return;clearTimeout(RZ.saveT);rzMsg('Guardando…');
+  RZ.saveT=setTimeout(async()=>{try{const r=await fetch(RZ.API,{method:'PUT',credentials:'same-origin',headers:{'X-CE':'1','Content-Type':'application/json'},body:JSON.stringify({cfg:{weeks:RZ.cfg.weeks,totals:RZ.cfg.totals}})});
+    const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||('error '+r.status));RZ.cfg=rzNorm(j.cfg);rzMsg('Guardado');rzWho();}catch(e){rzMsg('No se ha guardado: '+e.message);}},600);}
+function rzMsg(t){const m=$('#rz-msg');if(m)m.textContent=t||'';}
+function rzWho(){const w=$('#rz-who');if(!w)return;
+  if(RZ.demo){w.innerHTML='Demo · <button type="button" class="rz-demo" id="rz-demo">'+(RZ.can?'Ver como persona sin permiso':'Ver como Pau o Irene')+'</button>';return;}
+  const c=RZ.cfg;w.textContent=(RZ.can?'Puedes editar':'Solo lectura (el permiso se da en Administración › Usuarios › Dashboard › Residencias)')+(c.updated_at?' · último cambio el '+new Date(c.updated_at).toLocaleString('es-ES',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})+(c.updated_by?' por '+c.updated_by:''):'');}
+function rzRender(){const T=$('#rz-t'),TT=$('#rz-tot');if(!T||!TT||!RZ.cfg)return;const C=RZ.cfg,ed=RZ.can,pu=v=>v.toLocaleString('es-ES',{maximumFractionDigits:1});
+  const occ={},blk={};RZ.R.forEach(r=>{occ[r]=RZ.W.reduce((a,w)=>a+(C.weeks[w][r].on?rzOcc(w,r):0),0);blk[r]=RZ.W.reduce((a,w)=>a+(C.weeks[w][r].on?C.weeks[w][r].blk:0),0);});
+  let tot=0;RZ.W.forEach(w=>tot+=rzCnt(w,'MAX')+rzCnt(w,'ONE'));const sin=tot-occ.UAM-occ.UEM;
+  const row=(r)=>{const t=C.totals[r],p=t?occ[r]/t*100:0;return '<div class="rz-row" style="--rc:'+RZC[r]+'"><div class="rz-nm"><b>'+r+'</b><small>'+f(blk[r])+' en bloqueos semanales</small></div>'
+    +'<div class="rz-bw"><div class="rz-track"><i style="width:'+Math.min(p,100)+'%;background:var(--rc)"></i></div><div class="rz-cap"><span><b>'+f(occ[r])+'</b> plazas ocupadas</span><span>Contratadas: '+(ed?'<input class="rz-in" type="number" min="0" step="1" data-tot="'+r+'" value="'+(t||'')+'" placeholder="0" aria-label="Plazas contratadas '+r+'">':'<b>'+f(t)+'</b>')+'</span></div></div>'
+    +'<div class="rz-pct">'+(t?pu(p)+' %':'—')+'</div></div>';};
+  const TA=C.totals.UAM+C.totals.UEM,OA=occ.UAM+occ.UEM,PA=TA?OA/TA*100:0;
+  TT.innerHTML='<div class="rz-all"><div class="k">Total residencias</div><div class="p">'+(TA?pu(PA)+'%':'—')+'</div>'
+    +'<div class="c">'+f(OA)+' de '+f(TA)+' plazas contratadas en la UAM y la UEM'+(sin>0?' · <span class="bad">'+f(sin)+' internos sin residencia</span>':'')+'</div>'
+    +'<div class="tr"><i style="width:'+(TA?Math.min(PA,100):0)+'%"></i></div></div>'+row('UAM')+row('UEM');
+  let h='<div class="rz-wk rz-head"><div></div><div>Internos con pago</div><div style="--rc:var(--rz-uam)"><span class="dot"></span>UAM</div><div style="--rc:var(--rz-uem)"><span class="dot"></span>UEM</div></div>';
+  RZ.W.forEach(w=>{const W=C.weeks[w];
+    const mod=m=>{const a=W[m],c=rzCnt(w,m),sc=a.to==='UAM'?RZC.UAM:a.to==='UEM'?RZC.UEM:a.to==='split'?'var(--gold)':'var(--c5)';
+      let x='<div class="rz-mod"><div class="t">'+m+' Interno</div><div class="n">'+c+'<small>'+(c===1?'jugador':'jugadores')+'</small></div>';
+      if(ed)x+='<select class="rz-sel" style="--sc:'+sc+'" data-w="'+w+'" data-m="'+m+'" aria-label="'+m+' Interno, semana '+w+'">'+[['UAM','A la UAM'],['UEM','A la UEM'],['split','Dividir'],['-','Sin asignar']].map(o=>'<option value="'+o[0]+'"'+(a.to===o[0]?' selected':'')+'>'+o[1]+'</option>').join('')+'</select>';
+      else x+='<span class="rz-to" style="--sc:'+sc+'">'+(a.to==='split'?'Dividido':a.to==='-'?'Sin asignar':'A la '+a.to)+'</span>';
+      if(a.to==='split')x+='<div class="rz-split">UAM '+(ed?'<input class="rz-in" type="number" min="0" max="'+c+'" step="1" data-w="'+w+'" data-s="'+m+'" value="'+rzPart(w,m,'UAM')+'" aria-label="'+m+' a la UAM, semana '+w+'">':'<b>'+rzPart(w,m,'UAM')+'</b>')+' · UEM <b>'+rzPart(w,m,'UEM')+'</b></div>';
+      return x+'</div>';};
+    const res=r=>{const s=W[r],n=rzOcc(w,r);
+      const sw=ed?'<label class="rz-sw"><input type="checkbox" data-w="'+w+'" data-r="'+r+'" data-k="on"'+(s.on?' checked':'')+' aria-label="'+r+' abierta la semana '+w+'">'+(s.on?'Abierta':'Cerrada')+'</label>':'';
+      if(!s.on)return '<div class="rz-res closed" style="--rc:'+RZC[r]+'"><div class="rz-hd"><span class="who">'+r+'</span>'+sw+'</div><div class="msg">'+RZI.lock+'<span>Cerrada esta semana'+(n?' · '+n+' asignados sin plaza':'')+'</span></div></div>';
+      const S=rzState(n,s.blk),p=s.blk?Math.min(n/s.blk*100,100):0;
+      return '<div class="rz-res '+(s.blk&&n>=s.blk?'st-ok':'st-under')+'" style="--rc:'+RZC[r]+'"><div class="rz-hd"><span class="who">'+r+'</span>'+sw+'</div>'
+        +'<div class="rz-v"><span class="n">'+n+'</span><span>de</span>'+(ed?'<input class="rz-in" type="number" min="0" step="1" data-w="'+w+'" data-r="'+r+'" data-k="blk" value="'+(s.blk||'')+'" placeholder="0" aria-label="Bloqueo '+r+', semana '+w+'">':'<b>'+s.blk+'</b>')+'<span>bloqueadas</span></div>'
+        +'<div class="rz-meter"><i style="width:'+p+'%;background:'+S.c+'"></i></div><span class="rz-st" style="background:'+S.c+'">'+S.i+S.t+(s.blk?' · '+Math.round(n/s.blk*100)+' %':'')+'</span></div>';};
+    h+='<div class="rz-wk"><div class="rz-sem">S'+w+'</div><div class="rz-mods">'+mod('MAX')+mod('ONE')+'</div>'+res('UAM')+res('UEM')+'</div>';});
+  T.innerHTML=h;
+  rzWho();}
+async function rzInit(){const sec=$('#resid');if(!sec)return;RZ.demo=!!window.CE_RESID_DEMO;
+  if(RZ.demo){RZ.cfg=rzNorm(window.CE_RESID_DEMO.cfg);RZ.can=true;}
+  else{try{const r=await fetch(RZ.API,{credentials:'same-origin',cache:'no-store'});const j=await r.json();if(!r.ok)throw new Error(j.error||r.status);RZ.cfg=rzNorm(j.cfg);RZ.can=!!j.canEdit;}
+    catch(e){RZ.cfg=rzDefault();RZ.can=false;rzMsg('No se ha podido leer la configuración de las residencias');}}
+  rzRender();
+  sec.addEventListener('change',e=>{const t=e.target;if(!RZ.can)return;const C=RZ.cfg,w=t.dataset.w;
+    if(t.dataset.tot)C.totals[t.dataset.tot]=Math.max(0,Math.round(+t.value||0));
+    else if(w&&t.dataset.m){const a=C.weeks[w][t.dataset.m];a.to=t.value;if(t.value==='split')a.n=rzCnt(w,t.dataset.m);}
+    else if(w&&t.dataset.s)C.weeks[w][t.dataset.s].n=Math.max(0,Math.round(+t.value||0));
+    else if(w&&t.dataset.k==='blk')C.weeks[w][t.dataset.r].blk=Math.max(0,Math.round(+t.value||0));
+    else if(w&&t.dataset.k==='on')C.weeks[w][t.dataset.r].on=t.checked;else return;
+    rzRender();rzSave();});
+  sec.addEventListener('click',e=>{if(e.target.id==='rz-demo'){RZ.can=!RZ.can;rzRender();}});}
+try{rzInit();}catch(e){console.error(e);}
+
 
 dash.onData(()=>{
   const ids=['kpis','timeline','dims','stages','extras_cat','extras','kits_week','kits_size','kits_matrix'];

@@ -192,6 +192,7 @@ Catalyst publica primero en el entorno de Development. Desde la consola desplega
 - Función propia **`dashboard_api`**, separada de `campus_api` para que una versión nueva del software no la borre. Usa la misma cookie de sesión y las tablas CESessions/CEUsers. **Variables de entorno:** las mismas de Zoho que `campus_api` (`ZOHO_CLIENT_ID`, `ZOHO_CLIENT_SECRET`, `ZOHO_REFRESH_TOKEN`, `ZOHO_ACCOUNTS_URL`, `ZOHO_API_URL`) y, opcionales, `CE_LOGIN_URL`, `CE_DASH_TTL_MIN`.
 - `GET /server/dashboard_api/dashboard.js`: cifras agregadas de las inscripciones **con pago** (Zoho CRM, solo lectura). Se guardan en el Data Store (`CEDocs` col `dash`; marca `dash_ts` en `CEMeta`) y se reutilizan 15 minutos.
 - `POST /server/dashboard_api/api/dashboard/refresh`: botón «Actualizar» (máximo una lectura de Zoho por minuto; queda en el registro de actividad).
+- `GET|PUT /server/dashboard_api/api/residencias`: bloqueos y asignaciones de las residencias UAM y UEM (Madrid). Leer: cualquier usuario con sesión. Guardar: administradores y usuarios con el permiso **Dashboard › Residencias: Editar** (`dashboard.residencias` = 2, en el catálogo de permisos de `campus_api`). Se guarda en `CEDocs` col `resid`, id `cfg`.
 - Detalle en `dashboard/README.md`.
 
 ## Seguridad: resumen
