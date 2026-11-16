@@ -67,6 +67,16 @@ module.exports = function makeStore(req) {
     },
   };
   /* documentos guardados (horarios, equipos…): una columna de texto admite 10.000 caracteres, se trocean */
+  /* un documento puede tener a la vez trozos de la escritura anterior y de la nueva (un instante): se usa la versión completa más reciente */
+  const join = parts => {
+    const by = {}; parts.forEach(r => { (by[r.updated_at || ""] = by[r.updated_at || ""] || []).push(r); });
+    for (const k of Object.keys(by).sort().reverse()) {
+      const ps = by[k].sort((a, b) => Number(a.part) - Number(b.part)); const n = Number(ps[0].parts || ps.length);
+      if (ps.length < n) continue;
+      try { return { ok: true, v: JSON.parse(ps.slice(0, n).map(p => p.data || "").join("")) }; } catch (e) {}
+    }
+    return { ok: false };
+  };
   const CHUNK = 9000;
   const docs = {
     list: async col => {
@@ -74,12 +84,7 @@ module.exports = function makeStore(req) {
       const by = {};
       rows.forEach(r => { (by[r.doc_id] = by[r.doc_id] || []).push(r); });
       const out = {};
-      Object.entries(by).forEach(([id, parts]) => {
-        parts.sort((a, b) => Number(a.part) - Number(b.part));
-        const n = Number(parts[0].parts || parts.length);
-        if (parts.length < n) return; // escritura a medias: se ignora hasta que esté completa
-        try { out[id] = JSON.parse(parts.slice(0, n).map(p => p.data || "").join("")); } catch (e) {}
-      });
+      Object.entries(by).forEach(([id, parts]) => { const j = join(parts); if (j.ok) out[id] = j.v; });
       return out;
     },
     put: async (col, id, data, by) => {
@@ -87,8 +92,13 @@ module.exports = function makeStore(req) {
       const parts = []; for (let i = 0; i < json.length || i === 0; i += CHUNK) parts.push(json.slice(i, i + CHUNK));
       const old = await all("CEDocs", "col = " + q(col) + " AND doc_id = " + q(id));
       const now = new Date().toISOString();
-      await table("CEDocs").insertRows(parts.map((d, i) => ({ col, doc_id: id, part: i, parts: parts.length, data: d, updated_at: now, updated_by: by || null })));
+      const rows = parts.map((d, i) => ({ col, doc_id: id, part: i, parts: parts.length, data: d, updated_at: now, updated_by: by || null }));
+      for (let i = 0; i < rows.length; i += 100) await table("CEDocs").insertRows(rows.slice(i, i + 100)); // en tandas: documentos grandes (copia de seguridad)
       for (const r of old) await table("CEDocs").deleteRow(num(r.ROWID));
+    },
+    get: async (col, id) => {
+      const parts = await all("CEDocs", "col = " + q(col) + " AND doc_id = " + q(id));
+      if (!parts.length) return null; const j = join(parts); return j.ok ? j.v : null;
     },
     remove: async (col, id) => {
       const old = await all("CEDocs", "col = " + q(col) + " AND doc_id = " + q(id));

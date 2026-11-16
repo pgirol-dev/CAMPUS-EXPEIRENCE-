@@ -220,3 +220,11 @@ Todo el recorrido se ha probado en local con una simulación del SDK de Catalyst
 - que la dependencia `zcatalyst-sdk-node` se instale en el despliegue.
 
 Zoho indica que `zcatalyst-sdk-node` está en proceso de sustitución por el nuevo JavaScript SDK (`@zcatalyst/...`). Funciona hoy, y si hay que cambiarlo solo afecta a `store.js`.
+
+## Protección de los datos guardados (16/11)
+- Archivo `functions/campus_api/protect.js` (el mismo en `selfhost/protect.js`). Colecciones protegidas: `hor`, `hweek`, `hsim`, `hsimd`, `teams`, `reqs`, `hbus`, `happr`.
+- **Historial:** antes de sobrescribir un documento protegido se guarda la versión anterior en `CEDocs` col `hist`, id `<col>|<id>` (las 20 últimas). `GET /api/hist?col=&id=` (permiso de lectura de esa colección).
+- **Papelera:** al borrar, el documento va a `CEDocs` col `trash`, id `<col>|<id>|<ms>`. `GET /api/trash`, `POST /api/trash/restore {key}` (permiso de edición de esa colección), `DELETE /api/trash[?key=]` (solo administrador).
+- **Copia de seguridad diaria:** desde las 3:00 (Madrid), la primera consulta a `/api/changes` la hace. Dos ranuras `CEDocs` col `backup` id `A`/`B`; el puntero está en `CEMeta` clave `backup`. La nueva sustituye a la anterior solo si se ha completado bien. Administrador: `GET /api/admin/backup`, `GET /api/admin/backup/data`, `POST /api/admin/backup/run`, `POST /api/admin/backup/restore {cols}`.
+- Colección nueva `hsimd`: horarios del simulador (un documento por día y modalidad), permiso `horarios.simulador`.
+- `store.js`: `docs.get(col,id)`; las escrituras grandes se insertan en tandas de 100 filas y, si hay trozos de dos escrituras a la vez, se usa la versión completa más reciente.

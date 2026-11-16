@@ -25,6 +25,7 @@ const CFG = {
   },
 };
 const makeStore = require(env("CE_STORE_MODULE", "./store.js"));
+const makeProtect = require("./protect.js");
 
 /* ---------- catálogo de permisos ---------- */
 const CATALOG = [
@@ -57,6 +58,7 @@ const COLS = {
   ingmv: { read: u => lvl(u, "contabilidad.ingresos") >= 1, write: u => lvl(u, "contabilidad.ingresos") >= 2 },
   dev:   { read: u => lvl(u, "contabilidad.devoluciones") >= 1, write: u => lvl(u, "contabilidad.devoluciones") >= 2 },
   hsim:  { read: u => lvl(u, "horarios.simulador") >= 1, write: u => lvl(u, "horarios.simulador") >= 2 },
+  hsimd: { read: u => lvl(u, "horarios.simulador") >= 1, write: u => lvl(u, "horarios.simulador") >= 2 },
 };
 const canZoho = u => ["registros", "equipos", "horarios", "contabilidad", "incidencias"].some(a => anyOf(u, a));
 const DOC_ID = /^[A-Za-z0-9_.:|\-]{1,200}$/;
@@ -274,6 +276,8 @@ async function handle(req, res) {
   const failsOf = async k => { const r = await st.meta.get("fail:" + k); let a = []; try { a = JSON.parse(r ? r.v : "[]"); } catch (e) {} return a.filter(t => Date.now() - t < 15 * 60000); };
   const addFail = async k => { const a = await failsOf(k); a.push(Date.now()); await st.meta.set("fail:" + k, JSON.stringify(a.slice(-25))); };
   /* cambios por colección, para avisar a quien tiene la app abierta */
+  const P = makeProtect({ get: (c, i) => st.docs.get(c, i), put: (c, i, d, b) => st.docs.put(c, i, d, b), remove: (c, i) => st.docs.remove(c, i), list: c => st.docs.list(c),
+    metaGet: async k => { const r = await st.meta.get(k); return r ? r.v : null; }, metaSet: (k, v) => st.meta.set(k, v) }, () => Object.keys(COLS));
   const touch = async col => { const r = await st.meta.get("changes"); let m = {}; try { m = JSON.parse(r ? r.v : "{}"); } catch (e) {} m[col] = Date.now(); await st.meta.set("changes", JSON.stringify(m)); };
 
   /* protección CSRF: cabecera propia y, si se configura, origen permitido */
@@ -353,6 +357,13 @@ async function handle(req, res) {
   if (p === "/api/changes" && M === "GET") {
     const since = +url.searchParams.get("since") || 0; const r = await st.meta.get("changes"); let ch = {}; try { ch = JSON.parse(r ? r.v : "{}"); } catch (e) {}
     const cols = {}; Object.entries(ch).forEach(([c, t]) => { if (t > since && COLS[c] && COLS[c].read(U)) cols[c] = t; });
+    /* copia de seguridad diaria (una vez al día, desde las 3:00): la memoria evita leer la base de datos en cada consulta */
+    { const md = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Madrid", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", hourCycle: "h23" }).formatToParts(new Date()).reduce((o, x) => (o[x.type] = x.value, o), {});
+      const day = md.year + "-" + md.month + "-" + md.day;
+      if (+md.hour >= 3 && MEM.bkDay !== day && !(MEM.bkTry && Date.now() - MEM.bkTry < 5 * 60000)) {
+        MEM.bkTry = Date.now();
+        try { const r = await P.backupIfDue(false); if (r && r.day === day) MEM.bkDay = day; } catch (e) { console.log("Copia de seguridad: " + (e && e.message)); }
+      } }
     return send(res, 200, { now: Date.now(), cols, me: U.ver || 0 });
   }
   if ((m = /^\/api\/db\/([a-z]+)$/.exec(p)) && M === "GET") {
@@ -364,8 +375,33 @@ async function handle(req, res) {
     if (!DOC_ID.test(id)) return fail(res, 400, "Identificador no válido");
     if (!COLS[col].write(U, id)) return fail(res, 403, "Solo lectura: no tienes permiso para modificar esto.");
     if (M === "DELETE" && col === "inc" && !U.is_admin) return fail(res, 403, "Solo un administrador puede borrar incidencias.");
-    if (M === "PUT") { const b = await readBody(req); await st.docs.put(col, id, b.data, U.id); } else await st.docs.remove(col, id);
+    if (M === "PUT") { const b = await readBody(req); await P.beforePut(col, id, b.data, U); await st.docs.put(col, id, b.data, U.id); }
+    else { await P.beforeDelete(col, id, U); await st.docs.remove(col, id); }
     await touch(col); return send(res, 200, { ok: true });
+  }
+  /* --- historial y papelera de los datos protegidos (horarios, equipos…) --- */
+  if (p === "/api/hist" && M === "GET") {
+    const col = String(url.searchParams.get("col") || ""), id = String(url.searchParams.get("id") || "");
+    if (!COLS[col] || !DOC_ID.test(id)) return fail(res, 400, "Documento no válido"); if (!COLS[col].read(U)) return fail(res, 403, "Sin acceso");
+    return send(res, 200, { versions: await P.history(col, id) });
+  }
+  if (p === "/api/trash" && M === "GET") {
+    const col = String(url.searchParams.get("col") || "");
+    const items = (await P.trashList()).filter(e => COLS[e.col] && COLS[e.col].read(U) && (!col || e.col === col));
+    return send(res, 200, { items, admin: !!U.is_admin });
+  }
+  if (p === "/api/trash/restore" && M === "POST") {
+    const b = await readBody(req, 2000); const key = String(b.key || ""); if (!DOC_ID.test(key)) return fail(res, 400, "Elemento no válido");
+    const e0 = (await P.trashList()).find(x => x.key === key); if (!e0) return fail(res, 404, "Ya no está en la papelera");
+    if (!COLS[e0.col] || !COLS[e0.col].write(U, e0.id)) return fail(res, 403, "No tienes permiso para recuperarlo.");
+    await P.trashRestore(key, U); await touch(e0.col); await audit(U, "papelera_recuperar", e0.col + "/" + e0.id);
+    return send(res, 200, { ok: true });
+  }
+  if (p === "/api/trash" && M === "DELETE") {
+    if (!U.is_admin) return fail(res, 403, "Solo el administrador puede vaciar la papelera.");
+    const key = url.searchParams.get("key"); if (key && !DOC_ID.test(key)) return fail(res, 400, "Elemento no válido");
+    await P.trashEmpty(key || null); await audit(U, "papelera_vaciar", key || "todo");
+    return send(res, 200, { ok: true });
   }
   if (p === "/api/profiles" && M === "GET") {
     const ids = String(url.searchParams.get("ids") || "").split(",").map(s => s.replace(/^u/, "")).filter(s => /^\d+$/.test(s)).slice(0, 30);
@@ -409,6 +445,14 @@ async function handle(req, res) {
     if (p === "/api/admin/zoho-users" && M === "GET") {
       try { const list = await zohoActiveUsers(url.searchParams.get("refresh") === "1"); const taken = new Set((await st.users.all()).map(u => u.zoho_id)); return send(res, 200, { users: list.map(z => Object.assign({ registered: taken.has(z.id) }, z)) }); }
       catch (e) { return fail(res, 502, "No se ha podido leer la lista de usuarios de Zoho CRM: " + e.message); }
+    }
+    if (p === "/api/admin/backup" && M === "GET") return send(res, 200, await P.backupInfo());
+    if (p === "/api/admin/backup/data" && M === "GET") { const d = await P.backupData(); if (!d) return fail(res, 404, "Aún no hay copia de seguridad"); return send(res, 200, d); }
+    if (p === "/api/admin/backup/run" && M === "POST") { const r = await P.backupIfDue(true); await audit(U, "copia_seguridad", r.err ? "error: " + r.err : "ok"); return send(res, 200, r); }
+    if (p === "/api/admin/backup/restore" && M === "POST") {
+      const b = await readBody(req, 2000); const which = Array.isArray(b.cols) ? b.cols.filter(c => COLS[c]) : [];
+      const r = await P.backupRestore(which, U); for (const c of r.cols) await touch(c); await audit(U, "copia_restaurada", r.cols.join(",") + " · " + r.n + " documentos");
+      return send(res, 200, r);
     }
     if (p === "/api/admin/audit" && M === "GET") return send(res, 200, { items: await st.audit.list(+url.searchParams.get("limit") || 200) });
     if (p === "/api/admin/users" && M === "POST") {

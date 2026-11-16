@@ -585,3 +585,16 @@ Se asignan automáticamente en este orden, un equipo por nombre y sin repetir de
 - 13/11 (tarde): El acceso «Dashboard» volvió a desaparecer porque `client/index.html` se publicó sin la línea `<script src="dashboard-menu.js" defer>` (no se generó con `build.js`) y este documento se sobrescribió con una copia anterior. Se restaura, se añade **Torrevieja** al dashboard (abierta, Ubicacion = Torrevieja) y se refuerzan las reglas del apartado 1.
 - 13/11: **Almería** abierta también en el dashboard (Ubicacion = Almeria; productos «… Almería»).
 - 16/11: **Residencias** en el dashboard (vista Madrid): ocupación de la UAM y la UEM con bloqueos semanales, asignación de MAX/ONE Interno y totales contratados. Decisión de Pau: el permiso de edición se da desde Administración › Usuarios del software (Dashboard › Residencias), para Irene Martínez y quien se decida. Se mantiene la línea estética del dashboard.
+- 16/11: **Horarios: datos protegidos y mejoras** (decisiones de Pau).
+  - **Causa de los horarios perdidos:** desde el 13/11 no hubo ningún guardado de horarios reales en el servidor; se trabajaba en el **Simulador**, que solo guardaba equipos y configuración y dejaba los bloques en la pantalla. Lo hecho allí no se pudo recuperar.
+  - **El simulador ahora guarda sus horarios** (colección `hsimd`, un documento por día y modalidad). Cambiar el número de equipos ya no borra la simulación.
+  - **Pasar al horario real:** botón en el simulador. Copia la semana a Horarios: los grupos se emparejan por nombre o, si no coinciden, por orden con los equipos reales. También copia instalaciones y buses. Lo que hubiera en real queda en el historial. Irene trabaja en el simulador y luego pasa la semana a real.
+  - **Franja de modo** siempre visible: «Simulador · Week X» (rosa) u «Horario real» (verde).
+  - **Guardado a prueba de fallos** (Horarios, Simulador y Equipos): «Guardado ✓ hora»; si un guardado falla, aviso rojo fijo con «Reintentar», y el navegador avisa antes de cerrar con cambios sin guardar.
+  - **Historial:** cada guardado conserva la versión anterior (20 últimas por día y modalidad) con quién y cuándo; desde «Historial y papelera» se restaura.
+  - **Papelera:** borrar un día o una semana lo manda a la papelera (cualquiera con edición); se recupera desde ahí. Solo el administrador la vacía. Nada se borra solo.
+  - **Copia de seguridad diaria:** desde las 3:00, una sola copia (la más reciente). La nueva solo sustituye a la anterior cuando se ha completado bien; si falla, se conserva la anterior y se reintenta. En «Sistema › Usuarios y accesos › Copia de seguridad»: hacer copia ahora, descargarla y recuperar Horarios, Simulador, Equipos o todo (lo actual queda en historial/papelera).
+  - Protegidos: hor, hweek, hsim, hsimd, teams, reqs, hbus, happr. Servidor: `protect.js` (Catalyst y servidor propio).
+  - **Buses:** plazas a elegir entre 28, 54, 60 y 72. El reparto automático sigue usando 54/60/72 (los de tarifa); el de 28 no tiene tarifa.
+  - **Check-in y check-out:** en la instalación salen siempre «Fleming VBB» y «Residencia».
+  - **Aceptar avisos:** cualquier aviso de conflicto se puede aceptar (personas con edición de Horarios). Queda en gris con quién y cuándo, deja de contar como error y se puede quitar. Si el conflicto cambia, vuelve a avisar.

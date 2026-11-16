@@ -5,7 +5,7 @@ Herramienta del equipo operativo de Campus Experience (Real Madrid, ISL Agency) 
 ## Estructura del software
 - **Inicio:** se elige la temporada (Campus Experience 2027).
 - **Registros**
-- **Operativa:** Horarios y Equipos.
+- **Operativa:** Horarios (con simulador que guarda y «Pasar al horario real», historial, papelera y aceptar avisos), Equipos e Incidencias.
 - **Administración:** Contabilidad (pagos, devoluciones y cancelaciones).
 - **Atención al público**, **Marketing** y **Recursos Humanos:** próximamente.
 - **Dashboard** de registros Campus Experience 2027 (solo en Catalyst): `client/dashboard.html`, en el menú lateral. Incluye **Residencias** (UAM/UEM) en la vista Madrid; el permiso para editarla se da en Administración › Usuarios (Dashboard › Residencias).

@@ -980,6 +980,23 @@ table.oplist th .fsel.on{background:var(--pink);border-color:var(--pink);color:v
 .incact .ic-note{font-size:12.5px;color:var(--ink-3)}
 .ipfoot{border-top:1px solid var(--line);padding:12px 20px;background:var(--bg)}
 .incdelbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.bk-box{max-width:900px;display:flex;flex-direction:column;gap:12px}
+.bk-act{display:flex;gap:8px;flex-wrap:wrap}
+.bk-rest{padding:14px;border-radius:10px;background:var(--surface-2)} .bk-rest h4{margin:0 0 4px}
+.hmodebar{display:flex;align-items:center;gap:8px 14px;flex-wrap:wrap;padding:10px 16px;border-radius:10px}
+.hmodebar .hmb-t{font-family:var(--f-wide);font-style:italic;font-weight:900;font-stretch:125%;text-transform:uppercase;font-size:.95rem}
+.hmodebar .hmb-s{font-size:12.5px;flex:1 1 260px}
+.hmodebar.sim{background:var(--pink);color:var(--on-hot)} .hmodebar.sim .btn{background:var(--bg);color:var(--ink);border-color:transparent} .hmodebar.sim .btn.primary{background:var(--navy);color:var(--navy-ink)}
+.hmodebar.real{background:var(--surface-2);box-shadow:inset 4px 0 0 var(--green)}
+.savebar2{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:90;display:flex;align-items:center;gap:12px;flex-wrap:wrap;max-width:min(680px,calc(100vw - 32px));padding:12px 16px;border-radius:12px;background:var(--bad);color:var(--on-hot);box-shadow:var(--shadow);font-size:13px}
+.savebar2 b{font-weight:800} .savebar2 .btn{background:var(--bg);color:var(--ink);border-color:transparent}
+.hhist{z-index:60}
+.hh-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.hh-row>span{display:flex;flex-direction:column;flex:1;min-width:0} .hh-row small{color:var(--ink-3);font-size:11.5px}
+.hh-note{font-size:12px;color:var(--ink-3);margin:10px 0}
+.hh-foot{padding-top:12px}
+.hal.accd{opacity:.75;background:var(--surface-2)!important;box-shadow:inset 3px 0 0 var(--ink-3)!important}
+.accby{font-size:11px;color:var(--ink-3);font-weight:700}
 .btn.incdel{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 45%,transparent)}
 .btn.incdel.on{background:var(--bad);color:var(--on-hot);border-color:var(--bad)}
 .incboard,.incpanel,.incscope{--inc-navy:var(--navy)}
@@ -1485,7 +1502,7 @@ html.no-equipos-madrid #eqWeekGrid [data-eqweek]:not([data-eqweek^="c:"]),html.n
 html.no-horarios-simulador [data-hview="sim"]{display:none}
 html.no-contabilidad-pagos [data-acc="pagos"],html.no-contabilidad-devoluciones [data-acc="dev"],html.no-contabilidad-cancelaciones [data-acc="can"]{display:none}
 /* solo lectura: se ocultan los mandos que modifican (el servidor además rechaza cualquier cambio) */
-html.ro-h #hAuto,html.ro-h #hManual,html.ro-h #hDel,html.ro-h [data-appr],html.ro-h #hIssA,html.ro-h #hIssB,html.ro-h [data-cday],html.ro-h [data-busreset],html.ro-h [data-busrest],html.ro-h [data-busdel],html.ro-h [data-busedit],html.ro-h .bed,html.ro-h [data-busmv],
+html.ro-h [data-accept],html.ro-h [data-unaccept],html.ro-h #hIssC,html.ro-h #hAuto,html.ro-h #hManual,html.ro-h #hDel,html.ro-h [data-appr],html.ro-h #hIssA,html.ro-h #hIssB,html.ro-h [data-cday],html.ro-h [data-busreset],html.ro-h [data-busrest],html.ro-h [data-busdel],html.ro-h [data-busedit],html.ro-h .bed,html.ro-h [data-busmv],
 html.ro-h [data-idel],html.ro-h [data-iresi],html.ro-h [data-radd],html.ro-h [data-rdel],html.ro-h [data-gdel],html.ro-h .iadd2,html.ro-h .iaddsel{display:none!important}
 html.ro-h #hModPanel input,html.ro-h #hModPanel select,html.ro-h #hModPanel label,html.ro-h .instv input,html.ro-h .instv select,html.ro-h [data-msede],html.ro-h [data-mfr],html.ro-h [data-rday],html.ro-h [data-rc],html.ro-h [data-rn],html.ro-h [data-rws],html.ro-h [data-rwe],html.ro-h [data-rwin],html.ro-h [data-full],html.ro-h [data-move],html.ro-h [data-pickr],html.ro-h [data-simt]{pointer-events:none}
 html.ro-e #eqAuto,html.ro-e #eqManual,html.ro-e #eqSelBar,html.ro-e #eqConfirm,html.ro-e [data-radd],html.ro-e [data-rqdone],html.ro-e [data-rqdel],html.ro-e [data-rqundo]{display:none!important}
@@ -1904,6 +1921,7 @@ html.sb-min .sfh{display:block;font-family:var(--f-wide);font-style:italic;font-
     </div>
     <div id="hWeekGrid" class="wkgrid" aria-label="Semanas"></div>
     <div id="hBody" class="stack" hidden>
+      <div id="hModeBar" class="hmodebar"></div>
       <div id="hSim" class="simpanel" hidden></div>
       <div id="hProgRow"><div class="mgrid" id="hProg" role="group" aria-label="Modalidades y sus sedes"></div><div id="hModPanel" class="instpanel modpanel" hidden></div></div>
       <div class="dgrid" id="hDays" role="group" aria-label="Día"></div>
@@ -1927,6 +1945,7 @@ html.sb-min .sfh{display:block;font-family:var(--f-wide);font-style:italic;font-
       <button type="button" class="issx" id="hIssX" aria-label="Cerrar">×</button>
       <span class="isk">Requiere revisión</span><b id="hIssT" class="wide"></b>
       <div class="ismeta" id="hIssM"></div><div class="isbody" id="hIssB"></div>
+      <div class="isact" id="hIssC" hidden><button class="btn primary" type="button" data-issacc>Aceptar este aviso</button></div>
       <div class="isact" id="hIssA" hidden><button class="btn isno" type="button" data-issv="no">Denegar</button><button class="btn primary isok" type="button" data-issv="ok">Aprobar</button></div>
     </div></div>
     <div class="hmodal" id="hDlModal" hidden><div class="hmbox" role="dialog" aria-modal="true" aria-labelledby="hDlT">
@@ -2657,7 +2676,7 @@ async function eqSave(groups){
   EQ.docs[key]=body;renderEquipos();
   if(!S.db){$("eqSave").textContent="No se puede guardar en esta vista";return}
   $("eqSave").textContent="Guardando…";
-  try{await S.db.collection("teams").doc(key).set(body);$("eqSave").textContent="Guardado"}
+  try{await saved("teams:"+key,()=>S.db.collection("teams").doc(key).set(body),"equipos");$("eqSave").textContent="Guardado ✓ "+new Date().toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})}
   catch(e){$("eqSave").textContent=e&&e.code==="permission_denied"?"No tienes permiso para guardar equipos":"No se pudo guardar. Vuelve a intentarlo."}
 }
 function teamLabel(g,ti){return eqCamp()&&g.teams.length<=1?(g.name||"Equipo"):(g.name||"Grupo")+" "+(ti+1)}
@@ -2817,7 +2836,7 @@ async function reqSave(mut){
   const key=eqKey();const cur=JSON.parse(JSON.stringify(reqDoc()));cur.done=cur.done||{};cur.items=cur.items||[];mut(cur);cur.updatedAt=new Date().toISOString();if(S.me)cur.updatedBy=S.me;
   EQ.reqs[key]=cur;renderEquipos();
   if(!S.db){$("eqSave").textContent="No se puede guardar en esta vista";return}
-  try{await S.db.collection("reqs").doc(key).set(cur);$("eqSave").textContent="Guardado"}catch(e){$("eqSave").textContent="No se pudo guardar la solicitud. Vuelve a intentarlo."}
+  try{await saved("reqs:"+key,()=>S.db.collection("reqs").doc(key).set(cur),"solicitudes de equipos");$("eqSave").textContent="Guardado"}catch(e){$("eqSave").textContent="No se pudo guardar la solicitud. Vuelve a intentarlo."}
 }
 function renderReqs(st){
   const box=$("eqReqs");const items=reqItems(st);const pend=items.filter(i=>!i.done).length;
@@ -2932,6 +2951,8 @@ const clone=o=>JSON.parse(JSON.stringify(o));
 const dur=b=>tm(b.e)-tm(b.s);
 const isExp=b=>b.a==="Actividades Experience";
 /* tipo de instalación que necesita cada sesión */
+/* check-in y check-out: siempre se puede elegir Fleming VBB o Residencia */
+const CHECK_SEDES=["Fleming VBB","Residencia"];const isCheck=a=>/check-?in|check-?out/i.test(String(a||""));
 function needType(b){const c=b.c||ACT_CAT[b.a];
   if(c==="fut")return "campo";if(c==="prep")return "prep";if(c==="pis")return "piscina";
   if(["Comida","Cena","Desayuno"].includes(b.a))return "comedor";if(isExp(b))return "exp";if(b.a==="Tour BNB")return "tour";
@@ -3048,9 +3069,15 @@ function schedOf(week,dow,ap){const d=(H.sim?H.simDocs:H.docs)[hKey(week,dow,ap)
 const apprKey=(dow,ap,g,b)=>"d"+dow+"|"+apKey(ap)+"|"+g+"|"+b.s+"|"+b.a;
 function apprOf(week,k){if(H.sim){const d=H.simAppr[hw(week)];return d&&d[k]||""}const d=H.appr[hw(week)];return d&&d.items?d.items[k]||"":""}
 /* ---------- COMPROBACIÓN DE REGLAS ---------- */
+/* avisos aceptados: si el equipo revisa un conflicto y quiere que suceda, lo acepta (queda en gris, con quién y cuándo).
+   La clave depende del aviso exacto: si el conflicto cambia, vuelve a avisar. Se guarda junto a las aprobaciones de la semana. */
+function accSig(dow,x){const t=[dow,x.k,x.sub||"",x.ap||"",x.g||"",(x.gs||[]).join(","),x.r||"",x.s,x.e,x.txt||"",x.used||"",x.cap||""].join("~");let h=0;for(let i=0;i<t.length;i++)h=(h*31+t.charCodeAt(i))|0;return "acc-"+(h>>>0).toString(36)}
+function accInfo(v){const p=String(v).split("|");return {by:p[1]||"",at:p[2]||""}}
+async function hAccept(k,on){const me=await ingMe();hSaveAppr(CW(),k,on?"acc|"+(me.name||"")+"|"+new Date().toISOString():"");setStatus(on?"Aceptado":"Guardado")}
 function dayIssues(week,dow){
   const NAC=hNac(week);const cfg=wkCfg(week);const flags=new Map(),list=[];const occ={};const entries={};
   const add=(k,why,item)=>{if(item.appr){const st=apprOf(week,item.appr);item.st=st;if(st==="ok"){list.push(item);return}}
+    else{item.accK=accSig(dow,item);const a=apprOf(week,item.accK);if(a&&String(a).startsWith("acc")){item.acc=accInfo(a);list.push(item);return}}
     if(!flags.has(k))flags.set(k,[]);flags.get(k).push(why);list.push(item)};
   const put=(cat,key,s,e,v)=>{for(let x=s;x<e;x+=15)(((occ[cat]=occ[cat]||{})[key]=occ[cat][key]||{})[x]=occ[cat][key][x]||[]).push(v)};
   const fri=dow===5,mon=dow===1;
@@ -3200,7 +3227,7 @@ function weekIssues(week){const out=[];if(hNac(week))return out;const days=weekD
   if(dayAps(week,5).some(isInt)){const sig=new Set();["ONE|Interno","MAX|Interno"].forEach(ap=>{if(!dayAps(week,5).includes(ap))return;const sc=schedOf(week,5,ap);apGroups(week,ap).forEach(g=>{const c=(sc[g]||[]).find(b=>b.a==="Ceremonia de clausura");sig.add(c?c.s:"—")})});if(sig.size>1)out.push({ap:"",g:"Viernes",txt:"La clausura de ONE y MAX internos debe ser a la misma hora"})}
   return out}
 function dayMissing(week,dow){let n=0;dayAps(week,dow).forEach(ap=>{const names=apGroups(week,ap);const sc=schedOf(week,dow,ap);if(!names.length)n++;else names.forEach(g=>{if(!(sc[g]||[]).length)n++})});return n}
-function dayErrCount(iss){return iss.list.filter(x=>!(x.k==="appr"&&x.st==="ok")).length}
+function dayErrCount(iss){return iss.list.filter(x=>!(x.k==="appr"&&x.st==="ok")&&!x.acc).length}
 function dayComplete(week,dow){const aps=dayAps(week,dow);if(!aps.length)return null;return dayMissing(week,dow)===0&&dayErrCount(dayIssues(week,dow))===0}
 function hWeekComplete(n){const r=[0,1,2,3,4,5,6].map(d=>dayComplete(n,d)).filter(x=>x!==null);return r.length>0&&r.every(Boolean)&&!weekIssues(n).length}
 /* ---------- GENERADOR DE HORARIOS (reglas del documento de Pau, 29/10 y respuestas del 03/11) ----------
@@ -3486,26 +3513,103 @@ function genDay(week,dow,opts){opts=opts||{};const cfg=wkCfg(week);const st=newS
   return res;
 }
 
-/* ---------- guardar ---------- */
-function setStatus(t){$("hSave").textContent=t}
+
+/* ===== FRANJA DE MODO, PASAR AL HORARIO REAL, HISTORIAL Y PAPELERA ===== */
+const CAT_API=()=>!!(window.CE_API&&window.CE_ACL);
+function renderModeBar(){const el=$("hModeBar");if(!el)return;const w=CW();
+  if(H.sim){const has=weekDays(w).some(d=>APARTADOS.some(([p,m])=>H.simDocs[hKey(w,d,p+"|"+m)]));
+    el.className="hmodebar sim";el.innerHTML='<span class="hmb-t">Simulador · Week '+w+'</span><span class="hmb-s">Se guarda, pero no es el horario real. Cuando esté listo, pásalo a Horarios.</span>'+(has&&hCanEditReal()?'<button type="button" class="btn primary" data-sim2real>Pasar al horario real</button>':"")+(CAT_API()?'<button type="button" class="btn" data-hhist>Historial y papelera</button>':"")}
+  else{el.className="hmodebar real";el.innerHTML='<span class="hmb-t">Horario real · '+(hNac(w)?esc((campById(String(w).slice(2))||{}).n||""):"Week "+w)+'</span><span class="hmb-s">Lo que cambies aquí es lo que verá el equipo. Todo se guarda solo.</span>'+(CAT_API()?'<button type="button" class="btn" data-hhist>Historial y papelera</button>':"")}}
+function hCanEditReal(){return !window.CE_ACL||!!window.CE_ACL.admin||(((window.CE_ACL.perms||{})["horarios.semanas"]||0)>=2)}
+/* simulador → horario real: copia los horarios de la semana (con los nombres de los grupos reales, por orden si no coinciden),
+   las instalaciones y los buses. Lo que hubiera en el horario real queda en el historial. */
+async function sim2real(){const w=CW();if(!H.sim||!S.db)return;
+  const was=H.sim;H.sim=false;const realG={};APARTADOS.forEach(([p,m])=>{const ap=p+"|"+m;realG[ap]=apGroups(w,ap)});H.sim=was;
+  const jobs=[],miss=[];
+  weekDays(w).forEach(d=>APARTADOS.forEach(([p,m])=>{const ap=p+"|"+m;const doc=H.simDocs[hKey(w,d,ap)];if(!doc||!doc.groups)return;const R=realG[ap]||[];
+    if(!R.length&&!miss.includes(ap))miss.push(ap);
+    const groups=doc.groups.map((g,i)=>({name:R.length?(R.includes(g.name)?g.name:(R[i]||g.name)):g.name,blocks:(g.blocks||[]).map(b=>Object.assign({},b))}));jobs.push([w,d,ap,groups])}));
+  if(!jobs.length){setStatus("No hay nada que pasar");return}
+  setStatus("Pasando al horario real…");
+  try{await Promise.all(jobs.map(j=>hSaveAp(...j)));
+    const cfg=H.simCfg[hw(w)];if(cfg){const c=clone(cfg);c.v=4;c.updatedAt=new Date().toISOString();if(S.me)c.updatedBy=S.me;H.wk[hw(w)]=c;await saved("hweek:"+hw(w),()=>S.db.collection("hweek").doc(hw(w)).set(c),"instalaciones de la semana")}
+    for(const [k,ov] of Object.entries(H.simBus).filter(([k])=>k.startsWith(hw(w)+"-"))){H.busOv[k]=ov;await saved("hbus:"+k,()=>S.db.collection("hbus").doc(k).set(ov),"buses")}
+    setStatus("Guardado");toast("Week "+w+" pasada al horario real"+(miss.length?". Sin equipos reales aún en "+miss.map(MODSHORT).join(", ")+": se ha copiado con los nombres del simulador":""))}
+  catch(e){setStatus(e&&e.code==="permission_denied"?"No tienes permiso para cambiar el horario real":"No se pudo pasar. Vuelve a intentarlo.")}
+  renderHorarios()}
+/* historial (versiones anteriores de cada día) y papelera: solo en el software operativo (servidor) */
+const HH={open:false,tab:"hist",busy:false,vers:null,trash:null,admin:false,err:""};
+async function hHistLoad(){const w=CW();HH.busy=true;HH.err="";renderHHist();
+  try{const col=H.sim?"hsimd":"hor";const keys=[];[0,1,2,3,4,5,6].forEach(d=>APARTADOS.forEach(([p,m])=>keys.push(hKey(w,d,p+"|"+m))));
+    const day=keys.filter(k=>k.includes("-d"+H.dow+"-"));
+    const res=await Promise.all(day.map(k=>window.CE_API("GET","/api/hist?col="+col+"&id="+encodeURIComponent(k)).then(r=>({k,v:r.versions||[]})).catch(()=>({k,v:[]}))));
+    HH.vers={col,list:res.flatMap(r=>r.v.map((x,i)=>Object.assign({k:r.k,i},x))).sort((a,b)=>String(b.at).localeCompare(String(a.at)))};
+    const t=await window.CE_API("GET","/api/trash");HH.admin=!!t.admin;HH.trash=(t.items||[]).filter(e=>["hor","hsimd","hweek","hbus","happr","hsim","teams","reqs"].includes(e.col));
+  }catch(e){HH.err=e.message||"No se ha podido leer el historial"}
+  HH.busy=false;renderHHist()}
+function renderHHist(){let el=$("hHist");if(!el){el=document.createElement("aside");el.id="hHist";el.className="incpanel hhist";el.setAttribute("role","dialog");el.setAttribute("aria-label","Historial y papelera");document.body.appendChild(el);
+    el.addEventListener("click",hHistClick)}
+  el.hidden=!HH.open;$("incScrim")&&($("incScrim").hidden=!HH.open&&!INC.panel);if(!HH.open)return;
+  const ap2=k=>{const m=/-d(\d)-(.+)$/.exec(k);if(!m)return k;const ap=APARTADOS.map(([p,q])=>p+"|"+q).find(x=>apKey(x)===m[2]);return DOWS[+m[1]]+" · "+(ap?MODSHORT(ap):m[2])};
+  const f=d=>new Date(d).toLocaleString("es-ES",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
+  let h='<div class="ipx"><span class="tt"><b>Historial y papelera</b><small>'+(H.sim?"Simulador":"Horario real")+" · Week "+CW()+" · "+DOWS[H.dow]+'</small></span><button type="button" class="x" data-hhclose aria-label="Cerrar">×</button></div>'+
+    '<div class="ipb"><div class="seg"><button type="button" data-hhtab="hist" aria-pressed="'+(HH.tab==="hist")+'">Versiones del día</button><button type="button" data-hhtab="trash" aria-pressed="'+(HH.tab==="trash")+'">Papelera'+(HH.trash&&HH.trash.length?" ("+HH.trash.length+")":"")+"</button></div>";
+  if(HH.busy)h+='<p class="ic-none">Cargando…</p>';else if(HH.err)h+='<p class="ic-none">'+esc(HH.err)+"</p>";
+  else if(HH.tab==="hist"){const L=(HH.vers&&HH.vers.list)||[];
+    h+='<p class="hh-note">Cada vez que alguien guarda, la versión anterior se conserva aquí (las 20 últimas de cada día y modalidad). Restaurar vuelve a esa versión; la actual también queda guardada.</p>';
+    h+=L.length?L.map((x,n)=>'<div class="hh-row"><span><b>'+esc(ap2(x.k))+"</b><small>Versión anterior a "+esc(f(x.at))+" · cambiada por "+esc(x.byName||"—")+" · "+((x.data&&x.data.groups)||[]).reduce((a,g)=>a+(g.blocks||[]).length,0)+' bloques</small></span><button type="button" class="btn" data-hhrest="'+n+'">Restaurar</button></div>').join(""):'<p class="ic-none">Aún no hay versiones anteriores de este día.</p>'}
+  else{const L=HH.trash||[];
+    h+='<p class="hh-note">Lo que se borra viene aquí y se puede recuperar. Nada se borra solo; solo el administrador puede vaciar la papelera.</p>';
+    h+=L.length?L.map((x,n)=>'<div class="hh-row"><span><b>'+esc(x.col==="hor"||x.col==="hsimd"?ap2(x.id)+(x.col==="hsimd"?" (simulador)":""):x.col+" · "+x.id)+"</b><small>Borrado el "+esc(f(x.at))+" por "+esc(x.byName||"—")+'</small></span><button type="button" class="btn" data-hhrec="'+n+'">Recuperar</button>'+(HH.admin?'<button type="button" class="btn incdel" data-hhdel="'+n+'">Eliminar</button>':"")+"</div>").join("")+(HH.admin?'<div class="hh-foot"><button type="button" class="btn incdel" data-hhempty>Vaciar papelera</button></div>':""):'<p class="ic-none">La papelera está vacía.</p>'}
+  el.innerHTML=h+"</div>"}
+async function hHistClick(e){let b;
+  if(e.target.closest("[data-hhclose]")){HH.open=false;renderHHist();if($("incScrim"))$("incScrim").hidden=true;return}
+  if((b=e.target.closest("[data-hhtab]"))){HH.tab=b.dataset.hhtab;renderHHist();return}
+  if((b=e.target.closest("[data-hhrest]"))){const x=HH.vers.list[+b.dataset.hhrest];if(!x||!S.db)return;
+    if(b.dataset.sure!=="1"){b.dataset.sure="1";b.textContent="¿Seguro? Pulsa otra vez";return}
+    try{await saved(HH.vers.col+":"+x.k,()=>S.db.collection(HH.vers.col).doc(x.k).set(Object.assign({},x.data,{updatedAt:new Date().toISOString(),updatedBy:S.me||null})),"horario");toast("Versión restaurada");hHistLoad()}catch(err){toast("No se pudo restaurar")}return}
+  if((b=e.target.closest("[data-hhrec]"))){const x=HH.trash[+b.dataset.hhrec];if(!x)return;try{await window.CE_API("POST","/api/trash/restore",{key:x.key});toast("Recuperado");hHistLoad()}catch(err){toast(err.message||"No se pudo recuperar")}return}
+  if((b=e.target.closest("[data-hhdel]"))){const x=HH.trash[+b.dataset.hhdel];if(!x)return;if(b.dataset.sure!=="1"){b.dataset.sure="1";b.textContent="¿Eliminar para siempre?";return}
+    try{await window.CE_API("DELETE","/api/trash?key="+encodeURIComponent(x.key));hHistLoad()}catch(err){toast(err.message||"No se pudo eliminar")}return}
+  if((b=e.target.closest("[data-hhempty]"))){if(b.dataset.sure!=="1"){b.dataset.sure="1";b.textContent="¿Vaciar para siempre? Pulsa otra vez";return}
+    try{await window.CE_API("DELETE","/api/trash");hHistLoad()}catch(err){toast(err.message||"No se pudo vaciar")}}}
+document.addEventListener("click",e=>{
+  if(e.target.closest("[data-sim2real]")){const b=e.target.closest("[data-sim2real]");if(b.dataset.sure!=="1"){b.dataset.sure="1";b.textContent="Sustituye el horario real de la Week "+CW()+". ¿Seguro?";setTimeout(()=>{if(b.isConnected){b.dataset.sure="";b.textContent="Pasar al horario real"}},6000);return}sim2real();return}
+  if(e.target.closest("[data-hhist]")){HH.open=true;HH.tab="hist";if($("incScrim"))$("incScrim").hidden=false;renderHHist();hHistLoad();return}});
+/* ---------- guardar ----------
+   Cada escritura pasa por saved(): si falla, queda un aviso rojo fijo con «Reintentar» y el navegador avisa antes de cerrar. */
+var SAVE={pending:0,failed:[]};
+function saveBar(){let el=$("saveBar");if(!el){el=document.createElement("div");el.id="saveBar";el.className="savebar2";el.setAttribute("role","alert");document.body.appendChild(el);
+    el.addEventListener("click",e=>{if(e.target.closest("[data-saveretry]")){const f=SAVE.failed.slice();SAVE.failed=[];saveBar();f.forEach(x=>saved(x.label,x.fn,x.what).catch(()=>{}))}})}
+  el.hidden=!SAVE.failed.length;if(SAVE.failed.length)el.innerHTML='<b>No se ha guardado</b><span>'+esc(SAVE.failed.map(x=>x.what).filter((v,i,a)=>a.indexOf(v)===i).join(" · "))+'. Revisa la conexión.</span><button type="button" class="btn" data-saveretry>Reintentar</button>'}
+async function saved(label,fn,what){SAVE.pending++;try{const r=await fn();SAVE.failed=SAVE.failed.filter(x=>x.label!==label);return r}
+  catch(e){if(!(e&&e.code==="permission_denied"))SAVE.failed=SAVE.failed.filter(x=>x.label!==label).concat([{label,fn,what:what||"cambios"}]);throw e}
+  finally{SAVE.pending--;saveBar()}}
+window.addEventListener("beforeunload",e=>{if(SAVE.pending>0||SAVE.failed.length){e.preventDefault();e.returnValue="Hay cambios sin guardar"}});
+function setStatus(t){const ok=/^(Guardado|Cambiado|Aprobado|Rechazado|Aceptado|Horario creado|Semana creada|Deshecho|Borrado|Día borrado|Semana borrada|Movido|Pegado|Copiado)/.test(t);
+  $("hSave").textContent=t+(ok?" ✓ "+new Date().toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"}):"")}
 async function hSaveAp(week,dow,ap,groups){
   const key=hKey(week,dow,ap);const body={week,dow,ap,v:3,groups:groups.map(g=>({name:g.name,blocks:g.blocks.map(b=>{const o={s:b.s,e:b.e,a:b.a,c:b.c||ACT_CAT[b.a]||"log",t:b.t||needType(b)};if(b.sd){o.sd=b.sd;o.u=b.u==null?"":String(b.u)}if(b.nf)o.nf=true;if(b.from)o.from=b.from;if(b.to)o.to=b.to;return o})})),updatedAt:new Date().toISOString()};
   if(S.me)body.updatedBy=S.me;H.docs[key]=body;
   if(!S.db)throw {code:"nodb"};
-  await S.db.collection("hor").doc(key).set(body);
+  await saved("hor:"+key,()=>S.db.collection("hor").doc(key).set(body),"horario");
 }
 async function hSaveMany(jobs,msg){renderHorarios();if(!S.db){setStatus("No se puede guardar en esta vista");return}
   setStatus("Guardando…");try{await Promise.all(jobs.map(j=>hSaveAp(...j)));setStatus(msg||"Guardado")}catch(e){setStatus(e&&e.code==="permission_denied"?"No tienes permiso para guardar horarios":"No se pudo guardar. Vuelve a intentarlo.")}renderHorarios()}
 async function hSaveCfg(week,cfg){cfg.v=4;if(H.sim){H.simCfg[hw(week)]=cfg;return hSaveSim(week)}cfg.updatedAt=new Date().toISOString();if(S.me)cfg.updatedBy=S.me;H.wk[hw(week)]=cfg;renderHorarios();
   if(!S.db){setStatus("No se puede guardar en esta vista");return}
-  setStatus("Guardando…");try{await S.db.collection("hweek").doc(hw(week)).set(cfg);setStatus("Guardado")}catch(e){setStatus(e&&e.code==="permission_denied"?"No tienes permiso para cambiar instalaciones":"No se pudo guardar. Vuelve a intentarlo.")}}
+  setStatus("Guardando…");try{await saved("hweek:"+hw(week),()=>S.db.collection("hweek").doc(hw(week)).set(cfg),"instalaciones de la semana");setStatus("Guardado")}catch(e){setStatus(e&&e.code==="permission_denied"?"No tienes permiso para cambiar instalaciones":"No se pudo guardar. Vuelve a intentarlo.")}}
 async function hSaveAppr(week,k,v){if(H.sim){const d=Object.assign({},H.simAppr[hw(week)]||{});if(v)d[k]=v;else delete d[k];H.simAppr[hw(week)]=d;setStatus(v==="ok"?"Aprobado":v==="no"?"Rechazado":"Guardado");return hSaveSim(week)}const d=clone(H.appr[hw(week)]||{items:{}});d.items=d.items||{};if(v)d.items[k]=v;else delete d.items[k];d.updatedAt=new Date().toISOString();if(S.me)d.updatedBy=S.me;H.appr[hw(week)]=d;renderHorarios();
   if(!S.db){setStatus("No se puede guardar en esta vista");return}
-  try{await S.db.collection("happr").doc(hw(week)).set(d);setStatus(v==="ok"?"Aprobado":v==="no"?"Rechazado":"Guardado")}catch(e){setStatus("No se pudo guardar. Vuelve a intentarlo.")}}
-async function hSaveSim(week){renderHorarios();if(!S.db)return;try{await S.db.collection("hsim").doc(hw(week)).set({teams:H.simTeams[hw(week)]||{},cfg:H.simCfg[hw(week)]||null,appr:H.simAppr[hw(week)]||{},bus:Object.fromEntries(Object.entries(H.simBus).filter(([k])=>k.startsWith(hw(week)+"-"))),updatedAt:new Date().toISOString()})}catch(e){}}
-function hAuto(dows){if(H.sim){const t0=performance.now();dows.forEach(d=>{const g=genDay(CW(),d);Object.entries(g).forEach(([ap,groups])=>{H.simDocs[hKey(CW(),d,ap)]={groups}})});H.simGen=CW();setStatus("Simulación generada");renderHorarios();return}
+  try{await saved("happr:"+hw(week),()=>S.db.collection("happr").doc(hw(week)).set(d),"aprobaciones");setStatus(v==="ok"?"Aprobado":v==="no"?"Rechazado":"Guardado")}catch(e){setStatus("No se pudo guardar. Vuelve a intentarlo.")}}
+async function hSaveSimDocs(week,keys){if(!S.db){setStatus("No se puede guardar en esta vista");return}
+  setStatus("Guardando…");
+  try{await Promise.all(keys.map(k=>{const d=H.simDocs[k];return saved("hsimd:"+k,()=>d?S.db.collection("hsimd").doc(k).set({groups:d.groups,updatedAt:new Date().toISOString(),updatedBy:S.me||null}):S.db.collection("hsimd").doc(k).delete(),"simulador")}));setStatus("Guardado")}
+  catch(e){setStatus(e&&e.code==="permission_denied"?"No tienes permiso para guardar el simulador":"No se pudo guardar. Vuelve a intentarlo.")}}
+async function hSaveSim(week){renderHorarios();if(!S.db)return;try{await saved("hsim:"+hw(week),()=>S.db.collection("hsim").doc(hw(week)).set({teams:H.simTeams[hw(week)]||{},cfg:H.simCfg[hw(week)]||null,appr:H.simAppr[hw(week)]||{},bus:Object.fromEntries(Object.entries(H.simBus).filter(([k])=>k.startsWith(hw(week)+"-"))),updatedAt:new Date().toISOString()}),"simulador")}catch(e){}}
+function hAuto(dows){if(H.sim){const ks=[];dows.forEach(d=>{const g=genDay(CW(),d);Object.entries(g).forEach(([ap,groups])=>{const k=hKey(CW(),d,ap);H.simDocs[k]={groups};ks.push(k)})});H.simGen=CW();renderHorarios();hSaveSimDocs(CW(),ks);return}
   const jobs=[];dows.forEach(d=>{const g=genDay(CW(),d);Object.entries(g).forEach(([ap,groups])=>{jobs.push([CW(),d,ap,groups]);H.docs[hKey(CW(),d,ap)]={groups}})});hSaveMany(jobs,dows.length>1?"Semana creada":"Horario creado")}
-async function hClear(dows){if(H.sim){Object.keys(H.simDocs).forEach(k=>{if(k.startsWith("w"+CW()+"-"))delete H.simDocs[k]});setStatus("Simulación borrada");renderHorarios();return}const keys=[];dows.forEach(d=>APARTADOS.forEach(([p,m])=>{const k=hKey(CW(),d,p+"|"+m);if(H.docs[k])keys.push(k)}));
+async function hClear(dows){if(H.sim){const ks=[];dows.forEach(d=>APARTADOS.forEach(([p,m])=>{const k=hKey(CW(),d,p+"|"+m);if(H.simDocs[k]){delete H.simDocs[k];ks.push(k)}}));renderHorarios();hSaveSimDocs(CW(),ks);return}const keys=[];dows.forEach(d=>APARTADOS.forEach(([p,m])=>{const k=hKey(CW(),d,p+"|"+m);if(H.docs[k])keys.push(k)}));
   keys.forEach(k=>delete H.docs[k]);H.manual=false;H.brush="";hEditClose();renderHorarios();
   if(!S.db){setStatus("No se puede guardar en esta vista");return}
   setStatus("Borrando…");try{await Promise.all(keys.map(k=>S.db.collection("hor").doc(k).delete()));setStatus(dows.length>1?"Semana borrada":"Día borrado")}catch(e){setStatus("No se pudo borrar. Vuelve a intentarlo.")}}
@@ -3520,6 +3624,7 @@ function renderHorarios(){try{sbSync()}catch(e){}
   if(hNac(H.week)&&(H.view==="buses"||H.view==="sim"))H.view="grid";H.sim=H.view==="sim";if(H.sim&&!H.simWeek)H.simWeek=(typeof H.week==="number"&&H.week)||1;
   const L0=!H.week;
   $("hWeekGrid").hidden=!L0;$("hBody").hidden=L0;$("hMode").hidden=L0;$("hMode").classList.toggle("nac",hNac(CW()));
+  if(!L0)try{renderModeBar()}catch(e){}
   const VL={inst:"Instalaciones",buses:"Buses"};
   $("hCrumbs").innerHTML=L0?"":'<button type="button" data-hback>Semanas</button><span class="sep">›</span><span class="cur">'+(H.sim?"Simulador · Week "+CW()+(VW()==="inst"?" · Instalaciones":" · "+DOWS[H.dow]+" "+dayDate(CW(),H.dow)):esc(hWL(CW()))+(VW()==="inst"?" · Instalaciones":" · "+DOWS[H.dow]+" "+dayDate(CW(),H.dow)+({buses:" · Buses",res:" · Ocupación"}[VW()]||"")))+"</span>";
   $("hMode").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.hview===H.view?"true":"false"));
@@ -3680,7 +3785,7 @@ function simPdf(w){const days=simExportData(w);if(!days.length)return null;
   let out="%PDF-1.4\n%âãÏÓ\n";const offs=[];objs.forEach((o,i)=>{offs.push(out.length);out+=(i+1)+" 0 obj\n"+o+"\nendobj\n"});
   const xr=out.length;out+="xref\n0 "+(objs.length+1)+"\n0000000000 65535 f \n"+offs.map(o=>String(o).padStart(10,"0")+" 00000 n \n").join("")+"trailer\n<< /Size "+(objs.length+1)+" /Root "+cat+" 0 R /Info << /Title ("+enc("Simulación horario Week "+w)+") /Producer (Campus Experience) >> >>\nstartxref\n"+xr+"\n%%EOF";
   const u=new Uint8Array(out.length);for(let i=0;i<out.length;i++)u[i]=out.charCodeAt(i)&255;return u}
-function simHasGen(){const w=CW();return H.sim&&H.simGen===w&&weekDays(w).some(d=>APARTADOS.some(([p,m])=>H.simDocs[hKey(w,d,p+"|"+m)]))}
+function simHasGen(){const w=CW();return H.sim&&weekDays(w).some(d=>APARTADOS.some(([p,m])=>H.simDocs[hKey(w,d,p+"|"+m)]))}
 function renderDl(){const m=$("hDlModal");if(!m)return;m.hidden=!H.dlOpen;if(!H.dlOpen)return;
   m.querySelectorAll("[data-dlf]").forEach(b=>b.setAttribute("aria-pressed",String(H.dlFmt===b.dataset.dlf)));$("hDlGo").disabled=!H.dlFmt||!!H.dlBusy;$("hDlGo").textContent=H.dlBusy?"Preparando…":"Descargar";$("hDlMsg").textContent=H.dlMsg||""}
 async function simDownload(){const w=CW();const f=H.dlFmt;if(!f||!S.dl)return;H.dlBusy=true;H.dlMsg="";renderDl();
@@ -3689,7 +3794,7 @@ async function simDownload(){const w=CW();const f=H.dlFmt;if(!f||!S.dl)return;H.
   catch(e){const c=e&&e.code;H.dlMsg=c==="declined"?"":c==="rate_limited"?"Hay otra descarga pendiente. Inténtalo en unos segundos.":c==="extension_not_enabled"||c==="rejected_extension"?"Este formato no se puede descargar aquí.":"No se pudo descargar en esta vista."}
   finally{H.dlBusy=false;renderDl()}}
 /* ---------- SIMULADOR ---------- */
-function simStatus(w){return H.simGen===w&&weekDays(w).some(d=>APARTADOS.some(([p,m])=>H.simDocs[hKey(w,d,p+"|"+m)]))?'Simulación generada con los datos actuales':'<b>Pulsa «Generar horario»</b> para crear la simulación de la Week '+w+"."}
+function simStatus(w){return weekDays(w).some(d=>APARTADOS.some(([p,m])=>H.simDocs[hKey(w,d,p+"|"+m)]))?'Simulación generada con los datos actuales':'<b>Pulsa «Generar horario»</b> para crear la simulación de la Week '+w+"."}
 function renderSimPanel(){const w=CW();const T=H.simTeams[hw(w)]||{};const el=$("hSim");
   if(el.dataset.w===String(w)&&el.querySelector("[data-simt]")){ // actualiza sin reconstruir: no se pierde lo que se está escribiendo
     el.querySelectorAll("[data-simt]").forEach(i=>{if(i!==document.activeElement)i.value=+T[i.dataset.simt]||0});
@@ -3768,20 +3873,23 @@ function openIssue(i){const x=(H.issList||[])[i];if(!x)return;const T=ISS_TXT[x.
   const what=(x.txt||T[0])+(x.k==="cap"?" ("+x.used+" de "+x.cap+" "+x.unit+")":"");
   $("hIssB").innerHTML="<div><h4>Qué pasa</h4>"+esc(what)+"</div><div><h4>Por qué</h4>"+esc(T[1])+"</div><div><h4>Cómo solucionarlo</h4><ul>"+T[2].map(t=>"<li>"+esc(t)+"</li>").join("")+"</ul></div>";
   const A=$("hIssA");A.hidden=!(x.k==="appr"&&x.apprK);if(!A.hidden){A.dataset.k=x.apprK;const cur=apprOf(CW(),x.apprK);A.querySelectorAll("[data-issv]").forEach(b=>b.classList.toggle("on",cur===b.dataset.issv))}
+  const C=$("hIssC");C.hidden=!(x.accK&&x.k!=="appr");if(!C.hidden){C.dataset.k=x.accK;C.querySelector("[data-issacc]").textContent=x.acc?"Quitar la aceptación":"Aceptar este aviso";C.dataset.on=x.acc?"0":"1"}
   $("hIss").hidden=false;$("hIssX").focus()}
 function renderAlerts(iss,aps){
   const nMiss=dayMissing(CW(),H.dow);const L=iss.list;const pills=[];
-  const hard=L.filter(isHard);const pend=L.filter(x=>x.k==="appr"&&x.st!=="ok"&&x.st!=="no"),rej=L.filter(x=>x.k==="appr"&&x.st==="no");
-  const soft=L.filter(x=>x.k!=="appr"&&!isHard(x));const wk=weekIssues(CW());const nRev=pend.length+rej.length+soft.length+wk.length;
+  const hard=L.filter(x=>isHard(x)&&!x.acc);const pend=L.filter(x=>x.k==="appr"&&x.st!=="ok"&&x.st!=="no"),rej=L.filter(x=>x.k==="appr"&&x.st==="no");
+  const soft=L.filter(x=>x.k!=="appr"&&!isHard(x)&&!x.acc);const accd=L.filter(x=>x.acc);const wk=weekIssues(CW());const nRev=pend.length+rej.length+soft.length+wk.length;
   if(hard.length)pills.push('<span class="alert"><b>'+hard.length+"</b> "+(hard.length===1?"problema":"problemas")+" de aforo o choque</span>");
   if(nMiss)pills.push('<span class="alert"><b>'+nMiss+"</b> "+(nMiss===1?"grupo por hacer":"grupos por hacer")+"</span>");
   if(!hard.length&&!nMiss&&aps.length)pills.push('<span class="alert ok">Sin problemas de aforo</span>');
-  if(nRev)pills.push('<button type="button" class="alert rev" data-rev aria-expanded="'+!!H.showRev+'">Revisión de reglas · <b>'+nRev+"</b>"+(pend.length?" ("+pend.length+" por aprobar)":"")+"</button>");
+  if(nRev||accd.length)pills.push('<button type="button" class="alert rev" data-rev aria-expanded="'+!!H.showRev+'">Revisión de reglas · <b>'+nRev+"</b>"+(pend.length?" ("+pend.length+" por aprobar)":"")+(accd.length?" · "+accd.length+(accd.length>1?" aceptados":" aceptado"):"")+"</button>");
   H.issList=[];
   const row=(x,extra)=>'<div class="hal'+(x.k==="appr"?" ap":"")+(isHard(x)?"":" soft")+'" data-iss="'+(H.issList.push(x)-1)+'" role="button" tabindex="0" title="Ver el detalle"><span class="hr">'+esc(x.r||x.g||"")+'</span><span class="ht">'+(x.day||!x.e?"Todo el día":hFmtRange(x.s,x.e))+'</span><span class="hg">'+esc((x.gs?x.gs.join(" · ")+" · ":"")+(x.txt||(x.a?x.a:""))+(x.k==="cap"?" ("+x.used+" de "+x.cap+" "+x.unit+")":""))+'</span><span class="hw">'+(extra||esc(x.ap?MODSHORT(x.ap):""))+"</span></div>";
-  const al=[];hard.sort((a,b)=>a.s-b.s).forEach(x=>al.push(row(x)));
+  const accBtn=x=>x.accK?'<button class="btn" type="button" data-accept="'+esc(x.accK)+'">Aceptar</button>':"";
+  const al=[];hard.sort((a,b)=>a.s-b.s).forEach(x=>al.push(row(x,accBtn(x)+" "+esc(x.ap?MODSHORT(x.ap):""))));
   if(H.showRev){pend.concat(rej).forEach(x=>{const b={s:ts(x.s),a:x.a};const k=apprKey(H.dow,x.ap,x.g,b);x.apprK=k;al.push(row(x,'<button class="btn primary" type="button" data-appr="'+esc(k)+'" data-v="ok">Aprobar</button><button class="btn" type="button" data-appr="'+esc(k)+'" data-v="no">Denegar</button>'+(x.st==="no"?" <b>Denegado</b>":"")))});
-    soft.sort((a,b)=>(a.day?0:1)-(b.day?0:1)||a.s-b.s).forEach(x=>al.push(row(x)));
+    soft.sort((a,b)=>(a.day?0:1)-(b.day?0:1)||a.s-b.s).forEach(x=>al.push(row(x,accBtn(x)+" "+esc(x.ap?MODSHORT(x.ap):""))));
+    accd.forEach(x=>al.push(row(x,'<span class="accby">Aceptado'+(x.acc.by?" por "+esc(x.acc.by):"")+(x.acc.at?" · "+esc(new Date(x.acc.at).toLocaleString("es-ES",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})):"")+'</span> <button class="btn" type="button" data-unaccept="'+esc(x.accK)+'">Quitar</button>').replace('class="hal','class="hal accd')));
     wk.forEach(x=>al.push('<div class="hal soft" data-iss="'+(H.issList.push(Object.assign({k:"week"},x))-1)+'" role="button" tabindex="0" title="Ver el detalle"><span class="hr">'+esc(x.g)+'</span><span class="ht">Semana</span><span class="hg">'+esc(x.txt)+'</span><span class="hw">'+esc(MODSHORT(x.ap))+"</span></div>"))}
   const MAXS=30;
   $("hAlerts").innerHTML='<div class="eqalerts">'+pills.join("")+(al.length>MAXS?'<button class="btn" type="button" data-allal>'+(H.allAl?"Ver menos":"Ver los "+al.length)+"</button>":"")+"</div>"+(al.length?'<div class="hals">'+(H.allAl?al:al.slice(0,MAXS)).join("")+"</div>":"");
@@ -3853,10 +3961,12 @@ function renderHRes(iss){
    Coste: tarifas Juliá verano 2026 (carpeta CLAUDE). Se elige lo más barato para cada bus:
    disposición de 4, 6, 8 o 12 h que cubra su jornada, o precio por trayecto (solo DR.FL–VBB–UAM y DR.FL–VILLA). */
 const BUS_SIZES=[54,60,72];
+/* plazas que se pueden elegir a mano (el reparto automático usa 54, 60 y 72, que son los que tienen tarifa) */
+const BUS_PICK=[28,54,60,72];
 const JULIA={72:{d:{4:291.5,6:418,8:566.5,12:834},fvu:149.6,fvi:158.4},60:{d:{4:270,6:385,8:511.5,12:705},fvu:137.5,fvi:148.5},54:{d:{4:255,6:368.5,8:484,12:645},fvu:129.8,fvi:141.9}};
 const legUnit=(l,size)=>{const A=l.from==="RESA"?"UAM":l.from,B=l.to==="RESA"?"UAM":l.to;const set=new Set([A,B]);
   if([...set].every(x=>["FLEMING","VBB","UAM"].includes(x)))return JULIA[size].fvu;if(set.has("VILLA")&&set.has("FLEMING"))return JULIA[size].fvi;return null};
-function busCost(b){const SZ=BUS_SIZES.find(z=>z>=b.size)||72;const J=JULIA[SZ];const L=b.legs.filter(x=>!x.empty);const span=(b.end-b.start)/60;
+function busCost(b){const SZ=BUS_SIZES.find(z=>z>=b.size)||72;const J=JULIA[SZ];if(+b.size<=28)return {c:null,t:"Bus de 28 plazas: sin tarifa"};const L=b.legs.filter(x=>!x.empty);const span=(b.end-b.start)/60;
   const hrs=[4,6,8,12].find(h=>h>=span);const dispo=hrs?{c:J.d[hrs],t:"Disposición "+hrs+" h"}:null;
   const units=L.map(l=>legUnit(l,SZ));const unit=units.every(u=>u!=null)?{c:units.reduce((a,u)=>a+u,0),t:L.length+" trayecto"+(L.length>1?"s":"")+" sueltos"}:null;
   const opts=[dispo,unit].filter(Boolean).sort((a,c)=>a.c-c.c);return opts[0]||{c:null,t:"Más de 12 h: no cabe en una disposición"}}
@@ -3886,7 +3996,7 @@ function busOv(w,d){const o=(H.sim?H.simBus:H.busOv)[busKey(w,d)]||{};return {bu
 async function saveBusOv(w,d,ov,msg){const k=busKey(w,d);ov.updatedAt=new Date().toISOString();
   if(H.sim){H.simBus[k]=ov;setStatus(msg||"Guardado");return hSaveSim(w)}
   H.busOv[k]=ov;renderHorarios();if(!S.db){setStatus("No se puede guardar en esta vista");return}
-  setStatus("Guardando…");try{await S.db.collection("hbus").doc(k).set(ov);setStatus(msg||"Guardado")}catch(e){setStatus("No se pudo guardar. Vuelve a intentarlo.")}}
+  setStatus("Guardando…");try{await saved("hbus:"+k,()=>S.db.collection("hbus").doc(k).set(ov),"buses");setStatus(msg||"Guardado")}catch(e){setStatus("No se pudo guardar. Vuelve a intentarlo.")}}
 /* lugares de ese día para elegir origen y destino */
 function dayPlaces(cfg,dow){const out=["FLEMING"];cfg.sedes.forEach(s=>{if(!s.res.length||s.res.some(r=>!(r.off||[]).includes(dow)))out.push(s.n)});return [...new Set(out)]}
 function rebuildBus(b){const L=b.legs.filter(x=>!x.empty).sort((p,q)=>p.dep-q.dep);const legs=[];let at=null;
@@ -3937,7 +4047,7 @@ function renderBuses(cfg){
   const tOpts=(v)=>'<option value="">—</option>'+Array.from({length:73},(_,i)=>ts(6*60+i*15)).map(x=>'<option'+(x===v?" selected":"")+">"+x+"</option>").join("");
   h+='<div class="buscols">';
   buses.forEach(b=>{const bad=b.max>b.size;h+='<div class="bcol'+(bad?" over":"")+'"><div class="bh"><span class="gname">Bus '+b.n+'</span><span class="gsub">'+ts(b.start)+"–"+ts(b.end)+" · "+b.max+" pasajeros"+'</span><span class="bcost">'+(b.cost.c!=null?eur(b.cost.c)+" · "+esc(b.cost.t):esc(b.cost.t))+'</span>'+
-      '<div class="bed"><label>Plazas <input type="number" min="1" max="99" value="'+b.size+'" data-buscap="'+b.n+'"></label><label>Disponible <select data-busav="'+b.n+'" data-f="s">'+tOpts(b.av&&b.av.s)+'</select>–<select data-busav="'+b.n+'" data-f="e">'+tOpts(b.av&&b.av.e)+"</select></label></div></div><div class=\"blegs\">";
+      '<div class="bed"><label>Plazas <select data-buscap="'+b.n+'">'+BUS_PICK.concat(BUS_PICK.includes(+b.size)?[]:[+b.size]).map(z=>'<option value="'+z+'"'+(+b.size===z?" selected":"")+">"+z+" plazas</option>").join("")+'</select></label><label>Disponible <select data-busav="'+b.n+'" data-f="s">'+tOpts(b.av&&b.av.s)+'</select>–<select data-busav="'+b.n+'" data-f="e">'+tOpts(b.av&&b.av.e)+"</select></label></div></div><div class=\"blegs\">";
     b.legs.forEach(l=>{if(l.empty){h+='<div class="bleg empty"><span class="bt2">'+ts(l.dep)+'</span><span class="btr">'+esc(l.from+" → "+l.to)+'</span><span class="bg">En vacío</span></div>';return}
       h+='<div class="bleg'+(l.unk?" unk":"")+'"><span class="bt2">'+ts(l.dep)+'</span><span class="btr">'+esc(l.from+" → "+l.to)+'</span><span class="bs">'+l.seats+"/"+b.size+'</span><div class="bgs">'+l.gs.map(t=>'<span class="btg2"><b>'+esc(t.g)+'</b> <small>'+esc(MODSHORT(t.ap))+'</small><select data-busmv="'+tix(t)+'" aria-label="Cambiar de bus">'+Array.from({length:maxN},(_,i)=>i+1).map(n=>'<option value="'+n+'"'+(n===b.n?" selected":"")+">Bus "+n+"</option>").join("")+'<option value="new">Bus nuevo</option></select><button type="button" class="bmini" data-busedit="'+tix(t)+'" title="Editar trayecto">Editar</button><button type="button" class="bmini x" data-busdel="'+tix(t)+'" title="Quitar del bus">×</button></span>').join("")+"</div></div>"});
     h+="</div></div>"});
@@ -3974,10 +4084,10 @@ const isHard=x=>HARD_K.has(x.k)||(x.k!=="appr"&&HARD_RE.test(x.txt||""));
 function hDocGroups(dow,ap){const names=apGroups(CW(),ap);const sc=schedOf(CW(),dow,ap);return names.map(n=>({name:n,blocks:(sc[n]||[]).map(b=>Object.assign({},b))}))}
 function hCommit(changes,msg){const w=CW();const prev=changes.map(([d,ap])=>[d,ap,hDocGroups(d,ap)]);H.undo=(H.undo||[]).concat([prev]).slice(-40);
   changes.forEach(([d,ap,groups])=>groups.forEach(g=>g.blocks.sort((p,q)=>tm(p.s)-tm(q.s))));
-  if(H.sim){changes.forEach(([d,ap,groups])=>{H.simDocs[hKey(w,d,ap)]={groups:groups.map(g=>({name:g.name,blocks:g.blocks}))}});H.simGen=w;setStatus(msg||"Cambiado");renderHorarios();return}
+  if(H.sim){const ks=[];changes.forEach(([d,ap,groups])=>{const k=hKey(w,d,ap);H.simDocs[k]={groups:groups.map(g=>({name:g.name,blocks:g.blocks}))};ks.push(k)});H.simGen=w;renderHorarios();hSaveSimDocs(w,ks);return}
   hSaveMany(changes.map(([d,ap,groups])=>[w,d,ap,groups]),msg||"Guardado")}
 function hUndo(){const last=(H.undo||[]).pop();if(!last){setStatus("Nada que deshacer");return}const w=CW();
-  if(H.sim){last.forEach(([d,ap,groups])=>{H.simDocs[hKey(w,d,ap)]={groups}});setStatus("Deshecho");renderHorarios();return}
+  if(H.sim){const ks=[];last.forEach(([d,ap,groups])=>{const k=hKey(w,d,ap);H.simDocs[k]={groups};ks.push(k)});renderHorarios();hSaveSimDocs(w,ks);return}
   hSaveMany(last.map(([d,ap,groups])=>[w,d,ap,groups]),"Deshecho")}
 function groupSize(ap,n){const g=apGroupsFull(CW(),ap).find(x=>x.name===n);return g?g.size:0}
 /* instalaciones activas de un tipo con el sitio libre en [s,e) para el grupo de la columna ci */
@@ -4027,7 +4137,8 @@ function renderHEdit(){
   if(t==="cer")cfg.sedes.forEach(s=>s.res.filter(r=>r.t==="cer"||r.n==="Campo 9"||r.n==="Campo UEM").forEach(r=>ch.push({sd:s.id,u:r.n,l:resLabel(cfg,{sd:s.id,u:r.n})})));
   const bs=tm(b.s),be=tm(b.e);const fr=t&&t!=="cer"&&t!=="tour"?resFree(t,bs,be,H.edit.ci,H.edit.bi>=0?{ap:c.ap,g:c.n,i:H.edit.bi}:null):[];const frL=o=>{const f=fr.find(x=>x.sd===o.sd&&x.u===o.u);return f?" · "+freeTxt(f):""};
   fr.forEach(o=>{if(!ch.some(x=>x.sd===o.sd&&x.u===o.u))ch.push({sd:o.sd,u:o.u,l:o.l})});
-  $("hEr").innerHTML='<option value="">'+(t?"Sin instalación":"No necesita")+"</option>"+ch.map(x=>'<option value="'+esc(x.sd+"|"+x.u)+'"'+(x.sd+"|"+x.u===cur?" selected":"")+">"+esc(x.l+frL(x))+"</option>").join("")+(cur&&!ch.some(x=>x.sd+"|"+x.u===cur)?'<option value="'+esc(cur)+'" selected>'+esc(resLabel(cfg,b))+" (no activa)</option>":"");
+  if(isCheck(b.a))CHECK_SEDES.forEach(n=>{if(!ch.some(x=>x.sd==="ext"&&x.u===n))ch.push({sd:"ext",u:n,l:n})});
+  $("hEr").innerHTML='<option value="">'+(t||isCheck(b.a)?"Sin instalación":"No necesita")+"</option>"+ch.map(x=>'<option value="'+esc(x.sd+"|"+x.u)+'"'+(x.sd+"|"+x.u===cur?" selected":"")+">"+esc(x.l+frL(x))+"</option>").join("")+(cur&&!ch.some(x=>x.sd+"|"+x.u===cur)?'<option value="'+esc(cur)+'" selected>'+esc(resLabel(cfg,b))+" (no activa)</option>":"");
   $("hEs").innerHTML=hTimes(b.s);$("hEe").innerHTML=hTimes(b.e);
   $("hEdel").hidden=H.edit.bi<0;$("hEall").checked=false;
   {const isB=isBusBlk(b)||/^Bus/.test(b.a||"");$("hEbus").hidden=!isB;if(isB){const pl=dayPlaces(cfg,H.dow);let f0=b.from||"",t0=b.to||"";
@@ -4049,7 +4160,7 @@ function hEditClose(){H.edit=null;const b=$("hEdit");if(b)b.hidden=true}
     if((b=e.target.closest("[data-simv]"))){H.simView=b.dataset.simv;renderHorarios();return}});
   $("hSim").addEventListener("input",e=>{const el=e.target.closest("[data-simt]");if(!el||el.value==="")return;const w=CW();const T=(H.simTeams[hw(w)]=H.simTeams[hw(w)]||{});T[el.dataset.simt]=Math.max(0,parseInt(el.value,10)||0);H.simDirty=Date.now()});
   $("hSim").addEventListener("change",e=>{const el=e.target.closest("[data-simt]");if(!el)return;const w=CW();const T=(H.simTeams[hw(w)]=H.simTeams[hw(w)]||{});T[el.dataset.simt]=Math.max(0,parseInt(el.value,10)||0);H.simDirty=Date.now();
-    Object.keys(H.simDocs).forEach(k=>{if(k.startsWith(hw(w)+"-"))delete H.simDocs[k]});H.simGen=0;const d=weekDays(w);if(d.length&&!d.includes(H.dow))H.dow=d[0];hSaveSim(w)});
+    const d=weekDays(w);if(d.length&&!d.includes(H.dow))H.dow=d[0];hSaveSim(w)});
   $("hOccTabs").addEventListener("click",e=>{const b=e.target.closest("[data-occ]");if(!b)return;H.occ=b.dataset.occ;renderHorarios()});
   $("hProg").addEventListener("click",e=>{const b=e.target.closest("[data-hmod]");if(!b||b.disabled)return;H.open=H.open===b.dataset.hmod?"":b.dataset.hmod;renderHorarios()});
   $("hModPanel").addEventListener("click",e=>{
@@ -4081,9 +4192,12 @@ function hEditClose(){H.edit=null;const b=$("hEdit");if(b)b.hidden=true}
     if((b=e.target.closest("[data-pickr]"))){const P=H.pick;if(!P)return;const it=PAL.find(p=>p.k===P.k);const v=b.dataset.pickr;let res=null;if(v){const ix=v.indexOf("|");res={sd:v.slice(0,ix),u:v.slice(ix+1)}}hPlace(P.ci,P.s,it,res)}});
   $("hAlerts").addEventListener("keydown",e=>{if(e.key==="Enter"){const r=e.target.closest("[data-iss]");if(r)openIssue(+r.dataset.iss)}});
   $("hIss").addEventListener("click",e=>{if(e.target===$("hIss")||e.target.closest("#hIssX")){$("hIss").hidden=true;return}
+    const ac=e.target.closest("[data-issacc]");if(ac){const C=$("hIssC");hAccept(C.dataset.k,C.dataset.on==="1");$("hIss").hidden=true;return}
     const b=e.target.closest("[data-issv]");if(b){const k=$("hIssA").dataset.k,v=b.dataset.issv;if(k){hSaveAppr(CW(),k,apprOf(CW(),k)===v?"":v)}$("hIss").hidden=true}});
   document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("hIss").hidden)$("hIss").hidden=true});
   $("hAlerts").addEventListener("click",e=>{const r0=e.target.closest("[data-iss]");if(r0&&!e.target.closest("button")){openIssue(+r0.dataset.iss);return}
+    const ab=e.target.closest("[data-accept]");if(ab){e.stopPropagation();hAccept(ab.dataset.accept,true);return}
+    const ub=e.target.closest("[data-unaccept]");if(ub){e.stopPropagation();hAccept(ub.dataset.unaccept,false);return}
     const b=e.target.closest("[data-appr]");if(b){const k=b.dataset.appr,v=b.dataset.v;hSaveAppr(CW(),k,apprOf(CW(),k)===v?"":v);return}
     if(e.target.closest("[data-allal]")){H.allAl=!H.allAl;renderHorarios();return}
     if(e.target.closest("[data-rev]")){H.showRev=!H.showRev;renderHorarios()}});
@@ -4180,7 +4294,7 @@ function hEditClose(){H.edit=null;const b=$("hEdit");if(b)b.hidden=true}
   $("hEsave").addEventListener("click",()=>{if(!H.edit)return;const a=$("hEa").value.trim(),rv=$("hEr").value,s=$("hEs").value,en=$("hEe").value;
     if(!a){$("hEa").focus();return}if(tm(en)<=tm(s)){$("hEe").focus();return}
     const c=H.cols[H.edit.ci];const groups=apGroupsEdit(c.ap);const g=groups.find(x=>x.name===c.n);if(!g)return;
-    const nb={s,e:en,a,c:ACT_CAT[a]||"log"};nb.t=needType(nb);if(rv&&nb.t){const ix=rv.indexOf("|");nb.sd=rv.slice(0,ix);nb.u=rv.slice(ix+1)}
+    const nb={s,e:en,a,c:ACT_CAT[a]||"log"};nb.t=needType(nb);if(rv&&(nb.t||isCheck(a))){const ix=rv.indexOf("|");nb.sd=rv.slice(0,ix);nb.u=rv.slice(ix+1)}
     if(!$("hEbus").hidden&&$("hEfrom").value&&$("hEto").value){if($("hEfrom").value===$("hEto").value){setStatus("Origen y destino iguales");return}nb.from=$("hEfrom").value;nb.to=$("hEto").value}
     const old=H.edit.bi>=0?g.blocks[H.edit.bi]:null;
     const put=(o,ob)=>{const i=ob?o.blocks.findIndex(b=>b.s===ob.s&&b.a===ob.a):-1;if(i>=0)o.blocks[i]=Object.assign({},nb);else o.blocks.push(Object.assign({},nb));o.blocks.sort((p,q)=>tm(p.s)-tm(q.s))};
@@ -4869,6 +4983,7 @@ renderRegistros();
     if(!db)return;S.db=db;
     db.collection("reqs").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});EQ.reqs=m;renderEquipos()},()=>{});
     db.collection("teams").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});if(!EQ.saving)EQ.docs=m;renderEquipos();renderHorarios()},()=>{});
+    db.collection("hsimd").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v&&Array.isArray(v.groups))m[d.id]={groups:v.groups}});H.simDocs=m;renderHorarios()},()=>{});
     db.collection("hsim").onSnapshot(snap=>{snap.docs.forEach(d=>{const v=d.data();if(!v)return;if(v.teams&&!(H.simDirty&&Date.now()-H.simDirty<5000))H.simTeams[d.id]=Object.assign({},H.simTeams[d.id]||{},v.teams);if(v.cfg)H.simCfg[d.id]=v.cfg;if(v.appr)H.simAppr[d.id]=v.appr;if(v.bus)Object.assign(H.simBus,v.bus)});renderHorarios()},()=>{});
     db.collection("hbus").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});H.busOv=m;renderHorarios()},()=>{});
     db.collection("happr").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});H.appr=m;renderHorarios()},()=>{});
@@ -5079,7 +5194,7 @@ function permChips(u){if(u.admin)return '<span class="ad-chip adm">Todo · Admin
 function adRender(){const box=$("view-admin");if(!box||box.hidden&&curView()!=="admin")return;
   const us=AD.users,act=us.filter(u=>u.active).length,adm=us.filter(u=>u.admin&&u.active).length,off=us.length-act;
   let h='<div class="eqhead"><div class="eqtitlebox"><h2 class="eqtitle">Usuarios y accesos</h2><span class="sub">Crea usuarios a partir de vuestro Zoho CRM y decide qué ve o edita cada uno.</span></div>'
-    +'<div class="ad-hact"><div class="seg" role="tablist"><button type="button" data-adtab="users" aria-pressed="'+(AD.tab==="users")+'">Usuarios</button><button type="button" data-adtab="audit" aria-pressed="'+(AD.tab==="audit")+'">Actividad</button></div><button type="button" class="btn ad-new" data-adnew>+ Nuevo usuario</button></div></div>';
+    +'<div class="ad-hact"><div class="seg" role="tablist"><button type="button" data-adtab="users" aria-pressed="'+(AD.tab==="users")+'">Usuarios</button><button type="button" data-adtab="audit" aria-pressed="'+(AD.tab==="audit")+'">Actividad</button><button type="button" data-adtab="backup" aria-pressed="'+(AD.tab==="backup")+'">Copia de seguridad</button></div><button type="button" class="btn ad-new" data-adnew>+ Nuevo usuario</button></div></div>';
   h+='<div class="ad-dc"><i>1</i><span><b>Usuario activo de Zoho CRM.</b> Se comprueba al crearlo, al entrar y cada 30 min de uso.</span><span class="ar">→</span><i>2</i><span><b>Accesos en el software.</b> Por apartado y subapartado: sin acceso, ver o editar.</span></div>';
   if(AD.err)h+='<div class="ad-err">'+esc(AD.err)+"</div>";
   if(AD.tab==="users"){
@@ -5089,6 +5204,14 @@ function adRender(){const box=$("view-admin");if(!box||box.hidden&&curView()!=="
     h+=L.length?'<div class="ad-list">'+L.map(u=>{const tags=(u.admin?'<span class="ad-tag adm">Administrador</span>':"")+(!u.active?'<span class="ad-tag bad">Desactivado</span>':"")+(u.zohoStatus==="inactive"?'<span class="ad-tag bad">Inactivo en Zoho</span>':'<span class="ad-tag ok">Zoho ✓</span>')+(u.mustChange?'<span class="ad-tag">Debe cambiar contraseña</span>':"");
       return '<button type="button" class="ad-row'+(u.active?"":" off")+(u.admin?" isadm":"")+'" data-aded="'+u.id+'"><span class="ad-av">'+esc(iniOf(u.name))+'</span><span class="ad-who"><b>'+esc(u.name)+'</b><small>'+esc(u.email)+(u.zohoRole?" · "+esc(u.zohoRole):"")+'</small><span class="ad-tags">'+tags+'</span></span><span class="ad-perm">'+permChips(u)+'</span><span class="ad-last"><b>Último acceso</b>'+esc(ago(u.lastLogin))+'</span><span class="ar">›</span></button>'}).join("")+"</div>"
       :'<div class="ad-empty">'+(AD.loading?"Cargando usuarios…":q?"Ningún usuario coincide con la búsqueda.":"Todavía no hay usuarios. Pulsa «Nuevo usuario».")+"</div>";
+  }else if(AD.tab==="backup"){const B=AD.backup;const f=d=>d?new Date(d).toLocaleString("es-ES",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}):"—";
+    h+='<div class="bk-box"><h3 class="wide" style="margin:0 0 6px">Copia de seguridad</h3><p class="sub">Cada día, a partir de las 3:00, se copian todos los datos guardados del software (horarios, simulador, equipos, incidencias, contabilidad…). Se conserva solo la última copia buena: la nueva sustituye a la anterior únicamente cuando se ha completado sin errores.</p>';
+    if(!B)h+='<p>Cargando…</p>';else{
+      h+='<div class="ad-stats"><div class="ad-stat"><b>'+(B.at?f(B.at):"Aún no hay")+'</b><span>Última copia buena</span></div><div class="ad-stat"><b>'+(B.n||0)+'</b><span>Documentos</span></div><div class="ad-stat"><b>'+(B.size?Math.round(B.size/1024)+" KB":"—")+'</b><span>Tamaño</span></div></div>';
+      if(B.err)h+='<div class="ad-err">El último intento falló ('+esc(f(B.failAt))+'): '+esc(B.err)+'. Se conserva la copia anterior y se volverá a intentar.</div>';
+      h+='<div class="bk-act"><button type="button" class="btn primary" data-bkrun>Hacer copia ahora</button>'+(B.at?'<button type="button" class="btn" data-bkdl>Descargar la copia</button>':"")+"</div>";
+      if(B.at)h+='<div class="bk-rest"><h4>Recuperar desde la copia del '+esc(f(B.at))+'</h4><p class="sub">Devuelve lo elegido al estado de la copia. Lo que haya ahora no se pierde: queda en el historial y en la papelera.</p><div class="bk-act">'+[["hor,hweek,hbus,happr","Horarios"],["hsimd,hsim","Simulador"],["teams,reqs","Equipos"],["","Todo"]].map(([c,l])=>'<button type="button" class="btn" data-bkrest="'+c+'">'+l+"</button>").join("")+"</div></div>"}
+    h+="</div>";
   }else{
     const A=AD.audit;const LBL={login:"Entró",login_fallido:"Intento fallido",login_denegado_zoho:"Bloqueado por Zoho",sesion_cerrada_zoho:"Sesión cerrada por Zoho",cambio_contraseña:"Cambió su contraseña",usuario_creado:"Usuario creado",usuario_modificado:"Usuario modificado",usuario_borrado:"Usuario borrado",admin_creado_cli:"Administrador creado (instalación)",contraseña_restablecida_cli:"Contraseña restablecida (servidor)"};
     h+=!A?'<div class="ad-empty">Cargando actividad…</div>':A.length?'<div class="tablebox"><table class="ad-audit"><thead><tr><th>Cuándo</th><th>Quién</th><th>Qué</th><th>Detalle</th></tr></thead><tbody>'+A.map(x=>"<tr><td>"+esc(new Date(x.ts).toLocaleString("es-ES",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}))+"</td><td>"+esc(x.email||"—")+"</td><td>"+esc(LBL[x.action]||x.action)+"</td><td>"+esc(x.detail||"")+"</td></tr>").join("")+"</tbody></table></div>":'<div class="ad-empty">Sin actividad todavía.</div>';
@@ -5097,7 +5220,13 @@ function adRender(){const box=$("view-admin");if(!box||box.hidden&&curView()!=="
 }
 $("view-admin").addEventListener("input",e=>{if(e.target.id==="adQ"){AD.q=e.target.value;const pos=e.target.selectionStart;adRender();const i=$("adQ");if(i){i.focus();try{i.setSelectionRange(pos,pos)}catch(x){}}}});
 $("view-admin").addEventListener("click",async e=>{let b;
-  if((b=e.target.closest("[data-adtab]"))){AD.tab=b.dataset.adtab;if(AD.tab==="audit"){AD.audit=null;adRender();try{AD.audit=(await window.CE_API("GET","/api/admin/audit?limit=200")).items}catch(x){AD.audit=[];AD.err=x.message}}adRender();return}
+  if((b=e.target.closest("[data-adtab]"))){AD.tab=b.dataset.adtab;if(AD.tab==="audit"){AD.audit=null;adRender();try{AD.audit=(await window.CE_API("GET","/api/admin/audit?limit=200")).items}catch(x){AD.audit=[];AD.err=x.message}}
+    if(AD.tab==="backup"){AD.backup=null;adRender();try{AD.backup=await window.CE_API("GET","/api/admin/backup")}catch(x){AD.backup={};AD.err=x.message}}adRender();return}
+  if((b=e.target.closest("[data-bkrun]"))){b.disabled=true;b.textContent="Haciendo la copia…";try{AD.backup=await window.CE_API("POST","/api/admin/backup/run");toast(AD.backup.err?"La copia ha fallado":"Copia hecha")}catch(x){toast(x.message)}adRender();return}
+  if((b=e.target.closest("[data-bkdl]"))){try{const d=await window.CE_API("GET","/api/admin/backup/data");const name="copia-campus-experience-"+String(d.at||"").slice(0,10)+".json";
+      if(S.dl)await S.dl.save({filename:name,data:JSON.stringify(d)});else{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(d)],{type:"application/json"}));a.download=name;a.click()}}catch(x){toast(x.message||"No se pudo descargar")}return}
+  if((b=e.target.closest("[data-bkrest]"))){if(b.dataset.sure!=="1"){b.dataset.sure="1";b.textContent="¿Seguro? Pulsa otra vez";return}
+    b.disabled=true;try{const r=await window.CE_API("POST","/api/admin/backup/restore",{cols:b.dataset.bkrest?b.dataset.bkrest.split(","):[]});toast("Recuperado: "+r.n+" documentos")}catch(x){toast(x.message||"No se pudo recuperar")}adRender();return}
   if(e.target.closest("[data-adnew]")){adEdit(null);return}
   if((b=e.target.closest("[data-aded]"))){adEdit(AD.users.find(u=>String(u.id)===b.dataset.aded));return}});
 /* --- panel de edición --- */

@@ -83,6 +83,7 @@ const COLS = {
   ingmv: { read: u => lvl(u, "contabilidad.ingresos") >= 1, write: u => lvl(u, "contabilidad.ingresos") >= 2 },
   dev:   { read: u => lvl(u, "contabilidad.devoluciones") >= 1, write: u => lvl(u, "contabilidad.devoluciones") >= 2 },
   hsim:  { read: u => lvl(u, "horarios.simulador") >= 1, write: u => lvl(u, "horarios.simulador") >= 2 },
+  hsimd: { read: u => lvl(u, "horarios.simulador") >= 1, write: u => lvl(u, "horarios.simulador") >= 2 },
 };
 const canZoho = u => ["registros", "equipos", "horarios", "contabilidad", "incidencias"].some(a => anyOf(u, a));
 
@@ -122,10 +123,21 @@ const Q = {
   docsOf: db.prepare("SELECT id,data FROM docs WHERE col=?"),
   docPut: db.prepare("INSERT INTO docs(col,id,data,updated_at,updated_by) VALUES(?,?,?,?,?) ON CONFLICT(col,id) DO UPDATE SET data=excluded.data,updated_at=excluded.updated_at,updated_by=excluded.updated_by"),
   docDel: db.prepare("DELETE FROM docs WHERE col=? AND id=?"),
+  docGet: db.prepare("SELECT data FROM docs WHERE col=? AND id=?"),
   audit: db.prepare("INSERT INTO audit(ts,user_id,email,action,detail,ip) VALUES(?,?,?,?,?,?)"),
   auditList: db.prepare("SELECT ts,email,action,detail FROM audit ORDER BY id DESC LIMIT ?"),
 };
 const nowISO = () => new Date().toISOString();
+/* protección de datos: historial, papelera y copia de seguridad diaria (mismo código que en Catalyst) */
+const P = require("./protect.js")({
+  get: async (c, i) => { const r = Q.docGet.get(c, i); if (!r) return null; try { return JSON.parse(r.data); } catch (e) { return null; } },
+  put: async (c, i, d, b) => { Q.docPut.run(c, i, JSON.stringify(d === undefined ? null : d), nowISO(), b || null); },
+  remove: async (c, i) => { Q.docDel.run(c, i); },
+  list: async c => { const o = {}; for (const r of Q.docsOf.all(c)) { try { o[r.id] = JSON.parse(r.data); } catch (e) {} } return o; },
+  metaGet: async k => { const r = Q.docGet.get("_meta", k); return r ? JSON.parse(r.data) : null; },
+  metaSet: async (k, v) => { Q.docPut.run("_meta", k, JSON.stringify(v), nowISO(), null); },
+}, () => Object.keys(COLS));
+setInterval(() => { P.backupIfDue(false).catch(e => console.log("Copia de seguridad: " + e.message)); }, 30 * 60000).unref();
 const audit = (u, action, detail, ip) => { try { Q.audit.run(nowISO(), u ? u.id : null, u ? u.email : null, action, detail ? String(detail).slice(0, 500) : null, ip || null); } catch (e) {} };
 const hydrate = u => { if (!u) return null; let p = {}; try { p = JSON.parse(u.perms || "{}"); } catch (e) {} u.permsObj = cleanPerms(p); u.is_admin = !!u.is_admin; u.active = !!u.active; return u; };
 
@@ -419,9 +431,28 @@ async function handle(req, res) {
     const col = m[1], id = m[2]; if (!COLS[col]) return fail(res, 404, "Colección desconocida");
     if (!COLS[col].write(U, id)) return fail(res, 403, "Solo lectura: no tienes permiso para modificar esto.");
     if (M === "DELETE" && col === "inc" && !U.is_admin) return fail(res, 403, "Solo un administrador puede borrar incidencias.");
-    if (M === "PUT") { const b = await readBody(req); Q.docPut.run(col, id, JSON.stringify(b.data === undefined ? null : b.data), nowISO(), U.id); }
-    else Q.docDel.run(col, id);
+    if (M === "PUT") { const b = await readBody(req); await P.beforePut(col, id, b.data, U); Q.docPut.run(col, id, JSON.stringify(b.data === undefined ? null : b.data), nowISO(), U.id); }
+    else { await P.beforeDelete(col, id, U); Q.docDel.run(col, id); }
     broadcast(col, "u" + U.id); return send(res, 200, { ok: true });
+  }
+  if (p === "/api/hist" && M === "GET") {
+    const col = String(url.searchParams.get("col") || ""), id = String(url.searchParams.get("id") || "");
+    if (!COLS[col] || !/^[A-Za-z0-9_.:|\-]{1,200}$/.test(id)) return fail(res, 400, "Documento no válido"); if (!COLS[col].read(U)) return fail(res, 403, "Sin acceso");
+    return send(res, 200, { versions: await P.history(col, id) });
+  }
+  if (p === "/api/trash" && M === "GET") {
+    const col = String(url.searchParams.get("col") || "");
+    return send(res, 200, { items: (await P.trashList()).filter(e => COLS[e.col] && COLS[e.col].read(U) && (!col || e.col === col)), admin: !!U.is_admin });
+  }
+  if (p === "/api/trash/restore" && M === "POST") {
+    const b = await readBody(req, 2000); const key = String(b.key || "");
+    const e0 = (await P.trashList()).find(x => x.key === key); if (!e0) return fail(res, 404, "Ya no está en la papelera");
+    if (!COLS[e0.col] || !COLS[e0.col].write(U, e0.id)) return fail(res, 403, "No tienes permiso para recuperarlo.");
+    await P.trashRestore(key, U); broadcast(e0.col, "u" + U.id); return send(res, 200, { ok: true });
+  }
+  if (p === "/api/trash" && M === "DELETE") {
+    if (!U.is_admin) return fail(res, 403, "Solo el administrador puede vaciar la papelera.");
+    await P.trashEmpty(url.searchParams.get("key") || null); return send(res, 200, { ok: true });
   }
   if (p === "/api/profiles" && M === "GET") {
     const ids = String(url.searchParams.get("ids") || "").split(",").filter(Boolean).slice(0, 50);
@@ -464,6 +495,10 @@ async function handle(req, res) {
   /* --- administración (solo administradores) --- */
   if (p.startsWith("/api/admin/")) {
     if (!U.is_admin) return fail(res, 403, "Solo el administrador puede hacer esto.");
+    if (p === "/api/admin/backup" && M === "GET") return send(res, 200, await P.backupInfo());
+    if (p === "/api/admin/backup/data" && M === "GET") { const d = await P.backupData(); if (!d) return fail(res, 404, "Aún no hay copia de seguridad"); return send(res, 200, d); }
+    if (p === "/api/admin/backup/run" && M === "POST") return send(res, 200, await P.backupIfDue(true));
+    if (p === "/api/admin/backup/restore" && M === "POST") { const b = await readBody(req, 2000); const r = await P.backupRestore(Array.isArray(b.cols) ? b.cols.filter(c => COLS[c]) : [], U); r.cols.forEach(c => broadcast(c, "u" + U.id)); return send(res, 200, r); }
     if (p === "/api/admin/users" && M === "GET") return send(res, 200, { users: Q.users.all().map(u => pubUser(hydrate(u))), catalog: CATALOG });
     if (p === "/api/admin/zoho-users" && M === "GET") {
       try { const list = await zohoActiveUsers(url.searchParams.get("refresh") === "1"); const taken = new Set(Q.users.all().map(u => u.zoho_id)); return send(res, 200, { users: list.map(z => Object.assign({ registered: taken.has(z.id) }, z)) }); }
