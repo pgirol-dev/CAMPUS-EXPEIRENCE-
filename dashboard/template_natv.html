@@ -683,10 +683,6 @@ body{margin:0;background:var(--color-bg);color:var(--color-fg);font:14px/1.45 va
 .ce .rt-leg button em{font-style:normal;font-weight:500;opacity:.7}
 .ce .rt-leg button[aria-pressed=false]{opacity:.45}
 .ce .rt-leg button[aria-pressed=false] i{background:transparent;box-shadow:inset 0 0 0 1.5px var(--c)}
-.ce .rt-mk{display:flex;gap:6px 18px;flex-wrap:wrap;font:500 12px var(--font);color:var(--tileink);border-top:1px solid color-mix(in srgb,var(--tileink) 14%,transparent);padding-top:12px;margin-top:4px}
-.ce .rt-mk[hidden]{display:none}
-.ce .rt-mk span{display:inline-flex;align-items:center;gap:7px}
-.ce .rt-mk b{min-width:19px;height:19px;border-radius:96px;background:var(--pink);color:#fff;font:italic 900 10.5px/19px Archivo,"Arial Black",Impact,sans-serif;text-align:center}
 /* ===== Residencias ===== */
 .ce .rz-demo{font:700 11px var(--font);border:1px solid color-mix(in srgb,var(--tileink) 30%,transparent);border-radius:96px;background:transparent;color:var(--tileink);padding:4px 10px;cursor:pointer}
 .ce{--rz-uam:#ea456c;--rz-uem:#0f2145;--rz-ok:#2f9a5e;--rz-warn:#d99a1e;--rz-bad:#d93a55}
@@ -1054,7 +1050,7 @@ body{margin:0;background:var(--color-bg);color:var(--color-fg);font:14px/1.45 va
     </div>
 
     <section class="blk rt-g" id="ritmo-g">
-      <div class="bh"><span class="num">01</span><h2>Ritmo de inscripción</h2><p>Madrid, sedes nacionales e institucionales juntas. Pasa el ratón por una columna para ver el detalle; toca la leyenda para ocultar un origen.</p></div>
+      <div class="bh"><span class="num">01</span><h2>Ritmo de inscripción</h2><p>Madrid, sedes nacionales e institucionales juntas. Pasa el ratón por una columna para ver el detalle (las aperturas de sede van marcadas con un número); toca la leyenda para ocultar un origen.</p></div>
       <div class="rt-k" id="rg-k"></div>
       <div class="card">
         <div class="head"><h3 id="rg-h">Registros en el tiempo</h3><div class="pillrow">
@@ -1064,7 +1060,6 @@ body{margin:0;background:var(--color-bg);color:var(--color-fg);font:14px/1.45 va
         <div class="rt-leg" id="rg-leg" role="group" aria-label="Orígenes"></div>
         <div class="cols" id="rg-tl"></div>
         <p class="note" id="rg-n"></p>
-        <div class="rt-mk" id="rg-mk"></div>
       </div>
     </section>
   </div>
@@ -1407,7 +1402,6 @@ const p2=n=>String(n).padStart(2,'0');
 const ORG={madrid:{n:'Madrid',c:'var(--pink)'},nac:{n:'Nacionales',c:'var(--navy)'},ins:{n:'Institucionales',c:'#9aa3b5'}};
 /* aperturas que se marcan en el gráfico general (fecha en que se abrió la venta) */
 const TL_MARKS=[{d:'2026-10-08',t:'Madrid abre la venta (antes, pre-registros)'},{d:'2026-11-10',t:'Andorra, Valencia y Málaga abren'},{d:'2026-11-11',t:'Alicante abre'},{d:'2026-11-13',t:'Torrevieja y Almería abren'}];
-const fdia=d=>{const[,m,x]=d.split('-').map(Number);return x+' '+MS[m-1];};
 function tlRows(srcs,met,tab){
   const v0=tab==='month'?'day':tab,m=new Map();
   srcs.forEach(s=>{let rows=met==='reg'?s.tl.filter(r=>r.view==='r'+v0):[];if(!rows.length)rows=s.tl.filter(r=>r.view===v0);
@@ -1441,7 +1435,6 @@ function ritmo(o){
   if(o.met==='reg')note+=' Cada registro es una semana contratada y cuenta el día de la inscripción.';
   if(o.mode==='acc'&&o.tab!=='hour')note+=' Vista acumulada: cada columna suma todo lo anterior.';
   if(o.noteEl)o.noteEl.textContent=note;
-  if(o.mkEl){o.mkEl.hidden=!o.marks||o.tab==='hour';o.mkEl.innerHTML=TL_MARKS.map((m,i)=>'<span><b>'+(i+1)+'</b>'+fdia(m.d)+' · '+m.t+'</span>').join('');}
   return rows;}
 const seg=(sel,fn)=>root.querySelectorAll(sel+' button').forEach(b=>b.addEventListener('click',()=>{root.querySelectorAll(sel+' button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));fn(b);}));
 /* Madrid (y cada sede nacional al abrirla) */
@@ -1457,7 +1450,7 @@ function rgSrcs(){const s=[{o:'madrid',tl:DATA.timeline||[]}];Object.values(DATA
   (DATA.ins_sedes||[]).forEach(x=>s.push({o:'ins',name:x.name,tl:x.timeline||[]}));if(!(DATA.ins_sedes||[]).length)s.push({o:'ins',tl:[]});return s;}
 function drawRG(){const el=$('#rg-tl');if(!el||!DATA)return;const srcs=rgSrcs(),U=RG.met==='reg'?['registro','registros']:['jugador','jugadores'];
   $('#rg-h').textContent=RG.met==='reg'?'Registros en el tiempo':'Jugadores inscritos en el tiempo';
-  ritmo({el,noteEl:$('#rg-n'),mkEl:$('#rg-mk'),srcs,met:RG.met,tab:RG.tab,mode:RG.mode,stack:true,marks:true,hidden:RG.hidden});
+  ritmo({el,noteEl:$('#rg-n'),srcs,met:RG.met,tab:RG.tab,mode:RG.mode,stack:true,marks:true,hidden:RG.hidden});
   /* leyenda con el total de cada origen */
   const tot=k=>tlRows(srcs.filter(s=>s.o===k),RG.met,'week').reduce((a,x)=>a+(x.p[k]||0),0);
   $('#rg-leg').innerHTML=Object.keys(ORG).map(k=>{const n=tot(k);return '<button type="button" data-o="'+k+'" aria-pressed="'+!RG.hidden.has(k)+'" style="--c:'+ORG[k].c+'"><i></i>'+ORG[k].n+' <em>'+(n||k!=='ins'?f(n):'sin datos todavía')+'</em></button>';}).join('');
