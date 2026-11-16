@@ -596,5 +596,6 @@ Se asignan automáticamente en este orden, un equipo por nombre y sin repetir de
   - **Copia de seguridad diaria:** desde las 3:00, una sola copia (la más reciente). La nueva solo sustituye a la anterior cuando se ha completado bien; si falla, se conserva la anterior y se reintenta. En «Sistema › Usuarios y accesos › Copia de seguridad»: hacer copia ahora, descargarla y recuperar Horarios, Simulador, Equipos o todo (lo actual queda en historial/papelera).
   - Protegidos: hor, hweek, hsim, hsimd, teams, reqs, hbus, happr. Servidor: `protect.js` (Catalyst y servidor propio).
   - **Buses:** plazas a elegir entre 28, 54, 60 y 72. El reparto automático sigue usando 54/60/72 (los de tarifa); el de 28 no tiene tarifa.
-  - **Check-in y check-out:** en la instalación salen siempre «Fleming VBB» y «Residencia».
+  - **Check-in y check-out:** en la instalación salen siempre tres sedes: «Fleming», «Valdebebas» y «Residencia» (corregido el 16/11: eran tres, no dos).
+  - **Orden de las columnas del horario:** media jornada, jornada completa e internos; dentro de cada una, primero ONE y luego MAX (ONE MJ · ONE JC · MAX JC · ONE INT · MAX INT). También en la fila de modalidades.
   - **Aceptar avisos:** cualquier aviso de conflicto se puede aceptar (personas con edición de Horarios). Queda en gris con quién y cuándo, deja de contar como error y se puede quitar. Si el conflicto cambia, vuelve a avisar.

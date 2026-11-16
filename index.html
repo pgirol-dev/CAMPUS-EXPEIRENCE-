@@ -2952,7 +2952,7 @@ const dur=b=>tm(b.e)-tm(b.s);
 const isExp=b=>b.a==="Actividades Experience";
 /* tipo de instalación que necesita cada sesión */
 /* check-in y check-out: siempre se puede elegir Fleming VBB o Residencia */
-const CHECK_SEDES=["Fleming VBB","Residencia"];const isCheck=a=>/check-?in|check-?out/i.test(String(a||""));
+const CHECK_SEDES=["Fleming","Valdebebas","Residencia"];const isCheck=a=>/check-?in|check-?out/i.test(String(a||""));
 function needType(b){const c=b.c||ACT_CAT[b.a];
   if(c==="fut")return "campo";if(c==="prep")return "prep";if(c==="pis")return "piscina";
   if(["Comida","Cena","Desayuno"].includes(b.a))return "comedor";if(isExp(b))return "exp";if(b.a==="Tour BNB")return "tour";
@@ -3038,7 +3038,10 @@ function simGroups(week,ap){const T=(H.simTeams[hw(week)]||{});const prog=ap.spl
 function apGroupsFull(week,ap){if(H.sim)return simGroups(week,ap);const d=EQ.docs[hw(week)+"-"+apKey(ap)];return d&&Array.isArray(d.groups)?d.groups.map(g=>{const T=(g.teams||[]).filter(t=>t&&t.length);return {name:String(g.name||""),teams:T.length,size:T.reduce((a,t)=>a+t.length,0)}}).filter(g=>g.teams):[]}
 function apGroups(week,ap){return apGroupsFull(week,ap).map(g=>g.name)}
 function apCount(week,ap){if(H.sim)return (+(H.simTeams[hw(week)]||{})[apKey(ap)]||0)*SIM_PLAYERS[ap.split("|")[0]];if(hNac(week))return rowsFor(week,ap).length;return S.rows.filter(r=>r.weeks.some(w=>w.n===week&&w.prog+"|"+w.mod===ap)).length}
-function dayAps(week,dow){return APARTADOS.map(([p,m])=>p+"|"+m).filter(ap=>MODDAYS[ap].includes(dow)&&apCount(week,ap))}
+/* orden de las columnas en Horarios: media jornada, jornada completa e internos; dentro de cada una, primero ONE y luego MAX */
+const H_ORDER=["ONE|Media Jornada","MAX|Media Jornada","ONE|Jornada Completa","MAX|Jornada Completa","ONE|Interno","MAX|Interno"];
+const H_APS=()=>H_ORDER.filter(ap=>APARTADOS.some(([p,m])=>p+"|"+m===ap));
+function dayAps(week,dow){return H_APS().filter(ap=>MODDAYS[ap].includes(dow)&&apCount(week,ap))}
 function weekDays(week){return [1,2,3,4,5,6,0].filter(d=>dayAps(week,d).length)}
 function tplFor(ap,i){const T=HTPL[ap]||[];return T.length?T[i%T.length].map(b=>Object.assign({},b)):[]}
 /* ---------- configuración de la semana ---------- */
@@ -3638,7 +3641,7 @@ function renderHorarios(){try{sbSync()}catch(e){}
   const cfg=wkCfg(CW());
   $("hSim").hidden=!H.sim;if(H.sim)renderSimPanel();
   /* resumen compacto: programa y modalidad abreviados, participantes y equipos (sin sedes); al pulsar se despliegan sus instalaciones */
-  $("hProg").innerHTML=APARTADOS.map(([p,m])=>{const ap=p+"|"+m;const n=apCount(CW(),ap);const G=apGroupsFull(CW(),ap);const nt=G.reduce((a,g)=>a+g.teams,0);
+  $("hProg").innerHTML=H_APS().map(ap=>ap.split("|")).map(([p,m])=>{const ap=p+"|"+m;const n=apCount(CW(),ap);const G=apGroupsFull(CW(),ap);const nt=G.reduce((a,g)=>a+g.teams,0);
     return '<button type="button" class="mchip p-'+p+(n?"":" zero")+'" data-hmod="'+ap+'" aria-expanded="'+(H.open===ap)+'"'+(n?"":" disabled")+' title="'+esc(apLabel(p,m))+' · pulsa para ver sus instalaciones"><span class="mk2">'+esc(MODSHORT(ap))+'</span><span class="mv"><b>'+(n?n:"—")+'</b> part.</span><span class="mv"><b>'+(n?nt||"—":"—")+'</b> eq.</span></button>'}).join("");
   renderModPanel(cfg);
   const instV=VW()==="inst";
