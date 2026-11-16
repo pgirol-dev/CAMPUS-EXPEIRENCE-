@@ -12,6 +12,7 @@ grep -q '"dashboard_api"' catalyst.json      || falta "catalyst.json no incluye 
 [ -f client/dashboard-menu.js ]              || falta "Falta client/dashboard-menu.js (el acceso «Dashboard» del menú)."
 grep -q 'dashboard-menu.js' build.js         || falta "build.js ya no enlaza dashboard-menu.js (el acceso del menú)."
 grep -q 'dashboard-menu.js' client/index.html || falta "client/index.html no enlaza dashboard-menu.js: ejecuta node build.js."
+grep -q 'k: "dashboard"' functions/campus_api/index.js || falta "El catálogo de permisos de campus_api ya no incluye «Dashboard › Residencias» (k: \"dashboard\")."
 if [ "$ok" = 0 ]; then
   echo
   echo "El dashboard de registros forma parte del software y se perdería al publicar."

@@ -12,6 +12,16 @@ Versión del dashboard que antes vivía en claude.ai, ahora dentro del software 
 - **Botón «Actualizar»:** `POST /server/dashboard_api/api/dashboard/refresh` (como mucho una lectura de Zoho por minuto). Queda en el registro de actividad.
 - Atención al público ya no forma parte del dashboard (está en el software operativo).
 
+## Residencias (Madrid, desde el 16 nov)
+Apartado «Residencias» en la vista Madrid: ocupación de la **UAM** y la **UEM** en las semanas 2 a 8 (las que tienen programa interno).
+- **Quién cuenta:** jugadores **con pago** de MAX Interno y ONE Interno, por semana (`resid` en `ce_engine.js`: `[{week, max, one}]`). Las noches extra no entran.
+- **Por semana y residencia:** bloqueo (plazas) editable y residencia abierta o cerrada esa semana. Cada modalidad se asigna a la UAM, a la UEM, se divide entre las dos (plazas a la UAM, resto a la UEM) o queda sin asignar.
+- **Totales:** cada residencia tiene sus plazas contratadas (editables, independientes de la suma de bloqueos) y arriba va el total de las dos, con el mismo formato que las tarjetas destacadas del dashboard.
+- **Colores:** por debajo del bloqueo en rojo; cerca (desde el 80 %) en ámbar; bloqueo cubierto o superado en verde con ✓. Fondo de la tarjeta: tono UAM (rosado) mientras no se cubre el bloqueo; gris azulado (tono UEM) cuando se cubre o se supera.
+- **Quién edita:** los administradores y quien tenga el permiso **Dashboard › Residencias: Editar**, que se da en el software en *Administración › Usuarios* (permiso `dashboard.residencias` = 2 del catálogo de `campus_api`). El resto lo ve en solo lectura. Lo comprueba el servidor.
+- **API:** `GET /server/dashboard_api/api/residencias` → `{cfg, canEdit}`; `PUT` con `{cfg}` (cabecera `X-CE: 1`). Se guarda en `CEDocs` col `resid`, id `cfg`, y cada cambio queda en el registro de actividad (`residencias_editadas`).
+- **Línea estética:** todo lo nuevo usa los mismos componentes del dashboard (tarjeta destacada marino con título en Archivo 900 cursiva, cifra grande rosa en Instrument Serif cursiva, subtítulo en cursiva). No se introducen estilos nuevos que rompan esa línea.
+
 ## Cambiar el diseño
 Se edita `dashboard/template_natv.html` (o `cat_ui.js`, el botón) y se regenera la página:
 
@@ -42,6 +52,7 @@ Después de cualquier cambio: subir a GitHub (`main`). Se despliega solo en Cata
 El software operativo se edita a menudo partiendo de copias propias (el artefacto «Operativa Campus Experience»). Dos veces (11 y 12 nov) una publicación borró el dashboard porque vivía dentro de `index.html` y de `campus_api`. Desde el 12 nov:
 - los datos están en la función **`dashboard_api`** (comparte login y Data Store, pero tiene su propio código);
 - el acceso del menú está en **`client/dashboard-menu.js`**;
+- el permiso «Dashboard › Residencias» está en el catálogo de `campus_api` (`k: "dashboard"`); si una versión nueva lo quita, deja de poder darse desde Administración;
 - `scripts/comprobar_dashboard.sh` comprueba que todo sigue ahí; lo ejecutan `publicar.sh` y el despliegue automático, y si falta algo **no se publica**.
 
 `dashboard_api` necesita en Catalyst las mismas variables de Zoho que `campus_api` (`ZOHO_CLIENT_ID`, `ZOHO_CLIENT_SECRET`, `ZOHO_REFRESH_TOKEN`, `ZOHO_ACCOUNTS_URL`, `ZOHO_API_URL`; opcional `CE_LOGIN_URL`, `CE_DASH_TTL_MIN`).

@@ -12,6 +12,8 @@
    Rutas:
      GET  /dashboard.js               datos del dashboard como JavaScript (o redirige al acceso sin sesión)
      POST /api/dashboard/refresh      vuelve a leer Zoho ahora (botón «Actualizar»; cabecera X-CE)
+     GET  /api/residencias            bloqueos y asignaciones de las residencias (UAM y UEM)
+     PUT  /api/residencias            guardarlos (administradores y personas autorizadas; cabecera X-CE)
 */
 "use strict";
 const crypto = require("crypto");
@@ -112,6 +114,32 @@ const COOKIE = LOCAL ? "ce_sess" : "__Host-ce_sess"; // la misma cookie que camp
 const sha = t => crypto.createHash("sha256").update(t).digest("hex");
 const bool = v => v === true || v === "true" || v === 1 || v === "1";
 
+/* residencias: se valida todo lo que llega antes de guardarlo */
+const RZ_W = [2, 3, 4, 5, 6, 7, 8], RZ_R = ["UAM", "UEM"], RZ_TO = ["UAM", "UEM", "split", "-"];
+/* quién edita: administradores y usuarios con el permiso «Dashboard › Residencias: Editar» (dashboard.residencias = 2), que se da en Administración › Usuarios del SO */
+const RZ_PERM = "dashboard.residencias";
+function rzCanEdit(u) { if (bool(u.is_admin)) return true; let p = {}; try { p = JSON.parse(u.perms || "{}"); } catch (e) {} return +p[RZ_PERM] === 2; }
+const rzInt = v => Math.max(0, Math.min(100000, Math.round(+v || 0)));
+function rzClean(c) {
+  c = c && typeof c === "object" ? c : {};
+  const t = c.totals || {};
+  const out = { weeks: {}, totals: { UAM: rzInt(t.UAM), UEM: rzInt(t.UEM) }, updated_at: c.updated_at || "", updated_by: c.updated_by || "" };
+  RZ_W.forEach(w => {
+    const x = (c.weeks || {})[w] || {}; const o = {};
+    RZ_R.forEach(r => { const y = x[r] || {}; o[r] = { on: y.on !== false, blk: rzInt(y.blk) }; });
+    [["MAX", "UAM"], ["ONE", "UEM"]].forEach(([m, def]) => { const y = x[m] || {}; o[m] = { to: RZ_TO.includes(y.to) ? y.to : def, n: rzInt(y.n) }; });
+    out.weeks[w] = o;
+  });
+  return out;
+}
+const readJson = req => new Promise((resolve, reject) => {
+  if (req.body && typeof req.body === "object" && !Buffer.isBuffer(req.body)) return resolve(req.body);
+  let n = 0; const ch = [];
+  req.on("data", c => { n += c.length; if (n > 100000) reject(Object.assign(new Error("Demasiado grande"), { status: 413 })); else ch.push(c); });
+  req.on("end", () => { if (!n) return resolve({}); try { resolve(JSON.parse(Buffer.concat(ch).toString("utf8"))); } catch (e) { reject(Object.assign(new Error("JSON no válido"), { status: 400 })); } });
+  req.on("error", reject);
+});
+
 /* sesión del software operativo (campus_api la crea, la renueva y comprueba Zoho cada 30 min) */
 async function sessionOf(req, st) {
   const tok = cookies(req)[COOKIE]; if (!tok || tok.length < 40) return null;
@@ -155,6 +183,25 @@ async function handle(req, res) {
       try { await st.audit.add({ ts: new Date().toISOString(), user_id: S.u.id, email: S.u.email, action: "dashboard_actualizado", detail: null, ip: ipOf(req) }); } catch (e) {}
       return send(res, 200, { ok: true, ts: r.data.ts });
     } catch (e) { if (!e.status) console.error(e); return fail(res, e.status || 502, e.status ? e.message : "Error al leer Zoho CRM"); }
+  }
+
+  /* --- residencias (UAM y UEM): bloqueos y asignaciones; los editan los administradores y quien tenga el permiso «Dashboard › Residencias: Editar» --- */
+  if (p === "/api/residencias" && (M === "GET" || M === "PUT")) {
+    const S = await sessionOf(req, st); if (!S) return fail(res, 401, "Sesión caducada. Vuelve a entrar.");
+    const raw = (await st.docs.list("resid")).cfg;
+    const cfg = rzClean(raw || {});
+    const canEdit = rzCanEdit(S.u);
+    if (M === "GET") return send(res, 200, { cfg, canEdit });
+    if (req.headers["x-ce"] !== "1") return fail(res, 403, "Petición no permitida");
+    const o = req.headers.origin; if (o && CFG.origins.length && !CFG.origins.includes(o)) return fail(res, 403, "Origen no permitido");
+    if (!canEdit) return fail(res, 403, "No tienes permiso para editar las residencias. Pídelo a un administrador (Administración › Usuarios › Dashboard › Residencias: Editar).");
+    const b = await readJson(req);
+    const n = rzClean(b.cfg || {});
+    cfg.weeks = n.weeks; cfg.totals = n.totals;
+    cfg.updated_at = new Date().toISOString(); cfg.updated_by = S.u.name || S.u.email || "";
+    await st.docs.put("resid", "cfg", cfg, S.u.id);
+    try { await st.audit.add({ ts: cfg.updated_at, user_id: S.u.id, email: S.u.email, action: "residencias_editadas", detail: "bloqueos y asignaciones", ip: ipOf(req) }); } catch (e) {}
+    return send(res, 200, { ok: true, cfg });
   }
 
   return fail(res, 404, "No encontrado");
