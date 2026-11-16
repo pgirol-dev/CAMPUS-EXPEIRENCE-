@@ -53,14 +53,17 @@ function build(rs,ex){
   var day=function(r){return r.Created_Time.slice(0,10);};
   var today=madridToday();var mon=addDays(today,-weekday(today));
   var dc=new Counter();rs.forEach(function(r){dc.add(day(r));});
+  /* registros = semanas contratadas de cada inscripción, en el día en que se inscribió (como «Jugadores por semana de campus») */
+  function nreg(r){var ws=new Set((LN[r.id]||[]).map(function(x){return x[1];}));if(!ws.size)(r.Weeks||[]).forEach(function(x){ws.add(lastWord(x));});return ws.size;}
+  var rc=new Counter();rs.forEach(function(r){rc.add(day(r),nreg(r));});
   var keys=Array.from(dc.m.keys()).sort();var maxk=keys.length?keys[keys.length-1]:null;
-  function days_series(){var out=[['pre',keys.filter(function(k){return k<PRE;}).reduce(function(a,k){return a+dc.get(k);},0)]];
+  function days_series(dc){var out=[['pre',keys.filter(function(k){return k<PRE;}).reduce(function(a,k){return a+dc.get(k);},0)]];
     var x=PRE,z=maxk&&maxk>today?maxk:today;if(!maxk&&PRE>today)z=PRE;
     while(x<=z){out.push([x,dc.get(x)]);x=addDays(x,1);}return out;}
-  function weeks_series(){var out=[['pre','','2026-10-07',keys.filter(function(k){return k<PRE;}).reduce(function(a,k){return a+dc.get(k);},0)]];
+  function weeks_series(dc){var out=[['pre','','2026-10-07',keys.filter(function(k){return k<PRE;}).reduce(function(a,k){return a+dc.get(k);},0)]];
     var s=PRE,e='2026-10-11',z=maxk&&maxk>today?maxk:today;if(!maxk&&PRE>today)z=PRE;
     while(s<=z){var tot=0;keys.forEach(function(k){if(k>=s&&k<=e)tot+=dc.get(k);});out.push([out.length,s,e,tot]);s=addDays(e,1);e=addDays(s,6);}return out;}
-  function hours_series(){var c=new Counter();rs.forEach(function(r){c.add(parseInt(r.Created_Time.slice(11,13),10));});var o=[];for(var h=0;h<24;h++)o.push([h,c.get(h)]);return o;}
+  function hours_series(w){var c=new Counter();rs.forEach(function(r){c.add(parseInt(r.Created_Time.slice(11,13),10),w?w(r):1);});var o=[];for(var h=0;h<24;h++)o.push([h,c.get(h)]);return o;}
   var fact=0,cobr=0;rs.forEach(function(r){fact+=nz(r.Total);cobr+=nz(r.Paid);});
   var LI={},EXT=new Counter();
   ex.forEach(function(e){var p=e[0],imp=e[1],pid=e[2],sem=e[4];var c=mcode(p);if(c&&sem)(LI[pid]=LI[pid]||[]).push([MN[c],imp||0]);else if(String(p).indexOf('Campus Experience')!==0)EXT.add(pid,imp||0);});
@@ -78,7 +81,8 @@ function build(rs,ex){
     k:{n:rs.length,hoy:dc.get(today),sem:keys.filter(function(k){return k>=mon;}).reduce(function(a,k){return a+dc.get(k);},0),
        d7:keys.filter(function(k){return k>=addDays(today,-6);}).reduce(function(a,k){return a+dc.get(k);},0),
        fact:r2(fact),cobr:r2(cobr),pend:r2(fact-cobr),ticket:rs.length?r2(fact/rs.length):0},
-    day:days_series(),week:weeks_series(),hour:hours_series(),
+    day:days_series(dc),week:weeks_series(dc),hour:hours_series(),
+    rday:days_series(rc),rweek:weeks_series(rc),rhour:hours_series(nreg),
     mod:mcnt.most(8).map(function(e){return [e[0],e[1]];}),modrev:mrev.most(8).map(function(e){return [e[0],r2(e[1])];}),
     gen_:top(rs,function(r){return {Male:'Masculino',Female:'Femenino'}[r.Gender]||'N/D';}),
     pos:top(rs,function(r){return r.Posicion_participante||'N/D';}),
@@ -132,6 +136,9 @@ function conv(d){
   var t=[];d.day.forEach(function(e){t.push({view:'day',key:e[0],start:e[0]!=='pre'?e[0]:'',end:'',count:e[1]});});
   d.week.forEach(function(e){t.push({view:'week',key:e[0],start:e[1],end:e[2],count:e[3]});});
   d.hour.forEach(function(e){t.push({view:'hour',key:e[0],start:'',end:'',count:e[1]});});
+  (d.rday||[]).forEach(function(e){t.push({view:'rday',key:e[0],start:e[0]!=='pre'?e[0]:'',end:'',count:e[1]});});
+  (d.rweek||[]).forEach(function(e){t.push({view:'rweek',key:e[0],start:e[1],end:e[2],count:e[3]});});
+  (d.rhour||[]).forEach(function(e){t.push({view:'rhour',key:e[0],start:'',end:'',count:e[1]});});
   var rev={};d.modrev.forEach(function(e){rev[e[0]]=e[1];});var dm=[];
   [['mod','mod'],['gen','gen_'],['pos','pos'],['age','age'],['nat','nat'],['src','src'],['promo','promo'],['col','col'],['pay','pay']].forEach(function(p){
     d[p[1]].forEach(function(e){dm.push({dim:p[0],label:e[0],count:e[1],revenue:p[0]==='mod'?(e[0] in rev?rev[e[0]]:''):''});});});
@@ -209,6 +216,7 @@ function check(D,minN){
   if(Math.abs(K.cobr+K.pend-K.fact)>1)e.push('cobrado + pendiente ≠ facturación');
   if(D.timeline.filter(function(r){return r.view==='week';}).reduce(function(a,r){return a+r.count;},0)!==n)e.push('el gráfico semanal no suma el total');
   ['gen','pos','age','src','promo','col','pay','paymod'].forEach(function(x){if(dim(x)!==n)e.push('el reparto «'+x+'» no suma el total');});
+  var rwk=D.timeline.filter(function(r){return r.view==='rweek';});if(rwk.length&&rwk.reduce(function(a,r){return a+r.count;},0)!==dim('campwk'))e.push('el ritmo de registros no suma las semanas contratadas');
   if(dim('mod')!==dim('campwk'))e.push('modalidades ≠ semanas contratadas');
   if(Math.abs(dim('rev')-K.fact)>1)e.push('el reparto de facturación no suma el total');
   if(D._chk&&D._chk.sinMadrid)e.push(D._chk.sinMadrid+' inscripciones de Madrid sin línea de modalidad');
