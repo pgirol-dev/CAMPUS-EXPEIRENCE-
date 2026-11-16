@@ -12,6 +12,13 @@ Versión del dashboard que antes vivía en claude.ai, ahora dentro del software 
 - **Botón «Actualizar»:** `POST /server/dashboard_api/api/dashboard/refresh` (como mucho una lectura de Zoho por minuto). Queda en el registro de actividad.
 - Atención al público ya no forma parte del dashboard (está en el software operativo).
 
+## Ritmo de inscripción (desde el 16 nov)
+- **Selector Registros | Jugadores** en el ritmo de Madrid (y de cada sede nacional) y en el general de la Portada. Por defecto, **Registros**.
+  - Registros = semanas contratadas de cada inscripción, en el día en que se hizo (vistas `rday`, `rweek`, `rhour` del motor; mismo criterio que «Jugadores por semana de campus»). Jugadores = inscripciones con pago (vistas `day`, `week`, `hour`).
+  - `check()` comprueba que la suma de `rweek` es igual a la de `campwk`.
+- **Ritmo general en la Portada** (debajo de las tarjetas): suma Madrid + sedes nacionales + institucionales, con columnas apiladas por origen (Madrid rosa, Nacionales marino, Institucionales gris). La leyenda muestra el total de cada origen y permite ocultarlo. Encima: hoy, últimos 7 días y tendencia frente a los 7 anteriores.
+- **Aperturas de sede:** círculo rosa numerado con línea discontinua en el día de cada apertura (lista `TL_MARKS` en `template_natv.html`); el detalle sale al pasar el ratón. **Sin leyenda debajo del gráfico** (decisión de Pau: ensucia la tabla).
+
 ## Residencias (Madrid, desde el 16 nov)
 Apartado «Residencias» en la vista Madrid: ocupación de la **UAM** y la **UEM** en las semanas 2 a 8 (las que tienen programa interno).
 - **Quién cuenta:** jugadores **con pago** de MAX Interno y ONE Interno, por semana (`resid` en `ce_engine.js`: `[{week, max, one}]`). Las noches extra no entran.

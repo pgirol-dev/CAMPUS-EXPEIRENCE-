@@ -675,6 +675,19 @@ body{margin:0;background:var(--color-bg);color:var(--color-fg);font:14px/1.45 va
 .ce main .card.nat-fact{padding:22px 26px 24px}
 .ce main .card.nat-fact .big{font-size:clamp(3rem,6vw,4.6rem)}
 
+/* ===== Ritmo de inscripción (Madrid y general) ===== */
+.ce .col .bar.stk{display:flex;flex-direction:column-reverse;gap:1.5px;overflow:hidden;background:transparent!important}
+.ce .col .bar.stk i{display:block;min-height:0}
+.ce .col .pl{position:relative}
+.ce .col.mk .pl::before{content:"";position:absolute;top:0;bottom:0;left:50%;border-left:1.5px dashed var(--pink);opacity:.75}
+.ce .col .mkn{position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:2;min-width:19px;height:19px;padding:0 5px;border-radius:96px;background:var(--pink);color:#fff;font:italic 900 10.5px/19px Archivo,"Arial Black",Impact,sans-serif;text-align:center;white-space:nowrap;box-shadow:0 0 0 2px var(--tilebg,#fff)}
+.ce .rt-k{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr))}
+.ce .rt-leg{display:flex;gap:8px;flex-wrap:wrap;margin:2px 0 4px}
+.ce .rt-leg button{display:inline-flex;align-items:center;gap:7px;font:700 11px var(--font);border:1px solid color-mix(in srgb,var(--tileink) 22%,transparent);border-radius:96px;background:transparent;color:var(--tileink);padding:5px 12px 5px 9px;cursor:pointer}
+.ce .rt-leg button i{width:10px;height:10px;border-radius:3px;background:var(--c)}
+.ce .rt-leg button em{font-style:normal;font-weight:500;opacity:.7}
+.ce .rt-leg button[aria-pressed=false]{opacity:.45}
+.ce .rt-leg button[aria-pressed=false] i{background:transparent;box-shadow:inset 0 0 0 1.5px var(--c)}
 /* ===== Residencias ===== */
 .ce .rz-demo{font:700 11px var(--font);border:1px solid color-mix(in srgb,var(--tileink) 30%,transparent);border-radius:96px;background:transparent;color:var(--tileink);padding:4px 10px;cursor:pointer}
 .ce{--rz-uam:#ea456c;--rz-uem:#0f2145;--rz-ok:#2f9a5e;--rz-warn:#d99a1e;--rz-bad:#d93a55}
@@ -1055,6 +1068,20 @@ body{margin:0;background:var(--color-bg);color:var(--color-fg);font:14px/1.45 va
         <div class="sbody"><h3>Storage</h3><span class="go" aria-hidden="true">→</span></div></button>
       </div>
     </div>
+
+    <section class="blk rt-g" id="ritmo-g">
+      <div class="bh"><span class="num">01</span><h2>Ritmo de inscripción</h2><p>Madrid, sedes nacionales e institucionales juntas. Pasa el ratón por una columna para ver el detalle (las aperturas de sede van marcadas con un número); toca la leyenda para ocultar un origen.</p></div>
+      <div class="rt-k" id="rg-k"></div>
+      <div class="card">
+        <div class="head"><h3 id="rg-h">Registros en el tiempo</h3><div class="pillrow">
+        <div class="seg" id="rg-met" role="group" aria-label="Qué se cuenta"><button type="button" data-k="reg" aria-pressed="true">Registros</button><button type="button" data-k="jug" aria-pressed="false">Jugadores</button></div>
+        <div class="seg" id="rg-tab" role="group" aria-label="Vista"><button type="button" data-v="day" aria-pressed="true">Diario</button><button type="button" data-v="week" aria-pressed="false">Semanal</button><button type="button" data-v="month" aria-pressed="false">Mensual</button><button type="button" data-v="hour" aria-pressed="false">Por hora</button></div>
+        <div class="seg" id="rg-mode" role="group" aria-label="Modo"><button type="button" data-m="per" aria-pressed="true">Por periodo</button><button type="button" data-m="acc" aria-pressed="false">Acumulado</button></div></div></div>
+        <div class="rt-leg" id="rg-leg" role="group" aria-label="Orígenes"></div>
+        <div class="cols" id="rg-tl"></div>
+        <p class="note" id="rg-n"></p>
+      </div>
+    </section>
   </div>
 
   <div class="view" id="v-aten">
@@ -1115,7 +1142,8 @@ body{margin:0;background:var(--color-bg);color:var(--color-fg);font:14px/1.45 va
   <section class="blk" id="ritmo">
     <div class="bh"><span class="num">01</span><h2>Ritmo de inscripción</h2><p>Cuándo se apuntan las familias. Pasa el ratón por una columna para ver el detalle.</p></div>
     <div class="card">
-      <div class="head"><h3>Jugadores inscritos en el tiempo</h3><div class="pillrow">
+      <div class="head"><h3 id="tl-h">Registros en el tiempo</h3><div class="pillrow">
+        <div class="seg" id="seg-met" role="group" aria-label="Qué se cuenta"><button type="button" data-k="reg" aria-pressed="true">Registros</button><button type="button" data-k="jug" aria-pressed="false">Jugadores</button></div>
         <div class="seg" id="seg-tab" role="group" aria-label="Vista"><button type="button" data-v="day" aria-pressed="true">Diario</button><button type="button" data-v="week" aria-pressed="false">Semanal</button><button type="button" data-v="month" aria-pressed="false">Mensual</button><button type="button" data-v="hour" aria-pressed="false">Por hora</button></div>
         <div class="seg" id="seg-mode" role="group" aria-label="Modo"><button type="button" data-m="per" aria-pressed="true">Por periodo</button><button type="button" data-m="acc" aria-pressed="false">Acumulado</button></div></div></div>
       <div class="cols" id="tl" data-source="timeline"></div>
@@ -1222,7 +1250,10 @@ function columns(el,items){
   el.replaceChildren(...items.map((c,k)=>{
     const d=mk('<div class="v"></div><div class="pl"><div class="bar"></div></div><div class="l1"></div><div class="l2"></div>','col');
     const v=$('.v',d);v.textContent=f(c.v);if(!c.v)v.classList.add('z');
-    const b=$('.bar',d);b.style.height=(c.v/mx*100)+'%';b.style.background=c.color;b.style.animationDelay=Math.min(k*18,500)+'ms';
+    const b=$('.bar',d);b.style.height=(c.v/mx*100)+'%';b.style.animationDelay=Math.min(k*18,500)+'ms';
+    if(c.parts&&c.parts.filter(q=>q.v).length>1){b.classList.add('stk');b.innerHTML=c.parts.filter(q=>q.v).map(q=>'<i style="flex:'+q.v+' 0 0;background:'+q.color+'"></i>').join('');}
+    else b.style.background=c.parts?((c.parts.find(q=>q.v)||c.parts[0]||{}).color||c.color):c.color;
+    if(c.mark){d.classList.add('mk');const m=document.createElement('span');m.className='mkn';m.textContent=c.mark;$('.pl',d).appendChild(m);}
     $('.l1',d).textContent=c.l1||'';$('.l2',d).textContent=c.l2||'';
     hover(d,c.tip);return d;}));
 }
@@ -1383,38 +1414,78 @@ function dtable(el,cfg){
   draw();el.replaceChildren(wrap);
 }
 
-let TL=[],tab='day',mode='per';
-function drawTL(){
-  if(!TL.length)return;
-  const rows=TL.filter(r=>r.view===(tab==='month'?'day':tab));
-  let items=[],note='';
-  if(tab==='day'){
-    items=rows.map(r=>{if(r.key==='pre')return{v:+r.count,l1:'Pre-reg.',l2:'hasta 7 oct',color:col(2),tip:'Pre-registros (antes del 8 de octubre): '+f(+r.count)};
-      const [y,m,d]=r.key.split('-').map(Number);return{v:+r.count,l1:String(d),l2:MS[m-1],color:col(0),tip:d+' '+MS[m-1]+' '+y+': '+f(+r.count)+' jugadores'};});
-    note='Cada columna es un día. La primera agrupa los pre-registros, anteriores al 8 de octubre.';
-  }else if(tab==='week'){
-    items=rows.map(r=>{if(r.key==='pre')return{v:+r.count,l1:'Pre-reg.',l2:'hasta 7 oct',color:col(2),tip:'Pre-registros (antes del 8 de octubre): '+f(+r.count)};
-      const [,m1,d1]=r.start.split('-').map(Number),[,m2,d2]=r.end.split('-').map(Number);
-      const rg=d1+(m1!==m2?' '+MS[m1-1]:'')+'–'+d2+' '+MS[m2-1];
-      return{v:+r.count,l1:'Semana '+r.key,l2:rg,color:col(0),tip:'Semana '+r.key+' ('+rg+'): '+f(+r.count)+' jugadores'};});
-    note='Semana 1: del 8 al 11 de octubre (jueves a domingo). Después, semanas de lunes a domingo.';
-  }else if(tab==='month'){
-    const MF=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-    const pre=rows.find(r=>r.key==='pre');const mm=new Map();
-    rows.forEach(r=>{if(r.key==='pre')return;const k=r.key.slice(0,7);mm.set(k,(mm.get(k)||0)+(+r.count));});
-    items=(pre?[{v:+pre.count,l1:'Pre-reg.',l2:'hasta 7 oct',color:col(2),tip:'Pre-registros (antes del 8 de octubre): '+f(+pre.count)}]:[]).concat([...mm].sort((a,b)=>a[0]<b[0]?-1:1).map(([k,v])=>{const [y,m]=k.split('-').map(Number);const desde=(y===2026&&m===10)?' (desde el 8 de octubre)':'';return{v,l1:MF[m-1],l2:String(y),color:col(0),tip:MF[m-1]+' '+y+desde+': '+f(v)+' jugadores'};}));
-    note='Cada columna es un mes. Octubre cuenta desde el 8 de octubre; lo anterior va en la columna de pre-registros.';
-  }else{
-    const p=n=>String(n).padStart(2,'0');
-    items=rows.map(r=>({v:+r.count,l1:p(+r.key),l2:'h',color:col(0),tip:'De '+p(+r.key)+':00 a '+p((+r.key+1)%24)+':00: '+f(+r.count)+' jugadores'}));
-    note='Jugadores inscritos según la hora del día (suma de todos los días).';
-  }
-  if(mode==='acc'&&tab!=='hour'){let s=0;items=items.map(it=>{s+=it.v;return{...it,v:s,color:col(3),tip:it.tip+' · acumulado '+f(s)};});note+=' Vista acumulada: cada columna suma todo lo anterior.';}
-  const el=$('#tl');columns(el,items);el.scrollLeft=el.scrollWidth;$('#tln').textContent=note;
-}
+/* ===== Ritmo de inscripción: Madrid (una serie) y general de la portada (apilado por origen) =====
+   «Registros» = semanas contratadas, el día en que se hizo la inscripción (vistas rday/rweek/rhour del motor).
+   «Jugadores» = inscripciones con pago (vistas day/week/hour). */
+const MF=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const p2=n=>String(n).padStart(2,'0');
+const ORG={madrid:{n:'Madrid',c:'var(--pink)'},nac:{n:'Nacionales',c:'var(--navy)'},ins:{n:'Institucionales',c:'#9aa3b5'}};
+/* aperturas que se marcan en el gráfico general (fecha en que se abrió la venta) */
+const TL_MARKS=[{d:'2026-10-08',t:'Madrid abre la venta (antes, pre-registros)'},{d:'2026-11-10',t:'Andorra, Valencia y Málaga abren'},{d:'2026-11-11',t:'Alicante abre'},{d:'2026-11-13',t:'Torrevieja y Almería abren'}];
+function tlRows(srcs,met,tab){
+  const v0=tab==='month'?'day':tab,m=new Map();
+  srcs.forEach(s=>{let rows=met==='reg'?s.tl.filter(r=>r.view==='r'+v0):[];if(!rows.length)rows=s.tl.filter(r=>r.view===v0);
+    rows.forEach(r=>{const k=tab==='month'&&r.key!=='pre'?String(r.key).slice(0,7):String(r.key);let x=m.get(k);
+      if(!x){x={key:k,start:r.start,end:r.end,p:{},sub:{}};m.set(k,x);}
+      x.p[s.o]=(x.p[s.o]||0)+(+r.count);if(s.o==='nac'&&s.name)x.sub[s.name]=(x.sub[s.name]||0)+(+r.count);});});
+  const rk=x=>x.key==='pre'?-1e15:(tab==='hour'||tab==='week')?+x.key:Date.parse(x.key.length===7?x.key+'-01':x.key);
+  return [...m.values()].sort((a,b)=>rk(a)-rk(b));}
+function tlLab(x,tab){
+  if(x.key==='pre')return{l1:'Pre-reg.',l2:'hasta 7 oct',t:'Pre-registros (antes del 8 de octubre)'};
+  if(tab==='day'){const[y,m,d]=x.key.split('-').map(Number);return{l1:String(d),l2:MS[m-1],t:d+' '+MS[m-1]+' '+y};}
+  if(tab==='week'){const[,m1,d1]=x.start.split('-').map(Number),[,m2,d2]=x.end.split('-').map(Number);const rg=d1+(m1!==m2?' '+MS[m1-1]:'')+'–'+d2+' '+MS[m2-1];return{l1:'Semana '+x.key,l2:rg,t:'Semana '+x.key+' ('+rg+')'};}
+  if(tab==='month'){const[y,m]=x.key.split('-').map(Number);return{l1:MF[m-1],l2:String(y),t:MF[m-1]+' '+y+((y===2026&&m===10)?' (desde el 8 de octubre)':'')};}
+  return{l1:p2(+x.key),l2:'h',t:'De '+p2(+x.key)+':00 a '+p2((+x.key+1)%24)+':00'};}
+function tlMarks(x,tab){if(tab==='hour'||x.key==='pre')return [];
+  return TL_MARKS.map((m,i)=>[m,i+1]).filter(([m])=>tab==='day'?m.d===x.key:tab==='month'?m.d.slice(0,7)===x.key:(m.d>=x.start&&m.d<=x.end)).map(a=>a[1]);}
+function ritmo(o){
+  const rows=tlRows(o.srcs,o.met,o.tab);if(!rows.length){o.el.replaceChildren();return [];}
+  const U=o.met==='reg'?['registro','registros']:['jugador','jugadores'],fu=n=>f(n)+' '+(n===1?U[0]:U[1]);
+  const orgs=o.stack?Object.keys(ORG).filter(k=>o.srcs.some(s=>s.o===k)&&!(o.hidden&&o.hidden.has(k))):null;
+  const acc={};let accT=0;
+  const items=rows.map(x=>{const L=tlLab(x,o.tab);
+    let parts=orgs?orgs.map(k=>({k,v:x.p[k]||0,color:ORG[k].c})):[{k:'one',v:Object.values(x.p).reduce((a,b)=>a+b,0),color:x.key==='pre'?col(2):col(0)}];
+    let v=parts.reduce((a,q)=>a+q.v,0),tip=L.t+': '+fu(v);
+    if(orgs&&v)tip+=' · '+parts.filter(q=>q.v).map(q=>ORG[q.k].n+' '+f(q.v)+(q.k==='nac'?' ('+Object.entries(x.sub).filter(e=>e[1]).map(e=>e[0]+' '+f(e[1])).join(', ')+')':'')).join(' · ');
+    if(o.mode==='acc'&&o.tab!=='hour'){parts=parts.map(q=>{acc[q.k]=(acc[q.k]||0)+q.v;return{...q,v:acc[q.k],color:orgs?q.color:col(3)};});accT+=v;v=accT;tip+=' · acumulado '+fu(accT);}
+    const mk=o.marks?tlMarks(x,o.tab):[];if(mk.length)tip+=' · '+mk.map(i=>TL_MARKS[i-1].t).join(' · ');
+    return{v,parts,l1:L.l1,l2:L.l2,tip,mark:mk.join('·')};});
+  columns(o.el,items);o.el.scrollLeft=o.el.scrollWidth;
+  let note={day:'Cada columna es un día. La primera agrupa los pre-registros, anteriores al 8 de octubre.',week:'Semana 1: del 8 al 11 de octubre (jueves a domingo). Después, semanas de lunes a domingo.',month:'Cada columna es un mes. Octubre cuenta desde el 8 de octubre; lo anterior va en la columna de pre-registros.',hour:U[1].charAt(0).toUpperCase()+U[1].slice(1)+' según la hora del día en que se hizo la inscripción (suma de todos los días).'}[o.tab];
+  if(o.met==='reg')note+=' Cada registro es una semana contratada y cuenta el día de la inscripción.';
+  if(o.mode==='acc'&&o.tab!=='hour')note+=' Vista acumulada: cada columna suma todo lo anterior.';
+  if(o.noteEl)o.noteEl.textContent=note;
+  return rows;}
 const seg=(sel,fn)=>root.querySelectorAll(sel+' button').forEach(b=>b.addEventListener('click',()=>{root.querySelectorAll(sel+' button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));fn(b);}));
+/* Madrid (y cada sede nacional al abrirla) */
+let TL=[],tab='day',mode='per',met='reg';
+function drawTL(){if(!TL.length)return;const h=$('#tl-h');if(h)h.textContent=met==='reg'?'Registros en el tiempo':'Jugadores inscritos en el tiempo';
+  ritmo({el:$('#tl'),noteEl:$('#tln'),srcs:[{o:'madrid',tl:TL}],met,tab,mode});}
 seg('#seg-tab',b=>{tab=b.dataset.v;drawTL();});
 seg('#seg-mode',b=>{mode=b.dataset.m;drawTL();});
+seg('#seg-met',b=>{met=b.dataset.k;drawTL();});
+/* General de la portada: Madrid + sedes nacionales + institucionales */
+const RG={tab:'day',mode:'per',met:'reg',hidden:new Set()};
+function rgSrcs(){const s=[{o:'madrid',tl:DATA.timeline||[]}];Object.values(DATA.sedes||{}).forEach(x=>s.push({o:'nac',name:x.name,tl:x.timeline||[]}));
+  (DATA.ins_sedes||[]).forEach(x=>s.push({o:'ins',name:x.name,tl:x.timeline||[]}));if(!(DATA.ins_sedes||[]).length)s.push({o:'ins',tl:[]});return s;}
+function drawRG(){const el=$('#rg-tl');if(!el||!DATA)return;const srcs=rgSrcs(),U=RG.met==='reg'?['registro','registros']:['jugador','jugadores'];
+  $('#rg-h').textContent=RG.met==='reg'?'Registros en el tiempo':'Jugadores inscritos en el tiempo';
+  ritmo({el,noteEl:$('#rg-n'),srcs,met:RG.met,tab:RG.tab,mode:RG.mode,stack:true,marks:true,hidden:RG.hidden});
+  /* leyenda con el total de cada origen */
+  const tot=k=>tlRows(srcs.filter(s=>s.o===k),RG.met,'week').reduce((a,x)=>a+(x.p[k]||0),0);
+  $('#rg-leg').innerHTML=Object.keys(ORG).map(k=>{const n=tot(k);return '<button type="button" data-o="'+k+'" aria-pressed="'+!RG.hidden.has(k)+'" style="--c:'+ORG[k].c+'"><i></i>'+ORG[k].n+' <em>'+(n||k!=='ins'?f(n):'sin datos todavía')+'</em></button>';}).join('');
+  /* cifras: hoy, últimos 7 días y tendencia (orígenes visibles) */
+  const vis=Object.keys(ORG).filter(k=>!RG.hidden.has(k)),d=tlRows(srcs.filter(s=>vis.includes(s.o)),RG.met,'day').filter(x=>x.key!=='pre'),sv=x=>vis.reduce((a,k)=>a+(x.p[k]||0),0);
+  const last=d.slice(-7),prev=d.slice(-14,-7),hoy=d.length?sv(d[d.length-1]):0,ayer=d.length>1?sv(d[d.length-2]):0,s7=last.reduce((a,x)=>a+sv(x),0),p7=prev.reduce((a,x)=>a+sv(x),0);
+  const tr=p7?Math.round((s7-p7)/p7*100):null,fu=n=>f(n)+' '+(n===1?U[0]:U[1]);
+  $('#rg-k').innerHTML='<div class="card kpi" style="--ac:var(--pink)"><span class="lab">Hoy</span><span class="big">'+f(hoy)+'</span><span class="sub">'+U[1]+' · ayer <b>'+f(ayer)+'</b></span></div>'
+    +'<div class="card kpi" style="--ac:var(--navy)"><span class="lab">Últimos 7 días</span><span class="big">'+f(s7)+'</span><span class="sub">media de <b>'+(s7/7).toLocaleString('es-ES',{maximumFractionDigits:1})+'</b> al día</span></div>'
+    +'<div class="card kpi" style="--ac:var(--gold)"><span class="lab">Tendencia</span><span class="big">'+(tr===null?'—':(tr>0?'+':'')+f(tr)+' %')+'</span><span class="sub">frente a los 7 días anteriores (<b>'+fu(p7)+'</b>)</span></div>';}
+seg('#rg-tab',b=>{RG.tab=b.dataset.v;drawRG();});
+seg('#rg-mode',b=>{RG.mode=b.dataset.m;drawRG();});
+seg('#rg-met',b=>{RG.met=b.dataset.k;drawRG();});
+(function(){const l=$('#rg-leg');if(l)l.addEventListener('click',e=>{const b=e.target.closest('[data-o]');if(!b)return;const k=b.dataset.o;
+  if(RG.hidden.has(k))RG.hidden.delete(k);else if(RG.hidden.size<Object.keys(ORG).length-1)RG.hidden.add(k);drawRG();});})();
 
 
 // vistas
@@ -1665,7 +1736,7 @@ dash.onData(()=>{
       const pc=tl[3].querySelector('i'),pp=tl[4].querySelector('i');if(pc)pc.textContent=pct(T.cobr,T.fact);if(pp)pp.textContent=pct(T.pend,T.fact);
       tl.forEach(x=>{const e=x.querySelector('.tl em');if(e&&!e.dataset.base)e.dataset.base='1';});}
     const cs=$('#cover .tiles');if(cs)cs.title='Madrid + Nacionales + Institucionales';}$('#k-sempi').textContent=(wsum/(K.n||1)).toLocaleString('es-ES',{minimumFractionDigits:1,maximumFractionDigits:1});
-  TL=D.timeline.data;drawTL();
+  TL=D.timeline.data;drawTL();if(!window.__SCOPE)try{drawRG();}catch(e){console.error(e);}
   const dm=D.dims.data;
   const mod=dimRows(dm,'mod');
   donut($('#d-mod'),$('#l-mod'),mod,'registros');
