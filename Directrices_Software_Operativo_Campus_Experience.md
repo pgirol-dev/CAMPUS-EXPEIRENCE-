@@ -598,7 +598,15 @@ Se asignan automáticamente en este orden, un equipo por nombre y sin repetir de
   - **Copia de seguridad diaria:** desde las 3:00, una sola copia (la más reciente). La nueva solo sustituye a la anterior cuando se ha completado bien; si falla, se conserva la anterior y se reintenta. En «Sistema › Usuarios y accesos › Copia de seguridad»: hacer copia ahora, descargarla y recuperar Horarios, Simulador, Equipos o todo (lo actual queda en historial/papelera).
   - Protegidos: hor, hweek, hsim, hsimd, teams, reqs, hbus, happr. Servidor: `protect.js` (Catalyst y servidor propio).
   - **Buses:** plazas a elegir entre 28, 54, 60 y 72. El reparto automático sigue usando 54/60/72 (los de tarifa); el de 28 no tiene tarifa.
-  - **Check-in y check-out:** en la instalación salen siempre tres sedes: «Fleming», «Valdebebas» y «Residencia» (corregido el 16/11: eran tres, no dos).
+  - **Check-in y check-out:** en la instalación salen siempre tres sedes: «Fleming», «VBB» y «Residencia» (corregido el 16/11: eran tres, no dos; el 17/11: siempre «VBB», nunca «Valdebebas»).
   - **Orden de las columnas del horario:** media jornada, jornada completa e internos; dentro de cada una, primero ONE y luego MAX (ONE MJ · ONE JC · MAX JC · ONE INT · MAX INT). También en la fila de modalidades.
   - **Aceptar avisos:** cualquier aviso de conflicto se puede aceptar (personas con edición de Horarios). Queda en gris con quién y cuándo, deja de contar como error y se puede quitar. Si el conflicto cambia, vuelve a avisar.
 - 16/11: **Cajas:** los títulos siempre caben en su caja. Si un nombre largo (p. ej. «Torrevieja») no cabe, la letra se reduce hasta que quepa; se aplica a todas las cajas (semanas, campus, contabilidad, portada) al pintarse y al cambiar el tamaño de la ventana.
+
+- 17/11: **Horarios: colores, scroll y check-in/out** (decisiones de Pau).
+  - **Colores:** piscina más azul; el bus tiene color propio (gris oscuro con texto blanco); comidas y snacks en un naranja más suave.
+  - **Scroll:** un solo scroll en el horario; la barra de edición (paleta) ya no se monta encima de los bloques.
+  - **Check-in y check-out:** como actividad solo existen «Check-in» y «Check-out»; la sede se elige después en Instalación: Fleming, VBB o Residencia.
+  - **Avisos:** se quitan los avisos de hora del check-in/out. Solo se avisa si a un día de externos le falta el Check-in o el Check-out. Internos: Check-in el primer día y Check-out el último (ONE internos, el viernes).
+  - **Horario automático:** genera bloques separados. Externos, lunes: Check-in Fleming 7:30, Bus a VBB 7:45, Check-in VBB 8:00, Welcome Pack 8:15–8:45, Welcome Ceremony 8:45–9:15. Resto de días: Check-in Fleming 8:00, Bus a VBB 8:15, Check-in VBB 8:30. Salida: Bus a Fleming y Check-out Fleming a la hora de siempre. El bus sale a la misma hora que antes.
+  - **Welcome Pack** del lunes: termina a las 8:45 (de 8:15 a 8:45 tras el Check-in en VBB; sigue valiendo de 8:00 a 8:45 en los horarios antiguos).
