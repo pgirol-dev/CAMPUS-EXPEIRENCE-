@@ -624,7 +624,7 @@ body.dragging,body.dragging *{user-select:none!important;-webkit-user-select:non
 .hal .hg{font-weight:600}
 .hal .hw{font-size:11px;font-weight:700;color:var(--bad);text-transform:uppercase;letter-spacing:.05em}
 @media (max-width:640px){.hal{grid-template-columns:1fr auto}.hal .hg{grid-column:1/-1}.hal .hw{grid-column:1/-1}}
-.hscroll{overflow:auto;max-height:calc(100vh - 150px);border-radius:6px;background:var(--surface-2);padding:0 0 4px;overscroll-behavior:contain}
+.hscroll{overflow:auto;max-height:calc(100vh - 90px - var(--palh,0px));border-radius:6px;background:var(--surface-2);padding:0 0 4px;overscroll-behavior:contain}
 .hscroll .hbt,.hscroll .hbm{position:sticky;top:0;z-index:6;height:26px;box-sizing:border-box}
 .hscroll .hgrid.gen .hhead{top:26px;z-index:5}
 .hscroll .hgrid:not(.gen) .hhead{top:0}
@@ -741,7 +741,7 @@ body.dragging,body.dragging *{user-select:none!important;-webkit-user-select:non
 .alert.rev[aria-expanded="true"]{background:var(--navy);color:var(--navy-ink)}
 .hal.soft{background:color-mix(in srgb,var(--ink) 5%,transparent)!important;color:var(--ink)!important}
 .hal.soft .hr{color:var(--ink-2)!important}
-.hpal{position:sticky;top:64px;z-index:6;background:var(--navy);color:var(--navy-ink);border-radius:6px;padding:10px 14px;display:flex;flex-direction:column;gap:8px;box-shadow:var(--shadow)}
+.hpal{position:relative;z-index:6;background:var(--navy);color:var(--navy-ink);border-radius:6px;padding:10px 14px;display:flex;flex-direction:column;gap:8px;box-shadow:var(--shadow)}
 .hpal .pt{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
 .hpal .pl1{font-family:var(--f-wide);font-style:italic;font-weight:900;font-stretch:125%;text-transform:uppercase;font-size:.8rem}
 .hpal .pn1{font-size:12px;font-weight:700;color:#ff8aa5}
@@ -1318,15 +1318,18 @@ html.ro-h .isnin{pointer-events:none;border-bottom-color:transparent}
 .wkbox.hwk.done .wteams{color:var(--green);font-weight:700}
 
 /* horarios v5: colores del documento (verde fútbol, azul claro piscina, rosa actividades, verde distinto prep) */
-:root{--fut:#1f9d6b;--fut-ink:#fff;--prep:color-mix(in srgb,#1f9d6b 30%,#e4e4e4);--prep-ink:#14432f;--pool:color-mix(in srgb,#0f2145 16%,#ffffff);--pool-ink:#0f2145;--act:#f4dc7a;--fun:#fbf0c4;--meal:#f5b37a}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--fut:#2fcf9f;--fut-ink:#10241c;--prep:color-mix(in srgb,#2fcf9f 28%,#1f2430);--prep-ink:#cfeee2;--pool:color-mix(in srgb,#c9d3ee 30%,#1f2430);--pool-ink:#e8eeee;--act:color-mix(in srgb,#f4dc7a 34%,#1f2430);--fun:color-mix(in srgb,#f4dc7a 16%,#1f2430);--meal:color-mix(in srgb,#f5b37a 34%,#1f2430)}}
-:root[data-theme="dark"]{--fut:#2fcf9f;--fut-ink:#10241c;--prep:color-mix(in srgb,#2fcf9f 28%,#1f2430);--prep-ink:#cfeee2;--pool:color-mix(in srgb,#c9d3ee 30%,#1f2430);--pool-ink:#e8eeee;--act:color-mix(in srgb,#f4dc7a 34%,#1f2430);--fun:color-mix(in srgb,#f4dc7a 16%,#1f2430);--meal:color-mix(in srgb,#f5b37a 34%,#1f2430)}
+:root{--fut:#1f9d6b;--fut-ink:#fff;--prep:color-mix(in srgb,#1f9d6b 30%,#e4e4e4);--prep-ink:#14432f;--pool:#bfdcf7;--pool-ink:#0f2145;--act:#f4dc7a;--fun:#fbf0c4;--meal:#f9d3ad;--bus:#3d4f52;--bus-ink:#ffffff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--fut:#2fcf9f;--fut-ink:#10241c;--prep:color-mix(in srgb,#2fcf9f 28%,#1f2430);--prep-ink:#cfeee2;--pool:color-mix(in srgb,#5fa8ec 38%,#1f2430);--pool-ink:#e8eeee;--act:color-mix(in srgb,#f4dc7a 34%,#1f2430);--fun:color-mix(in srgb,#f4dc7a 16%,#1f2430);--meal:color-mix(in srgb,#f5b37a 34%,#1f2430)}}
+:root[data-theme="dark"]{--fut:#2fcf9f;--fut-ink:#10241c;--prep:color-mix(in srgb,#2fcf9f 28%,#1f2430);--prep-ink:#cfeee2;--pool:color-mix(in srgb,#5fa8ec 38%,#1f2430);--pool-ink:#e8eeee;--act:color-mix(in srgb,#f4dc7a 34%,#1f2430);--fun:color-mix(in srgb,#f4dc7a 16%,#1f2430);--meal:color-mix(in srgb,#f5b37a 34%,#1f2430)}
 .hb.c-fut{background:var(--fut);color:var(--fut-ink);box-shadow:none}
 .hb.c-prep{background:var(--prep);color:var(--prep-ink);box-shadow:inset 3px 0 0 var(--fut)}
 .hb.c-pis{background:var(--pool);color:var(--pool-ink);box-shadow:inset 3px 0 0 var(--navy)}
 .hb.c-act{background:var(--act);color:var(--ink);box-shadow:inset 3px 0 0 #c9a227}
 .hb.c-fun,.hb.c-act.c-fun{background:var(--fun);box-shadow:inset 3px 0 0 #e6cf7a}
 .hb.c-com{background:var(--meal);color:var(--ink);box-shadow:none}
+.hb.c-bus{background:var(--bus,#3d4f52);color:var(--bus-ink,#fff);box-shadow:none}
+.hb.c-bus .br,.hb.c-bus small{color:color-mix(in srgb,#fff 80%,transparent)}
+.dot.c-bus{background:var(--bus,#3d4f52)}
 .hb.c-cer{background:var(--navy);color:var(--navy-ink);box-shadow:inset 3px 0 0 var(--pink)}
 .hb.bad{box-shadow:inset 0 0 0 2px var(--bad),0 0 0 1px var(--bad)!important}
 .hb.appr{box-shadow:inset 0 0 0 2px var(--green)!important}
@@ -2952,7 +2955,7 @@ const dur=b=>tm(b.e)-tm(b.s);
 const isExp=b=>b.a==="Actividades Experience";
 /* tipo de instalación que necesita cada sesión */
 /* check-in y check-out: siempre se puede elegir Fleming VBB o Residencia */
-const CHECK_SEDES=["Fleming","Valdebebas","Residencia"];const isCheck=a=>/check-?in|check-?out/i.test(String(a||""));
+const CHECK_SEDES=["Fleming","VBB","Residencia"];const isCheck=a=>/check-?in|check-?out/i.test(String(a||""));
 function needType(b){const c=b.c||ACT_CAT[b.a];
   if(c==="fut")return "campo";if(c==="prep")return "prep";if(c==="pis")return "piscina";
   if(["Comida","Cena","Desayuno"].includes(b.a))return "comedor";if(isExp(b))return "exp";if(b.a==="Tour BNB")return "tour";
@@ -3056,7 +3059,7 @@ const frOk=(fr,s)=>fr==="am"?s<MORNING_END:fr==="pm"?s>=MORNING_END:true;
 function resAvail(r,dow,s,e){if(!r)return "no existe";if((r.off||[]).includes(dow))return "no disponible el "+DOWS[dow].toLowerCase();const w=r.win&&r.win[dow];if(w&&w.s&&w.e&&(s<tm(w.s)||e>tm(w.e)))return "fuera de su franja ("+w.s+"–"+w.e+")";return ""}
 function locOf(cfg,b){if(/^Bus|· Bus|^A pie/.test(b.a))return "";if(b.sd){const s=findSede(cfg,b.sd);return s?s.n:b.sd}
   if(/Fleming/i.test(b.a))return "FLEMING";return ""}
-function resLabel(cfg,b){if(!b.sd)return "";const s=findSede(cfg,b.sd);if(!s)return b.u||"";if(!b.u)return s.n;return b.u.startsWith(s.n)||/UAM|RESA|UEM|VBB|BNB/.test(b.u)?b.u:s.n+" · "+b.u}
+function resLabel(cfg,b){if(!b.sd)return "";if(b.sd==="ext")return /valdebebas/i.test(b.u||"")?"VBB":(b.u||"");const s=findSede(cfg,b.sd);if(!s)return b.u||"";if(!b.u)return s.n;return b.u.startsWith(s.n)||/UAM|RESA|UEM|VBB|BNB/.test(b.u)?b.u:s.n+" · "+b.u}
 /* bloques antiguos (texto) → modelo nuevo */
 function normBlock(b){const x=Object.assign({},b);if(!x.c)x.c=ACT_CAT[x.a]||"log";
   if(!x.sd&&x.r){const L=legacyRes(x.r);if(L)Object.assign(x,L)}
@@ -3173,19 +3176,15 @@ function dayIssues(week,dow){
       const first=bl[0],lastb=bl[bl.length-1];
       if(isInt(ap)){if(!first||first.a!=="Wake up")whole("ini","Los internos empiezan el día con «Wake up»");else if(tm(first.s)<7*60)whole("ini","«Wake up» nunca antes de las 7:00");
         const oneFri=fri&&!isMAX(ap);
-        if(oneFri){const co=bl.find(b=>b.a==="Check-out");if(!co||co.s!=="20:00"||co.e!=="20:30")whole("fin","ONE internos: el viernes acaba con el Check-out de 20:00 a 20:30");else if(bl.some(b=>tm(b.s)>=tm(co.e)))whole("fin","ONE internos: nada después del Check-out del viernes")}
+        if(oneFri){const co=bl.find(b=>/^check-?out/i.test(b.a));if(!co)whole("fin","ONE internos: falta el Check-out del viernes");else if(bl.some(b=>tm(b.s)>=tm(co.e)))whole("fin","ONE internos: nada después del Check-out del viernes")}
         else if(!bl.some(b=>b.a==="Curfew Time"))whole("fin","Falta el «Curfew Time»");
         if(fri){const ce=bl.find(b=>b.a==="Ceremonia de clausura");const lastF=bl.filter(b=>b.c==="fut"||b.a==="Partidos"||b.a==="Entrenamiento").map(b=>tm(b.e));if(ce&&lastF.length&&tm(ce.s)<Math.max(...lastF))whole("cer","Internos: la clausura va al terminar los entrenamientos del viernes")}}
-      else{const fl=bl.find(b=>/Check-in Fleming|Salida bus Fleming/i.test(b.a)),se=bl.find(b=>/Check-in Sede/i.test(b.a));
-        const ff=mon?"07:30":"08:15",fs=mon?"08:00":"08:30";
-        if(!fl)whole("ini","Falta el Check-in de Fleming ("+ff+")");else if(fl.s!==ff)whole("ini","Check-in de Fleming a las "+ff);
-        if(!se)whole("ini","Falta el Check-in de la Sede ("+fs+")");else if(se.s!==fs)whole("ini","Check-in de la Sede a las "+fs);
+      else{/* check-in y check-out: solo se avisa si faltan (la hora y la sede las decide el equipo) */
+        if(!bl.some(b=>/^check-?in/i.test(b.a)))whole("ini","Falta el Check-in del día");
         if(mon){const wp=bl.find(b=>/Welcome Pack/i.test(b.a)),wc=bl.find(b=>/Welcome Ceremony/i.test(b.a));
           if(!wp||!/Welcome Pack/.test(wp.a)||wp.s!=="08:00"||(wp.e!=="08:45"))whole("ini","Welcome Pack de 8:00 a 8:45");
           if(!wc||wc.s!=="08:45"||wc.e!=="09:15")whole("ini","Welcome Ceremony de 8:45 a 9:15")}
-        const co={"ONE|Media Jornada":["13:15","13:30"],"ONE|Jornada Completa":["18:00","18:15"],"MAX|Jornada Completa":["19:00","19:15"]}[ap];
-        const cs=bl.find(b=>/Check-out Sede/i.test(b.a)),cf=bl.find(b=>/Check-out Fleming/i.test(b.a));
-        if(!cs||cs.s!==co[0])whole("fin","Check-out de la Sede a las "+co[0]);if(!cf||cf.s!==co[1])whole("fin","Check-out de Fleming a las "+co[1])}
+        if(!bl.some(b=>/^check-?out/i.test(b.a)))whole("fin","Falta el Check-out del día")}
       // cantidades del día
       const cnt=a=>bl.filter(b=>b.a===a).length;const nE=cnt("Entrenamiento"),nP=cnt("Partidos");
       const tbnb=isInt(ap)&&bl.some(b=>b.a==="Tour BNB");
@@ -3682,7 +3681,7 @@ function renderHorarios(){try{sbSync()}catch(e){}
     if(!c.bl.length)h+='<span class="hnone">Por hacer</span>';
     c.bl.forEach((b,bi)=>{const s=tm(b.s),e=tm(b.e);const why0=iss.flags.get(c.ap+"|"+c.n+"|"+bi);const why=why0&&why0.some(w=>HARD_RE.test(w))?why0.filter(w=>HARD_RE.test(w)):null;const rev=why0&&!why;const cc=b.c||ACT_CAT[b.a]||"log";const tall=(e-s)>=45;const rl=resLabel(iss.cfg,b);const need=b.t;
       const ak=apprKey(H.dow,c.ap,c.n,b),ast=apprOf(CW(),ak);const isAp=iss.list.some(x=>x.k==="appr"&&x.ap===c.ap&&x.g===c.n&&x.s===s&&x.a===b.a);
-      h+='<button type="button" class="hb c-'+cc+(b.a==="FUN"?" c-fun":"")+(why?" bad":"")+(isAp&&ast==="ok"?" appr":"")+(tall?"":" thin")+(H.edit&&H.edit.ci===ci&&H.edit.bi===bi?" on":"")+'" data-hb="'+ci+"."+bi+'" style="top:'+((s-mn)/15*RH+1)+"px;height:"+((e-s)/15*RH-2)+'px" title="'+esc(c.n+" · "+b.a+(rl?" · "+rl:"")+" · "+b.s+"–"+b.e+(why0?" · "+why0.join(" · "):"")+(isAp&&ast==="ok"?" · Aprobado":""))+'"><span class="ba">'+esc(isBusBlk(b)?busLabel(b,BN[c.ap+"|"+c.n+"|"+bi]):b.a)+"</span>"+(isBusBlk(b)?"":rl?'<span class="br">'+esc(rl)+"</span>":(need&&need!=="cer"?'<span class="br nr">'+(b.nf?"No cabe":"Sin instalación")+"</span>":""))+(tall?'<span class="bt">'+b.s+"–"+b.e+"</span>":"")+(why?'<span class="bx">!</span>':isAp&&ast==="ok"?'<span class="bx ok">✓</span>':rev?'<span class="bx rv" title="Revisión de reglas">·</span>':"")+(H.manual&&!H.tool?'<span class="rz"></span><span class="bdel" data-bdel="'+ci+"."+bi+'" title="Borrar caja" role="button" aria-label="Borrar caja">×</span>':"")+"</button>"});
+      h+='<button type="button" class="hb c-'+cc+(b.a==="FUN"?" c-fun":"")+(/^bus\b/i.test(b.a)?" c-bus":"")+(why?" bad":"")+(isAp&&ast==="ok"?" appr":"")+(tall?"":" thin")+(H.edit&&H.edit.ci===ci&&H.edit.bi===bi?" on":"")+'" data-hb="'+ci+"."+bi+'" style="top:'+((s-mn)/15*RH+1)+"px;height:"+((e-s)/15*RH-2)+'px" title="'+esc(c.n+" · "+b.a+(rl?" · "+rl:"")+" · "+b.s+"–"+b.e+(why0?" · "+why0.join(" · "):"")+(isAp&&ast==="ok"?" · Aprobado":""))+'"><span class="ba">'+esc(isBusBlk(b)?busLabel(b,BN[c.ap+"|"+c.n+"|"+bi]):b.a)+"</span>"+(isBusBlk(b)?"":rl?'<span class="br">'+esc(rl)+"</span>":(need&&need!=="cer"?'<span class="br nr">'+(b.nf?"No cabe":"Sin instalación")+"</span>":""))+(tall?'<span class="bt">'+b.s+"–"+b.e+"</span>":"")+(why?'<span class="bx">!</span>':isAp&&ast==="ok"?'<span class="bx ok">✓</span>':rev?'<span class="bx rv" title="Revisión de reglas">·</span>':"")+(H.manual&&!H.tool?'<span class="rz"></span><span class="bdel" data-bdel="'+ci+"."+bi+'" title="Borrar caja" role="button" aria-label="Borrar caja">×</span>':"")+"</button>"});
     h+="</div></div>"});
   h+="</div>";
   board.innerHTML=pre+'<div class="hscroll">'+h+"</div>";
@@ -4114,7 +4113,7 @@ function renderHPal(cfg,aps){
   const box=$("hPal");if(!H.manual||!aps.length){box.hidden=true;H.tool="";return}box.hidden=false;
   const tool=H.tool||"";const days=weekDays(CW()).filter(d=>d!==H.dow);
   let h='<div class="mrow"><span class="pl1">Editar horario</span><button type="button" class="pc pc-ed" data-tool="" aria-pressed="'+(!tool)+'">Mover y editar</button><span class="msep"></span>'+
-    PAL.map(p=>{const c=ACT_CAT[p.a]||"log";return '<button type="button" class="pc pk" data-tool="'+p.k+'" aria-pressed="'+(tool===p.k)+'"><i class="dot c-'+c+(p.a==="FUN"?" c-fun":"")+'"></i>'+esc(p.l)+'<small>'+durL(p.pool?90:p.d)+"</small></button>"}).join("")+"</div>";
+    PAL.map(p=>{const c=ACT_CAT[p.a]||"log";return '<button type="button" class="pc pk" data-tool="'+p.k+'" aria-pressed="'+(tool===p.k)+'"><i class="dot c-'+c+(p.a==="FUN"?" c-fun":"")+(/^bus\b/i.test(p.a)?" c-bus":"")+'"></i>'+esc(p.l)+'<small>'+durL(p.pool?90:p.d)+"</small></button>"}).join("")+"</div>";
   h+='<div class="mrow m2"><label class="mchk"><input type="checkbox" id="hPalAll"'+(H.palAll?" checked":"")+'> En todos los grupos de la modalidad</label><button type="button" class="btn mini" data-hundo'+((H.undo||[]).length?"":" disabled")+'>Deshacer</button>'+
     (days.length?'<span class="mlab">Copiar este día a</span>'+days.map(d=>'<button type="button" class="btn mini" data-cday="'+d+'">'+DOWS[d].slice(0,3)+"</button>").join("")+(days.length>1?'<button type="button" class="btn mini" data-cday="all">Todos</button>':""):"")+"</div>";
   if(H.clip){const cl=H.clip;h+='<div class="mrow m3"><span class="mlab">Copiado: <b>'+esc(cl.n)+"</b> · "+DOWS[cl.dow].toLowerCase()+'</span><span class="mlab">Pulsa «Pegar» en otro grupo, o</span><button type="button" class="btn mini" data-pasteall>Pegar en todos los de '+esc(MODSHORT(cl.ap))+"</button>"+
@@ -4136,7 +4135,7 @@ function renderHEdit(){
   box.hidden=false;const cfg=wkCfg(CW());
   $("hEditT").textContent=(H.edit.bi>=0?"Editar":"Añadir")+" · "+c.n;
   $("hEa").value=b.a||"";
-  const t=b.t||needType(b);const ch=t&&t!=="cer"?resChoices(cfg,c.ap,t):[];const cur=b.sd?b.sd+"|"+(b.u||""):"";
+  const t=b.t||needType(b);const ch=t&&t!=="cer"?resChoices(cfg,c.ap,t):[];const cur=b.sd?b.sd+"|"+(b.sd==="ext"&&/valdebebas/i.test(b.u||"")?"VBB":(b.u||"")):"";
   if(t==="cer")cfg.sedes.forEach(s=>s.res.filter(r=>r.t==="cer"||r.n==="Campo 9"||r.n==="Campo UEM").forEach(r=>ch.push({sd:s.id,u:r.n,l:resLabel(cfg,{sd:s.id,u:r.n})})));
   const bs=tm(b.s),be=tm(b.e);const fr=t&&t!=="cer"&&t!=="tour"?resFree(t,bs,be,H.edit.ci,H.edit.bi>=0?{ap:c.ap,g:c.n,i:H.edit.bi}:null):[];const frL=o=>{const f=fr.find(x=>x.sd===o.sd&&x.u===o.u);return f?" · "+freeTxt(f):""};
   fr.forEach(o=>{if(!ch.some(x=>x.sd===o.sd&&x.u===o.u))ch.push({sd:o.sd,u:o.u,l:o.l})});
@@ -4154,7 +4153,7 @@ function renderHEdit(){
 }
 function hEditClose(){H.edit=null;const b=$("hEdit");if(b)b.hidden=true}
 (function(){
-  $("hActs").innerHTML=Object.keys(ACT_CAT).concat(["Bus","Bus Fleming","Check-in Fleming","Check-in Sede","Vestuario","Check-out Sede","Check-out Fleming","Welcome Pack"]).map(a=>'<option value="'+esc(a)+'">').join("");
+  $("hActs").innerHTML=Object.keys(ACT_CAT).concat(["Bus","Bus Fleming","Check-in","Check-out","Vestuario","Welcome Pack"]).filter((a,i,arr)=>!/^check-?(in|out)\s+\S/i.test(a)&&arr.indexOf(a)===i).map(a=>'<option value="'+esc(a)+'">').join("");
   $("hWeekGrid").addEventListener("click",e=>{const b=e.target.closest("[data-hweek]");if(!b)return;const hv=b.dataset.hweek;H.week=isCampKey(hv)?hv:+hv;const d=weekDays(CW())[0];H.dow=d==null?1:d;H.view="grid";H.open="";H.confirm="";hEditClose();renderHorarios();window.scrollTo(0,0)});
   $("hCrumbs").addEventListener("click",e=>{if(e.target.closest("[data-hback]")){H.week=0;H.manual=false;H.open="";hEditClose();renderHorarios();window.scrollTo(0,0)}});
   $("hDays").addEventListener("click",e=>{const b=e.target.closest("[data-hdow]");if(!b||b.disabled)return;H.dow=+b.dataset.hdow;H.confirm="";hEditClose();renderHorarios()});
@@ -4977,6 +4976,8 @@ $("payRes").addEventListener("click",e=>{const b=e.target.closest("[data-paygo]"
 $("payList").addEventListener("keydown",e=>{if(e.key!=="Enter")return;const row=e.target.closest("[data-pid]");if(row&&typeof openDrawer==="function")openDrawer(row.dataset.pid)});
 $("payList").addEventListener("click",e=>{const row=e.target.closest("[data-pid]");if(!row)return;const r=(S.allRows||S.rows).find(x=>x.id===row.dataset.pid);if(r&&typeof openDrawer==="function")openDrawer(r.id)});
 
+/* altura de la barra de edición: el horario se ajusta para que no quede tapado y se pueda bajar hasta el final */
+(function(){const p=$("hPal");if(!p||!window.ResizeObserver)return;const upd=()=>document.documentElement.style.setProperty("--palh",(p.hidden?0:p.offsetHeight+12)+"px");new ResizeObserver(upd).observe(p);new MutationObserver(upd).observe(p,{attributes:true,attributeFilter:["hidden"]});upd()})();
 /* ===== CAJAS: los títulos siempre caben =====
    Si un título (o una palabra larga) no cabe en su caja, se reduce la letra hasta que quepa. Se aplica a todas las cajas al pintarse y al cambiar el tamaño de la ventana. */
 const FIT_SEL=".wkbox .wt,.pbx .pt2,.ptab .pt2,.season .sn,.bk-t,.modbox .mt";
