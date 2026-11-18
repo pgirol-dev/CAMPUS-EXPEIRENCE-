@@ -385,7 +385,11 @@ async function handle(req, res) {
   }
   if ((m = /^\/api\/db\/([a-z]+)$/.exec(p)) && M === "GET") {
     const col = m[1]; if (!COLS[col]) return fail(res, 404, "Colección desconocida"); if (!COLS[col].read(U)) return fail(res, 403, "Sin acceso");
-    return send(res, 200, { docs: await st.docs.list(col) });
+    const docs = await st.docs.list(col);
+    /* volcado inicial del Excel «Master BBDD Call Center» (historial de llamadas BBDD 2026): se carga una sola vez */
+    if (col === "attc" && !docs["x-b26"]) { try { const seen = await st.meta.get("seed_attc_xb26"); const f = require("path").join(__dirname, "seed", "attc_x-b26.json");
+      if (!seen && require("fs").existsSync(f)) { const d = JSON.parse(require("fs").readFileSync(f, "utf8")); await st.docs.put("attc", "x-b26", d, null); await st.meta.set("seed_attc_xb26", new Date().toISOString()); await touch("attc"); docs["x-b26"] = d; } } catch (e) { console.error(e); } }
+    return send(res, 200, { docs });
   }
   if ((m = /^\/api\/db\/([a-z]+)\/(.+)$/.exec(p)) && (M === "PUT" || M === "DELETE")) {
     const col = m[1], id = decodeURIComponent(m[2]); if (!COLS[col]) return fail(res, 404, "Colección desconocida");
