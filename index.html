@@ -4898,7 +4898,7 @@ $("canList").addEventListener("keydown",e=>{if(e.key!=="Enter")return;const row=
 var ATT={docs:{},list:"",q:"",fAtt:"",fSt:"",lim:200,b26:null,b26busy:false,b26err:"",x27:null,x27busy:false,x27err:"",panel:null,edit:null,
   lpW:0,lpF:"pend",lpQ:"",desk:null,deskBusy:false,deskErr:"",me:null};
 const ATT_ST=["No contesta","No contesta X2","En su tejado","Volver a llamar","Fuera de horario","Inscrito","No interesado","No apto","Duplicado","Error de datos","Otras sedes","Agencia/grupo","Hermanos","Incidencia"];
-const ATT_TONE=st=>/^Inscrito/.test(st)?"ok":/tejado/i.test(st)?"hot":/No contesta|Volver a llamar|Fuera de horario/.test(st)?"wait":st?"off":"none";
+const ATT_TONE=st=>/^Trash$/i.test(st)?"off":/^Inscrito/.test(st)?"ok":/tejado/i.test(st)?"hot":/No contesta|Volver a llamar|Fuera de horario/.test(st)?"wait":st?"off":"none";
 const ATT_VIA=[["telefono","Teléfono"],["whatsapp","WhatsApp"],["email","Email"],["persona","En persona"],["otros","Otros"]];
 const ATT_VL=Object.fromEntries(ATT_VIA);
 const ATT_LISTS=[
@@ -4922,7 +4922,7 @@ async function attFetch(q,opt){const all=[];
     const info=(p&&p.data&&p.data.info)||(p&&p.info)||{};if(rows.length<ATT_PAGE||info.more_records===false)break}
   return all}
 const Q_B26="select Codigo, Deal_Name, Player, Contact_Name, Email, Telefono_Tutor_legal, Nationality, Idioma_comunicaciones, Tipo_Modalidad, Colectivos, Created_Time from Deals where Deal_Name like '2026 RMF CE Madrid%' and Stage = 'Paid'";
-const Q_X27=()=>"select Deal_Name, Player, Contact_Name, Email, Telefono_Tutor_legal, Nationality, Idioma_comunicaciones, Tipo_Modalidad, Colectivos, Created_Time, Stage, Reservation_Code, Total, Event_Name from Deals where Event_Name.Name in "+EVS+" and Stage in ('Unpaid','Reservation Payment Completed')";
+const Q_X27=()=>"select Deal_Name, Player, Contact_Name, Email, Telefono_Tutor_legal, Nationality, Idioma_comunicaciones, Tipo_Modalidad, Colectivos, Created_Time, Stage, Reservation_Code, Total, Event_Name from Deals where Event_Name.Name in "+EVS+" and Stage in ('Unpaid','Reservation Payment Completed','Trash')";
 async function attLoad(force){if(!S.mcp)return;const opt={cache:{staleTime:60000,gcTime:600000,refresh:!!force}};
   if(!ATT.b26busy&&(force||!ATT.b26)){ATT.b26busy=true;ATT.b26err="";attRender();
     attFetch(Q_B26,opt)
@@ -4939,10 +4939,12 @@ function attRows(list){const EN=attEnrolled();let out=[];
   if(list==="besp"||list==="beng"){if(!ATT.b26)return null;
     out=ATT.b26.filter(d=>(/^espa/i.test(String(d.Nationality||"").trim()))===(list==="besp")).map(d=>attRowOf(d,list,"c-"+(d.Codigo||d.id)))}
   else if(list==="unp"||list==="pre"){if(!ATT.x27)return null;
-    const xs=ATT.x27.filter(d=>list==="unp"?d.Stage==="Unpaid":d.Stage==="Reservation Payment Completed");
-    out=xs.map(d=>attRowOf(d,list,"d-"+d.id));
-    if(list==="unp"){const seen={};out.forEach(x=>{const k=x.pid+"|"+x.mod;(seen[k]=seen[k]||[]).push(x)});
-      out.forEach(x=>{x.dup=!!x.pid&&(seen[x.pid+"|"+x.mod].length>1||EN.PM.has(x.pid+"|"+x.mod))})}
+    /* Unpaids: las que siguen sin pagar y, además, las que ya se pasaron a Trash pero tienen llamadas apuntadas (para no perder su historial) */
+    const hasLog=id=>!!(attXls("d-"+id).log||[]).length||!!(ATT.docs["d-"+id]&&(ATT.docs["d-"+id].log||[]).length);
+    const xs=ATT.x27.filter(d=>list==="unp"?(d.Stage==="Unpaid"||(d.Stage==="Trash"&&hasLog(d.id))):d.Stage==="Reservation Payment Completed");
+    out=xs.map(d=>Object.assign(attRowOf(d,list,"d-"+d.id),{trash:d.Stage==="Trash"}));
+    if(list==="unp"){const seen={};out.filter(x=>!x.trash).forEach(x=>{const k=x.pid+"|"+x.mod;(seen[k]=seen[k]||[]).push(x)});
+      out.forEach(x=>{x.dup=!x.trash&&!!x.pid&&((seen[x.pid+"|"+x.mod]||[]).length>1||EN.PM.has(x.pid+"|"+x.mod))})}
     else out=out.filter(x=>!(x.pid&&EN.P.has(x.pid))&&!(x.email&&EN.E.has(x.email.toLowerCase())))}
   else return [];
   out.forEach(x=>{const doc=ATT.docs[x.key]||{};x.doc=doc;x.log=attLog(x.key);
@@ -4950,7 +4952,7 @@ function attRows(list){const EN=attEnrolled();let out=[];
     const last=x.log[x.log.length-1];x.st=x.ins?"Inscrito":last?last.st||"":"";x.att=doc.att||attXls(x.key).att||(last&&last.byName)||"";x.lastDay=last?last.day||attDay(last.at):""});
   return out}
 /* historial importado del Excel (un solo documento «x-b26»): solo lectura; los contactos nuevos van al documento de cada persona */
-function attXls(key){const X=ATT.docs["x-b26"];if(!X||!X.items||!/^c-/.test(key))return {};return X.items[key.slice(2)]||{}}
+function attXls(key){const X=ATT.docs[/^c-/.test(key)?"x-b26":/^d-/.test(key)?"x-27":""];if(!X||!X.items)return {};return X.items[key.slice(2)]||{}}
 function attLog(key){const own=(ATT.docs[key]&&Array.isArray(ATT.docs[key].log))?ATT.docs[key].log.map((e,i)=>Object.assign({i},e)):[];const xl=(attXls(key).log||[]).map(e=>Object.assign({src:"excel",via:"telefono",dir:"out"},e));
   return xl.concat(own).sort((a,b)=>String(a.day||"").localeCompare(String(b.day||"")))}
 function attListStats(rows){const n=rows.length,g=rows.filter(x=>x.log.length).length,ins=rows.filter(x=>x.st==="Inscrito").length;return {n,g,p:n-g,ins,av:n?g/n:0,pi:n?ins/n:0}}
@@ -4966,7 +4968,8 @@ function renderBbdd(){if($("view-bbdd").hidden)return;
       return '<button type="button" class="bdbox'+(l.off?" off":"")+'" data-bdl="'+l.k+'"'+(l.off?' aria-disabled="true"':"")+'><span class="bdt"><span class="wt">'+esc(l.n)+"</span>"+(l.lang?'<span class="bdlang l-'+l.lang.toLowerCase()+'">'+l.lang+"</span>":"")+'</span><span class="ps2">'+esc(l.sub)+"</span>"+
         (l.off?'<span class="bdoff">Pendiente de conectar</span>':busy?'<span class="bdoff">Leyendo Zoho…</span>':'<span class="bdn"><b>'+s.n+'</b><small>registros</small></span><span class="bdmini"><span><b>'+s.g+"</b> gestionados</span><span><b>"+s.p+"</b> pendientes</span><span><b>"+s.ins+'</b> inscritos</span></span><span class="wbar"><i style="width:'+(s.av*100)+'%;background:var(--navy)"></i><i style="width:'+(s.pi*100)+'%;background:var(--green)"></i></span>')+"</button>"}).join("")+
       (ATT.b26err||ATT.x27err?'<p class="devmsg" style="grid-column:1/-1">'+esc([ATT.b26err,ATT.x27err].filter(Boolean).join(" "))+"</p>":"")+
-      (ATT.docs["x-b26"]?'<p class="ingnote" style="grid-column:1/-1">Historial del Excel importado: '+ATT.docs["x-b26"].n+" personas y "+ATT.docs["x-b26"].contacts+" contactos ("+esc(ATT.docs["x-b26"].file||"")+", "+esc(new Date(ATT.docs["x-b26"].at).toLocaleString("es-ES",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}))+(ATT.docs["x-b26"].byName?" · "+esc(ATT.docs["x-b26"].byName):"")+"). Esos contactos salen con la marca «Excel» y no se corrigen aquí.</p>":"");return}
+      (ATT.docs["x-b26"]?'<p class="ingnote" style="grid-column:1/-1">Historial del Excel importado: '+ATT.docs["x-b26"].n+" personas y "+ATT.docs["x-b26"].contacts+" contactos ("+esc(ATT.docs["x-b26"].file||"")+", "+esc(new Date(ATT.docs["x-b26"].at).toLocaleString("es-ES",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}))+(ATT.docs["x-b26"].byName?" · "+esc(ATT.docs["x-b26"].byName):"")+"). Esos contactos salen con la marca «Excel» y no se corrigen aquí.</p>":"")+
+      (ATT.docs["x-27"]?'<p class="ingnote" style="grid-column:1/-1">Historial de Unpaids y Prerreservas importado: '+ATT.docs["x-27"].n+" inscripciones y "+ATT.docs["x-27"].contacts+" contactos. Las unpaids que ya están en Trash salen al final de la lista con la marca «En Trash».</p>":"");return}
   const rows=attRows(L.k);
   if(rows==null){$("bdRows").innerHTML="";$("bdHead").innerHTML="";$("bdCount").textContent="";$("bdEmpty").hidden=false;$("bdEmpty").innerHTML="<h3>Leyendo Zoho CRM…</h3>";$("bdMore").hidden=true;return}
   const atts=[...new Set(rows.map(x=>x.att).filter(Boolean))].sort();
@@ -4974,11 +4977,11 @@ function renderBbdd(){if($("view-bbdd").hidden)return;
   $("bdSt").innerHTML='<option value="">Todos los estados</option><option value="-"'+(ATT.fSt==="-"?" selected":"")+'>Sin gestionar</option>'+ATT_ST.map(s=>'<option'+(ATT.fSt===s?" selected":"")+">"+esc(s)+"</option>").join("")+(L.k==="unp"?'<option value="dup"'+(ATT.fSt==="dup"?" selected":"")+">Duplicados</option>":"");
   const q=attNrm(ATT.q.trim());
   let it=rows.filter(x=>(!ATT.fAtt||(ATT.fAtt==="-"?!x.att:x.att===ATT.fAtt))&&(!ATT.fSt||(ATT.fSt==="-"?!x.st:ATT.fSt==="dup"?x.dup:x.st===ATT.fSt))&&(!q||attNrm(x.name+" "+x.tutor+" "+x.email+" "+x.phone+" "+x.code).includes(q)));
-  it.sort((a,b)=>(b.day||"").localeCompare(a.day||"")||a.name.localeCompare(b.name));
+  it.sort((a,b)=>(!!a.trash-!!b.trash)||(b.day||"").localeCompare(a.day||"")||a.name.localeCompare(b.name));
   $("bdCount").textContent=it.length+" de "+rows.length;
   $("bdHead").innerHTML="<tr><th>Fecha</th><th>Jugador · Tutor</th><th>Teléfono</th><th>Email</th><th>Nacionalidad</th><th>Idioma</th><th>Modalidad</th><th>Colectivo</th><th>ATT</th><th>Estado</th><th>Contactos</th></tr>";
   $("bdEmpty").hidden=!!it.length;if(!it.length)$("bdEmpty").innerHTML="<h3>Nadie con estos filtros</h3>";
-  $("bdRows").innerHTML=it.slice(0,ATT.lim).map(x=>'<tr data-attk="'+esc(x.key)+'" tabindex="0"><td>'+(x.day?fmtDL(x.day):"—")+'</td><td class="nm"><b class="name">'+esc(x.name)+"</b>"+(x.dup?' <span class="attdup">Duplicado</span>':"")+"<br><small>"+esc(x.tutor||"—")+(x.code?" · "+esc(x.code):"")+"</small></td><td>"+esc(x.phone||"—")+"</td><td>"+esc(x.email||"—")+"</td><td>"+esc(x.nat||"—")+"</td><td>"+(x.lang?'<span class="bdlang sm l-'+x.lang.toLowerCase()+'">'+x.lang+"</span>":"—")+"</td><td>"+esc(x.mod||"—")+"</td><td>"+esc(x.col||"—")+"</td><td>"+esc(x.att||"—")+"</td><td>"+attChip(x.st,x.ins)+"</td><td>"+(x.log.length?"<b>"+x.log.length+"</b> · "+esc(x.lastDay?fmtD(x.lastDay):""):"—")+"</td></tr>").join("");
+  $("bdRows").innerHTML=it.slice(0,ATT.lim).map(x=>'<tr data-attk="'+esc(x.key)+'" tabindex="0"><td>'+(x.day?fmtDL(x.day):"—")+'</td><td class="nm"><b class="name">'+esc(x.name)+"</b>"+(x.dup?' <span class="attdup">Duplicado</span>':"")+(x.trash?' <span class="attst t-off" title="La inscripción ya está en Trash en el CRM">En Trash</span>':"")+"<br><small>"+esc(x.tutor||"—")+(x.code?" · "+esc(x.code):"")+"</small></td><td>"+esc(x.phone||"—")+"</td><td>"+esc(x.email||"—")+"</td><td>"+esc(x.nat||"—")+"</td><td>"+(x.lang?'<span class="bdlang sm l-'+x.lang.toLowerCase()+'">'+x.lang+"</span>":"—")+"</td><td>"+esc(x.mod||"—")+"</td><td>"+esc(x.col||"—")+"</td><td>"+esc(x.att||"—")+"</td><td>"+attChip(x.st,x.ins)+"</td><td>"+(x.log.length?"<b>"+x.log.length+"</b> · "+esc(x.lastDay?fmtD(x.lastDay):""):"—")+"</td></tr>").join("");
   $("bdMore").hidden=it.length<=ATT.lim;$("bdMore").textContent="Ver más ("+(it.length-ATT.lim)+" más)"}
 /* ---------- LIMPIEZA ---------- */
 const lpDone=r=>{let pay=false;try{pay=payState(r).k!=="late"}catch(e){}const doc=r.d.Comprobaci_n_documentos===true||r.d.Comprobaci_n_documentos==="true";return {pay,doc,ok:pay&&doc}};
