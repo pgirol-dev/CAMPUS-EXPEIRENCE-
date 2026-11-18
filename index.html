@@ -1154,8 +1154,16 @@ html.no-dev-edit [data-devok]{pointer-events:none}
   .prow.crow .pnm,.prow.crow .fchips{grid-column:1/-1}
 }
 /* ingresos */
-.inggrid{grid-template-columns:repeat(5,minmax(0,1fr))}
-@media (max-width:900px){.inggrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.inggrid{grid-template-columns:repeat(2,minmax(0,1fr)) minmax(0,1.3fr)}
+@media (max-width:700px){.inggrid{grid-template-columns:repeat(2,minmax(0,1fr))}.inggrid .mny{grid-column:1/-1}}
+.invgrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.pbx.ib-all::before{background:var(--ink-3)} .pbx.ib-pend::before{background:var(--pink)}
+/* alarma de Ingresos: un día cuadrado ha cambiado */
+.ingalarm{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 14px;border-radius:6px;background:var(--bad);color:var(--on-hot)}
+.ingalarm p{margin:0;flex:1 1 260px;font-weight:700}
+.ingalarm p small{display:block;font-weight:600;opacity:.85}
+.ingalarm .btn{background:var(--on-hot);color:var(--bad);border-color:transparent}
+.ingd.st-ok.is-chg{box-shadow:inset 4px 0 0 var(--bad);background:var(--bad-soft)}
 .pbx.gb-pend::before{background:var(--pink)} .pbx.gb-ok::before{background:var(--green)} .pbx.gb-rev::before{background:var(--bad)} .pbx.gb-sum::before{background:var(--navy)}
 .pbx.gb-sum{cursor:default} .pbx.gb-sum:hover{transform:none;box-shadow:none} .pbx.gb-sum .pc2{font-size:1.7rem}
 #ingCamp{border:1px solid var(--line);background:var(--field);color:var(--ink);border-radius:96px;padding:8px 12px;font:600 12.5px var(--f-body)}
@@ -1992,7 +2000,7 @@ html.sb-min .sfh{display:block;font-family:var(--f-wide);font-style:italic;font-
   <section id="view-facturas" class="stack" hidden>
     <div class="eqhead"><div class="eqtitlebox"><h2 class="eqtitle">Facturas</h2><span class="sub" id="invSub"></span></div><button class="btn" type="button" id="invRefresh">Actualizar facturas</button></div>
     <div class="incscope sedebar" id="invSede" role="group" aria-label="Sede"></div>
-    <div class="paygrid" id="invBoxes" role="group" aria-label="Estado de las facturas"></div>
+    <div class="paygrid invgrid" id="invBoxes" role="group" aria-label="Estado de las facturas"></div>
     <div class="filters"><input type="search" id="invQ" placeholder="Buscar jugador, código o número de factura" aria-label="Buscar"><span class="count" id="invCount"></span></div>
     <div class="paylist" id="invList"></div>
     <div id="invOrph"></div>
@@ -2009,6 +2017,7 @@ html.sb-min .sfh{display:block;font-family:var(--f-wide);font-style:italic;font-
   <section id="view-ingresos" class="stack" hidden>
     <div class="eqhead"><div class="eqtitlebox"><h2 class="eqtitle">Ingresos</h2><span class="sub" id="ingSub"></span></div><button class="btn" type="button" id="ingRefresh">Actualizar</button></div>
     <div class="seg ingbanks" id="ingBank" role="tablist" aria-label="Banco"></div>
+    <div id="ingAlarm" hidden></div>
     <div class="paygrid inggrid" id="ingBoxes" role="group" aria-label="Estado de los días"></div>
     <div class="filters"><input type="search" id="ingQ" placeholder="Buscar familia, jugador o factura" aria-label="Buscar"><select id="ingCamp" aria-label="Campus"></select><span class="count" id="ingCount"></span></div>
     <div id="ingList" class="inglist"></div>
@@ -4431,7 +4440,7 @@ $("accTabs").addEventListener("click",e=>{const b=e.target.closest("[data-acc]")
 /* ===== FACTURAS: comprobación entre el CRM (lo pagado) y Zoho Books (lo facturado) =====
    En Books se crea una factura por cada pago, serie C-2027, con la referencia «<fecha>-<id de la inscripción>».
    Las reservas de 50 € antiguas no llevan el id: se enlazan por el email de la familia. */
-var INV={f:"err",q:"",list:null,busy:false,err:"",at:null};
+var INV={f:"ok",q:"",list:null,busy:false,err:"",at:null};
 const BOOKS_ORG="20110950454",INV_PREFIX="C-2027";
 /* Andorra factura en otra organización de Books (ISL Agency), serie AND27.nn */
 const BOOKS_ORG_AND="20112628138",INV_AND_PREFIX="AND27";
@@ -4482,10 +4491,11 @@ function invCheck(){
     return {r,inv,res,resIn:true,paid,total,sum:tot,k,diff:r2(tot-paid),unpaid}});
   Object.values(byEmail).flat().forEach(i=>{if(!used.has(i))orph.push({i,why:Math.abs(+i.total-50)<.01?"Reserva de 50 € sin inscripción activa con ese email":"Factura sin el código de la inscripción en la referencia"})});
   return {rows,orph}}
-const INV_BOX=[["err","Con error","Sin factura, no cuadra o sin cobrar"],["sin","Sin factura","Ha pagado y no hay factura"],["dif","No cuadra","Facturado distinto de lo pagado"],["ok","Correctas","Facturado igual a lo pagado"],["all","Todos",""]];
+/* vista: Todos · Pendientes de cuadrar (sin factura, no cuadra, sin cobrar, sin pagos y facturas sin inscripción) · Correctas */
+const INV_BOX=[["all","Todos","Jugadores y facturas"],["pend","Pendientes de cuadrar","Con estado o error"],["ok","Correctas","Facturado igual a lo pagado"]];
 const INV_LBL={ok:"Correcta",sin:"Sin factura",dif:"No cuadra",cobro:"Sin cobrar",none:"Sin pagos"};
 const INV_ERR=k=>k==="sin"||k==="dif"||k==="cobro"||k==="none";
-function invErrCount(){if(!INV.list||!(S.allRows||[]).length)return null;try{const c=invCheck();return c.rows.filter(x=>INV_ERR(x.k)).length}catch(e){return null}}
+function invErrCount(){if(!INV.list||!(S.allRows||[]).length)return null;try{const c=invCheck();return c.rows.filter(x=>INV_ERR(x.k)).length+c.orph.length}catch(e){return null}}
 const booksUrl=i=>"https://books.zoho.eu/app/"+(i._org||BOOKS_ORG)+"#/invoices/"+encodeURIComponent(i.invoice_id);
 const cnUrl=c=>"https://books.zoho.eu/app/"+(c._org||BOOKS_ORG)+"#/creditnotes/"+encodeURIComponent(c.creditnote_id);
 function renderFacturas(){
@@ -4497,21 +4507,32 @@ function renderFacturas(){
   if(!INV.list||!AR.length){$("invBoxes").innerHTML="";$("invList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">'+(INV.busy||!AR.length?"Cargando facturas…":"Sin datos")+"</h3></div>";$("invOrph").innerHTML="";return}
   const ck=invCheck();const invCamp=i=>{if(i._org===BOOKS_ORG_AND)return "and";const se=invSeries(i.invoice_number);return se===INV_PREFIX?"mad":(ING_SER[se.replace(/27$/,"")]||"mad")};
   $("invSede").innerHTML=sedeBar("inv",ck.rows.map(x=>x.r.camp||"mad"));
-  const rows=ck.rows.filter(x=>sedeOk("inv",x.r.camp||"mad")),orph=ck.orph.filter(o=>sedeOk("inv",invCamp(o.i)));const cnt={all:rows.length,ok:0,sin:0,dif:0,cobro:0,none:0};rows.forEach(x=>cnt[x.k]++);cnt.err=cnt.sin+cnt.dif+cnt.cobro;
+  const rows=ck.rows.filter(x=>sedeOk("inv",x.r.camp||"mad")),orph=ck.orph.filter(o=>sedeOk("inv",invCamp(o.i)));if(!["all","pend","ok"].includes(INV.f))INV.f="ok";
+  const cnt={ok:0,pend:orph.length};rows.forEach(x=>{if(x.k==="ok")cnt.ok++;else cnt.pend++});cnt.all=rows.length+orph.length;
   $("invBoxes").innerHTML=INV_BOX.map(([k,t,sub])=>'<button type="button" class="pbx ib-'+k+'" data-if="'+k+'" aria-pressed="'+(INV.f===k)+'"><span class="pt2">'+t+'</span><span class="pc2">'+cnt[k]+'</span><span class="ps2">'+sub+"</span></button>").join("");
   const nrm=t=>String(t).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();const q=nrm(INV.q.trim());
-  let it=rows.filter(x=>INV.f==="all"||(INV.f==="err"?INV_ERR(x.k):x.k===INV.f));
+  let it=rows.filter(x=>INV.f==="all"||(INV.f==="pend"?x.k!=="ok":x.k==="ok"));
+  let oi=INV.f==="ok"?[]:orph.slice();
   if(q)it=it.filter(x=>nrm(x.r.hay+" "+x.r.name+" "+x.r.code+" "+((campById(x.r.camp||"mad")||{}).n||"")+" "+x.inv.map(i=>i.invoice_number).join(" ")).includes(q));
-  const ord={sin:0,dif:1,cobro:2,ok:3,none:4};it.sort((a,b)=>ord[a.k]-ord[b.k]||a.r.name.localeCompare(b.r.name));
-  $("invCount").textContent=it.length+" jugadores";
+  if(q)oi=oi.filter(o=>nrm((o.i.customer_name||"")+" "+(o.i.email||"")+" "+o.i.invoice_number).includes(q));
+  const ord={sin:0,dif:1,cobro:2,none:3,ok:4};it.sort((a,b)=>ord[a.k]-ord[b.k]||a.r.name.localeCompare(b.r.name));
+  $("invCount").textContent=it.length+" jugadores"+(oi.length?" · "+oi.length+" facturas sin inscripción":"");
   const chip=(i,extra)=>'<a class="ichip'+(+i.balance>0?" ko":"")+'" href="'+booksUrl(i)+'" target="_blank" rel="noopener" title="Abrir en Zoho Books · '+esc(i.date||"")+(+i.balance>0?" · pendiente "+eur(i.balance):"")+'">'+esc(i.invoice_number)+" <b>"+eur(i.total)+"</b>"+(extra||"")+"</a>";
-  $("invList").innerHTML=it.length?it.map(x=>{
+  const orphRow=o=>'<div class="prow frow is-orph"><span class="pnm"><b>'+esc(o.i.customer_name||"—")+'</b><span class="code">'+esc(o.i.email||"")+'</span></span><span class="pst ist-sin">Sin inscripción</span><span class="pnx ko">'+esc(o.why)+'</span><span class="fchips">'+chip(o.i)+"</span></div>";
+  oi.sort((a,b)=>String(b.i.date).localeCompare(String(a.i.date)));
+  const pendIt=it.filter(x=>x.k!=="ok"),okIt=it.filter(x=>x.k==="ok");
+  const rowOf=x=>{
     const amt=x.k==="none"?'<span class="pnx ko">Sin pagos: el CRM la da como activa pero no hay nada pagado ni facturado'+(x.total?" · total "+eur(x.total):"")+"</span>"
       :'<span class="pnx'+(INV_ERR(x.k)?" ko":"")+'">Facturado <b>'+eur(x.sum)+"</b> · Pagado <b>"+eur(x.paid)+"</b>"+(x.total?" · Total "+eur(x.total):"")+(x.k==="dif"?" · <b>"+(x.diff>0?"+":"")+eur(x.diff)+"</b>":"")+(x.k==="cobro"?" · factura sin cobrar":"")+"</span>";
     const chips=x.inv.map(i=>chip(i)).concat(x.res.map(i=>chip(i,' <i>reserva</i>'))).join("");
-    return '<div class="prow frow is-'+x.k+'" data-pid="'+esc(x.r.id)+'"><span class="pnm"><b class="nmrow"><span class="nmt" title="'+esc(x.r.name)+'">'+esc(x.r.name)+'</span>'+vipTag(x.r)+campTag(x.r)+'</b><span class="code">'+esc(x.r.code)+'</span></span><span class="pst ist-'+x.k+'">'+INV_LBL[x.k]+"</span>"+amt+'<span class="fchips">'+(chips||(x.k==="none"?"":'<span class="ichip none">Ninguna factura</span>'))+"</span></div>"}).join("")
-    :'<div class="eqempty"><h3 class="wide" style="margin:0">'+(INV.f==="err"?"Ningún error: todo cuadra":"Nadie en este estado")+"</h3></div>";
-  $("invOrph").innerHTML=orph.length?'<details class="iorph"><summary><b>Facturas sin inscripción activa</b><span>'+orph.length+'</span><small>Reservas sin inscripción, bajas o devoluciones. Revisa si necesitan factura rectificativa.</small></summary><div class="paylist">'+orph.sort((a,b)=>String(b.i.date).localeCompare(String(a.i.date))).map(o=>'<div class="prow frow is-orph"><span class="pnm"><b>'+esc(o.i.customer_name||"—")+'</b><span class="code">'+esc(o.i.email||"")+'</span></span><span class="pst ist-sin">Revisar</span><span class="pnx ko">'+esc(o.why)+'</span><span class="fchips">'+chip(o.i)+"</span></div>").join("")+"</div></details>":"";
+    return '<div class="prow frow is-'+x.k+'" data-pid="'+esc(x.r.id)+'"><span class="pnm"><b class="nmrow"><span class="nmt" title="'+esc(x.r.name)+'">'+esc(x.r.name)+'</span>'+vipTag(x.r)+campTag(x.r)+'</b><span class="code">'+esc(x.r.code)+'</span></span><span class="pst ist-'+x.k+'">'+INV_LBL[x.k]+"</span>"+amt+'<span class="fchips">'+(chips||(x.k==="none"?"":'<span class="ichip none">Ninguna factura</span>'))+"</span></div>"};
+  const secH=(t,n)=>INV.f==="all"&&n?'<div class="devsec">'+t+"<span>"+n+"</span></div>":"";
+  $("invList").innerHTML=(pendIt.length||oi.length||okIt.length)?
+    secH("Pendientes de cuadrar",pendIt.length+oi.length)+pendIt.map(rowOf).join("")+(oi.length?'<div class="devsec cerr" style="margin-top:10px">Facturas sin inscripción activa<span>'+oi.length+" · reservas sin inscripción, bajas o devoluciones: revisa si necesitan rectificativa</span></div>"+oi.map(orphRow).join(""):"")+
+    secH("Correctas",okIt.length)+okIt.map(rowOf).join("")
+    :'<div class="eqempty"><h3 class="wide" style="margin:0">'+(INV.f==="pend"?"Nada pendiente: todo cuadra":INV.f==="ok"?"Ninguna correcta todavía":"Nadie")+"</h3></div>";
+  $("invOrph").innerHTML="";
+  if(false)$("invOrph").innerHTML=orph.length?'<details class="iorph"><summary><b>Facturas sin inscripción activa</b><span>'+orph.length+'</span><small>Reservas sin inscripción, bajas o devoluciones. Revisa si necesitan factura rectificativa.</small></summary><div class="paylist">'+orph.sort((a,b)=>String(b.i.date).localeCompare(String(a.i.date))).map(o=>'<div class="prow frow is-orph"><span class="pnm"><b>'+esc(o.i.customer_name||"—")+'</b><span class="code">'+esc(o.i.email||"")+'</span></span><span class="pst ist-sin">Revisar</span><span class="pnx ko">'+esc(o.why)+'</span><span class="fchips">'+chip(o.i)+"</span></div>").join("")+"</div></details>":"";
 }
 $("invBoxes").addEventListener("click",e=>{const b=e.target.closest("[data-if]");if(!b)return;INV.f=b.dataset.if;renderFacturas()});
 $("invQ").addEventListener("input",e=>{INV.q=e.target.value;renderFacturas()});
@@ -4925,17 +4946,20 @@ function renderIngresos(){
   if(!INV.list){$("ingBoxes").innerHTML="";$("ingCount").textContent="";$("ingList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Cargando cobros…</h3></div>';return}
   const R=ingRows();
   $("ingBank").innerHTML=ING_BANKS.map(([b,l,sub])=>{const n=ingDays(R,b).filter(d=>d.st!=="ok").length;return '<button type="button" role="tab" data-ingbk="'+b+'" aria-pressed="'+(ING.bank===b)+'" aria-selected="'+(ING.bank===b)+'">'+l+" <small>"+sub+'</small><span class="n'+(n?"":" z")+'" title="Días por cuadrar o revisar">'+n+"</span></button>"}).join("");
-  const days=ingDays(R);const cnt={pend:0,rev:0,ok:0,all:days.length};days.forEach(d=>cnt[d.st]++);
-  const tot=r2(days.reduce((a,d)=>a+d.total,0)),np=days.reduce((a,d)=>a+d.ps.length,0);const first=days.length?days[days.length-1].day:null;
-  const BX=[["pend","Por cuadrar","Días sin marcar"],["rev","Revisar","Han cambiado después de cuadrar"],["ok","Cuadrados","Marcados como correctos"],["all","Todos","Todos los días con cobros"]];
-  $("ingBoxes").innerHTML=BX.map(([k,t,sub])=>'<button type="button" class="pbx gb-'+k+'" data-gf="'+k+'" aria-pressed="'+(ING.f===k)+'"><span class="pt2">'+t+'</span><span class="pc2">'+cnt[k]+'</span><span class="ps2">'+sub+"</span></button>").join("")+
-    '<div class="pbx gb-sum" aria-label="Total cobrado"><span class="pt2">Total cobrado</span><span class="pc2">'+eur(tot)+'</span><span class="ps2">'+np+" cobros"+(first?" desde el "+ingDate(first,{day:"numeric",month:"short"}):"")+"</span></div>";
+  /* dos cajas: Por cuadrar y Cuadrados. Un día cuadrado que cambia después («rev») sigue en Cuadrados, en rojo, y salta la alarma */
+  if(!["pend","ok"].includes(ING.f))ING.f="pend";
+  const days=ingDays(R);const box=d=>d.st==="pend"?"pend":"ok";const cnt={pend:0,ok:0};days.forEach(d=>cnt[box(d)]++);const nRev=days.filter(d=>d.st==="rev").length;
+  const okDays=days.filter(d=>d.st==="ok");const tot=r2(okDays.reduce((a,d)=>a+d.total,0)),np=okDays.reduce((a,d)=>a+d.ps.length,0);
+  const BX=[["pend","Por cuadrar","Días sin marcar"],["ok","Cuadrados","Marcados como correctos"]];
+  $("ingBoxes").innerHTML=BX.map(([k,t,sub])=>'<button type="button" class="pbx gb-'+k+'" data-gf="'+k+'" aria-pressed="'+(ING.f===k)+'"><span class="pt2">'+t+'</span><span class="pc2">'+cnt[k]+'</span><span class="ps2">'+sub+"</span>"+(k==="ok"&&nRev?'<span class="perr">'+nRev+(nRev>1?" han cambiado":" ha cambiado")+"</span>":"")+"</button>").join("")+
+    '<div class="mny" aria-label="Total cuadrado"><div class="mv keep"><i>Total cuadrado</i><b>'+eur(tot)+"</b><small>"+np+(np===1?" cobro en ":" cobros en ")+okDays.length+(okDays.length===1?" día cuadrado":" días cuadrados")+(nRev?" · no suma los días que han cambiado":"")+"</small></div></div>";
+  const al=$("ingAlarm");if(nRev){al.hidden=false;al.innerHTML='<div class="ingalarm" role="alert"><p>'+(nRev>1?nRev+" días cuadrados han cambiado después de cuadrarse":"Un día cuadrado ha cambiado después de cuadrarse")+"<small>Hay cobros nuevos o con otro importe. Revísalo y vuelve a cuadrarlo.</small></p>"+'<button type="button" class="btn" data-ingalarm="1">Ver '+(nRev>1?"los días":"el día")+"</button></div>"}else{al.hidden=true;al.innerHTML=""}
   const nrm=t=>String(t).normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();const q=nrm(ING.q.trim());
   const match=o=>(!ING.camp||o.camp===ING.camp)&&(!q||nrm(o.fam+" "+o.player+" "+o.i.invoice_number+" "+(o.r?o.r.code:"")).includes(q));
   const filt=!!(q||ING.camp);
-  let list=days.filter(d=>ING.f==="all"||d.st===ING.f);if(filt)list=list.filter(d=>d.ps.some(match));
+  let list=days.filter(d=>box(d)===ING.f);if(filt)list=list.filter(d=>d.ps.some(match));
   $("ingCount").textContent=list.length+" días";
-  if(!list.length){$("ingList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">'+(ING.f==="pend"&&!filt?"Todo cuadrado":ING.f==="rev"&&!filt?"Nada que revisar":"Ningún día")+"</h3>"+(ING.bank==="cai"&&INV.andErr?"<p>"+esc(INV.andErr)+"</p>":ING.bank==="cai"?"<p>Cobros de Andorra (Zoho Books · ISL Agency, serie "+INV_AND_PREFIX+").</p>":"")+"</div>";return}
+  if(!list.length){$("ingList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">'+(ING.f==="pend"&&!filt?"Todo cuadrado":ING.f==="ok"&&!filt?"Ningún día cuadrado todavía":"Ningún día")+"</h3>"+(ING.bank==="cai"&&INV.andErr?"<p>"+esc(INV.andErr)+"</p>":ING.bank==="cai"?"<p>Cobros de Andorra (Zoho Books · ISL Agency, serie "+INV_AND_PREFIX+").</p>":"")+"</div>";return}
   const ed=ingEdit();let h="",curM="";
   const mt={};list.forEach(d=>{const m=d.day.slice(0,7);mt[m]=mt[m]||{n:0,t:0};mt[m].n++;mt[m].t=r2(mt[m].t+d.total)});
   list.forEach(d=>{const m=d.day.slice(0,7);
@@ -4975,6 +4999,9 @@ async function ingSave(day,patch,msg){if(!S.db){toast("No se puede guardar en es
   try{await S.db.collection("ing").doc(k).set(doc);if(msg)toast(msg)}catch(e){toast(e&&e.code==="permission_denied"?"No tienes permiso para cuadrar ingresos":"No se pudo guardar. Vuelve a intentarlo.")}}
 async function ingMe(){if(ING.me)return ING.me;try{ING.me=S.user?await S.user.me():null}catch(e){}return ING.me||{}}
 $("ingBoxes").addEventListener("click",e=>{const b=e.target.closest("[data-gf]");if(!b)return;ING.f=b.dataset.gf;renderIngresos()});
+$("ingAlarm").addEventListener("click",e=>{if(!e.target.closest("[data-ingalarm]"))return;ING.f="ok";ING.q="";ING.camp="";$("ingQ").value="";
+  const rev=ingDays(ingRows()).filter(d=>d.st==="rev");rev.forEach(d=>ING.open.add(d.day));renderIngresos();
+  const el=rev.length&&document.querySelector('.ingd[data-ingday="'+rev[0].day+'"]');if(el)el.scrollIntoView({behavior:"smooth",block:"center"})});
 $("ingQ").addEventListener("input",e=>{ING.q=e.target.value;renderIngresos()});
 $("ingCamp").addEventListener("change",e=>{ING.camp=e.target.value;renderIngresos()});
 $("ingRefresh").addEventListener("click",()=>loadBooks(true));

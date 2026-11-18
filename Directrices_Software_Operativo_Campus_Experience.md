@@ -616,3 +616,7 @@ Se asignan automáticamente en este orden, un equipo por nombre y sin repetir de
   - **Contador de cancelaciones:** Total cancelado (lo pagado) − Reembolsado (ya devuelto) = **Nos quedamos**; debajo, «Quedará en X al devolver lo pendiente».
   - «Todas» va siempre la primera. Todo respeta el filtro de sede.
 - 18/11: **Zoho: campos borrados en el CRM.** Se borraron en Zoho CRM los campos «Bus_ida», «Bus_vuelta» y «Numero_Noches_Extra» de Deals y la lectura entera fallaba («Sin conexión con Zoho»). Ahora, si Zoho dice que un campo no existe, el software lo deja de pedir, vuelve a leer y avisa en Registros de qué campos faltan. El servidor (campus_api y servidor propio) pasa el nombre del campo en el error.
+- 18/11: **Contabilidad: Facturas e Ingresos más sencillos** (solo vista; la lógica no cambia).
+  - **Facturas:** tres cajas: Todos · Pendientes de cuadrar · Correctas. Se abre en **Correctas**. En Pendientes entran sin factura, no cuadra, sin cobrar, sin pagos y las facturas sin inscripción activa (antes en un desplegable aparte), cada una con su etiqueta. Mismo estilo que Pagos, Devoluciones y Cancelaciones.
+  - **Ingresos:** dos cajas: Por cuadrar · Cuadrados (se quitan «Todos» y «Revisar»). Se abre en **Por cuadrar**. Si un día cuadrado cambia después, se queda en Cuadrados pero en rojo y salta arriba una **alarma** roja con un botón para ir a ese día.
+  - **Total cuadrado** (en lugar de «Total cobrado»): solo suma los días marcados como cuadrados del banco elegido; los que han cambiado no cuentan hasta volver a cuadrarlos.
