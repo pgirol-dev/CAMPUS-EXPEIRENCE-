@@ -638,3 +638,7 @@ Se asignan automáticamente en este orden, un equipo por nombre y sin repetir de
   - **Total comisión aplicada − Liquidado = Pendiente de liquidar.** Las liquidaciones se apuntan a mano por agencia: cantidad, fecha, nota y quién (colección `agliq`, protegida).
   - **Descargar Excel** por agencia: niño, código, programa, semanas, precio, % y comisión aplicada, extras y lo que tiene que pagar; al final el desglose total, lo liquidado y lo pendiente.
   - **Tabla de comisiones:** botón fijo en la esquina inferior derecha.
+- 18/11: **Botón «Atrás» en todo el software** (decisión de Pau). En la barra de arriba, a la izquierda de dónde estás; sale en todas las pantallas menos en Inicio.
+  - Primero cierra lo que esté abierto encima (ficha, historial de contactos, incidencia, tabla de comisiones, editor o descarga de horarios, cambiar contraseña); con un panel abierto, el botón queda por encima del fondo oscuro.
+  - Si no hay nada abierto, **sube un nivel**: Registros › semana › modalidad → semana → Registros → Temporada → Inicio; Horarios/Equipos › semana → Horarios/Equipos → Operativa; Base de datos › lista → Base de datos → Atención al público; Limpieza › semana → Limpieza; Contabilidad, Facturas, Ingresos → Administración; los bloques → Temporada.
+  - Si hay algo escrito sin guardar, pregunta antes: «Tienes cambios sin guardar. ¿Salir igualmente?».

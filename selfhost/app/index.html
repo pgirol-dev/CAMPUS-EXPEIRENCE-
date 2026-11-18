@@ -1883,6 +1883,13 @@ html.sb-min .sfh{display:block;font-family:var(--f-wide);font-style:italic;font-
 .tb-menu{display:none;width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:transparent;color:var(--ink);place-items:center;cursor:pointer}
 .tb-menu svg{width:20px;height:20px}
 .tb-where{display:flex;align-items:baseline;gap:10px;min-width:0}
+.tb-back{all:unset;box-sizing:border-box;flex:none;display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px 0 10px;border-radius:96px;border:1px solid var(--line);color:var(--ink);font:800 11px var(--f-body);text-transform:uppercase;letter-spacing:.08em;cursor:pointer;margin-right:4px}
+.tb-back[hidden]{display:none}
+.tb-back.ov{position:fixed;z-index:60;background:var(--bg);box-shadow:var(--shadow)}
+.tb-back svg{width:18px;height:18px}
+.tb-back:hover{background:var(--navy);border-color:var(--navy);color:var(--navy-ink)}
+.tb-back:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+@media (max-width:600px){.tb-back{padding:0 9px}.tb-back span{display:none}}
 .tb-where b{font-family:var(--f-wide);font-style:italic;font-weight:900;font-stretch:125%;text-transform:uppercase;font-size:15px;letter-spacing:-.01em;white-space:nowrap}
 .tb-where span{font-family:var(--f-serif);font-style:italic;font-size:19px;color:var(--pink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sb-scrim{position:fixed;inset:0;z-index:35;background:rgba(10,14,24,.5);backdrop-filter:blur(2px);opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
@@ -1911,6 +1918,7 @@ html.sb-min .sfh{display:block;font-family:var(--f-wide);font-style:italic;font-
 <header class="top">
   <div class="wrap">
     <button class="tb-menu" id="tbMenu" type="button" aria-label="Abrir menú"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button>
+    <button class="tb-back" id="tbBack" type="button" aria-label="Atrás" title="Atrás" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span>Atrás</span></button>
     <div class="tb-where" id="tbWhere"><b>Inicio</b></div>
     <div class="sync"><span class="dot" id="syncDot"></span><span class="txt" id="syncTxt">Conectando con Zoho…</span><button class="btn" id="btnRefresh" type="button">Actualizar</button></div>
   </div>
@@ -5645,6 +5653,44 @@ function renderSide(){
   const season='<button type="button" class="sb-season" data-sv="temporada" title="Campus Experience '+SEASON+'"><span class="yy"><span class="y4">'+SEASON+'</span><span class="y2">'+String(SEASON).slice(2)+'</span></span><span class="tt"><small>Temporada</small><b>Campus Experience</b></span><span class="sw" data-sv="inicio" title="Cambiar de temporada" aria-label="Cambiar de temporada">'+SVG('<path d="M7 7h11l-3-3M17 17H6l3 3"/>')+'</span></button>';
   $("sbNav").innerHTML=grp("inicio")+season+BLOCKS.map(b=>grp(b[0])).join("")+(ACL&&ACL.admin?capIf("Sistema",grp("admin")):"");
   sbMark()}
+/* ===== BOTÓN ATRÁS (todo el software) =====
+   Primero cierra lo que esté abierto encima (ficha, historial, incidencia, tabla…); si no hay nada, sube un nivel.
+   Si hay algo escrito sin guardar, pregunta antes de salir. */
+function ceOverlay(){return (!$("mePw").hidden)||(!$("agTbl").hidden)||!!ATT.panel||!$("drawer").hidden||(!!INC.panel&&!$("incPanel").hidden)||!!H.dlOpen||!!H.edit}
+function ceDirty(){
+  try{if(!$("drawer").hidden&&draft&&S.open){const base=Object.assign({llamada:"pendiente",llamadaNota:"",whatsapp:false,docs:false,notas:""},opsOf(S.open));if(JSON.stringify(draft)!==JSON.stringify(base))return true}}catch(e){}
+  try{if(INC.panel&&!$("incPanel").hidden){if(INC.form&&String(INC.form.txt||"").trim())return true;if(INC.act&&String(INC.act.txt||"").trim())return true}}catch(e){}
+  try{if(ATT.panel&&ATT.edit&&(String(ATT.edit.obs||"").trim()||ATT.edit.st))return true}catch(e){}
+  try{if(AGX.addLiq&&!$("view-pagos").hidden){const i=$("agLiq").querySelector("[data-agliqamt]");if(i&&i.value.trim())return true}}catch(e){}
+  try{if(!$("mePw").hidden&&["mePw0","mePw1","mePw2"].some(i=>$(i).value))return true}catch(e){}
+  return false}
+function ceBack(){
+  if(ceDirty()&&!window.confirm("Tienes cambios sin guardar. ¿Salir igualmente?"))return;
+  if(!$("mePw").hidden){$("mePw").hidden=true;return}
+  if(!$("agTbl").hidden){AGX.tbl=false;$("agTbl").hidden=true;return}
+  if(ATT.panel){attClose();return}
+  if(!$("drawer").hidden){closeDrawer();return}
+  if(INC.panel&&!$("incPanel").hidden){INC.panel=null;INC.act=null;INC.form=null;INC.delAsk=null;renderIncidencias();return}
+  if(H.dlOpen){H.dlOpen=false;renderDl();return}
+  if(H.edit){hEditClose();renderHorarios();return}
+  AGX.addLiq=false;ATT.edit=null;
+  const v=curView();
+  if(v==="registros"){if(R.ap&&!(R.week===WALL||isCampKey(R.week))){regGo(R.week,"");sbMark();return}if(R.week){regGo(0,"");sbMark();return}}
+  if(v==="horarios"&&(H.view==="sim"||H.week)){sbGo("horarios","0");return}
+  if(v==="equipos"&&EQ.week){sbGo("equipos","0");return}
+  if(v==="bbdd"&&ATT.list){ATT.list="";renderBbdd();window.scrollTo(0,0);return}
+  if(v==="limpieza"&&ATT.lpW){ATT.lpW=0;renderLimpieza();window.scrollTo(0,0);return}
+  const up={temporada:"inicio",registros:"temporada",operativa:"temporada",administracion:"temporada",atencion:"temporada",marketing:"temporada",rrhh:"temporada",
+    horarios:"operativa",equipos:"operativa",incidencias:"operativa",pagos:"administracion",facturas:"administracion",ingresos:"administracion",bbdd:"atencion",limpieza:"atencion",attstats:"atencion",admin:"inicio"};
+  let t=up[v]||"inicio";if(!viewOk(t))t=t==="inicio"?"inicio":"temporada";sbGo(t)}
+$("tbBack").addEventListener("click",ceBack);
+/* con una ficha o panel abierto, el botón queda por encima del fondo oscuro, en el mismo sitio */
+const CE_BACK_HOME=$("tbBack").parentNode,CE_BACK_NEXT=$("tbWhere");
+function ceOvSync(){const b=$("tbBack");const on=ceOverlay();
+  /* la barra de arriba tiene su propia capa: con un panel abierto, el botón se saca al cuerpo de la página para quedar por encima */
+  if(on&&!b.classList.contains("ov")){b.hidden=false;const r=b.getBoundingClientRect();document.body.appendChild(b);b.style.top=r.top+"px";b.style.left=r.left+"px";b.classList.add("ov")}
+  else if(!on&&b.classList.contains("ov")){b.classList.remove("ov");b.style.top=b.style.left="";CE_BACK_HOME.insertBefore(b,CE_BACK_NEXT);try{sbMark()}catch(e){}}}
+new MutationObserver(ceOvSync).observe(document.body,{subtree:true,attributes:true,attributeFilter:["hidden"]});
 function sbMark(){
   const v=curView(),c=sbCur(v);
   $("sbNav").querySelectorAll(".si").forEach(b=>b.classList.toggle("on",b.dataset.sv===GRP_OF[v]));
@@ -5653,6 +5699,7 @@ function sbMark(){
   let sub="";if(v==="registros"&&R.week)sub=wLabel(R.week);else if(v==="equipos"&&EQ.week)sub=wLabel(EQ.week);else if(v==="horarios")sub=H.view==="sim"?"Simulador":H.week?hWL(H.week):"";else if(v==="pagos")sub={pagos:"Pagos",dev:"Devoluciones",can:"Cancelaciones",ag:"Agentes"}[accKey()];
   const ro=aclClasses(v);
   const blk=GRP_OF[v]&&GRP_OF[v]!==v&&SB_LBL[GRP_OF[v]]?"<small>"+SB_LBL[GRP_OF[v]]+" ›</small>":"";
+  $("tbBack").hidden=v==="inicio"&&!ceOverlay();
   $("tbWhere").innerHTML=blk+"<b>"+SB_LBL[v]+"</b>"+(sub?"<span>"+esc(sub)+"</span>":"")+(ro?'<em class="tb-ro" title="Puedes ver pero no modificar">Solo lectura</em>':"");}
 function sbSync(){if(!SBR||SB_RAF)return;SB_RAF=requestAnimationFrame(()=>{SB_RAF=0;const AR=S.allRows||[];const sig=AR.length+"|"+(S.weeks?1:0)+"|"+Object.keys(EQ.docs||{}).length+"|"+Object.keys(H.docs||{}).length+"|"+Object.keys(H.wk||{}).length+"|"+(INV.list?INV.list.length:0)+"|"+(INV.at?+INV.at:0);if(sig!==SB_SIG){SB_SIG=sig;renderSide();try{hubRender(curView())}catch(e){}}else sbMark()})}
 /* páginas de inicio, temporada y bloques */
