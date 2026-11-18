@@ -149,7 +149,8 @@ En Cloud Scale → Data Store creáis estas 5 tablas, con estas columnas y tipos
 
 ### 3. Credenciales de Zoho CRM (solo lectura)
 Cread un **Self Client** en la consola de API de Zoho, con el mismo centro de datos que vuestro CRM.
-- **Scopes:** `ZohoCRM.coql.READ,ZohoCRM.modules.READ,ZohoCRM.users.READ,ZohoBooks.invoices.READ`
+- **Scopes:** `ZohoCRM.coql.READ,ZohoCRM.modules.READ,ZohoCRM.users.READ,ZohoBooks.invoices.READ,ZohoBooks.creditnotes.READ,Desk.tickets.READ,Desk.basic.READ`
+- Los dos de **Zoho Desk** (desde el 18/11) son para leer los tickets en Atención al público › Estadísticas. Sin ellos, el software funciona igual y en Estadísticas sale «No se han podido leer los tickets de Zoho Desk».
 - Cambiad el código generado por un *refresh token*:
   ```bash
   curl -X POST "https://accounts.zoho.eu/oauth/v2/token" \
@@ -168,6 +169,8 @@ Se configuran en la consola (Serverless → Functions → campus_api → Configu
 | `ZOHO_API_URL` | `https://www.zohoapis.eu` (o `.com`) |
 | `ZOHO_BOOKS_ORG` | id de la organización de Zoho Books (por defecto `20110950454`, ISL Agency RMF) |
 | `ZOHO_BOOKS_URL` | `https://www.zohoapis.eu/books/v3` (por defecto) |
+| `ZOHO_DESK_ORG` | opcional: id de la organización de Zoho Desk (por defecto `20109649402`, ISL Agency) |
+| `ZOHO_DESK_URL` | opcional: `https://desk.zoho.eu/api/v1` (por defecto) |
 | `CE_SETUP_KEY` | una clave larga inventada, para crear el primer administrador. **Borradla después.** |
 | `CE_LOGIN_URL` | ruta de la pantalla de acceso; por defecto `/app/login.html`. Si el hosting sirve la web en la raíz del dominio, `/login.html` |
 | `CE_ALLOWED_ORIGINS` | opcional: dominio de la web, por ejemplo `https://operativa.islagency.com` |

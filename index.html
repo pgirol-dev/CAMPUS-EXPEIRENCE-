@@ -1153,6 +1153,81 @@ html.no-dev-edit [data-devok]{pointer-events:none}
   .prow.crow{grid-template-columns:1fr 1fr 1fr}
   .prow.crow .pnm,.prow.crow .fchips{grid-column:1/-1}
 }
+
+/* ===== atención al público ===== */
+.bdacts{display:flex;gap:8px;align-items:center} .bdimp{cursor:pointer} html:not(.is-admin) .bdimp{display:none}
+.bdgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:12px}
+.bdbox{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:6px;padding:16px 18px;border-radius:6px;background:var(--surface-2);position:relative;overflow:hidden;min-height:170px;transition:transform .2s,box-shadow .2s}
+.bdbox::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--navy)}
+.bdbox:hover{transform:translateY(-2px);box-shadow:var(--shadow)} .bdbox:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+.bdbox.off{cursor:default;opacity:.62} .bdbox.off:hover{transform:none;box-shadow:none} .bdbox.off::before{background:var(--ink-3)}
+.bdbox .bdt{display:flex;align-items:center;gap:10px;justify-content:space-between}
+.bdbox .wt{font-family:var(--f-wide);font-style:italic;font-weight:900;font-stretch:125%;text-transform:uppercase;font-size:1.05rem}
+.bdlang{display:inline-grid;place-items:center;min-width:46px;height:30px;padding:0 8px;border-radius:6px;font-family:var(--f-serif);font-style:italic;font-size:1.25rem;line-height:1;letter-spacing:.02em}
+.bdlang.l-esp{background:var(--pink);color:var(--on-hot)} .bdlang.l-eng{background:var(--navy);color:var(--navy-ink)}
+.bdlang.sm{min-width:0;height:20px;font-size:.9rem;padding:0 6px;border-radius:4px}
+.bdbox .bdn{display:flex;align-items:baseline;gap:8px;margin-top:auto} .bdbox .bdn b{font-family:var(--f-serif);font-style:italic;font-weight:400;font-size:2.4rem;line-height:1;color:var(--pink)} .bdbox .bdn small{font-size:12px;color:var(--ink-3);font-weight:600}
+.bdbox .bdmini{display:flex;gap:12px;flex-wrap:wrap;font-size:11.5px;color:var(--ink-2)} .bdbox .bdmini b{font-weight:800;color:var(--ink)}
+.bdbox .bdoff{margin-top:auto;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3)}
+.bdbox .wbar{display:flex;height:4px;border-radius:4px;background:color-mix(in srgb,var(--ink) 10%,transparent);overflow:hidden}
+table.bdtab{min-width:1300px} table.bdtab td small{color:var(--ink-3)}
+.attst{display:inline-block;padding:2px 9px;border-radius:96px;font-size:11px;font-weight:800;white-space:nowrap;background:var(--surface-2);color:var(--ink-2)}
+.attst.t-ok{background:var(--green);color:var(--on-green)} .attst.t-hot{background:var(--navy);color:var(--navy-ink)} .attst.t-wait{background:color-mix(in srgb,var(--gold) 30%,transparent);color:var(--ink)} .attst.t-off{background:color-mix(in srgb,var(--ink) 12%,transparent);color:var(--ink-2)} .attst.t-none{background:transparent;color:var(--ink-3);box-shadow:inset 0 0 0 1px var(--line)}
+.attdup{display:inline-block;padding:1px 7px;border-radius:96px;background:var(--bad);color:var(--on-hot);font-size:10.5px;font-weight:800}
+.attinfo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 14px;font-size:13px;background:var(--surface-2);border-radius:12px;padding:12px 14px}
+.attinfo span{display:flex;flex-direction:column;min-width:0;overflow-wrap:anywhere} .attinfo small{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3)}
+.attatt{display:flex;align-items:center;gap:10px;flex-wrap:wrap} .attatt select,.attf select,.attf input{border:1px solid var(--line);background:var(--field);color:var(--ink);border-radius:96px;padding:7px 12px;font:600 13px var(--f-body)}
+.attform{display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:12px;box-shadow:inset 0 0 0 1.5px var(--navy)}
+.attf{display:flex;flex-direction:column;gap:4px} .attf small{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3)}
+.attl p{margin:4px 0 0;font-size:13px;line-height:1.45}
+.attedit{all:unset;cursor:pointer;margin-left:auto;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-3)} .attedit:hover{color:var(--pink)}
+.btn.danger{color:var(--bad)}
+.lpgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.pbx.lb-pend::before{background:var(--pink)} .pbx.lb-ok::before{background:var(--green)}
+.lpmini{display:flex;gap:10px;font-size:11px;font-weight:700} .lpmini .k-ok{color:var(--green)} .lpmini .k-pe{color:var(--pink)}
+.wkbox .lpmini{margin-top:2px}
+.prow.lprow{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) auto auto minmax(140px,1fr);gap:12px;align-items:center;cursor:pointer} .lprow .lpchk{justify-self:start}
+.lprow.is-ok{box-shadow:inset 4px 0 0 var(--green)} .lprow.is-pe{box-shadow:inset 4px 0 0 var(--pink)}
+.lpmod{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700}
+.lpchk{display:inline-block;padding:3px 9px;border-radius:96px;font-size:11px;font-weight:800;white-space:nowrap;background:var(--bad-soft);color:var(--bad)} .lpchk.ok{background:color-mix(in srgb,var(--green) 18%,transparent);color:var(--ink)}
+.lpct{display:flex;flex-direction:column;font-size:12px} .lpct small{color:var(--ink-3)}
+@media (max-width:900px){.prow.lprow{grid-template-columns:1fr 1fr}}
+.sth{font-family:var(--f-wide);font-style:italic;font-weight:900;font-stretch:125%;text-transform:uppercase;font-size:1rem;margin:10px 0 0} .sth small{font-family:var(--f-body);font-style:normal;font-weight:600;font-stretch:100%;text-transform:none;font-size:12px;color:var(--ink-3)}
+.stgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr));gap:12px}
+.stcard{background:var(--surface-2);border-radius:6px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.stcard .sttop{display:flex;align-items:center;justify-content:space-between;gap:10px} .stcard .wt{font-family:var(--f-wide);font-style:italic;font-weight:900;font-stretch:125%;text-transform:uppercase}
+.stkpi{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px} .stkpi.wide{grid-template-columns:repeat(auto-fit,minmax(130px,1fr));background:var(--surface-2);border-radius:6px;padding:14px 16px}
+.stkpi span{display:flex;flex-direction:column} .stkpi b{font-family:var(--f-serif);font-style:italic;font-weight:400;font-size:1.9rem;line-height:1;color:var(--ink)} .stkpi small{font-size:11px;font-weight:700;color:var(--ink-3)}
+.stdet summary{cursor:pointer;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2)}
+.sttab{margin-top:8px;overflow:auto} .sttab table{min-width:0!important;width:100%;border-collapse:collapse;font-size:12.5px} .sttab th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);padding:6px 8px;border-bottom:1px solid var(--line)} .sttab td{padding:6px 8px;border-bottom:1px solid color-mix(in srgb,var(--line) 60%,transparent)} .sttab .num{text-align:right;font-variant-numeric:tabular-nums} .sttab tfoot td{font-weight:800}
+/* agentes */
+.aggrid{grid-template-columns:repeat(2,minmax(0,1fr))} .aggrid .mny{grid-column:1/-1}
+.pbx.ab-pend::before{background:var(--pink)} .pbx.ab-ok::before{background:var(--green)}
+.agh,.agrow{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1.6fr) repeat(4,minmax(80px,.6fr)) 110px;gap:10px;align-items:center}
+.agrow{padding:12px 14px;border-radius:6px;background:var(--surface-2);cursor:pointer;margin-top:6px}
+.agrow.is-ok{box-shadow:inset 4px 0 0 var(--green)} .agrow.is-pend{box-shadow:inset 4px 0 0 var(--pink)} .agrow.is-err{box-shadow:inset 4px 0 0 var(--bad);background:var(--bad-soft)}
+.agrow .cwhy{grid-column:1/-1;font-size:12px;font-weight:600;color:var(--bad)} .agrow.is-pend .cwhy{color:var(--ink-2)}
+.agrow .cm{font-family:var(--f-serif);font-style:italic;font-size:1.1rem;text-align:right} .agrow .cm.hot{color:var(--pink)}
+.agh{padding:0 14px;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3)} .agh span:nth-child(n+3):nth-child(-n+6){text-align:right}
+.agw{display:flex;flex-wrap:wrap;gap:4px} .agw span{font-size:11px;font-weight:700;padding:2px 7px;border-radius:4px;background:var(--bg)}
+@media (max-width:1000px){.agh{display:none}.agrow{grid-template-columns:1fr 1fr}}
+.agliq{display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:6px;background:var(--surface-2);margin-top:8px}
+.agliqh{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.agliqf{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap} .agliqf .grow{flex:1 1 200px} .agliqf input{width:100%;box-sizing:border-box}
+.agliql{display:flex;flex-direction:column;gap:4px} .agliqr{display:grid;grid-template-columns:100px 120px minmax(0,1fr) auto auto;gap:12px;align-items:center;padding:8px 10px;border-radius:6px;background:var(--bg);font-size:13px}
+.agliqr b{font-family:var(--f-serif);font-style:italic;font-weight:400;font-size:1.15rem} .agliqr .muted{font-size:11.5px}
+@media (max-width:700px){.agliqr{grid-template-columns:1fr 1fr}}
+.agtblbtn{all:unset;position:fixed;right:22px;bottom:22px;z-index:40;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 16px 10px 10px;border-radius:96px;background:var(--navy);color:var(--navy-ink);box-shadow:var(--shadow);font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+.agtblbtn{font-family:var(--f-serif);font-style:italic;font-size:1.3rem;text-transform:none;letter-spacing:0} .agtblbtn span{font-family:var(--f-body);font-style:normal;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
+.agtblbtn::before{content:"";display:none}
+.agtblbtn:focus-visible{outline:2px solid var(--pink);outline-offset:3px}
+.agtblwrap{position:fixed;inset:0;z-index:46;background:rgba(10,20,41,.45);display:grid;place-items:center;padding:16px}
+.agtblwrap[hidden]{display:none}
+.agmod{background:var(--bg);border-radius:12px;box-shadow:var(--shadow);max-width:980px;width:100%;max-height:calc(100vh - 32px);overflow:auto;padding:18px 20px;display:flex;flex-direction:column;gap:16px}
+.agmodh{display:flex;align-items:center;justify-content:space-between} .agmodh .wt,.agtb .wt{font-family:var(--f-wide);font-style:italic;font-weight:900;font-stretch:125%;text-transform:uppercase}
+.agmod .x{all:unset;cursor:pointer;font-size:22px;padding:2px 9px;border-radius:8px;color:var(--ink-3)}
+.agtb{display:flex;flex-direction:column;gap:6px;overflow:auto} .agtb small{font-size:12px;color:var(--ink-3)}
+.agtb table{border-collapse:collapse;font-size:12.5px;min-width:620px} .agtb th,.agtb td{border:1px solid var(--line);padding:6px 10px;text-align:center} .agtb thead th{background:var(--navy);color:var(--navy-ink);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em} .agtb tbody th{text-align:left}
 /* ingresos */
 .inggrid{grid-template-columns:repeat(2,minmax(0,1fr)) minmax(0,1.3fr)}
 @media (max-width:700px){.inggrid{grid-template-columns:repeat(2,minmax(0,1fr))}.inggrid .mny{grid-column:1/-1}}
@@ -1522,7 +1597,7 @@ html.no-ap-registros .mcard[href="#registros"],html.no-ap-horarios .mcard[href="
 html.no-registros-todos #regWeeks .wkall,html.no-registros-madrid #regWeeks .wkbox[data-week]:not(.wkall):not([data-week^="c:"]),html.no-registros-campus #regWeeks .wkbox[data-week^="c:"]{display:none}
 html.no-equipos-madrid #eqWeekGrid [data-eqweek]:not([data-eqweek^="c:"]),html.no-equipos-campus #eqWeekGrid [data-eqweek^="c:"]{display:none}
 html.no-horarios-simulador [data-hview="sim"]{display:none}
-html.no-contabilidad-pagos [data-acc="pagos"],html.no-contabilidad-devoluciones [data-acc="dev"],html.no-contabilidad-cancelaciones [data-acc="can"]{display:none}
+html.no-contabilidad-agentes [data-acc="ag"],html.no-contabilidad-pagos [data-acc="pagos"],html.no-contabilidad-devoluciones [data-acc="dev"],html.no-contabilidad-cancelaciones [data-acc="can"]{display:none}
 /* solo lectura: se ocultan los mandos que modifican (el servidor además rechaza cualquier cambio) */
 html.ro-h [data-accept],html.ro-h [data-unaccept],html.ro-h #hIssC,html.ro-h #hAuto,html.ro-h #hManual,html.ro-h #hDel,html.ro-h [data-appr],html.ro-h #hIssA,html.ro-h #hIssB,html.ro-h [data-cday],html.ro-h [data-busreset],html.ro-h [data-busrest],html.ro-h [data-busdel],html.ro-h [data-busedit],html.ro-h .bed,html.ro-h [data-busmv],
 html.ro-h [data-idel],html.ro-h [data-iresi],html.ro-h [data-radd],html.ro-h [data-rdel],html.ro-h [data-gdel],html.ro-h .iadd2,html.ro-h .iaddsel{display:none!important}
@@ -1829,6 +1904,8 @@ html.sb-min .sfh{display:block;font-family:var(--f-wide);font-style:italic;font-
 <div class="sb-scrim" id="sbScrim"></div>
 <div class="ad-scrim" id="adScrim"></div><aside class="ad-dr" id="adDr" role="dialog" aria-modal="true" aria-label="Usuario" hidden></aside>
 <div class="ce-toast" id="ceToast" role="status" aria-live="polite"></div>
+<div class="incscrim" id="attScrim" hidden></div>
+<aside class="incpanel" id="attPanel" role="dialog" aria-modal="true" aria-label="Historial de contactos" hidden></aside>
 <div class="hmodal" id="mePw" hidden><form class="hmbox" id="mePwF"><b>Cambiar mi contraseña</b><label class="sub" style="display:flex;flex-direction:column;gap:5px">Contraseña actual<input class="ad-in" type="password" id="mePw0" autocomplete="current-password"></label><label class="sub" style="display:flex;flex-direction:column;gap:5px">Nueva contraseña (10 caracteres o más, letras y números)<input class="ad-in" type="password" id="mePw1" autocomplete="new-password"></label><label class="sub" style="display:flex;flex-direction:column;gap:5px">Repite la nueva<input class="ad-in" type="password" id="mePw2" autocomplete="new-password"></label><div class="ad-err" id="mePwE" hidden></div><div class="hmact"><button class="btn" type="button" id="mePwX">Cancelar</button><button class="btn primary" type="submit">Guardar</button></div></form></div>
 
 <header class="top">
@@ -1857,8 +1934,31 @@ html.sb-min .sfh{display:block;font-family:var(--f-wide);font-style:italic;font-
     <div class="hubhead"><span class="hubk">Campus Experience 2027</span><h2 class="eqtitle">Administración</h2></div>
     <nav class="bkgrid" id="hubAdministracion" aria-label="Administración"></nav>
   </section>
-  <section id="view-atencion" class="stack" hidden>
-    <div class="soonpanel"><h2>Coming soon</h2><p class="wide" style="font-weight:900;font-style:italic;text-transform:uppercase">Atención al público</p></div>
+  <section id="view-atencion" class="home hub" hidden>
+    <div class="hubhead"><span class="hubk">Campus Experience 2027</span><h2 class="eqtitle">Atención al público</h2></div>
+    <nav class="bkgrid" id="hubAtencion" aria-label="Atención al público"></nav>
+  </section>
+  <section id="view-bbdd" class="stack" hidden>
+    <div class="eqhead"><div class="eqtitlebox"><h2 class="eqtitle">Base de datos</h2><nav class="crumbs" id="bdCrumbs" aria-label="Ruta"></nav></div><span class="bdacts"><label class="btn bdimp" title="Importa el historial de llamadas del Excel (pestañas «BBDD …»)">Importar Excel<input type="file" id="bdImp" accept=".xlsx" hidden></label><button class="btn" type="button" id="bdRefresh">Actualizar</button></span></div>
+    <div id="bdLists" class="bdgrid" aria-label="Listas"></div>
+    <div id="bdBody" class="stack" hidden>
+      <div class="filters"><input type="search" id="bdQ" placeholder="Buscar jugador, tutor, email, teléfono o código" aria-label="Buscar"><select id="bdAtt" aria-label="ATT"></select><select id="bdSt" aria-label="Estado"></select><span class="count" id="bdCount"></span></div>
+      <div class="tablebox"><table class="oplist bdtab"><thead id="bdHead"></thead><tbody id="bdRows"></tbody></table><div class="empty" id="bdEmpty" hidden></div></div>
+      <button class="btn" type="button" id="bdMore" hidden>Ver más</button>
+    </div>
+  </section>
+  <section id="view-limpieza" class="stack" hidden>
+    <div class="eqhead"><div class="eqtitlebox"><h2 class="eqtitle">Limpieza</h2><nav class="crumbs" id="lpCrumbs" aria-label="Ruta"></nav></div></div>
+    <div id="lpWeeks" class="wkgrid" aria-label="Semanas y sedes"></div>
+    <div id="lpBody" class="stack" hidden>
+      <div class="paygrid lpgrid" id="lpBoxes" role="group" aria-label="Estado"></div>
+      <div class="filters"><input type="search" id="lpQ" placeholder="Buscar jugador, código o tutor" aria-label="Buscar"><span class="count" id="lpCount"></span></div>
+      <div id="lpList" class="paylist"></div>
+    </div>
+  </section>
+  <section id="view-attstats" class="stack" hidden>
+    <div class="eqhead"><div class="eqtitlebox"><h2 class="eqtitle">Estadísticas</h2><span class="sub">Métricas de atención al público</span></div><button class="btn" type="button" id="stRefresh">Actualizar</button></div>
+    <div id="stBody" class="stack"></div>
   </section>
   <section id="view-marketing" class="stack" hidden>
     <div class="soonpanel"><h2>Coming soon</h2><p class="wide" style="font-weight:900;font-style:italic;text-transform:uppercase">Marketing</p></div>
@@ -2025,7 +2125,7 @@ html.sb-min .sfh{display:block;font-family:var(--f-wide);font-style:italic;font-
   <section id="view-pagos" class="stack" hidden>
   <div class="stack">
     <div class="eqhead"><div class="eqtitlebox"><h2 class="eqtitle">Contabilidad</h2><span class="sub" id="payToday"></span></div>
-      <div class="seg" id="accTabs" role="tablist" aria-label="Contabilidad"><button type="button" role="tab" data-acc="pagos" aria-selected="true" aria-pressed="true">Pagos</button><button type="button" role="tab" data-acc="dev" aria-selected="false" aria-pressed="false">Devoluciones</button><button type="button" role="tab" data-acc="can" aria-selected="false" aria-pressed="false">Cancelaciones</button></div></div>
+      <div class="seg" id="accTabs" role="tablist" aria-label="Contabilidad"><button type="button" role="tab" data-acc="pagos" aria-selected="true" aria-pressed="true">Pagos</button><button type="button" role="tab" data-acc="dev" aria-selected="false" aria-pressed="false">Devoluciones</button><button type="button" role="tab" data-acc="can" aria-selected="false" aria-pressed="false">Cancelaciones</button><button type="button" role="tab" data-acc="ag" aria-selected="false" aria-pressed="false">Agentes</button></div></div>
     <div class="stack" id="accPagos">
     <div class="psearch"><input type="search" id="payQ" placeholder="Buscar cualquier inscripción por nombre o código" aria-label="Buscar inscripción" autocomplete="off"><div class="pres" id="payRes" hidden></div></div>
     <div class="incscope sedebar" id="paySede" role="group" aria-label="Sede"></div>
@@ -2044,6 +2144,15 @@ html.sb-min .sfh{display:block;font-family:var(--f-wide);font-style:italic;font-
       <div class="paygrid cangrid" id="canBoxes" role="group" aria-label="Cancelaciones"></div>
       <div class="filters"><input type="search" id="canQ" placeholder="Buscar jugador o código" aria-label="Buscar"><span class="count" id="canCount"></span></div>
       <div class="paylist" id="canList"></div>
+    </div>
+    <div class="stack" id="accAg" hidden>
+      <div class="incscope sedebar" id="agPick" role="group" aria-label="Agencia"></div>
+      <div class="paygrid aggrid" id="agBoxes" role="group" aria-label="Estado de las comisiones"></div>
+      <div class="filters"><input type="search" id="agQ" placeholder="Buscar jugador o código" aria-label="Buscar"><button class="btn" type="button" id="agDl" disabled>Descargar Excel</button><span class="count" id="agCount"></span></div>
+      <div class="paylist" id="agList"></div>
+      <div id="agLiq"></div>
+      <button type="button" class="agtblbtn" id="agTblBtn" aria-label="Ver la tabla de comisiones">%<span>Tabla de comisiones</span></button>
+      <div class="agtblwrap" id="agTbl" hidden></div>
     </div>
   </div>
 </section>
@@ -2146,14 +2255,14 @@ const FIELDS=[
  {k:"obs",l:"Observaciones",sec:"otros",z:"Observaciones"}
 ];
 const SECTIONS=[["part","Participante"],["semanas","Semanas contratadas"],["equip","Equipaciones"],["serv","Servicios"],["salud","Salud y dieta"],["cons","Consentimientos"],["fam","Familia y contacto"],["auth","Autorizados para recogida"],["pago","Pago"],["docu","Documentación"],["otros","Otros"]];
-const BASE_FIELDS=["Deal_Name","Player","Tipo_Modalidad","Weeks","Modified_Time","Event_Name","Refund","First_Instalment_Paid_At","Second_Instalment_Paid_At","Third_Instalment_Paid_At"];
+const BASE_FIELDS=["Deal_Name","Player","Tipo_Modalidad","Comprobaci_n_documentos","Agencia","Created_Time","Colectivos","Weeks","Modified_Time","Event_Name","Refund","First_Instalment_Paid_At","Second_Instalment_Paid_At","Third_Instalment_Paid_At"];
 const DEAL_FIELDS=[...new Set(BASE_FIELDS.concat(FIELDS.flatMap(f=>(f.z?[f.z]:[]).concat(f.zz||[]))))];
 const DEAL_WHERE=" from Deals where Event_Name.Name in "+EVS+" and Stage not in "+STAGES_OUT;
 const DEAL_PARTS=[];for(let i=0;i<DEAL_FIELDS.length;i+=40)DEAL_PARTS.push(DEAL_FIELDS.slice(i,i+40));
 /* canceladas y con importe de devolución (Refund amount): para Devoluciones y Cancelaciones. No son inscripciones activas */
 const X_FIELDS=["Deal_Name","Player","Event_Name","Stage","Total","Paid","Refund","Reservation_Code","Email","Email_persona","Forma_de_pago","Balance_Due1","Modified_Time","Contact_Name","Account_Name","Telefono_Tutor_legal","A_o_de_nacimiento","Gender","Codigo_descuento","First_Instalment_Amount","First_Instalment_Status","First_Instalment_Due_Date","Second_Instalment_Amount","Second_Instalment_Status","Second_Instalment_Due_Date","Third_Instalment_Amount","Third_Instalment_Status","Third_Instalment_Due_Date"];
 const X_WHERE=" from Deals where Event_Name.Name in "+EVS+" and (Stage = 'Cancelled' or Refund is not null)";
-const Q_WEEKS="select Parent_Id, Producto, Semana1, Fecha_inicio, Fecha_fin from Campus_y_servicios_extra where Parent_Id.Event_Name.Name in "+EVS+" and Parent_Id.Stage not in "+STAGES_OUT;
+const Q_WEEKS="select Parent_Id, Producto, Semana1, Fecha_inicio, Fecha_fin, Importe from Campus_y_servicios_extra where Parent_Id.Event_Name.Name in "+EVS+" and Parent_Id.Stage not in "+STAGES_OUT;
 const Q_AUTH="select Name, Email, DNI_o_Pasaporte, Application from Personas_Autorizadas where Application.Event_Name.Name in "+EVS;
 function plazo(r,p){const d=r.d,a=d[p+"_Instalment_Amount"];if(a==null)return "";if(p!=="First"&&/totalidad|pago total/i.test(String(d.Forma_de_pago||"")))return "";const st=d[p+"_Instalment_Status"],due=d[p+"_Instalment_Due_Date"];return eur(a)+(st?" · "+(st==="Paid"?"Pagado":st):"")+(due?" · vence "+fmtDL(due):"")}
 function fieldVal(r,f){if(f.pend)return null;if(f.f)return f.f(r);const v=r.d[f.z];return v}
@@ -2206,20 +2315,21 @@ function build(){
   (S.weeks||[]).forEach(w=>{const pid=w.Parent_Id&&w.Parent_Id.id;if(!pid)return;(wk[pid]=wk[pid]||[]).push(w)});
   S.allRows=S.deals.map(d=>{
     const lines=wk[d.id]||[];
-    const weeks=[],extras=[];let kitExtra=0,gkExtra=0;
+    const weeks=[],extras=[];let kitExtra=0,gkExtra=0,xAmt=0;
     lines.forEach(l=>{const pn=l.Producto&&l.Producto.name;const p=parseProduct(pn);
-      if(p&&p.prog!=="F"){const n=parseInt(String(l.Semana1||"").replace(/\D/g,""),10)||null;weeks.push({n,prog:p.prog,mod:p.mod,start:l.Fecha_inicio,end:l.Fecha_fin,lid:l.id})}
-      else if(pn&&!p){extras.push(pn);if(pn==="Uniforme Oficial Adidas")kitExtra++;if(pn==="Uniforme Portero Oficial Adidas")gkExtra++}});
+      if(p&&p.prog!=="F"){const n=parseInt(String(l.Semana1||"").replace(/\D/g,""),10)||null;weeks.push({n,prog:p.prog,mod:p.mod,start:l.Fecha_inicio,end:l.Fecha_fin,lid:l.id,imp:l.Importe==null?null:+l.Importe})}
+      else xAmt+=(+l.Importe||0);
+      if(pn&&!p){extras.push(pn);if(pn==="Uniforme Oficial Adidas")kitExtra++;if(pn==="Uniforme Portero Oficial Adidas")gkExtra++}});
     weeks.sort((a,b)=>(a.n||99)-(b.n||99));
     const name=(d.Player&&d.Player.name)||String(d.Deal_Name||"").split(" - ").slice(1).join(" - ")||d.Deal_Name;
-    return {id:d.id,d,name,code:d.Reservation_Code||"",age:ageAt(d.A_o_de_nacimiento,weeks[0]&&weeks[0].start),weeks,extras,kitExtra,gkExtra,health:[],
+    return {id:d.id,d,name,code:d.Reservation_Code||"",age:ageAt(d.A_o_de_nacimiento,weeks[0]&&weeks[0].start),weeks,extras,xAmt:Math.round(xAmt*100)/100,kitExtra,gkExtra,health:[],
       tutor:txt(d.Contact_Name),hay:(name+" "+(d.Reservation_Code||"")).toLowerCase(),camp:campOf(d.Event_Name&&d.Event_Name.name)};
   });
   S.rows=S.allRows.filter(r=>r.camp==="mad");
   const act=new Set(S.allRows.map(r=>String(r.id)));
   S.xRows=(S.xDeals||[]).filter(d=>!act.has(String(d.id))).map(d=>{const name=(d.Player&&d.Player.name)||String(d.Deal_Name||"").split(" - ").slice(1).join(" - ")||d.Deal_Name;
     return {id:d.id,d,name,code:d.Reservation_Code||"",age:null,weeks:[],extras:[],kitExtra:0,gkExtra:0,health:[],tutor:txt(d.Contact_Name),hay:(name+" "+(d.Reservation_Code||"")).toLowerCase(),camp:campOf(d.Event_Name&&d.Event_Name.name),x:true}});
-  render();try{renderDev();renderCan()}catch(e){}
+  render();try{renderDev();renderCan()}catch(e){}try{renderAgentes();attRenderAll()}catch(e){}
 }
 function opsOf(id){return S.ops[id]||{}}
 
@@ -2547,7 +2657,7 @@ function exportCsv(){
 }
 
 /* events */
-const VIEWS=["inicio","temporada","registros","operativa","horarios","equipos","administracion","pagos","facturas","ingresos","incidencias","atencion","marketing","rrhh"];
+const VIEWS=["inicio","temporada","registros","operativa","horarios","equipos","administracion","pagos","facturas","ingresos","incidencias","atencion","bbdd","limpieza","attstats","marketing","rrhh"];
 function show(v){
   if(v==="contabilidad")v="pagos";if(v==="recursos-humanos")v="rrhh";if(v==="atencion-al-publico")v="atencion";
   if(!VIEWS.includes(v))v="inicio";
@@ -2559,6 +2669,9 @@ function show(v){
   if(v==="facturas")try{renderFacturas();if(!INV.list&&!INV.busy)loadBooks(false)}catch(e){}
   if(v==="incidencias")try{renderIncidencias()}catch(e){}
   if(v==="ingresos")try{renderIngresos();if(!INV.list&&!INV.busy)loadBooks(false)}catch(e){}
+  if(v==="bbdd")try{renderBbdd()}catch(e){}
+  if(v==="limpieza")try{renderLimpieza()}catch(e){}
+  if(v==="attstats")try{renderAttStats()}catch(e){}
   try{if(window.__hub)window.__hub(v)}catch(e){}
   window.scrollTo(0,0);try{sbSync()}catch(e){}
 }
@@ -4436,7 +4549,7 @@ function payGo(id){const x=payItems().find(y=>String(y.r.id)===String(id));if(!x
   const st=sedeSt("pay");if(!sedeOk("pay",x.r.camp||"mad")){st.s="all";st.c=""}renderPagos()}
 $("accTabs").addEventListener("click",e=>{const b=e.target.closest("[data-acc]");if(!b)return;const k=b.dataset.acc;
   $("accTabs").querySelectorAll("[data-acc]").forEach(x=>{const on=x.dataset.acc===k;x.setAttribute("aria-selected",String(on));x.setAttribute("aria-pressed",String(on))});
-  $("accPagos").hidden=k!=="pagos";$("accDev").hidden=k!=="dev";$("accCan").hidden=k!=="can";if(k==="pagos")renderPagos();if(k==="dev")renderDev();if(k==="can")renderCan();try{sbSync()}catch(e){}});
+  $("accPagos").hidden=k!=="pagos";$("accDev").hidden=k!=="dev";$("accCan").hidden=k!=="can";$("accAg").hidden=k!=="ag";if(k==="pagos")renderPagos();if(k==="dev")renderDev();if(k==="can")renderCan();if(k==="ag")renderAgentes();try{sbSync()}catch(e){}});
 /* ===== FACTURAS: comprobación entre el CRM (lo pagado) y Zoho Books (lo facturado) =====
    En Books se crea una factura por cada pago, serie C-2027, con la referencia «<fecha>-<id de la inscripción>».
    Las reservas de 50 € antiguas no llevan el id: se enlazan por el email de la familia. */
@@ -4735,6 +4848,357 @@ $("canBoxes").addEventListener("click",e=>{const b=e.target.closest("[data-cf]")
 $("canQ").addEventListener("input",e=>{CANX.q=e.target.value;renderCan()});
 $("canList").addEventListener("click",e=>{if(e.target.closest("a"))return;const row=e.target.closest("[data-pid]");if(row&&typeof openDrawer==="function")openDrawer(row.dataset.pid)});
 $("canList").addEventListener("keydown",e=>{if(e.key!=="Enter")return;const row=e.target.closest("[data-pid]");if(row&&typeof openDrawer==="function")openDrawer(row.dataset.pid)});
+/* ===== ATENCIÓN AL PÚBLICO =====
+   Base de datos: listas para las llamadas comerciales (Leads ESP/ENG, BBDD 2026 ESP/ENG, Unpaids y Prerreservas), todas con el mismo formato.
+   Limpieza: inscripciones 2027 por semana o sede, Completadas (pago al día + «Comprobación documentos») o Pendientes.
+   Estadísticas: resumen de cada lista, gestiones por día y contacto con las inscripciones 2027 (incluye Incidencias y tickets de Zoho Desk).
+   Los contactos se guardan en el software (colección «attc», un documento por persona). El CRM no se toca. */
+var ATT={docs:{},list:"",q:"",fAtt:"",fSt:"",lim:200,b26:null,b26busy:false,b26err:"",x27:null,x27busy:false,x27err:"",panel:null,edit:null,
+  lpW:0,lpF:"pend",lpQ:"",desk:null,deskBusy:false,deskErr:"",me:null};
+const ATT_ST=["No contesta","No contesta X2","En su tejado","Volver a llamar","Fuera de horario","Inscrito","No interesado","No apto","Duplicado","Error de datos","Otras sedes","Agencia/grupo","Hermanos","Incidencia"];
+const ATT_TONE=st=>/^Inscrito/.test(st)?"ok":/tejado/i.test(st)?"hot":/No contesta|Volver a llamar|Fuera de horario/.test(st)?"wait":st?"off":"none";
+const ATT_VIA=[["telefono","Teléfono"],["whatsapp","WhatsApp"],["email","Email"],["persona","En persona"],["otros","Otros"]];
+const ATT_VL=Object.fromEntries(ATT_VIA);
+const ATT_LISTS=[
+  {k:"lesp",n:"Leads",lang:"ESP",sub:"Fecha en que lo recibimos",off:"Los leads aún no están en el CRM. Se conectarán cuando estén activos."},
+  {k:"leng",n:"Leads",lang:"ENG",sub:"Fecha en que lo recibimos",off:"Los leads aún no están en el CRM. Se conectarán cuando estén activos."},
+  {k:"besp",n:"BBDD 2026",lang:"ESP",sub:"Inscritos 2026 de nacionalidad española"},
+  {k:"beng",n:"BBDD 2026",lang:"ENG",sub:"Inscritos 2026 de otras nacionalidades"},
+  {k:"unp",n:"Unpaids",sub:"Inscripciones 2027 sin pagar · marca los duplicados"},
+  {k:"pre",n:"Prerreservas",sub:"Salen solas cuando ya se han inscrito"}];
+const attEdit=()=>CAN("atencion.bbdd",2)||CAN("atencion.limpieza",2);
+if(!window.CE_ACL||window.CE_ACL.admin)document.documentElement.classList.add("is-admin");
+const attNrm=t=>String(t||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+const attLang=d=>/ingl/i.test(String(d.Idioma_comunicaciones||""))?"ENG":/castell|espa/i.test(String(d.Idioma_comunicaciones||""))?"ESP":"";
+const attDay=iso=>iso?String(iso).slice(0,10):"";
+const ATT_PAGE=2000;
+/* lectura propia con páginas de 2000 (las BBDD tienen miles de filas) */
+async function attFetch(q,opt){const all=[];
+  for(let off=0,i=0;i<15;i++,off+=ATT_PAGE){const res=await S.mcp.callTool(SERVER,TOOL,{body:{select_query:q+" limit "+off+", "+ATT_PAGE}},opt);
+    const p=typeof res.payload==="string"?(()=>{try{return JSON.parse(res.payload)}catch(e){return null}})():res.payload;const rows=rowsOf(p);
+    if(!rows){const e=new Error("incomplete");e.code="incomplete";throw e}all.push(...rows);
+    const info=(p&&p.data&&p.data.info)||(p&&p.info)||{};if(rows.length<ATT_PAGE||info.more_records===false)break}
+  return all}
+const Q_B26="select Codigo, Deal_Name, Player, Contact_Name, Email, Telefono_Tutor_legal, Nationality, Idioma_comunicaciones, Tipo_Modalidad, Colectivos, Created_Time from Deals where Deal_Name like '2026 RMF CE Madrid%' and Stage = 'Paid'";
+const Q_X27=()=>"select Deal_Name, Player, Contact_Name, Email, Telefono_Tutor_legal, Nationality, Idioma_comunicaciones, Tipo_Modalidad, Colectivos, Created_Time, Stage, Reservation_Code, Total, Event_Name from Deals where Event_Name.Name in "+EVS+" and Stage in ('Unpaid','Reservation Payment Completed')";
+async function attLoad(force){if(!S.mcp)return;const opt={cache:{staleTime:60000,gcTime:600000,refresh:!!force}};
+  if(!ATT.b26busy&&(force||!ATT.b26)){ATT.b26busy=true;ATT.b26err="";attRender();
+    attFetch(Q_B26,opt)
+      .then(r=>{ATT.b26=r}).catch(e=>{ATT.b26err="No se ha podido leer la BBDD 2026 de Zoho CRM"+(e&&e.message?" ("+e.message+")":"")+"."}).finally(()=>{ATT.b26busy=false;attRender()})}
+  if(!ATT.x27busy&&(force||!ATT.x27)){ATT.x27busy=true;ATT.x27err="";
+    attFetch(Q_X27(),opt).then(r=>{ATT.x27=r}).catch(e=>{ATT.x27err="No se han podido leer los unpaids y prerreservas"+(e&&e.message?" ("+e.message+")":"")+"."}).finally(()=>{ATT.x27busy=false;attRender()})}}
+/* inscritos 2027 activos: por jugador y por email del tutor */
+function attEnrolled(){const P=new Set(),E=new Set(),PM=new Set();(S.allRows||[]).forEach(r=>{const d=r.d;const pid=d.Player&&d.Player.id;if(pid){P.add(String(pid));(r.weeks||[]).forEach(w=>PM.add(pid+"|"+w.prog+"|"+w.mod));PM.add(pid+"|"+String(d.Tipo_Modalidad||""))}
+  [d.Email,d.Email_persona].forEach(e=>{e=String(e||"").trim().toLowerCase();if(e)E.add(e)})});return {P,E,PM}}
+function attRowOf(d,list,key){const pl=d.Player&&d.Player.name||String(d.Deal_Name||"").split(/ - |-(?=\S)/).slice(1).join(" ").trim();
+  return {key,list,d,id:String(d.id),pid:d.Player?String(d.Player.id||""):"",day:attDay(d.Created_Time),name:pl||"—",tutor:txt(d.Contact_Name)||"",phone:String(d.Telefono_Tutor_legal||""),email:String(d.Email||"").trim(),
+    nat:String(d.Nationality||""),lang:attLang(d),mod:String(d.Tipo_Modalidad||""),col:String(d.Colectivos||""),code:d.Codigo||d.Reservation_Code||""}}
+function attRows(list){const EN=attEnrolled();let out=[];
+  if(list==="besp"||list==="beng"){if(!ATT.b26)return null;
+    out=ATT.b26.filter(d=>(/^espa/i.test(String(d.Nationality||"").trim()))===(list==="besp")).map(d=>attRowOf(d,list,"c-"+(d.Codigo||d.id)))}
+  else if(list==="unp"||list==="pre"){if(!ATT.x27)return null;
+    const xs=ATT.x27.filter(d=>list==="unp"?d.Stage==="Unpaid":d.Stage==="Reservation Payment Completed");
+    out=xs.map(d=>attRowOf(d,list,"d-"+d.id));
+    if(list==="unp"){const seen={};out.forEach(x=>{const k=x.pid+"|"+x.mod;(seen[k]=seen[k]||[]).push(x)});
+      out.forEach(x=>{x.dup=!!x.pid&&(seen[x.pid+"|"+x.mod].length>1||EN.PM.has(x.pid+"|"+x.mod))})}
+    else out=out.filter(x=>!(x.pid&&EN.P.has(x.pid))&&!(x.email&&EN.E.has(x.email.toLowerCase())))}
+  else return [];
+  out.forEach(x=>{const doc=ATT.docs[x.key]||{};x.doc=doc;x.log=attLog(x.key);
+    x.ins=(x.pid&&EN.P.has(x.pid))||(!!x.email&&EN.E.has(x.email.toLowerCase()));if(list==="unp")x.ins=x.pid&&EN.P.has(x.pid);
+    const last=x.log[x.log.length-1];x.st=x.ins?"Inscrito":last?last.st||"":"";x.att=doc.att||attXls(x.key).att||(last&&last.byName)||"";x.lastDay=last?last.day||attDay(last.at):""});
+  return out}
+/* historial importado del Excel (un solo documento «x-b26»): solo lectura; los contactos nuevos van al documento de cada persona */
+function attXls(key){const X=ATT.docs["x-b26"];if(!X||!X.items||!/^c-/.test(key))return {};return X.items[key.slice(2)]||{}}
+function attLog(key){const own=(ATT.docs[key]&&Array.isArray(ATT.docs[key].log))?ATT.docs[key].log.map((e,i)=>Object.assign({i},e)):[];const xl=(attXls(key).log||[]).map(e=>Object.assign({src:"excel"},e));
+  return xl.concat(own).sort((a,b)=>String(a.day||"").localeCompare(String(b.day||"")))}
+function attListStats(rows){const n=rows.length,g=rows.filter(x=>x.log.length).length,ins=rows.filter(x=>x.st==="Inscrito").length;return {n,g,p:n-g,ins,av:n?g/n:0,pi:n?ins/n:0}}
+const pct=v=>(v*100).toLocaleString("es-ES",{maximumFractionDigits:1})+"%";
+function attChip(st,auto){return st?'<span class="attst t-'+ATT_TONE(st)+'"'+(auto?' title="Se marca solo: tiene inscripción 2027 en el CRM"':"")+">"+esc(st)+(auto?" ·&nbsp;auto":"")+"</span>":'<span class="attst t-none">Sin gestionar</span>'}
+/* ---------- BASE DE DATOS ---------- */
+function renderBbdd(){if($("view-bbdd").hidden)return;
+  if((!ATT.b26&&!ATT.b26busy)||(!ATT.x27&&!ATT.x27busy))attLoad(false);
+  const L=ATT_LISTS.find(l=>l.k===ATT.list);
+  $("bdCrumbs").innerHTML=L?'<button type="button" data-bdgo="">Base de datos</button><span class="sep">›</span><span class="cur">'+esc(L.n)+(L.lang?" · "+L.lang:"")+"</span>":'<span class="cur">Listas para las llamadas comerciales</span>';
+  $("bdLists").hidden=!!L;$("bdBody").hidden=!L;
+  if(!L){$("bdLists").innerHTML=ATT_LISTS.map(l=>{const rows=l.off?[]:attRows(l.k);const busy=!l.off&&rows==null;const s=rows?attListStats(rows):null;
+      return '<button type="button" class="bdbox'+(l.off?" off":"")+'" data-bdl="'+l.k+'"'+(l.off?' aria-disabled="true"':"")+'><span class="bdt"><span class="wt">'+esc(l.n)+"</span>"+(l.lang?'<span class="bdlang l-'+l.lang.toLowerCase()+'">'+l.lang+"</span>":"")+'</span><span class="ps2">'+esc(l.sub)+"</span>"+
+        (l.off?'<span class="bdoff">Pendiente de conectar</span>':busy?'<span class="bdoff">Leyendo Zoho…</span>':'<span class="bdn"><b>'+s.n+'</b><small>registros</small></span><span class="bdmini"><span><b>'+s.g+"</b> gestionados</span><span><b>"+s.p+"</b> pendientes</span><span><b>"+s.ins+'</b> inscritos</span></span><span class="wbar"><i style="width:'+(s.av*100)+'%;background:var(--navy)"></i><i style="width:'+(s.pi*100)+'%;background:var(--green)"></i></span>')+"</button>"}).join("")+
+      (ATT.b26err||ATT.x27err?'<p class="devmsg" style="grid-column:1/-1">'+esc([ATT.b26err,ATT.x27err].filter(Boolean).join(" "))+"</p>":"")+
+      (ATT.docs["x-b26"]?'<p class="ingnote" style="grid-column:1/-1">Historial del Excel importado: '+ATT.docs["x-b26"].n+" personas y "+ATT.docs["x-b26"].contacts+" contactos ("+esc(ATT.docs["x-b26"].file||"")+", "+esc(new Date(ATT.docs["x-b26"].at).toLocaleString("es-ES",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}))+(ATT.docs["x-b26"].byName?" · "+esc(ATT.docs["x-b26"].byName):"")+"). Esos contactos salen con la marca «Excel» y no se corrigen aquí.</p>":"");return}
+  const rows=attRows(L.k);
+  if(rows==null){$("bdRows").innerHTML="";$("bdHead").innerHTML="";$("bdCount").textContent="";$("bdEmpty").hidden=false;$("bdEmpty").innerHTML="<h3>Leyendo Zoho CRM…</h3>";$("bdMore").hidden=true;return}
+  const atts=[...new Set(rows.map(x=>x.att).filter(Boolean))].sort();
+  $("bdAtt").innerHTML='<option value="">Todos los ATT</option><option value="-"'+(ATT.fAtt==="-"?" selected":"")+'>Sin asignar</option>'+atts.map(a=>'<option'+(ATT.fAtt===a?" selected":"")+">"+esc(a)+"</option>").join("");
+  $("bdSt").innerHTML='<option value="">Todos los estados</option><option value="-"'+(ATT.fSt==="-"?" selected":"")+'>Sin gestionar</option>'+ATT_ST.map(s=>'<option'+(ATT.fSt===s?" selected":"")+">"+esc(s)+"</option>").join("")+(L.k==="unp"?'<option value="dup"'+(ATT.fSt==="dup"?" selected":"")+">Duplicados</option>":"");
+  const q=attNrm(ATT.q.trim());
+  let it=rows.filter(x=>(!ATT.fAtt||(ATT.fAtt==="-"?!x.att:x.att===ATT.fAtt))&&(!ATT.fSt||(ATT.fSt==="-"?!x.st:ATT.fSt==="dup"?x.dup:x.st===ATT.fSt))&&(!q||attNrm(x.name+" "+x.tutor+" "+x.email+" "+x.phone+" "+x.code).includes(q)));
+  it.sort((a,b)=>(b.day||"").localeCompare(a.day||"")||a.name.localeCompare(b.name));
+  $("bdCount").textContent=it.length+" de "+rows.length;
+  $("bdHead").innerHTML="<tr><th>Fecha</th><th>Jugador · Tutor</th><th>Teléfono</th><th>Email</th><th>Nacionalidad</th><th>Idioma</th><th>Modalidad</th><th>Colectivo</th><th>ATT</th><th>Estado</th><th>Contactos</th></tr>";
+  $("bdEmpty").hidden=!!it.length;if(!it.length)$("bdEmpty").innerHTML="<h3>Nadie con estos filtros</h3>";
+  $("bdRows").innerHTML=it.slice(0,ATT.lim).map(x=>'<tr data-attk="'+esc(x.key)+'" tabindex="0"><td>'+(x.day?fmtDL(x.day):"—")+'</td><td class="nm"><b class="name">'+esc(x.name)+"</b>"+(x.dup?' <span class="attdup">Duplicado</span>':"")+"<br><small>"+esc(x.tutor||"—")+(x.code?" · "+esc(x.code):"")+"</small></td><td>"+esc(x.phone||"—")+"</td><td>"+esc(x.email||"—")+"</td><td>"+esc(x.nat||"—")+"</td><td>"+(x.lang?'<span class="bdlang sm l-'+x.lang.toLowerCase()+'">'+x.lang+"</span>":"—")+"</td><td>"+esc(x.mod||"—")+"</td><td>"+esc(x.col||"—")+"</td><td>"+esc(x.att||"—")+"</td><td>"+attChip(x.st,x.ins)+"</td><td>"+(x.log.length?"<b>"+x.log.length+"</b> · "+esc(x.lastDay?fmtD(x.lastDay):""):"—")+"</td></tr>").join("");
+  $("bdMore").hidden=it.length<=ATT.lim;$("bdMore").textContent="Ver más ("+(it.length-ATT.lim)+" más)"}
+/* ---------- LIMPIEZA ---------- */
+const lpDone=r=>{let pay=false;try{pay=payState(r).k!=="late"}catch(e){}const doc=r.d.Comprobaci_n_documentos===true||r.d.Comprobaci_n_documentos==="true";return {pay,doc,ok:pay&&doc}};
+function lpItems(w){if(isCampKey(w))return (S.allRows||[]).filter(r=>r.camp===w.slice(2)).map(r=>({r,w:r.weeks[0]||{}}));return weekItems(w)}
+function renderLimpieza(){if($("view-limpieza").hidden)return;
+  const has=(S.allRows||[]).length>0;const w=ATT.lpW;
+  $("lpCrumbs").innerHTML=w?'<button type="button" data-lpgo="0">Limpieza</button><span class="sep">›</span><span class="cur">'+esc(wLabel(w))+"</span>":'<span class="cur">Inscripciones completadas y pendientes</span>';
+  $("lpWeeks").hidden=!!w;$("lpBody").hidden=!w;
+  if(!w){const box=(key,t,d,it,cl)=>{const ok=it.filter(x=>lpDone(x.r).ok).length,pe=it.length-ok;
+      return '<button class="wkbox'+(cl?" "+cl:"")+'" type="button" data-lpw="'+key+'"><span class="wt">'+esc(t)+'</span><span class="wd">'+(d||"&nbsp;")+'</span><span class="wn">'+(has?it.length:"—")+'</span><span class="lpmini"><span class="k-ok">'+(has?ok:"—")+' completadas</span><span class="k-pe">'+(has?pe:"—")+' pendientes</span></span><span class="wbar">'+(it.length?'<i style="width:'+(ok/it.length*100)+'%;background:var(--green)"></i><i style="width:'+(pe/it.length*100)+'%;background:var(--pink)"></i>':"")+"</span></button>"};
+    let h='<span class="wsec">Madrid</span>';for(let n=1;n<=9;n++)h+=box(n,"Week "+n,weekDates(n),weekItems(n));
+    [["nac","Nacionales"],["inst","Institucionales"]].forEach(([k,l])=>{const cs=CAMPS.filter(c=>c.kind===k);if(!cs.length)return;h+='<span class="wsec">'+l+"</span>";cs.forEach(c=>{h+=box("c:"+c.id,c.n,campDates(c.id),lpItems("c:"+c.id),"wc-"+k)})});
+    $("lpWeeks").innerHTML=h;return}
+  const it=lpItems(w).map(x=>Object.assign({},x,{s:lpDone(x.r)}));const ok=it.filter(x=>x.s.ok),pe=it.filter(x=>!x.s.ok);
+  $("lpBoxes").innerHTML=[["pend","Pendientes","Falta el pago al día o la documentación",pe.length],["ok","Completadas","Pago al día y documentación comprobada",ok.length]].map(([k,t,sub,n])=>'<button type="button" class="pbx lb-'+k+'" data-lpf="'+k+'" aria-pressed="'+(ATT.lpF===k)+'"><span class="pt2">'+t+'</span><span class="pc2">'+n+'</span><span class="ps2">'+sub+"</span></button>").join("");
+  const q=attNrm(ATT.lpQ.trim());let L=(ATT.lpF==="ok"?ok:pe).filter(x=>!q||attNrm(x.r.hay+" "+x.r.tutor).includes(q));
+  L.sort((a,b)=>a.r.name.localeCompare(b.r.name));
+  $("lpCount").textContent=L.length+" jugadores";
+  $("lpList").innerHTML=L.length?L.map(x=>{const r=x.r,doc=ATT.docs["d-"+r.id]||{},log=Array.isArray(doc.log)?doc.log:[],last=log[log.length-1];const ic=incForDeal(r.id).length;
+    const mk=x.w&&x.w.prog?'<span class="lpmod"><span class="mk2" style="background:var(--'+String(x.w.prog).toLowerCase()+')"></span>'+esc(x.w.prog)+" · "+esc(MODLBL[x.w.mod]||x.w.mod||"")+"</span>":"";
+    return '<div class="prow lprow '+(x.s.ok?"is-ok":"is-pe")+'" data-attd="'+esc(r.id)+'" tabindex="0"><span class="pnm"><b class="nmrow"><span class="nmt" title="'+esc(r.name)+'">'+esc(r.name)+"</span>"+campTag(r)+'</b><span class="code">'+esc(r.code)+(r.tutor?" · "+esc(r.tutor):"")+"</span></span>"+mk+
+      '<span class="lpchk'+(x.s.pay?" ok":"")+'">'+(x.s.pay?"✓ Pago al día":"✗ Pago atrasado")+'</span><span class="lpchk'+(x.s.doc?" ok":"")+'">'+(x.s.doc?"✓ Documentación":"✗ Documentación")+"</span>"+
+      '<span class="lpct">'+(log.length+ic?"<b>"+(log.length+ic)+"</b> contacto"+(log.length+ic>1?"s":"")+(last?"<small>último "+esc(fmtD(last.day||attDay(last.at)))+(last.byName?" · "+esc(last.byName):"")+"</small>":""):'<span class="muted">Sin contactos</span>')+"</span></div>"}).join("")
+    :'<div class="eqempty"><h3 class="wide" style="margin:0">'+(ATT.lpF==="ok"?"Ninguna completada todavía":"Nada pendiente")+"</h3>"+(ATT.lpF==="ok"?"<p>Pasan a completadas con el pago al día y la casilla «Comprobación documentos» marcada en el CRM.</p>":"")+"</div>"}
+/* ---------- HISTORIAL DE CONTACTOS (panel) ---------- */
+function incForDeal(id){try{return incList().filter(d=>String(d.pid)===String(id)).flatMap(d=>d.log.filter(e=>e.k==="resp"&&e.contact===true).map(e=>({inc:d,e})))}catch(e){return []}}
+function attOpen(key,info){ATT.panel={key,info};ATT.edit=null;attPanelRender()}
+function attClose(){ATT.panel=null;ATT.edit=null;$("attPanel").hidden=true;$("attScrim").hidden=true}
+function attPanelRender(){const P=ATT.panel;if(!P){attClose();return}const I=P.info,doc=Object.assign({},attXls(P.key).att?{att:attXls(P.key).att}:{},ATT.docs[P.key]||{}),log=attLog(P.key);
+  const ed=attEdit();const incs=I.dealId?incForDeal(I.dealId):[];const E=ATT.edit;
+  const known=[...new Set(Object.values(ATT.docs).flatMap(d=>[d.att].concat((d.log||[]).map(e=>e.byName))).filter(Boolean))].sort();
+  const items=log.map(e=>({k:"c",day:e.day||attDay(e.at),e})).concat(incs.map(x=>({k:"i",day:attDay(x.e.at),x}))).sort((a,b)=>(b.day||"").localeCompare(a.day||""));
+  let h='<div class="ipx"><div class="tt"><b>'+esc(I.name)+"</b><small>"+esc([I.tutor,I.code,I.where].filter(Boolean).join(" · "))+'</small><span class="tags">'+(I.st?attChip(I.st,I.ins):"")+(I.extra||"")+'</span></div><button type="button" class="x" data-attclose aria-label="Cerrar">×</button></div><div class="ipb">';
+  h+='<div class="attinfo">'+[["Teléfono",I.phone],["Email",I.email],["Nacionalidad",I.nat],["Idioma",I.lang],["Modalidad",I.mod],["Colectivo",I.col]].filter(x=>x[1]).map(([l,v])=>"<span><small>"+l+"</small>"+esc(v)+"</span>").join("")+"</div>";
+  h+='<div class="attatt"><span class="inclab">ATT que gestiona</span>'+(ed?'<select data-attassign aria-label="ATT que gestiona"><option value="">Sin asignar</option>'+known.concat(doc.att&&!known.includes(doc.att)?[doc.att]:[]).map(n=>'<option'+(doc.att===n?" selected":"")+">"+esc(n)+"</option>").join("")+'<option value="__me">Yo</option></select>':"<b>"+esc(doc.att||"Sin asignar")+"</b>")+"</div>";
+  if(ed&&!E)h+='<button type="button" class="bigbtn" data-attnew>+ Añadir contacto</button>';
+  if(E){const via=E.via||"telefono",dir=E.dir||"out";
+    h+='<div class="attform"><span class="inclab">'+(E.i!=null?"Corregir contacto":"Nuevo contacto")+'</span><label class="attf"><small>Fecha</small><input type="date" data-attfd value="'+esc(E.day||todayISO())+'"></label>'+
+      '<span class="inclab">¿Quién contactó?</span><div class="incwk"><button type="button" class="incopt" data-attdir="out" aria-pressed="'+(dir==="out")+'">Le contactamos</button><button type="button" class="incopt" data-attdir="in" aria-pressed="'+(dir==="in")+'">Nos contactó</button></div>'+
+      '<span class="inclab">Vía</span><div class="incwk">'+ATT_VIA.map(([k,l])=>'<button type="button" class="incopt" data-attvia="'+k+'" aria-pressed="'+(via===k)+'">'+l+"</button>").join("")+"</div>"+
+      '<label class="attf"><small>Estado</small><select data-attfs><option value="">— Elige —</option>'+ATT_ST.map(s=>'<option'+(E.st===s?" selected":"")+">"+esc(s)+"</option>").join("")+"</select></label>"+
+      '<label class="attf"><small>Qué nos dijeron</small><textarea class="inctxt" data-attfo placeholder="Lo que nos dijo la familia">'+esc(E.obs||"")+"</textarea></label>"+
+      '<div class="incbar"><button type="button" class="btn primary" data-attsave>Guardar</button><button type="button" class="btn" data-attcancel>Cancelar</button>'+(E.i!=null?'<button type="button" class="btn danger" data-attdel>Borrar</button>':"")+"</div></div>"}
+  h+='<span class="inclab">Historial de contactos · '+items.length+"</span>";
+  h+=items.length?'<ol class="inctl attl">'+items.map(it=>{if(it.k==="i"){const d=it.x.inc,e=it.x.e;return '<li class="k-resp"><div class="ic-h"><b>'+esc(fmtDL(it.day))+"</b><span>"+esc(e.byName||"—")+'</span><span class="ic-via">Incidencia · '+esc(INC_VL[e.via]||e.via||"")+"</span></div><p>"+esc(e.txt||"")+"</p></li>"}
+      const e=it.e;return '<li class="k-'+(e.dir==="in"?"no":"resp")+'"><div class="ic-h"><b>'+esc(it.day?fmtDL(it.day):"Sin fecha")+"</b><span>"+esc(e.byName||"—")+"</span>"+(e.st?attChip(e.st):"")+(e.via?'<span class="ic-via">'+(e.dir==="in"?"Nos contactó":"Le contactamos")+" · "+esc(ATT_VL[e.via]||e.via)+"</span>":"")+(e.src==="excel"?'<span class="ic-via">Excel</span>':"")+(ed&&e.i!=null?'<button type="button" class="attedit" data-attedit="'+e.i+'">Corregir</button>':"")+"</div>"+(e.obs?"<p>"+esc(e.obs)+"</p>":"")+"</li>"}).join("")+"</ol>":'<p class="muted" style="margin:0">Todavía no hay contactos.</p>';
+  h+="</div>";$("attPanel").innerHTML=h;$("attPanel").hidden=false;$("attScrim").hidden=false}
+async function attMe(){if(ATT.me)return ATT.me;try{ATT.me=S.user?await S.user.me():null}catch(e){}return ATT.me||{}}
+async function attPut(key,doc,msg){if(!S.db){toast("No se puede guardar en esta vista");return false}doc.updatedAt=new Date().toISOString();ATT.docs[key]=doc;attRenderAll();
+  try{await S.db.collection("attc").doc(key).set(doc);if(msg)toast(msg);return true}catch(e){toast(e&&e.code==="permission_denied"?"No tienes permiso para añadir contactos":"No se pudo guardar. Vuelve a intentarlo.");return false}}
+function attRenderAll(){try{renderBbdd()}catch(e){}try{renderLimpieza()}catch(e){}try{renderAttStats()}catch(e){}if(ATT.panel)attPanelRender()}
+function attRender(){attRenderAll()}
+$("attPanel").addEventListener("change",async e=>{const P=ATT.panel;if(!P)return;
+  if(e.target.matches("[data-attassign]")){let v=e.target.value;if(v==="__me")v=(await attMe()).name||"";const doc=Object.assign({},ATT.docs[P.key]||{log:[]});doc.att=v;await attPut(P.key,doc,"ATT asignado");return}
+  if(ATT.edit){if(e.target.matches("[data-attfd]"))ATT.edit.day=e.target.value;if(e.target.matches("[data-attfs]"))ATT.edit.st=e.target.value}});
+$("attPanel").addEventListener("input",e=>{if(ATT.edit&&e.target.matches("[data-attfo]"))ATT.edit.obs=e.target.value});
+$("attPanel").addEventListener("click",async e=>{let b;const P=ATT.panel;if(!P)return;
+  if(e.target.closest("[data-attclose]")){attClose();return}
+  if(e.target.closest("[data-attnew]")){ATT.edit={day:todayISO(),via:"telefono",dir:"out",st:"",obs:""};attPanelRender();return}
+  if(e.target.closest("[data-attcancel]")){ATT.edit=null;attPanelRender();return}
+  if((b=e.target.closest("[data-attdir]"))){ATT.edit.dir=b.dataset.attdir;attPanelRender();return}
+  if((b=e.target.closest("[data-attvia]"))){ATT.edit.via=b.dataset.attvia;attPanelRender();return}
+  if((b=e.target.closest("[data-attedit]"))){const doc=ATT.docs[P.key]||{};const i=+b.dataset.attedit;const x=(doc.log||[])[i];if(!x)return;ATT.edit={i,day:x.day||attDay(x.at),via:x.via||"telefono",dir:x.dir||"out",st:x.st||"",obs:x.obs||""};attPanelRender();return}
+  if(e.target.closest("[data-attdel]")){const E=ATT.edit;if(E.i==null)return;if(!confirmDel())return;const doc=Object.assign({},ATT.docs[P.key]);doc.log=(doc.log||[]).filter((x,i)=>i!==E.i);ATT.edit=null;await attPut(P.key,doc,"Contacto borrado");return}
+  if(e.target.closest("[data-attsave]")){const E=ATT.edit;if(!E.st){toast("Elige el estado del contacto");return}if(!E.day){toast("Pon la fecha del contacto");return}
+    const me=await attMe();const doc=Object.assign({log:[]},ATT.docs[P.key]||{});doc.log=(doc.log||[]).slice();
+    const entry={day:E.day,st:E.st,obs:(E.obs||"").trim(),via:E.via,dir:E.dir};
+    if(E.i!=null){doc.log[E.i]=Object.assign({},doc.log[E.i],entry,{editedBy:S.me||null,editedByName:me.name||"",editedAt:new Date().toISOString()})}
+    else doc.log.push(Object.assign(entry,{at:new Date().toISOString(),by:S.me||null,byName:me.name||""}));
+    doc.log.sort((a,b)=>String(a.day||"").localeCompare(String(b.day||""))||String(a.at||"").localeCompare(String(b.at||"")));
+    if(!doc.att&&me.name)doc.att=me.name;if(P.info.dealId)doc.deal=String(P.info.dealId);doc.list=P.info.list||doc.list||"";
+    ATT.edit=null;await attPut(P.key,doc,E.i!=null?"Contacto corregido":"Contacto guardado")}});
+const confirmDel=()=>{try{return window.confirm("¿Borrar este contacto?")}catch(e){return true}};
+$("attScrim").addEventListener("click",attClose);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&ATT.panel)attClose()});
+/* abrir el historial desde las listas */
+$("bdRows").addEventListener("click",e=>{const tr=e.target.closest("[data-attk]");if(!tr)return;const x=(attRows(ATT.list)||[]).find(y=>y.key===tr.dataset.attk);if(!x)return;
+  attOpen(x.key,{name:x.name,tutor:x.tutor,code:x.code,phone:x.phone,email:x.email,nat:x.nat,lang:x.lang,mod:x.mod,col:x.col,st:x.st,ins:x.ins,list:x.list,dealId:x.list==="unp"||x.list==="pre"?x.id:null,extra:x.dup?'<span class="attdup">Duplicado</span>':""})});
+$("bdRows").addEventListener("keydown",e=>{if(e.key==="Enter"){const tr=e.target.closest("[data-attk]");if(tr)tr.click()}});
+$("lpList").addEventListener("click",e=>{const row=e.target.closest("[data-attd]");if(!row)return;const r=(S.allRows||[]).find(x=>String(x.id)===row.dataset.attd);if(!r)return;const d=r.d;const s=lpDone(r);
+  attOpen("d-"+r.id,{name:r.name,tutor:r.tutor,code:r.code,where:wLabel(ATT.lpW),phone:String(d.Telefono_Tutor_legal||""),email:String(d.Email||""),nat:String(d.Nationality||""),lang:attLang(d),mod:(r.weeks[0]?r.weeks[0].prog+" · "+(MODLBL[r.weeks[0].mod]||r.weeks[0].mod):""),list:"lim",dealId:r.id,
+    extra:'<span class="lpchk'+(s.pay?" ok":"")+'">'+(s.pay?"✓ Pago al día":"✗ Pago atrasado")+'</span><span class="lpchk'+(s.doc?" ok":"")+'">'+(s.doc?"✓ Documentación":"✗ Documentación")+"</span>"})});
+$("lpList").addEventListener("keydown",e=>{if(e.key==="Enter"){const row=e.target.closest("[data-attd]");if(row)row.click()}});
+$("bdLists").addEventListener("click",e=>{const b=e.target.closest("[data-bdl]");if(!b||b.getAttribute("aria-disabled")==="true"){if(b)toast("Los leads aún no están en el CRM");return}ATT.list=b.dataset.bdl;ATT.q="";ATT.fAtt="";ATT.fSt="";ATT.lim=200;$("bdQ").value="";renderBbdd();window.scrollTo(0,0)});
+$("bdCrumbs").addEventListener("click",e=>{if(e.target.closest("[data-bdgo]")){ATT.list="";renderBbdd()}});
+$("bdQ").addEventListener("input",e=>{ATT.q=e.target.value;ATT.lim=200;renderBbdd()});
+$("bdAtt").addEventListener("change",e=>{ATT.fAtt=e.target.value;ATT.lim=200;renderBbdd()});
+$("bdSt").addEventListener("change",e=>{ATT.fSt=e.target.value;ATT.lim=200;renderBbdd()});
+$("bdMore").addEventListener("click",()=>{ATT.lim+=300;renderBbdd()});
+$("bdRefresh").addEventListener("click",()=>attLoad(true));
+/* importar el historial del Excel «Master BBDD Call Center» (solo administrador): pestañas «BBDD …»; se cruza por el CÓDIGO de la inscripción 2026 */
+async function readXlsx(file){const buf=new Uint8Array(await file.arrayBuffer());const dv=new DataView(buf.buffer);let e=buf.length-22;
+  while(e>=0&&!(buf[e]===0x50&&buf[e+1]===0x4b&&buf[e+2]===5&&buf[e+3]===6))e--;if(e<0)throw new Error("No es un archivo Excel (.xlsx)");
+  const n=dv.getUint16(e+10,true);let p=dv.getUint32(e+16,true);const F={};const td=new TextDecoder();
+  for(let i=0;i<n;i++){const m=dv.getUint16(p+10,true),cs=dv.getUint32(p+20,true),nl=dv.getUint16(p+28,true),xl=dv.getUint16(p+30,true),cl=dv.getUint16(p+32,true),off=dv.getUint32(p+42,true);
+    const name=td.decode(buf.subarray(p+46,p+46+nl));const ln=dv.getUint16(off+26,true),lx=dv.getUint16(off+28,true);F[name]={m,d:buf.subarray(off+30+ln+lx,off+30+ln+lx+cs)};p+=46+nl+xl+cl}
+  const txt=async k=>{const f=F[k];if(!f)return null;if(f.m===0)return td.decode(f.d);return await new Response(new Blob([f.d]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).text()};
+  const X=async k=>{const t=await txt(k);return t?new DOMParser().parseFromString(t,"application/xml"):null};
+  const ss=[];const sx=await X("xl/sharedStrings.xml");if(sx)[...sx.getElementsByTagName("si")].forEach(si=>ss.push([...si.getElementsByTagName("t")].map(t=>t.textContent).join("")));
+  const wb=await X("xl/workbook.xml"),rel=await X("xl/_rels/workbook.xml.rels");const R={};[...rel.getElementsByTagName("Relationship")].forEach(r=>R[r.getAttribute("Id")]=r.getAttribute("Target"));
+  const out={};for(const sh of [...wb.getElementsByTagName("sheet")]){const rid=sh.getAttribute("r:id")||sh.getAttributeNS("http://schemas.openxmlformats.org/officeDocument/2006/relationships","id");let t=R[rid]||"";t=t.replace(/^\//,"");if(!t.startsWith("xl/"))t="xl/"+t;
+    const doc=await X(t);if(!doc)continue;const rows=[];[...doc.getElementsByTagName("row")].forEach(row=>{const r=[];[...row.getElementsByTagName("c")].forEach(c=>{const ref=c.getAttribute("r")||"";let col=0;for(const ch of ref.replace(/\d/g,""))col=col*26+ch.charCodeAt(0)-64;col--;
+      const ty=c.getAttribute("t");const v=c.getElementsByTagName("v")[0];let val=ty==="s"?ss[+(v&&v.textContent)]:ty==="inlineStr"?[...c.getElementsByTagName("t")].map(x=>x.textContent).join(""):v?v.textContent:"";if(ty!=="s"&&ty!=="inlineStr"&&ty!=="str"&&val!==""&&!isNaN(+val))val=+val;r[col<0?r.length:col]=val});rows.push(r)});out[sh.getAttribute("name")]=rows}
+  return out}
+const xlDay=v=>{if(typeof v==="number"&&v>20000){const d=new Date(Date.UTC(1899,11,30)+v*864e5);return d.toISOString().slice(0,10)}const m=/^(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?$/.exec(String(v||"").trim());if(!m)return null;let y=m[3]?+m[3]:2026;if(y<100)y+=2000;if(+m[2]<1||+m[2]>12)return null;return y+"-"+String(m[2]).padStart(2,"0")+"-"+String(m[1]).padStart(2,"0")};
+async function attImport(file){if(!(ACL?ACL.admin:true)){toast("Solo el administrador puede importar");return}
+  try{const W=await readXlsx(file);const items={};let nl=0,ns=0;
+    Object.entries(W).filter(([n])=>/^bbdd/i.test(n.trim())).forEach(([n,rows])=>{ns++;const h=(rows[0]||[]).map(x=>String(x||"").trim().toUpperCase());const iC=h.indexOf("CODIGO"),iA=h.findIndex(x=>/^ATT/.test(x));
+      const est=[];h.forEach((x,i)=>{if(/^ESTADO/.test(x))est.push(i)});if(iC<0||!est.length)return;
+      rows.slice(1).forEach(r=>{const code=String(r[iC]||"").trim();if(!code)return;const att=String(r[iA]||"").trim();const log=[];
+        est.forEach((ie,k)=>{const st=String(r[ie]||"").trim(),ct=r[ie+1],ob=String(r[ie+2]||"").trim();if(!st&&!ob)return;if(/^\d{1,2}\/\d{1,2}$/.test(st))return;const day=xlDay(ct);
+          log.push({day,st,obs:!day&&ct?(String(ct)+(ob?" · "+ob:"")):ob,byName:att,r:k+1});nl++});
+        if(log.length||att)items[code]={att,log}})});
+    if(!ns){toast("El archivo no tiene pestañas «BBDD…»");return}
+    const me=await attMe();const doc={src:"excel",file:file.name,at:new Date().toISOString(),byName:me.name||"",n:Object.keys(items).length,contacts:nl,items};
+    if(!S.db){toast("No se puede guardar en esta vista");return}ATT.docs["x-b26"]=doc;attRenderAll();await S.db.collection("attc").doc("x-b26").set(doc);
+    toast("Importado: "+doc.n+" personas y "+nl+" contactos")}
+  catch(e){toast("No se pudo importar"+(e&&e.message?": "+e.message:""))}}
+$("bdImp").addEventListener("change",e=>{const f=e.target.files&&e.target.files[0];e.target.value="";if(f)attImport(f)});
+$("lpWeeks").addEventListener("click",e=>{const b=e.target.closest("[data-lpw]");if(!b)return;const v=b.dataset.lpw;ATT.lpW=isCampKey(v)?v:+v;ATT.lpF="pend";ATT.lpQ="";$("lpQ").value="";renderLimpieza();window.scrollTo(0,0)});
+$("lpCrumbs").addEventListener("click",e=>{if(e.target.closest("[data-lpgo]")){ATT.lpW=0;renderLimpieza()}});
+$("lpBoxes").addEventListener("click",e=>{const b=e.target.closest("[data-lpf]");if(!b)return;ATT.lpF=b.dataset.lpf;renderLimpieza()});
+$("lpQ").addEventListener("input",e=>{ATT.lpQ=e.target.value;renderLimpieza()});
+/* ---------- ESTADÍSTICAS ---------- */
+const DESK_ORG="20109649402",DESK_FROM="2026-09-01";
+async function deskLoad(force){if(!S.mcp||ATT.deskBusy)return;if(ATT.desk&&!force)return;ATT.deskBusy=true;ATT.deskErr="";
+  try{const all=[];for(let from=0,i=0;i<40;i++,from+=100){
+      const res=await S.mcp.callTool("Zoho Desk","getTickets",{query_params:{orgId:DESK_ORG,from,limit:100,sortBy:"createdTime"}},{cache:{staleTime:300000,gcTime:900000,refresh:!!force}});
+      let p=res&&res.payload;if(typeof p==="string"){try{p=JSON.parse(p)}catch(e){p=null}}const d=p&&(Array.isArray(p.data)?p.data:p.data&&Array.isArray(p.data.data)?p.data.data:null);
+      if(!d)throw {code:"shape",message:"respuesta no reconocida"};all.push(...d);if(d.length<100)break}
+    ATT.desk=all.filter(t=>String(t.createdTime||"")>=DESK_FROM)}
+  catch(e){const c=e&&e.code;ATT.deskErr=c==="server_not_connected"||c==="not_in_manifest"||c==="approval_required"||c==="unknown_tool"?"Zoho Desk no está conectado en esta vista.":"No se han podido leer los tickets de Zoho Desk"+(e&&e.message?" ("+e.message+")":"")+"."}
+  ATT.deskBusy=false;try{renderAttStats()}catch(e){}}
+function stTable(head,rows,foot){return '<div class="tablebox sttab"><table><thead><tr>'+head.map((h,i)=>"<th"+(i?' class="num"':"")+">"+h+"</th>").join("")+"</tr></thead><tbody>"+rows.map(r=>"<tr>"+r.map((c,i)=>"<td"+(i?' class="num"':"")+">"+c+"</td>").join("")+"</tr>").join("")+"</tbody>"+(foot?"<tfoot><tr>"+foot.map((c,i)=>"<td"+(i?' class="num"':"")+">"+c+"</td>").join("")+"</tr></tfoot>":"")+"</table></div>"}
+function renderAttStats(){if($("view-attstats").hidden)return;
+  if((!ATT.b26&&!ATT.b26busy)||(!ATT.x27&&!ATT.x27busy))attLoad(false);if(!ATT.desk&&!ATT.deskBusy&&!ATT.deskErr)deskLoad(false);
+  let h="";const lists=ATT_LISTS.filter(l=>!l.off);const byDay={};
+  h+='<h3 class="sth">Resumen de cada base de datos</h3><div class="stgrid">';
+  lists.forEach(l=>{const rows=attRows(l.k);if(!rows){h+='<div class="stcard"><b class="wt">'+esc(l.n)+(l.lang?" · "+l.lang:"")+"</b><p class=\"muted\">Leyendo Zoho…</p></div>";return}
+    const s=attListStats(rows);const st={},ag={};
+    rows.forEach(x=>x.log.forEach((e,i)=>{const r=Math.min(i,2);(st[e.st||"—"]=st[e.st||"—"]||[0,0,0])[r]++;const a=e.byName||"Sin asignar";(ag[a]=ag[a]||[0,0,0])[r]++;const d=e.day||attDay(e.at);if(d){(byDay[d]=byDay[d]||{})[l.k]=(byDay[d][l.k]||0)+1;byDay[d]["r"+r]=(byDay[d]["r"+r]||0)+1}}));
+    const tot=Object.values(st).reduce((a,v)=>a+v[0]+v[1]+v[2],0);
+    h+='<div class="stcard"><div class="sttop"><b class="wt">'+esc(l.n)+"</b>"+(l.lang?'<span class="bdlang l-'+l.lang.toLowerCase()+'">'+l.lang+"</span>":"")+'</div><div class="stkpi">'+[["Total",s.n],["Gestionados",s.g],["Pendientes",s.p],["% avance",pct(s.av)],["Inscritos",s.ins],["% inscritos",pct(s.pi)]].map(([k,v])=>"<span><b>"+v+"</b><small>"+k+"</small></span>").join("")+"</div>"+
+      (tot?'<details class="stdet"><summary>Estados y ATT</summary>'+stTable(["Estado","Ronda 1","Ronda 2","Ronda 3+","Total","%"],Object.entries(st).sort((a,b)=>(b[1][0]+b[1][1]+b[1][2])-(a[1][0]+a[1][1]+a[1][2])).map(([k,v])=>[attChip(k),v[0],v[1],v[2],"<b>"+(v[0]+v[1]+v[2])+"</b>",pct((v[0]+v[1]+v[2])/tot)]),["Total",...[0,1,2].map(i=>Object.values(st).reduce((a,v)=>a+v[i],0)),tot,"100%"])+
+        stTable(["ATT","Ronda 1","Ronda 2","Ronda 3+","Total","% cuota"],Object.entries(ag).sort((a,b)=>(b[1][0]+b[1][1]+b[1][2])-(a[1][0]+a[1][1]+a[1][2])).map(([k,v])=>[esc(k),v[0],v[1],v[2],"<b>"+(v[0]+v[1]+v[2])+"</b>",pct((v[0]+v[1]+v[2])/tot)]))+"</details>":'<p class="muted" style="margin:6px 0 0">Sin gestiones todavía.</p>')+"</div>"});
+  h+="</div>";
+  const days=Object.keys(byDay).sort().reverse();const T=days.reduce((a,d)=>a+lists.reduce((b,l)=>b+(byDay[d][l.k]||0),0),0);
+  h+='<h3 class="sth">Gestiones por fecha</h3>'+(days.length?'<div class="stkpi wide"><span><b>'+T+"</b><small>Total gestiones</small></span><span><b>"+days.length+"</b><small>Días activos</small></span><span><b>"+(days.length?(T/days.length).toLocaleString("es-ES",{maximumFractionDigits:1}):"0")+"</b><small>Promedio diario</small></span></div>"+
+    stTable(["Fecha"].concat(lists.map(l=>l.n+(l.lang?" "+l.lang:""))).concat(["Ronda 1","Ronda 2","Ronda 3+","Total día","% del total"]),days.slice(0,60).map(d=>{const t=lists.reduce((b,l)=>b+(byDay[d][l.k]||0),0);return [fmtDL(d)].concat(lists.map(l=>byDay[d][l.k]||0)).concat([byDay[d].r0||0,byDay[d].r1||0,byDay[d].r2||0,"<b>"+t+"</b>",pct(T?t/T:0)])}))
+    :'<p class="muted">Sin gestiones todavía.</p>');
+  /* contacto con las inscripciones 2027 */
+  const AR=S.allRows||[];const via={},dir={out:0,in:0};let con=0,mail=0;const EM=new Map();
+  const tk=ATT.desk||[];tk.forEach(t=>{const e=String(t.email||"").toLowerCase();if(e)EM.set(e,(EM.get(e)||0)+1)});
+  AR.forEach(r=>{const doc=ATT.docs["d-"+r.id]||{};const log=Array.isArray(doc.log)?doc.log:[];const inc=incForDeal(r.id);const em=[r.d.Email,r.d.Email_persona].map(x=>String(x||"").toLowerCase()).filter(Boolean);const tkt=em.some(e=>EM.has(e));
+    if(log.length||inc.length||tkt)con++;if(tkt)mail++;
+    const vs=new Set(),ds=new Set();log.forEach(e=>{vs.add(e.via||"otros");ds.add(e.dir||"out")});inc.forEach(x=>{vs.add(x.e.via||"otros");ds.add("out")});if(tkt){vs.add("email");ds.add("in")}
+    vs.forEach(v=>via[v]=(via[v]||0)+1);ds.forEach(d=>dir[d]++)});
+  h+='<h3 class="sth">Contacto con las inscripciones 2027</h3><div class="stkpi wide"><span><b>'+AR.length+"</b><small>Inscripciones</small></span><span><b>"+con+"</b><small>Contactadas por ATT</small></span><span><b>"+pct(AR.length?con/AR.length:0)+"</b><small>% contactadas</small></span><span><b>"+dir.out+"</b><small>Les contactamos</small></span><span><b>"+dir.in+"</b><small>Nos contactaron</small></span></div>"+
+    stTable(["Vía","Inscripciones","% del total"],ATT_VIA.map(([k,l])=>[l,via[k]||0,pct(AR.length?(via[k]||0)/AR.length:0)]))+
+    '<p class="ingnote">Cuenta los contactos apuntados en Limpieza, las respuestas de Incidencias con contacto con la familia y los tickets de Zoho Desk del email del tutor (como «nos contactó por email»).</p>';
+  /* tickets */
+  h+='<h3 class="sth">Tickets de Zoho Desk <small>desde el '+fmtDL(DESK_FROM)+"</small></h3>";
+  if(ATT.deskErr)h+='<p class="devmsg">'+esc(ATT.deskErr)+"</p>";else if(!ATT.desk)h+='<p class="muted">Leyendo Zoho Desk…</p>';
+  else{const by=k=>{const o={};tk.forEach(t=>{const v=t[k]||"—";o[v]=(o[v]||0)+1});return Object.entries(o).sort((a,b)=>b[1]-a[1])};const d30=new Date(Date.now()-30*864e5).toISOString();
+    h+='<div class="stkpi wide"><span><b>'+tk.length+"</b><small>Tickets</small></span><span><b>"+tk.filter(t=>t.createdTime>=d30).length+"</b><small>Últimos 30 días</small></span><span><b>"+tk.filter(t=>t.statusType==="Open").length+"</b><small>Abiertos</small></span><span><b>"+mail+"</b><small>Inscripciones 2027 con ticket</small></span></div>"+
+      '<div class="stgrid">'+[["Estado","status"],["Canal","channel"],["Idioma","language"]].map(([l,k])=>'<div class="stcard">'+stTable([l,"Tickets","%"],by(k).map(([v,n])=>[esc(v),n,pct(n/tk.length)]))+"</div>").join("")+"</div>"}
+  $("stBody").innerHTML=h}
+$("stRefresh").addEventListener("click",()=>{attLoad(true);deskLoad(true)});
+
+/* ===== CONTABILIDAD › AGENTES =====
+   Inscripciones con «Agencia» en el CRM. Comisión por semana según el programa y la modalidad (tabla de cada agencia);
+   en Residencial y MAX, el tramo depende del número de participante de esa agencia (1–30, 31–60, 61+), sin efecto retroactivo.
+   Los extras no llevan comisión. Precio del software = semanas con la comisión descontada + extras.
+   Comisión aplicada: el Total del CRM coincide con el precio del software (Oli lo cambia a mano). Si después vuelve a descuadrar, sale en rojo. */
+var AGX={ag:"all",f:"pend",q:"",docs:{},liq:{},tbl:false,addLiq:false};
+const AG_T={std:{"ONE|Media Jornada":[5,5,5],"ONE|Jornada Completa":[7,7,7],"ONE|Interno":[10,15,18],"MAX|Jornada Completa":[10,15,18],"MAX|Interno":[10,15,18]},
+  ert:{"ONE|Media Jornada":[5,5,5],"ONE|Jornada Completa":[7,7,7],"ONE|Interno":[5,9,12],"MAX|Jornada Completa":[5,9,12],"MAX|Interno":[5,9,12]}};
+const AG_PRICES={"ONE|Media Jornada":[395,415,435],"ONE|Jornada Completa":[625,650,695],"ONE|Interno":[1250,1295,1375],"MAX|Jornada Completa":[995,1050,1095],"MAX|Interno":[1750,1850,1940]};
+const AGENCIES=[{id:"sci",n:"Soccer Camps",full:"Soccer Camps International",who:"Stephane",re:/soccer\s*camps/i,t:"std"},{id:"st",n:"Soccer Travel",full:"Soccer Travel",who:"Ismain",re:/soccer\s*travel/i,t:"std"},{id:"ert",n:"Ertheo",full:"ACCOM CONSULTING SPAIN S.L.",re:/accom|ertheo/i,t:"ert"}];
+const agOf=r=>{const a=r.d&&r.d.Agencia;const n=a&&(a.name||a);if(!n)return null;return AGENCIES.find(x=>x.re.test(String(n)))||{id:"x",n:String(n),full:String(n),t:"std",other:true}};
+const agEdit=()=>CAN("contabilidad.agentes",2);
+const tierOf=n=>n<=30?0:n<=60?1:2;
+function agRows(){const rows=(S.allRows||[]).map(r=>({r,a:agOf(r)})).filter(x=>x.a);
+  const by={};rows.forEach(x=>{(by[x.a.id]=by[x.a.id]||[]).push(x)});
+  Object.values(by).forEach(L=>{L.sort((a,b)=>String(a.r.d.Created_Time||"").localeCompare(String(b.r.d.Created_Time||""))||String(a.r.id).localeCompare(String(b.r.id)));L.forEach((x,i)=>{x.n=i+1;x.tier=tierOf(i+1)})});
+  rows.forEach(x=>{const T=AG_T[x.a.t]||AG_T.std;const lines=(x.r.weeks||[]).map(w=>{const ap=w.prog+"|"+w.mod;const p=(T[ap]||[0,0,0])[x.tier];const base=+w.imp||0;return {w,ap,p,base,com:r2(base*p/100)}});
+    x.lines=lines;x.base=r2(lines.reduce((a,l)=>a+l.base,0));x.com=r2(lines.reduce((a,l)=>a+l.com,0));x.extras=r2(x.r.xAmt||0);x.so=r2(x.base-x.com+x.extras);x.crm=r2(x.r.d.Total);
+    x.match=Math.abs(x.so-x.crm)<0.01;const doc=AGX.docs["d"+x.r.id];x.was=!!(doc&&doc.ok);x.k=x.match?"ok":x.was?"err":"pend";x.miss=lines.some(l=>!l.base)});
+  return rows}
+/* cuando cuadra por primera vez se guarda: si después descuadra, sale en rojo dentro de Comisión aplicada */
+let AG_SAVING=new Set();
+function agRemember(rows){if(!S.db||!agEdit())return;rows.filter(x=>x.match&&!x.was&&!AG_SAVING.has(x.r.id)).slice(0,20).forEach(x=>{AG_SAVING.add(x.r.id);const doc={ok:true,so:x.so,at:new Date().toISOString(),by:S.me||null};AGX.docs["d"+x.r.id]=doc;
+  S.db.collection("agent").doc("d"+x.r.id).set(doc).catch(()=>{}).finally(()=>AG_SAVING.delete(x.r.id))})}
+const agLiq=id=>{const d=AGX.liq[id];return d&&Array.isArray(d.items)?d.items:[]};
+function renderAgentes(){if($("view-pagos").hidden||$("accAg").hidden)return;
+  if(!(S.allRows||[]).length){$("agList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Cargando inscripciones…</h3></div>';return}
+  const all=agRows();agRemember(all);
+  const ids=AGENCIES.map(a=>a.id).concat([...new Set(all.filter(x=>x.a.other).map(x=>x.a.id))]);
+  $("agPick").innerHTML='<button type="button" class="incpill" data-agp="all" aria-pressed="'+(AGX.ag==="all")+'">Todas<span class="n">'+all.length+"</span></button>"+AGENCIES.map(a=>'<button type="button" class="incpill'+(all.some(x=>x.a.id===a.id)?"":" zero")+'" data-agp="'+a.id+'" aria-pressed="'+(AGX.ag===a.id)+'">'+esc(a.n)+'<span class="n">'+all.filter(x=>x.a.id===a.id).length+"</span></button>").join("")+
+    (all.some(x=>x.a.other)?'<span class="sep"></span><span class="muted" style="font-size:12px">Otras agencias: '+esc([...new Set(all.filter(x=>x.a.other).map(x=>x.a.n))].join(", "))+"</span>":"");
+  const rows=all.filter(x=>AGX.ag==="all"||x.a.id===AGX.ag);
+  const pe=rows.filter(x=>x.k==="pend"),ok=rows.filter(x=>x.k!=="pend"),er=ok.filter(x=>x.k==="err");
+  const due=r2(ok.reduce((a,x)=>a+x.so,0)),liqIds=AGX.ag==="all"?AGENCIES.map(a=>a.id):[AGX.ag];const paid=r2(liqIds.reduce((a,id)=>a+agLiq(id).reduce((b,i)=>b+(+i.amt||0),0),0));
+  $("agBoxes").innerHTML=[["pend","Pendientes de revisión","Hay que cambiar el precio en el CRM",pe.length,0],["ok","Comisión aplicada","Total del CRM = precio del software",ok.length,er.length]].map(([k,t,sub,n,ne])=>'<button type="button" class="pbx ab-'+k+'" data-agf="'+k+'" aria-pressed="'+(AGX.f===k)+'"><span class="pt2">'+t+'</span><span class="pc2">'+n+'</span><span class="ps2">'+sub+"</span>"+(ne?'<span class="perr">'+ne+(ne>1?" vuelven a descuadrar":" vuelve a descuadrar")+"</span>":"")+"</button>").join("")+
+    '<div class="mny" aria-label="Liquidación"><div class="mv"><i>Total comisión aplicada</i><b>'+eur(due)+'</b><small>'+ok.length+" inscripciones</small></div><span class=\"op\" aria-hidden=\"true\">−</span><div class=\"mv\"><i>Liquidado</i><b>"+eur(paid)+"</b><small>Lo que ya nos han pagado</small></div><span class=\"op\" aria-hidden=\"true\">=</span><div class=\"mv keep\"><i>Pendiente de liquidar</i><b>"+eur(r2(due-paid))+"</b><small>"+(AGX.ag==="all"?"Todas las agencias":esc((AGENCIES.find(a=>a.id===AGX.ag)||{}).n||""))+"</small></div></div>";
+  const q=attNrm(AGX.q.trim());let L=(AGX.f==="ok"?ok:pe).filter(x=>!q||attNrm(x.r.hay+" "+x.a.n).includes(q));
+  L.sort((a,b)=>(b.k==="err")-(a.k==="err")||a.a.n.localeCompare(b.a.n)||a.n-b.n);
+  $("agCount").textContent=L.length+" inscripciones";
+  $("agList").innerHTML=(L.length?'<div class="crowh agh" aria-hidden="true"><span>Jugador</span><span>Semanas</span><span>Precio</span><span>Comisión</span><span>Precio software</span><span>Total CRM</span><span>Estado</span></div>'+L.map(x=>{const st=x.k==="ok"?'<span class="pst ist-ok">Aplicada</span>':x.k==="err"?'<span class="pst ist-dif">Descuadrada</span>':'<span class="pst ist-sin">Pendiente</span>';
+      return '<div class="agrow is-'+x.k+'" data-pid="'+esc(x.r.id)+'" tabindex="0"><span class="pnm"><b class="nmrow"><span class="nmt" title="'+esc(x.r.name)+'">'+esc(x.r.name)+"</span>"+campTag(x.r)+'</b><span class="code">'+esc(x.r.code)+" · "+esc(x.a.n)+" · participante "+x.n+"</span></span>"+
+        '<span class="agw">'+x.lines.map(l=>'<span title="'+esc(l.ap.replace("|"," · "))+'">W'+(l.w.n||"?")+" "+esc(l.w.prog)+" "+esc(MOD_SHORT[l.w.mod]||l.w.mod)+" · "+l.p+"%</span>").join("")+(x.extras?'<span class="muted">+ extras '+eur(x.extras)+"</span>":"")+"</span>"+
+        '<span class="cm">'+eur(x.base)+'</span><span class="cm hot">−'+eur(x.com)+'</span><span class="cm"><b>'+eur(x.so)+'</b></span><span class="cm">'+eur(x.crm)+"</span><span>"+st+"</span>"+
+        (x.k!=="ok"?'<span class="cwhy">'+(x.k==="err"?"Ya tenía la comisión aplicada y ahora el Total del CRM ("+eur(x.crm)+") no coincide con el precio del software ("+eur(x.so)+").":"Cambia en el CRM el Total a "+eur(x.so)+" (ahora "+eur(x.crm)+").")+(x.miss?" Hay semanas sin importe en el CRM.":"")+"</span>":"")+"</div>"}).join("")
+    :'<div class="eqempty"><h3 class="wide" style="margin:0">'+(AGX.f==="ok"?"Ninguna con la comisión aplicada todavía":"Nada pendiente de revisión")+"</h3></div>");
+  /* liquidaciones */
+  const ag=AGENCIES.find(a=>a.id===AGX.ag);const ed=agEdit();
+  $("agLiq").innerHTML=ag?'<div class="agliq"><div class="agliqh"><h3 class="sth" style="margin:0">Liquidaciones de '+esc(ag.n)+"</h3>"+(ed&&!AGX.addLiq?'<button type="button" class="btn primary" data-agliqadd>+ Apuntar pago recibido</button>':"")+"</div>"+
+    (AGX.addLiq?'<div class="agliqf"><label class="attf"><small>Cantidad (€)</small><input type="text" inputmode="decimal" data-agliqamt placeholder="0,00"></label><label class="attf"><small>Fecha</small><input type="date" data-agliqday value="'+todayISO()+'"></label><label class="attf grow"><small>Nota</small><input type="text" data-agliqnote placeholder="Transferencia, referencia…"></label><button type="button" class="btn primary" data-agliqsave>Guardar</button><button type="button" class="btn" data-agliqcancel>Cancelar</button></div>':"")+
+    (agLiq(ag.id).length?'<div class="agliql">'+agLiq(ag.id).slice().sort((a,b)=>String(b.day).localeCompare(String(a.day))).map(i=>'<div class="agliqr"><span class="dd">'+esc(fmtDL(i.day))+'</span><b>'+eur(i.amt)+"</b><span>"+esc(i.note||"")+'</span><span class="muted">Apuntado por '+esc(i.byName||"—")+" · "+esc(i.at?new Date(i.at).toLocaleString("es-ES",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}):"")+"</span>"+(ed?'<button type="button" class="attedit" data-agliqdel="'+esc(i.id)+'">Borrar</button>':"")+"</div>").join("")+"</div>":'<p class="muted" style="margin:0">Todavía no hay pagos apuntados.</p>')+"</div>"
+    :'<p class="ingnote">Elige una agencia para apuntar sus liquidaciones y descargar su listado.</p>';
+  $("agDl").disabled=!ag;}
+function agTableHtml(){const tb=(t,title,who)=>{const T=AG_T[t];const row=(ap,l)=>{const pr=AG_PRICES[ap];const c=T[ap];return "<tr><th>"+l+"</th>"+pr.map(p=>"<td>"+p+" €</td>").join("")+c.map(p=>"<td><b>"+p+"%</b></td>").join("")+"</tr>"};
+    return '<div class="agtb"><b class="wt">'+esc(title)+"</b>"+(who?"<small>"+esc(who)+"</small>":"")+'<table><thead><tr><th>Campus ONE</th><th>Early bird</th><th>Oficial</th><th>Last minute</th><th>1–30</th><th>31–60</th><th>61+</th></tr></thead><tbody>'+row("ONE|Media Jornada","Half day")+row("ONE|Jornada Completa","Full day")+row("ONE|Interno","Residential")+
+      '</tbody><thead><tr><th>Campus MAX</th><th></th><th></th><th></th><th></th><th></th><th></th></tr></thead><tbody>'+row("MAX|Jornada Completa","Full day")+row("MAX|Interno","Residential")+"</tbody></table></div>"};
+  return '<div class="agmod" role="dialog" aria-modal="true" aria-label="Tabla de comisiones"><div class="agmodh"><b class="wt">Tabla de comisiones · temporada 2027</b><button type="button" class="x" data-agtblx aria-label="Cerrar">×</button></div>'+tb("std","Soccer Camps y Soccer Travel","Stephane e Ismain")+tb("ert","Ertheo","ACCOM CONSULTING SPAIN S.L.")+'<p class="ingnote">Early bird hasta el 15 de marzo; oficial hasta el 15 de mayo. La comisión es la misma con los tres precios y va por semana. Los extras no llevan comisión.</p></div>'}
+function agXlsx(){const ag=AGENCIES.find(a=>a.id===AGX.ag);if(!ag)return null;const L=agRows().filter(x=>x.a.id===ag.id&&x.k!=="pend").sort((a,b)=>a.n-b.n);
+  const rows=[["Liquidación "+ag.full+" · Campus Experience 2027"],["Fecha: "+fmtDL(todayISO())],[],["Niño","Código","Programa","Semanas","Precio semanas","Comisión %","Comisión aplicada","Extras","A pagar"]];
+  L.forEach(x=>rows.push([x.r.name,x.r.code,[...new Set(x.lines.map(l=>l.w.prog+" "+(MODLBL[l.w.mod]||l.w.mod)))].join(" / "),x.lines.map(l=>"W"+(l.w.n||"?")).join(", "),x.base,[...new Set(x.lines.map(l=>l.p+"%"))].join(" / "),x.com,x.extras,x.so]));
+  const sum=k=>r2(L.reduce((a,x)=>a+x[k],0));const paid=r2(agLiq(ag.id).reduce((a,i)=>a+(+i.amt||0),0));
+  rows.push([],["Total",L.length+" niños","",L.reduce((a,x)=>a+x.lines.length,0)+" semanas",sum("base"),"",sum("com"),sum("extras"),sum("so")],["Liquidado","","","","","","","",paid],["Pendiente de liquidar","","","","","","","",r2(sum("so")-paid)]);
+  return simpleXlsx("Liquidación",rows,[30,12,30,22,14,12,16,12,14],4)}
+/* Excel sencillo: una hoja, cabecera en navy, importes con formato de euros */
+function simpleXlsx(name,rows,widths,headRow){const X=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  const col=n=>{let s="";n++;while(n>0){const m=(n-1)%26;s=String.fromCharCode(65+m)+s;n=Math.floor((n-1)/26)}return s};
+  const sd=rows.map((r,i)=>{const R=i+1;const hd=R===headRow,tt=R===1,tot=r[0]==="Total"||r[0]==="Pendiente de liquidar";
+    return '<row r="'+R+'">'+r.map((v,c)=>{const ref=col(c)+R;if(v==null||v==="")return "";if(typeof v==="number")return '<c r="'+ref+'" s="'+(tot?4:3)+'"><v>'+v+"</v></c>";return '<c r="'+ref+'" s="'+(hd?1:tt?2:tot?5:0)+'" t="inlineStr"><is><t xml:space="preserve">'+X(v)+"</t></is></c>"}).join("")+"</row>"}).join("");
+  const styles='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><numFmts count="1"><numFmt numFmtId="164" formatCode="#,##0.00 &quot;€&quot;"/></numFmts><fonts count="4"><font><sz val="10"/><name val="Arial"/></font><font><b/><sz val="10"/><color rgb="FFFFFFFF"/><name val="Arial"/></font><font><b/><i/><sz val="13"/><color rgb="FF0F2145"/><name val="Arial"/></font><font><b/><sz val="10"/><name val="Arial"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF0F2145"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="6"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"/><xf numFmtId="0" fontId="2" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="164" fontId="3" fillId="0" borderId="0" xfId="0" applyNumberFormat="1" applyFont="1"/><xf numFmtId="0" fontId="3" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs></styleSheet>';
+  const sheet='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><cols>'+widths.map((w,i)=>'<col min="'+(i+1)+'" max="'+(i+1)+'" width="'+w+'" customWidth="1"/>').join("")+"</cols><sheetData>"+sd+"</sheetData></worksheet>";
+  return zipStore([{name:"[Content_Types].xml",data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>'},
+    {name:"_rels/.rels",data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'},
+    {name:"xl/workbook.xml",data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="'+X(name.slice(0,31))+'" sheetId="1" r:id="rId1"/></sheets></workbook>'},
+    {name:"xl/_rels/workbook.xml.rels",data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>'},
+    {name:"xl/styles.xml",data:styles},{name:"xl/worksheets/sheet1.xml",data:sheet}])}
+async function agSaveLiq(id,items,msg){if(!S.db){toast("No se puede guardar en esta vista");return}const doc={items,updatedAt:new Date().toISOString()};AGX.liq[id]=doc;renderAgentes();
+  try{await S.db.collection("agliq").doc(id).set(doc);toast(msg)}catch(e){toast(e&&e.code==="permission_denied"?"No tienes permiso para apuntar liquidaciones":"No se pudo guardar. Vuelve a intentarlo.")}}
+$("agPick").addEventListener("click",e=>{const b=e.target.closest("[data-agp]");if(!b)return;AGX.ag=b.dataset.agp;AGX.addLiq=false;renderAgentes()});
+$("agBoxes").addEventListener("click",e=>{const b=e.target.closest("[data-agf]");if(!b)return;AGX.f=b.dataset.agf;renderAgentes()});
+$("agQ").addEventListener("input",e=>{AGX.q=e.target.value;renderAgentes()});
+$("agList").addEventListener("click",e=>{if(e.target.closest("a"))return;const row=e.target.closest("[data-pid]");if(row&&typeof openDrawer==="function")openDrawer(row.dataset.pid)});
+$("agLiq").addEventListener("click",async e=>{let b;const id=AGX.ag;
+  if(e.target.closest("[data-agliqadd]")){AGX.addLiq=true;renderAgentes();const i=$("agLiq").querySelector("[data-agliqamt]");if(i)i.focus();return}
+  if(e.target.closest("[data-agliqcancel]")){AGX.addLiq=false;renderAgentes();return}
+  if(e.target.closest("[data-agliqsave]")){const box=$("agLiq");const amt=ingNum(box.querySelector("[data-agliqamt]").value),day=box.querySelector("[data-agliqday]").value,note=box.querySelector("[data-agliqnote]").value.trim();
+    if(amt==null||isNaN(amt)||amt<=0){toast("Escribe la cantidad recibida");return}if(!day){toast("Pon la fecha");return}
+    const me=await attMe();const items=agLiq(id).concat([{id:"l"+Date.now().toString(36),amt,day,note,at:new Date().toISOString(),by:S.me||null,byName:me.name||""}]);AGX.addLiq=false;agSaveLiq(id,items,"Pago apuntado");return}
+  if((b=e.target.closest("[data-agliqdel]"))){if(!confirmDel())return;agSaveLiq(id,agLiq(id).filter(i=>i.id!==b.dataset.agliqdel),"Pago borrado")}});
+$("agDl").addEventListener("click",async()=>{const ag=AGENCIES.find(a=>a.id===AGX.ag);if(!ag)return;const data=agXlsx();const name="Liquidacion_"+ag.n.replace(/\s+/g,"_")+"_"+todayISO()+".xlsx";
+  try{if(S.dl)await S.dl.save({filename:name,data});else{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([data],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000)}toast("Listado descargado")}
+  catch(e){if(!(e&&e.code==="declined"))toast("No se pudo descargar en esta vista")}});
+$("agTblBtn").addEventListener("click",()=>{AGX.tbl=!AGX.tbl;$("agTbl").hidden=!AGX.tbl;if(AGX.tbl)$("agTbl").innerHTML=agTableHtml()});
+$("agTbl").addEventListener("click",e=>{if(e.target.closest("[data-agtblx]")||e.target===$("agTbl")){AGX.tbl=false;$("agTbl").hidden=true}});
+
 /* ===== INCIDENCIAS =====
    Cualquiera con acceso de edición a Incidencias crea y responde.
    Flujo: Por responder → (respuesta: ¿contacto con la familia? sí/no, vía y texto) → Por validar →
@@ -5068,6 +5532,10 @@ renderRegistros();
     if(S.open){const r=(S.allRows||S.rows).find(x=>x.id===S.open)||(S.xRows||[]).find(x=>x.id===S.open);if(r)drawBody(r)}
   });
   C.use("downloads").then(d=>{S.dl=d||null;renderHorarios()}).catch(()=>{});
+  C.use("db").then(db=>{if(!db)return;
+    db.collection("attc").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});ATT.docs=m;attRenderAll()},()=>{});
+    db.collection("agent").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});AGX.docs=Object.assign({},m,Object.fromEntries(Object.entries(AGX.docs).filter(([k,v])=>!m[k]&&v&&v.ok)));try{renderAgentes()}catch(e){}},()=>{});
+    db.collection("agliq").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});AGX.liq=m;try{renderAgentes()}catch(e){}},()=>{})}).catch(()=>{});
   C.use("user").then(async u=>{if(!u)return;S.user=u;try{S.me=await u.id()}catch(e){}});
   const mcp=await C.use("mcp");
   if(!mcp){setSync("err","Sin conexión");showBanner("bad","Esta vista no puede conectarse con Zoho CRM. Ábrela en claude.ai con tu cuenta de ISL.");$("empty").innerHTML="<h3>Sin datos de Zoho</h3><p>Las inscripciones aparecerán aquí al abrir la herramienta en claude.ai con Zoho CRM conectado.</p>";return}
@@ -5103,24 +5571,27 @@ Object.assign(SB_IC,{
   equipos:SVG('<path d="M8.2 3.5 4 6 2.5 10.5l3.2 1.3V20.5h12.6v-8.7l3.2-1.3L20 6l-4.2-2.5C15.2 5.1 13.8 6 12 6s-3.2-.9-3.8-2.5z"/><path d="M12 9.5v4"/>'),
   pagos:SVG('<circle cx="12" cy="12" r="8.5"/><path d="M15.3 8.9a4.1 4.1 0 1 0 0 6.2M7.6 11h6.2M7.6 13.1h6.2"/>'),
   facturas:SVG('<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 11.5h6"/><path d="m9.3 15.4 1.7 1.6 3.4-3.4"/>')});
+Object.assign(SB_IC,{bbdd:SVG('<ellipse cx="12" cy="6" rx="7" ry="2.6"/><path d="M5 6v6c0 1.4 3.1 2.6 7 2.6s7-1.2 7-2.6V6"/><path d="M5 12v6c0 1.4 3.1 2.6 7 2.6s7-1.2 7-2.6v-6"/>'),
+  limpieza:SVG('<path d="M4 6h10M4 12h10M4 18h7"/><path d="m15 17 2.2 2.2L21 15"/>'),attstats:SVG('<path d="M4 20V10M10 20V4M16 20v-7M21 20H3"/>')});
 const BK_TXT={registros:"Madrid, nacionales e institucionales",operativa:"El día a día del campus",administracion:"Contabilidad y gestión económica",atencion:"Consultas y comunicación con las familias",marketing:"Campañas y comunicación",rrhh:"El equipo de trabajo del campus",
-  horarios:"Semanas, simulador, buses e instalaciones",equipos:"Equipos por semana y por campus",pagos:"Pagos, devoluciones y cancelaciones"};
+  horarios:"Semanas, simulador, buses e instalaciones",equipos:"Equipos por semana y por campus",pagos:"Pagos, devoluciones, cancelaciones y agentes",
+  bbdd:"Listas para las llamadas comerciales",limpieza:"Inscripciones completadas y pendientes",attstats:"Métricas de atención al público"};
 const CHEV=SVG('<path d="m9 6 6 6-6 6"/>');
-const SB_LBL={inicio:"Inicio",temporada:"Campus Experience 2027",registros:"Registros",operativa:"Operativa",horarios:"Horarios",equipos:"Equipos",administracion:"Administración",pagos:"Contabilidad",facturas:"Facturas",ingresos:"Ingresos",incidencias:"Incidencias",atencion:"Atención al público",marketing:"Marketing",rrhh:"Recursos Humanos",admin:"Usuarios y accesos"};
+const SB_LBL={inicio:"Inicio",temporada:"Campus Experience 2027",registros:"Registros",operativa:"Operativa",horarios:"Horarios",equipos:"Equipos",administracion:"Administración",pagos:"Contabilidad",facturas:"Facturas",ingresos:"Ingresos",incidencias:"Incidencias",atencion:"Atención al público",bbdd:"Base de datos",limpieza:"Limpieza",attstats:"Estadísticas",marketing:"Marketing",rrhh:"Recursos Humanos",admin:"Usuarios y accesos"};
 /* bloques de la temporada y a qué bloque pertenece cada pantalla */
 const SEASON=2027;
-const GRP_OF={inicio:"inicio",temporada:"temporada",registros:"registros",operativa:"operativa",horarios:"operativa",equipos:"operativa",incidencias:"operativa",administracion:"administracion",pagos:"administracion",facturas:"administracion",ingresos:"administracion",atencion:"atencion",marketing:"marketing",rrhh:"rrhh",admin:"admin"};
-const BLOCKS=[["registros",[]],["operativa",["horarios","equipos","incidencias"]],["administracion",["pagos","facturas","ingresos"]],["atencion",[]],["marketing",[]],["rrhh",[]]];
-const SOON=new Set(["atencion","marketing","rrhh"]);
+const GRP_OF={inicio:"inicio",temporada:"temporada",registros:"registros",operativa:"operativa",horarios:"operativa",equipos:"operativa",incidencias:"operativa",administracion:"administracion",pagos:"administracion",facturas:"administracion",ingresos:"administracion",atencion:"atencion",bbdd:"atencion",limpieza:"atencion",attstats:"atencion",marketing:"marketing",rrhh:"rrhh",admin:"admin"};
+const BLOCKS=[["registros",[]],["operativa",["horarios","equipos","incidencias"]],["administracion",["pagos","facturas","ingresos"]],["atencion",["bbdd","limpieza","attstats"]],["marketing",[]],["rrhh",[]]];
+const SOON=new Set(["marketing","rrhh"]);
 /* ===== ACCESOS: solo cuando el software corre en el servidor propio (window.CE_ACL) ===== */
 const ACL=window.CE_ACL||null;
 const CAN=(k,min)=>!ACL||!!ACL.admin||(((ACL.perms||{})[k]||0)>=(min||1));
 const ANY=(a,min)=>!ACL||!!ACL.admin||Object.keys(ACL.perms||{}).some(k=>k.startsWith(a+".")&&ACL.perms[k]>=(min||1));
 const VIEW_AP={registros:"registros",horarios:"horarios",equipos:"equipos",pagos:"contabilidad",atencion:"atencion",marketing:"marketing",rrhh:"rrhh"};
-const viewOk=v=>v==="inicio"||v==="temporada"||(v==="admin"?!!(ACL&&ACL.admin):v==="operativa"?(viewOk("horarios")||viewOk("equipos")||viewOk("incidencias")):v==="incidencias"?CAN("incidencias.general"):v==="administracion"?(viewOk("pagos")||viewOk("facturas")||viewOk("ingresos")):v==="facturas"?CAN("contabilidad.facturas"):v==="ingresos"?CAN("contabilidad.ingresos"):v==="pagos"?(CAN("contabilidad.pagos")||CAN("contabilidad.devoluciones")||CAN("contabilidad.cancelaciones")):!VIEW_AP[v]||ANY(VIEW_AP[v]));
+const viewOk=v=>["atencion","bbdd","limpieza","attstats"].includes(v)?(v==="atencion"?(viewOk("bbdd")||viewOk("limpieza")||viewOk("attstats")):CAN({bbdd:"atencion.bbdd",limpieza:"atencion.limpieza",attstats:"atencion.estadisticas"}[v])):v==="inicio"||v==="temporada"||(v==="admin"?!!(ACL&&ACL.admin):v==="operativa"?(viewOk("horarios")||viewOk("equipos")||viewOk("incidencias")):v==="incidencias"?CAN("incidencias.general"):v==="administracion"?(viewOk("pagos")||viewOk("facturas")||viewOk("ingresos")):v==="facturas"?CAN("contabilidad.facturas"):v==="ingresos"?CAN("contabilidad.ingresos"):v==="pagos"?(CAN("contabilidad.pagos")||CAN("contabilidad.devoluciones")||CAN("contabilidad.cancelaciones")||CAN("contabilidad.agentes")):!VIEW_AP[v]||ANY(VIEW_AP[v]));
 const regKey=w=>w===WALL||w==="99"?"registros.todos":isCampKey(w)?"registros.campus":(w&&w!=="0")?"registros.madrid":null;
 const eqKeyOf=w=>isCampKey(w)?"equipos.campus":"equipos.madrid";
-const ACC_K={pagos:"contabilidad.pagos",dev:"contabilidad.devoluciones",can:"contabilidad.cancelaciones"};
+const ACC_K={pagos:"contabilidad.pagos",dev:"contabilidad.devoluciones",can:"contabilidad.cancelaciones",ag:"contabilidad.agentes"};
 function subOk(v,ss){if(!ACL)return true;
   if(v==="registros"){const k=regKey(ss==="0"?0:ss==="99"?WALL:isCampKey(ss)?ss:+ss);return k?CAN(k):true}
   if(v==="equipos")return ss==="0"?true:CAN(eqKeyOf(ss));
@@ -5156,14 +5627,14 @@ function sbSub(v){
   if(v==="registros")return ss(0,"Resumen")+ss(WALL,"Todos los registros",has?AR.length:null)+cap("Madrid")+wk(n=>({sm:has?weekItems(n).length:null}))+camps();
   if(v==="equipos")return cap("Madrid")+wk(n=>{let ok=false;try{ok=!!(S.rows.length&&weekComplete(n))}catch(e){}return {cl:ok?"ok":""}})+camps();
   if(v==="horarios")return ss("sim","Simulador")+cap("Madrid")+wk(n=>{let ok=false;try{ok=!!(S.rows.length&&hWeekComplete(n))}catch(e){}return {cl:ok?"ok":""}})+camps().replace(/<div class="sscap">Institucionales<\/div>[\s\S]*$/,"");
-  if(v==="pagos")return ss("pagos","Pagos")+ss("dev","Devoluciones")+ss("can","Cancelaciones");
+  if(v==="pagos")return ss("pagos","Pagos")+ss("dev","Devoluciones")+ss("can","Cancelaciones")+ss("ag","Agentes");
   return "";}
 function renderSide(){
   const AR=S.allRows||[];let late=0;try{late=AR.filter(r=>payState(r).k==="late").length}catch(e){}
   const regN=ACL&&!CAN("registros.campus")&&!CAN("registros.todos")?(S.rows||[]).length:AR.length;if(ACL&&!CAN("contabilidad.pagos"))late=0;
   const bd={registros:regN?'<span class="sbdg">'+regN+"</span>":"",pagos:late?'<span class="sbdg hot" title="'+late+' impagos">'+late+"</span>":""};
   const modH=(m,ss)=>viewOk(m)?'<button type="button" class="ss ssm" data-sv="'+m+'" data-ss="'+ss+'"><span class="ic">'+SB_IC[m]+"</span><span>"+SB_LBL[m]+"</span>"+(m==="pagos"&&late?'<span class="n" style="color:var(--sb-pink)">'+late+" impagos</span>":"")+(m==="facturas"&&invErr?'<span class="n" style="color:var(--sb-pink)">'+invErr+" errores</span>":"")+(m==="incidencias"&&myInc?'<span class="n" style="color:var(--sb-pink)">'+myInc+" te tocan</span>":"")+"</button>":"";
-  const subOfG=g=>g==="operativa"?(viewOk("horarios")?modH("horarios","0")+sbSub("horarios"):"")+(viewOk("equipos")?modH("equipos","0")+sbSub("equipos"):"")+(viewOk("incidencias")?modH("incidencias",""):""):g==="administracion"?(viewOk("pagos")?modH("pagos","")+sbSub("pagos"):"")+(viewOk("facturas")?modH("facturas",""):"")+(viewOk("ingresos")?modH("ingresos",""):""):g==="registros"?sbSub("registros"):"";
+  const subOfG=g=>g==="operativa"?(viewOk("horarios")?modH("horarios","0")+sbSub("horarios"):"")+(viewOk("equipos")?modH("equipos","0")+sbSub("equipos"):"")+(viewOk("incidencias")?modH("incidencias",""):""):g==="administracion"?(viewOk("pagos")?modH("pagos","")+sbSub("pagos"):"")+(viewOk("facturas")?modH("facturas",""):"")+(viewOk("ingresos")?modH("ingresos",""):""):g==="atencion"?(viewOk("bbdd")?modH("bbdd",""):"")+(viewOk("limpieza")?modH("limpieza",""):"")+(viewOk("attstats")?modH("attstats",""):""):g==="registros"?sbSub("registros"):"";
   const invErr=viewOk("facturas")?invErrCount():null;
   const myInc=viewOk("incidencias")?incMyCount():0;
   const bdg={operativa:myInc?'<span class="sbdg hot" title="Incidencias en las que estás y te toca actuar">'+myInc+"</span>":"",registros:bd.registros,administracion:(late||invErr)?'<span class="sbdg hot" title="'+(late||0)+" impagos · "+(invErr||0)+' errores de facturas">'+((late||0)+(invErr||0))+"</span>":""};
@@ -5179,7 +5650,7 @@ function sbMark(){
   $("sbNav").querySelectorAll(".si").forEach(b=>b.classList.toggle("on",b.dataset.sv===GRP_OF[v]));
   const se=$("sbNav").querySelector(".sb-season");if(se)se.classList.toggle("on",v==="temporada");
   $("sbNav").querySelectorAll("[data-ss]").forEach(b=>{const on=b.dataset.sv===v&&b.dataset.ss===c;b.classList.toggle("on",on);if(on)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
-  let sub="";if(v==="registros"&&R.week)sub=wLabel(R.week);else if(v==="equipos"&&EQ.week)sub=wLabel(EQ.week);else if(v==="horarios")sub=H.view==="sim"?"Simulador":H.week?hWL(H.week):"";else if(v==="pagos")sub={pagos:"Pagos",dev:"Devoluciones",can:"Cancelaciones"}[accKey()];
+  let sub="";if(v==="registros"&&R.week)sub=wLabel(R.week);else if(v==="equipos"&&EQ.week)sub=wLabel(EQ.week);else if(v==="horarios")sub=H.view==="sim"?"Simulador":H.week?hWL(H.week):"";else if(v==="pagos")sub={pagos:"Pagos",dev:"Devoluciones",can:"Cancelaciones",ag:"Agentes"}[accKey()];
   const ro=aclClasses(v);
   const blk=GRP_OF[v]&&GRP_OF[v]!==v&&SB_LBL[GRP_OF[v]]?"<small>"+SB_LBL[GRP_OF[v]]+" ›</small>":"";
   $("tbWhere").innerHTML=blk+"<b>"+SB_LBL[v]+"</b>"+(sub?"<span>"+esc(sub)+"</span>":"")+(ro?'<em class="tb-ro" title="Puedes ver pero no modificar">Solo lectura</em>':"");}
@@ -5194,9 +5665,9 @@ function hubRender(v){
     $("hubSeasons").innerHTML='<button type="button" class="season" data-sv="temporada"><span class="sy">'+SEASON+'</span><span class="sn">Campus Experience '+SEASON+'</span><span class="sst"><span><b>'+(AR.length||"—")+'</b>participantes</span><span><b>9</b>semanas en Madrid</span><span><b>'+camps+'</b>campus nacionales</span></span><span class="sgo">Entrar</span></button>'}
   if(v==="temporada")$("hubBlocks").innerHTML=BLOCKS.filter(b=>viewOk(b[0])).map(([b,mods])=>hubCard(b,{mods:b==="registros"?(AR.length?[AR.length+" participantes"]:[]):mods.filter(viewOk).map(m=>SB_LBL[m])})).join("");
   if(v==="operativa")$("hubOperativa").innerHTML=["horarios","equipos","incidencias"].filter(viewOk).map(m=>m==="incidencias"?hubCard(m,{mods:(()=>{const a=incList().filter(d=>d.st!=="closed");const u=a.filter(d=>d.urg).length;return [a.length?a.length+(a.length>1?" abiertas":" abierta"):"Sin abiertas"].concat(u?[u+(u>1?" URGENTES":" URGENTE")]:[])})()}):hubCard(m)).join("");
-  if(v==="administracion")$("hubAdministracion").innerHTML=["pagos","facturas","ingresos"].filter(viewOk).map(m=>m==="ingresos"?hubCard(m,{mods:(()=>{const n=ingPendCount();return n==null?["Zoho Books"]:[n?n+" días por cuadrar":"Todo cuadrado"]})()}):m==="pagos"?hubCard(m,{mods:["Pagos","Devoluciones","Cancelaciones"].filter((x,i)=>subOk("pagos",["pagos","dev","can"][i]))}):hubCard(m,{mods:(()=>{const n=invErrCount();return n==null?["Zoho Books"]:[n?n+" errores":"Todo cuadra"]})()})).join("");
+  if(v==="administracion")$("hubAdministracion").innerHTML=["pagos","facturas","ingresos"].filter(viewOk).map(m=>m==="ingresos"?hubCard(m,{mods:(()=>{const n=ingPendCount();return n==null?["Zoho Books"]:[n?n+" días por cuadrar":"Todo cuadrado"]})()}):m==="pagos"?hubCard(m,{mods:["Pagos","Devoluciones","Cancelaciones","Agentes"].filter((x,i)=>subOk("pagos",["pagos","dev","can","ag"][i]))}):hubCard(m,{mods:(()=>{const n=invErrCount();return n==null?["Zoho Books"]:[n?n+" errores":"Todo cuadra"]})()})).join("");
 }
-window.__hub=hubRender;
+window.__hub=v=>{hubRender(v);if(v==="atencion")$("hubAtencion").innerHTML=["bbdd","limpieza","attstats"].filter(viewOk).map(m=>hubCard(m,{mods:m==="bbdd"?["Leads","BBDD 2026","Unpaids","Prerreservas"]:m==="limpieza"?["Completadas","Pendientes"]:["Resumen por lista","Por fecha","Tickets"]})).join("")};
 document.querySelector("main").addEventListener("click",e=>{const b=e.target.closest(".hub [data-sv]");if(!b)return;e.preventDefault();sbGo(b.dataset.sv)});
 function sbSaveOpen(){try{localStorage.setItem("ce-sb-open",JSON.stringify([...SB_OPEN]))}catch(e){}}
 function sbGo(v,ss){

@@ -55,8 +55,8 @@ const CATALOG = [
   { k: "horarios", b: "Operativa", l: "Horarios", subs: [["semanas", "Horarios de las semanas"], ["campus", "Nacionales"], ["simulador", "Simulador"]] },
   { k: "equipos", b: "Operativa", l: "Equipos", subs: [["madrid", "Madrid (semanas)"], ["campus", "Nacionales e institucionales"]] },
   { k: "incidencias", b: "Operativa", l: "Incidencias", subs: [["general", "Incidencias"]] },
-  { k: "contabilidad", b: "Administración", l: "Contabilidad", subs: [["pagos", "Pagos"], ["devoluciones", "Devoluciones"], ["cancelaciones", "Cancelaciones"], ["facturas", "Control de facturas"], ["ingresos", "Ingresos"]] },
-  { k: "atencion", b: "Atención al público", l: "Atención al público", subs: [["general", "Atención al público"]] },
+  { k: "contabilidad", b: "Administración", l: "Contabilidad", subs: [["pagos", "Pagos"], ["devoluciones", "Devoluciones"], ["cancelaciones", "Cancelaciones"], ["agentes", "Agentes"], ["facturas", "Control de facturas"], ["ingresos", "Ingresos"]] },
+  { k: "atencion", b: "Atención al público", l: "Atención al público", subs: [["bbdd", "Base de datos"], ["limpieza", "Limpieza"], ["estadisticas", "Estadísticas"]] },
   { k: "marketing", b: "Marketing", l: "Marketing", subs: [["general", "Marketing"]] },
   { k: "rrhh", b: "Recursos Humanos", l: "Recursos Humanos", subs: [["general", "Recursos Humanos"]] },
 ];
@@ -78,14 +78,19 @@ const COLS = {
   hweek: { read: u => anyOf(u, "horarios"), write: (u, id) => lvl(u, String(id).startsWith("c-") ? "horarios.campus" : "horarios.semanas") >= 2 },
   happr: { read: u => anyOf(u, "horarios"), write: (u, id) => lvl(u, String(id).startsWith("c-") ? "horarios.campus" : "horarios.semanas") >= 2 },
   hbus:  { read: u => anyOf(u, "horarios"), write: (u, id) => lvl(u, String(id).startsWith("c-") ? "horarios.campus" : "horarios.semanas") >= 2 },
-  inc:   { read: u => lvl(u, "incidencias.general") >= 1, write: u => lvl(u, "incidencias.general") >= 2 },
+  inc:   { read: u => lvl(u, "incidencias.general") >= 1 || lvl(u, "atencion.estadisticas") >= 1 || lvl(u, "atencion.limpieza") >= 1, write: u => lvl(u, "incidencias.general") >= 2 },
   ing:   { read: u => lvl(u, "contabilidad.ingresos") >= 1, write: u => lvl(u, "contabilidad.ingresos") >= 2 },
   ingmv: { read: u => lvl(u, "contabilidad.ingresos") >= 1, write: u => lvl(u, "contabilidad.ingresos") >= 2 },
   dev:   { read: u => lvl(u, "contabilidad.devoluciones") >= 1, write: u => lvl(u, "contabilidad.devoluciones") >= 2 },
+  /* atención al público: historial de contactos (uno por persona) */
+  attc:  { read: u => anyOf(u, "atencion"), write: u => lvl(u, "atencion.bbdd") >= 2 || lvl(u, "atencion.limpieza") >= 2 },
+  /* contabilidad › agentes: comisión aplicada (marca) y liquidaciones de cada agencia */
+  agent: { read: u => lvl(u, "contabilidad.agentes") >= 1, write: u => lvl(u, "contabilidad.agentes") >= 2 },
+  agliq: { read: u => lvl(u, "contabilidad.agentes") >= 1, write: u => lvl(u, "contabilidad.agentes") >= 2 },
   hsim:  { read: u => lvl(u, "horarios.simulador") >= 1, write: u => lvl(u, "horarios.simulador") >= 2 },
   hsimd: { read: u => lvl(u, "horarios.simulador") >= 1, write: u => lvl(u, "horarios.simulador") >= 2 },
 };
-const canZoho = u => ["registros", "equipos", "horarios", "contabilidad", "incidencias"].some(a => anyOf(u, a));
+const canZoho = u => ["registros", "equipos", "horarios", "contabilidad", "incidencias", "atencion"].some(a => anyOf(u, a));
 
 /* ---------- base de datos ---------- */
 const db = new DatabaseSync(path.join(CFG.dataDir, "campus.db"));
@@ -237,6 +242,18 @@ async function zohoGate(u) {
 const BOOKS = { org: env("ZOHO_BOOKS_ORG", "20110950454"), orgAnd: env("ZOHO_BOOKS_ORG_AND", ""), url: env("ZOHO_BOOKS_URL", "https://www.zohoapis.eu/books/v3").replace(/\/$/, "") };
 /* organizaciones de Books permitidas: RMF (Madrid y nacionales) y, si está configurada, Andorra */
 const booksOrg = o => { o = String(o || BOOKS.org); return o === BOOKS.org || (BOOKS.orgAnd && o === BOOKS.orgAnd) ? o : null; };
+/* Zoho Desk (solo lectura): tickets para las estadísticas de atención al público.
+   El token de Zoho necesita el permiso Desk.tickets.READ (ver CATALYST.md). */
+const DESK = { org: env("ZOHO_DESK_ORG", "20109649402"), url: env("ZOHO_DESK_URL", "https://desk.zoho.eu/api/v1").replace(/\/$/, "") };
+async function deskTickets(from, limit) {
+  if (MOCK) return { data: (MOCK.tickets || []).slice(from, from + limit) };
+  const t = await zohoToken();
+  const r = await fetch(DESK.url + "/tickets?from=" + from + "&limit=" + limit + "&sortBy=createdTime", { headers: { Authorization: "Zoho-oauthtoken " + t, orgId: DESK.org }, signal: AbortSignal.timeout(30000) });
+  if (r.status === 204) return { data: [] };
+  const j = await r.json().catch(() => null);
+  if (!r.ok || !j) throw Object.assign(new Error((j && (j.message || j.errorCode)) || "Error de Zoho Desk " + r.status), { status: 502 });
+  return { data: j.data || [] };
+}
 async function booksGet(path) {
   const t = await zohoToken();
   const r = await fetch(BOOKS.url + path, { headers: { Authorization: "Zoho-oauthtoken " + t }, signal: AbortSignal.timeout(30000) });
@@ -472,6 +489,13 @@ async function handle(req, res) {
     catch (e) { return fail(res, e.status || 502, e.message || "Error al consultar Zoho Books"); }
   }
   /* --- Zoho Books (solo lectura): notas de crédito (rectificativas) para devoluciones y cancelaciones --- */
+  if (p === "/api/desk/tickets" && M === "POST") {
+    if (lvl(U, "atencion.estadisticas") < 1) return fail(res, 403, "Sin acceso a los tickets.");
+    const b = await readBody(req, 2000); const qp = b.query_params || {};
+    const from = Math.max(0, Math.min(5000, +qp.from || 0)), limit = Math.max(1, Math.min(100, +qp.limit || 100));
+    try { return send(res, 200, { payload: { data: await deskTickets(from, limit) } }); }
+    catch (e) { return fail(res, e.status || 502, e.message || "Error al consultar Zoho Desk"); }
+  }
   if (p === "/api/books/creditnotes" && M === "POST") {
     if (lvl(U, "contabilidad.devoluciones") < 1 && lvl(U, "contabilidad.cancelaciones") < 1) return fail(res, 403, "Sin acceso a las rectificativas.");
     const b = await readBody(req, 5000); const qp = b.query_params || {};
