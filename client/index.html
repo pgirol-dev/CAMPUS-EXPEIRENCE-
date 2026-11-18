@@ -1044,12 +1044,23 @@ html.no-inc-edit [data-incnewp],html.no-inc-edit .incact .ic-btns,html.no-inc-ed
 .ingbanks .n{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;box-sizing:border-box;border-radius:96px;background:var(--bad);color:var(--on-hot);font-size:10px}
 .ingbanks .n.z{background:color-mix(in srgb,currentColor 18%,transparent);color:inherit}
 .ingbanks small{font-weight:600;text-transform:none;letter-spacing:0;opacity:.75}
-.devgrid{grid-template-columns:repeat(5,minmax(0,1fr))}
-@media (max-width:900px){.devgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.devgrid,.cangrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.devgrid .mny,.cangrid .mny{grid-column:1/-1}
+.pbx.db-all::before,.pbx.cb-all::before{background:var(--ink-3)} .pbx.db-done::before{background:var(--green)}
+.pbx .perr{font-size:11px;font-weight:800;color:var(--bad)} .pbx[aria-pressed="true"] .perr{color:#ff8aa5}
+/* bloque del dinero: cifras grandes, sin adornos */
+.mny{display:flex;align-items:stretch;gap:0;border-radius:6px;background:var(--surface-2);overflow:hidden;min-width:0}
+.mny .mv{flex:1 1 0;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:3px;padding:12px 16px}
+.mny .mv+.mv{border-left:1px solid var(--line)}
+.mny .mv i{font-style:normal;font-size:12px;font-weight:700;color:var(--ink-2)}
+.mny .mv b{font-family:var(--f-serif);font-style:italic;font-weight:400;font-size:2.2rem;line-height:1;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mny .mv small{font-size:11px;font-weight:600;color:var(--ink-3)}
+.mny .mv.hot b{color:var(--pink)} .mny .mv.keep{background:var(--navy);color:var(--navy-ink)} .mny .mv.keep i,.mny .mv.keep small{color:color-mix(in srgb,var(--navy-ink) 75%,transparent)} .mny .mv.keep b{color:var(--navy-ink)}
+.mny .op{align-self:center;font-family:var(--f-serif);font-style:italic;font-size:1.9rem;color:var(--ink-3);padding:0 6px}
+@media (max-width:600px){.mny{flex-wrap:wrap}.mny .op{display:none}.mny .mv{flex-basis:45%}.mny .mv+.mv{border-left:0}.mny .mv b{font-size:1.6rem}}
+.epill{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;background:var(--bad);color:var(--on-hot);font-size:10.5px;font-weight:800;vertical-align:middle;white-space:nowrap}
 .pbx.db-pend::before{background:var(--pink)} .pbx.db-err::before{background:var(--bad)} .pbx.db-ok::before{background:var(--green)} .pbx.db-sum::before,.pbx.cb-sum::before{background:var(--navy)}
-.cangrid{grid-template-columns:repeat(6,minmax(0,1fr))}
-@media (max-width:1100px){.cangrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media (max-width:600px){.cangrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
 .pbx.cb-saldo::before{background:var(--gold)} .pbx.cb-pend::before{background:var(--pink)} .pbx.cb-can::before{background:var(--green)} .pbx.cb-err::before{background:var(--bad)}
 .cst{display:flex;flex-direction:column;gap:3px;align-items:flex-start}
 .cst small{font-size:10.5px;font-weight:700;color:var(--ink-3);white-space:nowrap}
@@ -4517,7 +4528,7 @@ $("invList").addEventListener("click",e=>{if(e.target.closest("a"))return;const 
    Hecha: Olivia crea en Books la nota de crédito desde la factura original. Si la suma coincide con el importe a devolver → correcta; si no → error en rojo.
    Las hechas se agrupan por la fecha de la rectificativa y se marcan como revisadas (como en Ingresos). */
 var CN={list:null,busy:false,err:"",at:null};
-var DEV={f:"pend",q:"",open:new Set(),docs:{}};
+var DEV={f:"all",q:"",open:new Set(),docs:{}};
 const DEV_OK_ST=["Paid","1st Payment","2nd Payment","3rd Payment","Cancelled","Refund","Partially refunded"];
 const DEV_ST_LBL={"Paid":"Pagado","1st Payment":"1er pago","2nd Payment":"2º pago","3rd Payment":"3er pago","Cancelled":"Cancelado","Refund":"Devuelto","Partially refunded":"Devolución parcial"};
 const devEdit=()=>!window.CE_ACL||!!window.CE_ACL.admin||(((window.CE_ACL.perms||{})["contabilidad.devoluciones"]||0)>=2);
@@ -4588,25 +4599,30 @@ function renderDev(){
   if(!AR.length||!INV.list){$("devSede").innerHTML="";$("devBoxes").innerHTML="";$("devCount").textContent="";$("devMsg").innerHTML="";$("devList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">'+(INV.err&&!INV.list?"Sin facturas":"Cargando devoluciones…")+"</h3>"+(INV.err&&!INV.list?"<p>"+esc(INV.err)+"</p>":"")+"</div>";return}
   const all=devRows();$("devSede").innerHTML=sedeBar("dev",all.map(devCamp));
   const rows=all.filter(x=>sedeOk("dev",devCamp(x)));
-  const cnt={pend:0,err:0,ok:0,all:rows.length};rows.forEach(x=>cnt[x.k]++);const pendSum=r2(rows.filter(x=>x.k==="pend").reduce((a,x)=>a+x.refund,0));
-  const BX=[["pend","Pendientes","Sin rectificativa"],["err","Con error","No cuadran o falta dato"],["ok","Correctas","Rectificativa = devolución"],["all","Todas",""]];
-  $("devBoxes").innerHTML=BX.map(([k,t,sub])=>'<button type="button" class="pbx db-'+k+'" data-df="'+k+'" aria-pressed="'+(DEV.f===k)+'"><span class="pt2">'+t+'</span><span class="pc2">'+cnt[k]+'</span><span class="ps2">'+sub+"</span></button>").join("")+
-    '<div class="pbx db-sum"><span class="pt2">Por devolver</span><span class="pc2">'+eur(pendSum)+'</span><span class="ps2">'+cnt.pend+" pendientes</span></div>";
+  /* vista: pendientes (sin rectificativa) y realizadas (con rectificativa); el error va dentro de cada una */
+  const vs=x=>x.k==="pend"?"pend":"done",isErr=x=>x.k==="err"||(x.k==="pend"&&x.why.length>0);
+  if(!["all","pend","done"].includes(DEV.f))DEV.f="all";
+  const cnt={all:rows.length,pend:0,done:0},cer={all:0,pend:0,done:0};rows.forEach(x=>{cnt[vs(x)]++;if(isErr(x)){cer[vs(x)]++;cer.all++}});
+  const devuelto=r2(rows.filter(x=>vs(x)==="done").reduce((a,x)=>a+x.cnSum,0));
+  const porDev=r2(rows.reduce((a,x)=>a+(x.k==="pend"?x.refund:Math.max(0,r2(x.refund-x.cnSum))),0));
+  const BX=[["all","Todas","Todas las devoluciones"],["pend","Pendientes","Sin rectificativa"],["done","Realizadas","Con rectificativa"]];
+  $("devBoxes").innerHTML=BX.map(([k,t,sub])=>'<button type="button" class="pbx db-'+k+'" data-df="'+k+'" aria-pressed="'+(DEV.f===k)+'"><span class="pt2">'+t+'</span><span class="pc2">'+cnt[k]+'</span><span class="ps2">'+sub+"</span>"+(cer[k]?'<span class="perr">'+cer[k]+(cer[k]>1?" con error":" con error")+"</span>":"")+"</button>").join("")+
+    '<div class="mny" aria-label="Dinero de las devoluciones"><div class="mv"><i>Devuelto</i><b>'+eur(devuelto)+'</b><small>Suma de las rectificativas</small></div><div class="mv hot"><i>Pendiente de devolución</i><b>'+eur(porDev)+"</b><small>Lo que falta por devolver</small></div></div>";
   $("devMsg").innerHTML=(CN.err?'<div class="devmsg">'+esc(CN.err)+"</div>":CN.busy&&!CN.list?'<div class="devmsg">Leyendo las rectificativas de Zoho Books…</div>':"")+(INV.andErr?'<div class="devmsg">'+esc(INV.andErr)+"</div>":"");
   const nrm=t=>String(t).normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();const q=nrm(DEV.q.trim());
-  let it=rows.filter(x=>DEV.f==="all"||x.k===DEV.f);
+  let it=rows.filter(x=>DEV.f==="all"||vs(x)===DEV.f);
   if(q)it=it.filter(x=>nrm((x.r?x.r.hay+" "+x.r.name:"")+" "+x.cns.map(c=>c.creditnote_number+" "+(c.customer_name||"")).join(" ")+" "+x.invs.map(i=>i.invoice_number).join(" ")).includes(q));
   $("devCount").textContent=it.length+" devoluciones";
-  if(!it.length){$("devList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">'+(DEV.f==="pend"?"Ninguna devolución pendiente":DEV.f==="err"?"Ningún error":"Nada en este estado")+"</h3><p>"+(DEV.f==="pend"?"Aparecen aquí cuando la inscripción tiene «Refund amount» en el CRM.":"")+"</p></div>";return}
+  if(!it.length){$("devList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">'+(DEV.f==="pend"?"Ninguna devolución pendiente":DEV.f==="done"?"Ninguna devolución realizada":"Ninguna devolución")+"</h3><p>"+(DEV.f==="pend"?"Aparecen aquí cuando la inscripción tiene «Refund amount» en el CRM.":"")+"</p></div>";return}
   const chip=i=>'<a class="ichip" href="'+booksUrl(i)+'" target="_blank" rel="noopener" title="Abrir la factura en Zoho Books">'+esc(i.invoice_number)+" <b>"+eur(i.total)+"</b></a>";
   const cchip=c=>'<a class="ichip cn" href="'+cnUrl(c)+'" target="_blank" rel="noopener" title="Abrir la rectificativa en Zoho Books · '+esc(c.date||"")+'">'+esc(c.creditnote_number)+" <b>"+eur(c.total)+"</b></a>";
   let h="";
   const pend=it.filter(x=>x.k==="pend");
   if(pend.length){if(DEV.f==="all")h+='<div class="devsec">Pendientes<span>'+pend.length+" · "+eur(r2(pend.reduce((a,x)=>a+x.refund,0)))+"</span></div>";
-    pend.sort((a,b)=>String(b.r.d.Modified_Time||"").localeCompare(String(a.r.d.Modified_Time||""))||a.r.name.localeCompare(b.r.name));
+    pend.sort((a,b)=>(isErr(b)-isErr(a))||String(b.r.d.Modified_Time||"").localeCompare(String(a.r.d.Modified_Time||""))||a.r.name.localeCompare(b.r.name));
     h+=pend.map(x=>{const r=x.r,d=r.d,open=DEV.open.has(String(r.id));
-      return '<div class="ingd st-pend'+(open?" open":"")+'"><div class="devh" data-devtog="'+esc(r.id)+'"><button type="button" class="chev" aria-label="Ver de qué facturas devolver" aria-expanded="'+open+'"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>'+
-        '<span class="pnm"><b class="nmrow"><span class="nmt" title="'+esc(r.name)+'">'+esc(r.name)+"</span>"+campTag(r)+'</b><span class="code">'+esc(r.code)+"</span></span>"+stagePill(d.Stage)+
+      return '<div class="ingd st-'+(isErr(x)?"rev":"pend")+(open?" open":"")+'"><div class="devh" data-devtog="'+esc(r.id)+'"><button type="button" class="chev" aria-label="Ver de qué facturas devolver" aria-expanded="'+open+'"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>'+
+        '<span class="pnm"><b class="nmrow"><span class="nmt" title="'+esc(r.name)+'">'+esc(r.name)+"</span>"+campTag(r)+(isErr(x)?'<span class="epill">Error</span>':"")+'</b><span class="code">'+esc(r.code)+"</span></span>"+stagePill(d.Stage)+
         '<span class="lbl"><small>Total</small>'+eur(x.total)+'</span><span class="lbl big"><small>A devolver</small>'+eur(x.refund)+"</span>"+
         '<span class="mot muted" title="Se rellenará cuando exista el campo «Motivo de devolución» en el CRM">Motivo: pendiente del CRM</span></div>'+
         (x.why.length?'<div class="ingrev">'+esc(x.why.join(" · "))+"</div>":"")+
@@ -4614,7 +4630,7 @@ function renderDev(){
         (x.al.rows.length?x.al.rows.map(a=>'<div class="dar'+(a.give?"":" zero")+'"><span>'+chip(a.i)+(a.i._em?' <i class="muted" title="Factura sin código de inscripción: encontrada por el email">por email</i>':"")+'</span><span class="dt">'+esc(a.i.date?fmtDL(a.i.date):"")+'</span><span class="am">'+eur(a.i.total)+'</span><span class="give">'+(a.give?eur(a.give):"—")+"</span></div>").join(""):'<div class="dnote ko">No se ha encontrado ninguna factura de esta inscripción en Zoho Books.</div>')+
         '<div class="dnote">Se devuelve empezando por la última factura. Crea en Books la rectificativa desde cada factura con el importe indicado.</div><div class="dnote"><button type="button" class="btn" data-devpid="'+esc(r.id)+'">Abrir ficha</button></div></div></div>'}).join("")}
   if(DEV.f!=="pend"){const days=devDays(it);const ed=devEdit();
-    if(days.length&&DEV.f==="all")h+='<div class="devsec">Hechas<span>por fecha de la rectificativa</span></div>';
+    if(days.length&&DEV.f==="all")h+='<div class="devsec">Realizadas<span>por fecha de la rectificativa</span></div>';
     h+=days.map(g=>{const open=!DEV.open.has("x"+g.day);
       const who=g.doc&&g.doc.ok?'<span class="ingwho">'+(g.st==="rev"?"Revisado antes por ":"Revisado por ")+"<b>"+esc(g.doc.byName||"—")+"</b><br>"+esc(g.doc.at?new Date(g.doc.at).toLocaleString("es-ES",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}):"")+"</span>":"";
       const btn=g.st==="ok"?'<button type="button" class="ingok done" data-devok="'+g.day+'"'+(ed?' title="Quitar la marca"':" disabled")+">✓ Correcto</button>":g.st==="rev"?'<button type="button" class="ingok rev" data-devok="'+g.day+'"'+(ed?"":" disabled")+">Volver a revisar</button>":(ed?'<button type="button" class="ingok" data-devok="'+g.day+'">Marcar correcto</button>':'<span class="ingwho">Sin revisar</span>');
@@ -4622,7 +4638,7 @@ function renderDev(){
         '<span class="dd2"><b>'+esc(g.day?ingDate(g.day,{weekday:"long",day:"numeric",month:"short",year:"numeric"}):"Sin fecha")+"</b><small>Fecha de la rectificativa</small></span>"+
         '<span class="np">'+g.xs.length+(g.xs.length>1?" devoluciones":" devolución")+(g.err?'<br><small style="color:var(--bad);font-weight:800">'+g.err+(g.err>1?" con error":" con error")+"</small>":"")+'</span><span class="tot">'+eur(g.total)+'</span><span></span><span class="ingact">'+who+btn+"</span></div>"+
         (g.st==="rev"?'<div class="ingrev">Ha cambiado desde que se revisó: hay rectificativas nuevas o con otro importe.</div>':"")+
-        '<div class="ingp">'+g.xs.map(x=>'<div class="devr'+(x.k==="err"?" ko":"")+'"><span class="who"'+(x.r?' data-devpid="'+esc(x.r.id)+'"':"")+"><b>"+esc(x.r?x.r.name:(x.c.customer_name||"—"))+"</b><small>"+(x.r?esc(x.r.code)+" ":"")+(x.r?campTag(x.r):"")+'</small></span><span class="am"><small>A devolver</small>'+(x.refund?eur(x.refund):"—")+'</span><span class="am"><small>Rectificado</small>'+eur(x.cnSum)+"</span>"+
+        '<div class="ingp">'+g.xs.slice().sort((a,b)=>(b.k==="err")-(a.k==="err")).map(x=>'<div class="devr'+(x.k==="err"?" ko":"")+'"><span class="who"'+(x.r?' data-devpid="'+esc(x.r.id)+'"':"")+"><b>"+esc(x.r?x.r.name:(x.c.customer_name||"—"))+"</b><small>"+(x.r?esc(x.r.code)+" ":"")+(x.r?campTag(x.r):"")+'</small></span><span class="am"><small>A devolver</small>'+(x.refund?eur(x.refund):"—")+'</span><span class="am"><small>Rectificado</small>'+eur(x.cnSum)+"</span>"+
           '<span><span class="pst '+(x.k==="ok"?"ist-ok":"ist-dif")+'">'+(x.k==="ok"?"Correcta":"Error")+'</span></span><span class="fchips chips">'+x.cns.map(cchip).join("")+"</span>"+
           (x.why.length?'<span class="why">'+esc(x.why.join(" · "))+"</span>":"")+(x.soft.length?'<span class="why soft">'+esc(x.soft.join(" · "))+"</span>":"")+"</div>").join("")+"</div></div>"}).join("")}
   $("devList").innerHTML=h;
@@ -4646,7 +4662,8 @@ $("devList").addEventListener("click",e=>{let b;if(e.target.closest("a"))return;
    - Refund amount vacío → Con saldo (falta decidir; aunque no haya pagado nada).
    - Refund amount 0 → Cancelado: todo lo pagado queda como no reembolsado.
    - Refund amount con importe → Pendiente de devolución (importe − devuelto). Cuando lo devuelto llega al importe → Cancelado; lo pagado que no se devuelve queda como no reembolsado.
-   - Cualquier incoherencia → grupo Errores, con la explicación. */
+   - Cualquier incoherencia → se marca como error dentro de su estado (Pendientes o Canceladas), con la explicación.
+   Vista: Todas · Pendientes (con saldo y pendientes de devolución) · Canceladas; dinero: pagado − reembolsado = nos quedamos. */
 var CANX={f:"all",q:""};
 const CAN_LBL={saldo:"Con saldo",pend:"Pendiente de devolución",can:"Cancelado",err:"Error de cancelación"};
 function canRows(){const X=accIndex();const eq=(a,b)=>Math.abs(a-b)<0.01;
@@ -4658,42 +4675,44 @@ function canRows(){const X=accIndex();const eq=(a,b)=>Math.abs(a-b)<0.01;
     if(has&&refund<0)why.push("El Refund amount es negativo ("+eur(refund)+").");
     if(has&&refund>paid+0.01)why.push("El Refund amount ("+eur(refund)+") es mayor que lo pagado ("+eur(paid)+").");
     if(has&&refund>0&&dev>refund+0.01)why.push("Se ha devuelto "+eur(dev)+", más que el Refund amount ("+eur(refund)+"). Sobran "+eur(r2(dev-refund))+".");
-    let k,pend=null,noReemb=null;
-    if(why.length)k="err";
-    else if(!has)k="saldo";
-    else if(refund===0){k="can";noReemb=r2(paid-dev)}
+    /* el estado sale de los datos; si algo no cuadra se marca como error dentro de ese estado */
+    let k,pend=null,noReemb=null;const err=why.length>0;
+    if(!has)k="saldo";
+    else if(refund<=0){k="can";noReemb=r2(paid-dev)}
     else if(eq(dev,refund)||dev>refund){k="can";pend=0;noReemb=r2(paid-refund)}
     else{k="pend";pend=r2(refund-dev)}
-    return {r,paid,total,refund,has,cns,invs,dev,pend,noReemb,k,why,when:String(d.Modified_Time||"").slice(0,10)}})}
+    return {r,paid,total,refund,has,cns,invs,dev,pend,noReemb,k,err,g:k==="can"?"can":"pend",why,when:String(d.Modified_Time||"").slice(0,10)}})}
 function renderCan(){
   if($("view-pagos").hidden||$("accCan").hidden)return;
   if(!INV.list&&!INV.busy&&S.mcp)loadBooks(false);if(INV.list&&!CN.list&&!CN.busy&&!CN.err&&S.mcp)loadCN(false);
   if(!(S.allRows||[]).length){$("canSede").innerHTML="";$("canBoxes").innerHTML="";$("canList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Cargando cancelaciones…</h3></div>';return}
   const all=canRows();$("canSede").innerHTML=sedeBar("can",all.map(x=>x.r.camp||"mad"));
-  const rows=all.filter(x=>sedeOk("can",x.r.camp||"mad"));const cnt={all:rows.length,saldo:0,pend:0,can:0,err:0};rows.forEach(x=>cnt[x.k]++);
-  const sPend=r2(rows.reduce((a,x)=>a+(x.k==="pend"?x.pend:0),0)),sNo=r2(rows.reduce((a,x)=>a+(x.noReemb>0?x.noReemb:0),0));
-  const BX=[["saldo","Con saldo","Falta el Refund amount"],["pend","Pendiente de devolución","Hay que devolver"],["can","Cancelado","Cerradas"],["err","Errores","Revisar"],["all","Todas","Inscripciones canceladas"]];
-  $("canBoxes").innerHTML=BX.map(([k,t,sub])=>'<button type="button" class="pbx cb-'+k+'" data-cf="'+k+'" aria-pressed="'+(CANX.f===k)+'"><span class="pt2">'+t+'</span><span class="pc2">'+cnt[k]+'</span><span class="ps2">'+sub+"</span></button>").join("")+
-    '<div class="pbx cb-sum"><span class="pt2">Por devolver</span><span class="pc2">'+eur(sPend)+'</span><span class="ps2">No reembolsado '+eur(sNo)+"</span></div>";
+  const rows=all.filter(x=>sedeOk("can",x.r.camp||"mad"));if(!["all","pend","can"].includes(CANX.f))CANX.f="all";
+  const cnt={all:rows.length,pend:0,can:0},cer={all:0,pend:0,can:0};rows.forEach(x=>{cnt[x.g]++;if(x.err){cer[x.g]++;cer.all++}});
+  const sPaid=r2(rows.reduce((a,x)=>a+x.paid,0)),sDev=r2(rows.reduce((a,x)=>a+x.dev,0)),sPend=r2(rows.reduce((a,x)=>a+(x.k==="pend"?x.pend:0),0));const keep=r2(sPaid-sDev);
+  const BX=[["all","Todas","Inscripciones canceladas"],["pend","Pendientes","Con saldo o por devolver"],["can","Canceladas","Cerradas"]];
+  $("canBoxes").innerHTML=BX.map(([k,t,sub])=>'<button type="button" class="pbx cb-'+k+'" data-cf="'+k+'" aria-pressed="'+(CANX.f===k)+'"><span class="pt2">'+t+'</span><span class="pc2">'+cnt[k]+'</span><span class="ps2">'+sub+"</span>"+(cer[k]?'<span class="perr">'+cer[k]+" con error</span>":"")+"</button>").join("")+
+    '<div class="mny" aria-label="Dinero de las cancelaciones"><div class="mv"><i>Total cancelado</i><b>'+eur(sPaid)+'</b><small>Lo pagado</small></div><span class="op" aria-hidden="true">−</span><div class="mv"><i>Reembolsado</i><b>'+eur(sDev)+'</b><small>Ya devuelto</small></div><span class="op" aria-hidden="true">=</span><div class="mv keep"><i>Nos quedamos</i><b>'+eur(keep)+"</b><small>"+(sPend>0?"Quedará en "+eur(r2(keep-sPend))+" al devolver lo pendiente ("+eur(sPend)+")":"Sin devoluciones pendientes")+"</small></div></div>";
   const nrm=t=>String(t).normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();const q=nrm(CANX.q.trim());
-  let it=rows.filter(x=>CANX.f==="all"||x.k===CANX.f);if(q)it=it.filter(x=>nrm(x.r.hay+" "+x.r.name+" "+x.invs.map(i=>i.invoice_number).join(" ")).includes(q));
-  const ord={err:0,pend:1,saldo:2,can:3};it.sort((a,b)=>ord[a.k]-ord[b.k]||b.when.localeCompare(a.when)||a.r.name.localeCompare(b.r.name));
+  let it=rows.filter(x=>CANX.f==="all"||x.g===CANX.f);if(q)it=it.filter(x=>nrm(x.r.hay+" "+x.r.name+" "+x.invs.map(i=>i.invoice_number).join(" ")).includes(q));
+  const ord={pend:0,can:1};it.sort((a,b)=>ord[a.g]-ord[b.g]||(b.err-a.err)||b.when.localeCompare(a.when)||a.r.name.localeCompare(b.r.name));
   $("canCount").textContent=it.length+" cancelaciones";
-  if(!it.length){$("canList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">'+(CANX.f==="err"?"Ningún error":"Ninguna cancelación en este estado")+"</h3></div>";return}
+  if(!it.length){$("canList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">'+(CANX.f==="pend"?"Ninguna cancelación pendiente":CANX.f==="can"?"Ninguna cancelación cerrada":"Ninguna cancelación")+"</h3></div>";return}
   const chip=i=>'<a class="ichip" href="'+booksUrl(i)+'" target="_blank" rel="noopener" title="Factura · '+esc(i.date||"")+'">'+esc(i.invoice_number)+" <b>"+eur(i.total)+"</b></a>";
   const cchip=c=>'<a class="ichip cn" href="'+cnUrl(c)+'" target="_blank" rel="noopener" title="Rectificativa · '+esc(c.date||"")+'">'+esc(c.creditnote_number)+" <b>"+eur(c.total)+"</b></a>";
   const devTxt=x=>CN.list?(x.dev?eur(x.dev):"—"):"—";
   const money=(v,cls)=>v==null||v===0?'<span class="cm none">—</span>':'<span class="cm'+(cls?" "+cls:"")+'">'+eur(v)+"</span>";
   const row=x=>{const d=x.r.d;
-    return '<div class="crow2 is-'+x.k+'" data-pid="'+esc(x.r.id)+'" tabindex="0">'+
+    return '<div class="crow2 is-'+(x.err?"err":x.k)+'" data-pid="'+esc(x.r.id)+'" tabindex="0">'+
       '<span class="cwho"><b class="nmrow"><span class="nmt" title="'+esc(x.r.name)+'">'+esc(x.r.name)+"</span>"+campTag(x.r)+'</b><span class="cmeta"><span>'+esc(x.r.code)+"</span>"+(x.when?"<span>Cancelada el "+esc(fmtD(x.when))+"</span>":"")+(d.Forma_de_pago?'<span class="cfp">'+esc(d.Forma_de_pago)+"</span>":"")+"</span></span>"+
-      '<span class="cst"><span class="cdot cs-'+x.k+'">'+CAN_LBL[x.k]+"</span>"+(x.k==="can"&&x.noReemb>0.01?'<small>No reembolsado '+eur(x.noReemb)+"</small>":"")+"</span>"+
+      '<span class="cst"><span class="cdot cs-'+x.k+'">'+CAN_LBL[x.k]+"</span>"+(x.err?'<span class="epill">'+(x.k==="can"?"Error · pendiente de solucionar":"Error")+"</span>":"")+(x.k==="can"&&x.noReemb>0.01?'<small>No reembolsado '+eur(x.noReemb)+"</small>":"")+"</span>"+
       '<span class="cv"><i>Total</i>'+money(x.total)+'</span><span class="cv"><i>Pagado</i><span class="cm">'+eur(x.paid)+'</span></span><span class="cv"><i>Por devolver</i>'+money(x.k==="pend"?x.pend:null,"hot")+'</span><span class="cv"><i>Devuelto</i>'+(CN.list?money(x.dev):'<span class="cm none">—</span>')+"</span>"+
       '<span class="cchips">'+x.invs.map(chip).concat(x.cns.map(cchip)).join("")+"</span>"+
       (x.why.length?'<span class="cwhy">'+x.why.map(esc).join("<br>")+"</span>":"")+"</div>"};
   const head='<div class="crowh" aria-hidden="true"><span>Jugador</span><span>Estado</span><span>Total</span><span>Pagado</span><span>Por devolver</span><span>Devuelto</span><span>Facturas</span></div>';
-  const errs=it.filter(x=>x.k==="err"),rest=it.filter(x=>x.k!=="err");
-  $("canList").innerHTML=(errs.length?'<div class="devsec cerr">Errores<span>'+errs.length+" · revisa el CRM o Books</span></div>"+head+errs.map(row).join("")+(rest.length?'<div class="devsec">Cancelaciones<span>'+rest.length+"</span></div>":""):"")+head+rest.map(row).join("")+
+  const sec=(g,t)=>{const xs=it.filter(x=>x.g===g);if(!xs.length)return "";const ne=xs.filter(x=>x.err).length;
+    return (CANX.f==="all"?'<div class="devsec">'+t+"<span>"+xs.length+(ne?" · "+ne+" con error":"")+"</span></div>":"")+head+xs.map(row).join("")};
+  $("canList").innerHTML=sec("pend","Pendientes")+sec("can","Canceladas")+
     (CN.err?'<p class="ingnote">'+esc(CN.err)+" Lo devuelto se mostrará al leer las rectificativas.</p>":"");
 }
 $("canBoxes").addEventListener("click",e=>{const b=e.target.closest("[data-cf]");if(!b)return;CANX.f=b.dataset.cf;renderCan()});
