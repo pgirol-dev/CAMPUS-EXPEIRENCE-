@@ -2140,10 +2140,10 @@ const SECTIONS=[["part","Participante"],["semanas","Semanas contratadas"],["equi
 const BASE_FIELDS=["Deal_Name","Player","Tipo_Modalidad","Weeks","Modified_Time","Event_Name","Refund","First_Instalment_Paid_At","Second_Instalment_Paid_At","Third_Instalment_Paid_At"];
 const DEAL_FIELDS=[...new Set(BASE_FIELDS.concat(FIELDS.flatMap(f=>(f.z?[f.z]:[]).concat(f.zz||[]))))];
 const DEAL_WHERE=" from Deals where Event_Name.Name in "+EVS+" and Stage not in "+STAGES_OUT;
-const Q_DEALS_PARTS=[];for(let i=0;i<DEAL_FIELDS.length;i+=40)Q_DEALS_PARTS.push("select "+DEAL_FIELDS.slice(i,i+40).join(", ")+DEAL_WHERE);
+const DEAL_PARTS=[];for(let i=0;i<DEAL_FIELDS.length;i+=40)DEAL_PARTS.push(DEAL_FIELDS.slice(i,i+40));
 /* canceladas y con importe de devolución (Refund amount): para Devoluciones y Cancelaciones. No son inscripciones activas */
 const X_FIELDS=["Deal_Name","Player","Event_Name","Stage","Total","Paid","Refund","Reservation_Code","Email","Email_persona","Forma_de_pago","Balance_Due1","Modified_Time","Contact_Name","Account_Name","Telefono_Tutor_legal","A_o_de_nacimiento","Gender","Codigo_descuento","First_Instalment_Amount","First_Instalment_Status","First_Instalment_Due_Date","Second_Instalment_Amount","Second_Instalment_Status","Second_Instalment_Due_Date","Third_Instalment_Amount","Third_Instalment_Status","Third_Instalment_Due_Date"];
-const Q_X="select "+X_FIELDS.join(", ")+" from Deals where Event_Name.Name in "+EVS+" and (Stage = 'Cancelled' or Refund is not null)";
+const X_WHERE=" from Deals where Event_Name.Name in "+EVS+" and (Stage = 'Cancelled' or Refund is not null)";
 const Q_WEEKS="select Parent_Id, Producto, Semana1, Fecha_inicio, Fecha_fin from Campus_y_servicios_extra where Parent_Id.Event_Name.Name in "+EVS+" and Parent_Id.Stage not in "+STAGES_OUT;
 const Q_AUTH="select Name, Email, DNI_o_Pasaporte, Application from Personas_Autorizadas where Application.Event_Name.Name in "+EVS;
 function plazo(r,p){const d=r.d,a=d[p+"_Instalment_Amount"];if(a==null)return "";if(p!=="First"&&/totalidad|pago total/i.test(String(d.Forma_de_pago||"")))return "";const st=d[p+"_Instalment_Status"],due=d[p+"_Instalment_Due_Date"];return eur(a)+(st?" · "+(st==="Paid"?"Pagado":st):"")+(due?" · vence "+fmtDL(due):"")}
@@ -2493,18 +2493,26 @@ async function fetchAll(q,opt){
   }
   return {rows:all,first};
 }
+/* Si en Zoho CRM se borra o se renombra un campo, la consulta falla entera. Aquí se quita ese campo
+   y se vuelve a pedir: el software sigue funcionando y avisa de qué campos faltan. */
+const GONE=new Set();
+const goneCol=e=>{const t=String((e&&(e.message||e.detail))||"")+" "+(()=>{try{return JSON.stringify(e)}catch(x){return ""}})();const m=/\[campo: (\w+)\]|column_name\W+(\w+)/.exec(t);return m?(m[1]||m[2]):null};
+async function fetchCols(cols,where,opt){let L=cols.filter(c=>!GONE.has(c));
+  for(let i=0;i<8;i++){try{return await fetchAll("select "+L.join(", ")+where,opt)}
+    catch(e){const c=goneCol(e);if(!c||!L.includes(c)||L.length<2)throw e;GONE.add(c);L=L.filter(x=>x!==c)}}
+  return fetchAll("select "+L.join(", ")+where,opt)}
 async function load(fresh){
   if(!S.mcp)return;
   setSync("","Leyendo Zoho…");$("btnRefresh").disabled=true;
   const opt={cache:fresh?{staleTime:60000,gcTime:600000,refresh:true}:{staleTime:60000,gcTime:600000}};
   try{
-    const parts=await Promise.all(Q_DEALS_PARTS.map(q=>fetchAll(q,opt)));
-    const [b,c,xx]=await Promise.all([fetchAll(Q_WEEKS,opt),fetchAll(Q_AUTH,opt).catch(()=>({rows:null})),fetchAll(Q_X,opt).catch(()=>({rows:null}))]);
+    const parts=await Promise.all(DEAL_PARTS.map(cols=>fetchCols(cols,DEAL_WHERE,opt)));
+    const [b,c,xx]=await Promise.all([fetchAll(Q_WEEKS,opt),fetchAll(Q_AUTH,opt).catch(()=>({rows:null})),fetchCols(X_FIELDS,X_WHERE,opt).catch(()=>({rows:null}))]);
     if(xx&&xx.rows)S.xDeals=xx.rows;
     const byId={};parts.forEach(pt=>pt.rows.forEach(x=>{byId[x.id]=Object.assign(byId[x.id]||{},x)}));
     const a={rows:Object.values(byId),first:parts[0].first};
     S.auth={};if(c.rows)c.rows.forEach(x=>{const id=x.Application&&x.Application.id;if(id)(S.auth[id]=S.auth[id]||[]).push(x)});S.authOk=!!c.rows;
-    S.deals=a.rows;S.weeks=b.rows;hideBanner();stamp(a.first);build();if(typeof loadBooks==="function"&&(!INV.list||fresh))setTimeout(()=>loadBooks(!!fresh),300);
+    S.deals=a.rows;S.weeks=b.rows;hideBanner();if(GONE.size)showBanner("warn","Estos campos ya no existen en Zoho CRM y se han dejado de leer: "+esc([...GONE].join(", "))+". El resto funciona con normalidad.");stamp(a.first);build();if(typeof loadBooks==="function"&&(!INV.list||fresh))setTimeout(()=>loadBooks(!!fresh),300);
     if(!a.rows.length){$("empty").hidden=false;$("empty").innerHTML="<h3>Aún no hay inscripciones</h3><p>No hay inscripciones con pagos en "+esc(EVENT)+".</p>"}
     startRefresh();
   }catch(e){

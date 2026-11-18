@@ -186,7 +186,7 @@ async function zohoCoql(q) {
   if (MOCK) return mockCoql(q);
   const { status, json } = await zohoFetch("/crm/v8/coql", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ select_query: q }) });
   if (status === 204) return { data: [], info: { count: 0, more_records: false } };
-  if (status >= 400) throw Object.assign(new Error((json && (json.message || json.code)) || "Error de Zoho " + status), { status: 502, zoho: true });
+  if (status >= 400) { const col = json && json.details && json.details.column_name; throw Object.assign(new Error(((json && (json.message || json.code)) || "Error de Zoho " + status) + (col ? " [campo: " + col + "]" : "")), { status: 502, zoho: true, column: col || null }); }
   return json;
 }
 function mockCoql(q) {
