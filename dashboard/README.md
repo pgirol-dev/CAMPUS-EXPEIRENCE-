@@ -12,6 +12,13 @@ Versión del dashboard que antes vivía en claude.ai, ahora dentro del software 
 - **Botón «Actualizar»:** `POST /server/dashboard_api/api/dashboard/refresh` (como mucho una lectura de Zoho por minuto). Queda en el registro de actividad.
 - Atención al público ya no forma parte del dashboard (está en el software operativo).
 
+## Mapa de calor de España (Madrid, desde el 19 nov)
+- Tarjeta en «Perfil del jugador» de la vista Madrid, entre «Edad / Nacionalidades» y «Género y posición». Solo jugadores con pago de Madrid (ONE y MAX); no sale en las sedes nacionales.
+- **Provincia de residencia:** de la dirección postal del contacto (`Contact_Name.Mailing_Country`, `Mailing_Zip`, `Mailing_State`; los campos de facturación de la inscripción están vacíos). Primero las 2 primeras cifras del código postal; si no sirve, el texto de la provincia (`provOf` en `ce_engine.js`). País distinto de España → `EXT` (internacionales); sin país ni provincia reconocible → `ND`. Sale en `dims` como `prov`; `check()` comprueba que suma el total.
+- **Diseño:** mapa por provincias (Canarias en recuadro, Ceuta y Melilla como punto) con color por tramos (0 gris, 1, 2, 3–5, 6–10, más de 10, del rosa claro al marino); a la derecha, tarjeta marino «Viven en España», ranking de las 8 primeras provincias (al pasar el ratón se resalta en el mapa) y la cifra de internacionales.
+- Contornos: `spain-provinces.geojson` (codeforgermany/click_that_hood), simplificados e incrustados en `template_natv.html` (`ES_GEO`).
+- Se probó un mapa mundial en la Portada y se descartó (decisión de Pau: se ve deformado).
+
 ## Ritmo de inscripción (desde el 16 nov)
 - **Selector Registros | Jugadores** en el ritmo de Madrid (y de cada sede nacional) y en el general de la Portada. Por defecto, **Registros**.
   - Registros = semanas contratadas de cada inscripción, en el día en que se hizo (vistas `rday`, `rweek`, `rhour` del motor; mismo criterio que «Jugadores por semana de campus»). Jugadores = inscripciones con pago (vistas `day`, `week`, `hour`).

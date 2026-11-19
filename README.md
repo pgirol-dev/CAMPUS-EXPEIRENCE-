@@ -9,7 +9,7 @@ Herramienta del equipo operativo de Campus Experience (Real Madrid, ISL Agency) 
 - **Administración:** Contabilidad (pagos, devoluciones, cancelaciones y agentes), Facturas e Ingresos.
 - **Atención al público:** Base de datos (listas para las llamadas comerciales), Limpieza (inscripciones completadas y pendientes) y Estadísticas.
 - **Marketing** y **Recursos Humanos:** próximamente.
-- **Dashboard** de registros Campus Experience 2027 (solo en Catalyst): `client/dashboard.html`, en el menú lateral. Incluye el **ritmo de inscripción general** en la Portada (Registros | Jugadores) y **Residencias** (UAM/UEM) en la vista Madrid; el permiso para editarla se da en Administración › Usuarios (Dashboard › Residencias).
+- **Dashboard** de registros Campus Experience 2027 (solo en Catalyst): `client/dashboard.html`, en el menú lateral. Incluye el **ritmo de inscripción general** en la Portada (Registros | Jugadores) y, en la vista Madrid, el **mapa de calor de España** y **Residencias** (UAM/UEM); el permiso para editarla se da en Administración › Usuarios (Dashboard › Residencias).
 - **Sistema › Usuarios y accesos:** solo en las versiones con login.
 
 ## Dónde funciona
