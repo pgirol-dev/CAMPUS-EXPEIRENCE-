@@ -44,6 +44,18 @@ function colectivo(r){
 function age(r){var y=r.A_o_de_nacimiento;if(!y)return 'N/D';return String(2027-parseInt(String(y).slice(0,4),10));}
 function top(rs,f,k){var c=new Counter();rs.forEach(function(r){c.add(f(r));});return c.most(k===undefined?10:k).map(function(e){return [e[0],r2(e[1])];});}
 
+/* provincia de residencia (dirección postal del contacto): código INE de 2 cifras, 'EXT' si vive fuera de España, 'ND' sin dato.
+   Primero el código postal (sus 2 primeras cifras son la provincia); si no sirve, el texto de la provincia. */
+var PROV_TXT=(function(){var m={},L={'01':'alava araba','02':'albacete','03':'alicante alacant','04':'almeria','05':'avila','06':'badajoz','07':'baleares illesbalears islasbaleares balears mallorca menorca ibiza eivissa','08':'barcelona','09':'burgos','10':'caceres','11':'cadiz','12':'castellon castello castellondelaplana','13':'ciudadreal','14':'cordoba','15':'acoruna coruna lacoruna','16':'cuenca','17':'girona gerona','18':'granada','19':'guadalajara','20':'gipuzkoa guipuzcoa','21':'huelva','22':'huesca','23':'jaen','24':'leon','25':'lleida lerida','26':'larioja rioja','27':'lugo','28':'madrid comunidaddemadrid','29':'malaga','30':'murcia regiondemurcia','31':'navarra nafarroa','32':'ourense orense','33':'asturias principadodeasturias','34':'palencia','35':'laspalmas grancanaria lanzarote fuerteventura','36':'pontevedra','37':'salamanca','38':'santacruzdetenerife tenerife tf lapalma lagomera elhierro','39':'cantabria','40':'segovia','41':'sevilla','42':'soria','43':'tarragona','44':'teruel','45':'toledo','46':'valencia valencia','47':'valladolid','48':'bizkaia vizcaya','49':'zamora','50':'zaragoza','51':'ceuta','52':'melilla'};
+  Object.keys(L).forEach(function(k){L[k].split(' ').forEach(function(w){m[w]=k;});});return m;})();
+function nrm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z]/g,'');}
+function provOf(r){
+  var c=nrm(r['Contact_Name.Mailing_Country']),st=PROV_TXT[nrm(r['Contact_Name.Mailing_State'])]||null,z=String(r['Contact_Name.Mailing_Zip']||'').replace(/\D/g,'');
+  var es=c==='espana'||c==='spain'||c==='es'||c==='esp'||c==='espanya'||c==='reinodeespana';
+  if(c&&!es)return 'EXT';
+  var zp=z.length===5&&+z.slice(0,2)>=1&&+z.slice(0,2)<=52?z.slice(0,2):null;
+  if(!c&&!st)return 'ND';
+  return zp||st||'ND';}
 function build(rs,ex){
   var PRE='2026-10-08';
   var LN={};ex.forEach(function(e){var p=e[0],pid=e[2],sem=e[4];var c=mcode(p);if(c&&sem){(LN[pid]=LN[pid]||[]).push([c,lastWord(sem)]);}});
@@ -86,7 +98,8 @@ function build(rs,ex){
     mod:mcnt.most(8).map(function(e){return [e[0],e[1]];}),modrev:mrev.most(8).map(function(e){return [e[0],r2(e[1])];}),
     gen_:top(rs,function(r){return {Male:'Masculino',Female:'Femenino'}[r.Gender]||'N/D';}),
     pos:top(rs,function(r){return r.Posicion_participante||'N/D';}),
-    nat:top(rs,function(r){return r.Nationality||'N/D';},10),age:top(rs,age,40),
+    nat:top(rs,function(r){return r.Nationality||'N/D';},10),
+    prov:top(rs,provOf,80),age:top(rs,age,40),
     src:top(rs,chan,40),promo:top(rs,function(r){return r.Codigo_descuento||'Sin código';},40),
     col:col,pay:top(rs,function(r){return r.Forma_de_pago||'N/D';}),
     stage:stages.map(function(s){var a=rs.filter(function(r){return r.Stage===s;});return [s,a.length,r2(a.reduce(function(t,r){return t+nz(r.Total);},0)),r2(a.reduce(function(t,r){return t+nz(r.Paid);},0))];})};
@@ -140,7 +153,7 @@ function conv(d){
   (d.rweek||[]).forEach(function(e){t.push({view:'rweek',key:e[0],start:e[1],end:e[2],count:e[3]});});
   (d.rhour||[]).forEach(function(e){t.push({view:'rhour',key:e[0],start:'',end:'',count:e[1]});});
   var rev={};d.modrev.forEach(function(e){rev[e[0]]=e[1];});var dm=[];
-  [['mod','mod'],['gen','gen_'],['pos','pos'],['age','age'],['nat','nat'],['src','src'],['promo','promo'],['col','col'],['pay','pay']].forEach(function(p){
+  [['mod','mod'],['gen','gen_'],['pos','pos'],['age','age'],['nat','nat'],['prov','prov'],['src','src'],['promo','promo'],['col','col'],['pay','pay']].forEach(function(p){
     d[p[1]].forEach(function(e){dm.push({dim:p[0],label:e[0],count:e[1],revenue:p[0]==='mod'?(e[0] in rev?rev[e[0]]:''):''});});});
   d.campwk.forEach(function(e){dm.push({dim:'campwk',label:e[0],count:e[1],revenue:''});});
   d.modrev.forEach(function(e){dm.push({dim:'rev',label:e[0],count:e[1],revenue:''});});
@@ -215,7 +228,7 @@ function check(D,minN){
   if(!(n>0))e.push('Madrid sin registros');if(minN&&n<minN)e.push('Madrid tiene menos registros ('+n+') que la última versión ('+minN+')');
   if(Math.abs(K.cobr+K.pend-K.fact)>1)e.push('cobrado + pendiente ≠ facturación');
   if(D.timeline.filter(function(r){return r.view==='week';}).reduce(function(a,r){return a+r.count;},0)!==n)e.push('el gráfico semanal no suma el total');
-  ['gen','pos','age','src','promo','col','pay','paymod'].forEach(function(x){if(dim(x)!==n)e.push('el reparto «'+x+'» no suma el total');});
+  ['gen','pos','age','src','promo','col','pay','paymod','prov'].forEach(function(x){if(dim(x)!==n)e.push('el reparto «'+x+'» no suma el total');});
   var rwk=D.timeline.filter(function(r){return r.view==='rweek';});if(rwk.length&&rwk.reduce(function(a,r){return a+r.count;},0)!==dim('campwk'))e.push('el ritmo de registros no suma las semanas contratadas');
   if(dim('mod')!==dim('campwk'))e.push('modalidades ≠ semanas contratadas');
   if(Math.abs(dim('rev')-K.fact)>1)e.push('el reparto de facturación no suma el total');
