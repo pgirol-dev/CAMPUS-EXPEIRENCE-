@@ -1213,6 +1213,7 @@ table.bdtab{min-width:1300px} table.bdtab td small{color:var(--ink-3)}
 @media (max-width:900px){.prow.lprow{grid-template-columns:1fr 1fr}}
 .prow.lprow{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) auto minmax(150px,1.1fr) minmax(130px,.9fr)}
 @media (max-width:900px){.prow.lprow{grid-template-columns:1fr 1fr}}
+.rqi.chk{box-shadow:inset 4px 0 0 var(--pink),inset 0 0 0 1.5px color-mix(in srgb,var(--pink) 45%,transparent)}
 .lpdoc{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:0} .lpdoc small{font-size:11.5px;color:var(--ink-3);line-height:1.3}
 .lpchk.d-rev{background:color-mix(in srgb,var(--navy) 12%,transparent);color:var(--navy)} .lpchk.d-none{background:var(--bad-soft);color:var(--bad)} .lpchk.d-inc{background:var(--bad);color:var(--on-hot)} .lpchk.d-comp{background:color-mix(in srgb,var(--green) 18%,transparent);color:var(--ink)}
 :root[data-theme="dark"] .lpchk.d-rev{color:var(--ink)}
@@ -2279,7 +2280,7 @@ const FIELDS=[
  {k:"xbus",l:"Servicio de bus",sec:"serv",fmt:"html",f:r=>busHtml(r)},
  {k:"nights",l:"Noches extra",sec:"serv",f:r=>r.nights?r.nights+(r.nights===1?" noche":" noches")+(r.nightDates&&r.nightDates.length?" ("+r.nightDates.map(fmtD).join(", ")+")":""):""},
  {k:"transfer",l:"Transfer",sec:"serv",pend:true},
- {k:"ircon",l:"Compartir grupo con",sec:"serv",f:r=>{const g=grupoCon(r);return g?g.txt:""}},
+ {k:"ircon",l:"Compartir grupo con",sec:"serv",fmt:"html",f:r=>grupoHtml(r)},
  {k:"rooming",l:"Petición de rooming",sec:"serv",z:"Rooming_request",req:true,hide:true},
  {k:"withp",l:"Quiere ir con (otro jugador)",sec:"serv",z:"Please_let_us_know_the_name_of_the_other_player",req:true,hide:true},
  {k:"travel",l:"Viaja solo o acompañado",sec:"serv",z:"El_la_participante_viajar_solo_a_o_acompa_ado_a",req:true,hide:true},
@@ -2369,16 +2370,31 @@ function rowsOf(p){
   if(p.data&&p.data.data===undefined&&p.status==="success")return [];
   return null;
 }
-/* servicio de bus: siempre ida y vuelta; más de un producto de bus o cantidad 2 = servicio duplicado */
-const busName=n=>String(n||"").replace(/^Campus Experience\s+/i,"").replace(/autobus/i,"Autobús").replace(/\bNo Interno\b/,"no interno");
-const busDup=r=>(r.buses||[]).length>1||(r.buses||[]).some(b=>b.q>1);
-function busHtml(r){const b=r.buses||[];if(!b.length)return "";return (busDup(r)?'<span class="flag" title="Tiene más de un servicio de bus: revisar">Bus duplicado</span> ':"")+b.map(x=>esc(x.n)+(x.q>1?" ×"+x.q:"")).join(" · ")}
-/* «Compartir grupo con: …» del Form 2: llega al principio de Observaciones */
-function grupoCon(r){const m=/Compartir grupo con:\s*([^\n]*)/i.exec(String(r.d.Observaciones||""));if(!m)return null;const v=m[1].trim().replace(/[.\s]+$/,"");
-  if(!v||(/^no\b/i.test(v)&&v.length<25))return null;
-  if(/^(tbc|tbd|por confirmar)$/i.test(v))return {name:"",txt:"Por confirmar, sin nombre"};
-  if(/^(s[ií]|sim|yes|y|ok|vale)$/i.test(v))return {name:"",txt:"Sí, sin nombre"};
-  return {name:v,txt:v}}
+/* servicios de bus / transfer: se enseña el nombre del producto tal cual; más de un autobús o cantidad 2 = servicio duplicado */
+const isBusProd=n=>/autob[uú]s|\bbus\b|transfer|traslado|shuttle/i.test(String(n||""));
+const busDup=r=>{const b=(r.buses||[]).filter(x=>/autob[uú]s|\bbus\b/i.test(x.n));return b.length>1||b.some(x=>x.q>1)};
+function busHtml(r){const b=r.buses||[];if(!b.length)return "";return (busDup(r)?'<span class="flag" title="Tiene más de un servicio de bus: revisar">Bus duplicado</span><br>':"")+b.map(x=>esc(x.n)+(x.q>1?" ×"+x.q:"")).join("<br>")}
+/* «Compartir grupo con: …» del Form 2 (al principio de Observaciones). Solo vale si el nombre coincide con un inscrito:
+   coincidencia clara = petición; parecido = se marca para confirmar a mano; «sí», «no», «TBC» y nombres sin inscrito se ignoran */
+const GRP_STOP=new Set("with his her their brother brothers sister sisters friend friends my our the and yes si sim no not compartir grupo con su sus mi hermano hermana hermanos hermanas primo prima amigo amiga amigos amigas que tambien se ha han inscrito inscrita en la las el los misma mismo modalidad semana semanas de del y e o or also too please tbc tbd ok vale".split(" "));
+function grpLev(a,b){if(Math.abs(a.length-b.length)>2)return 9;const d=[];for(let i=0;i<=a.length;i++){d[i]=[i];for(let j=1;j<=b.length;j++)d[i][j]=i?Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1)):j}return d[a.length][b.length]}
+const GRP_CACHE=new WeakMap();
+function grupoMatch(r){if(GRP_CACHE.has(r))return GRP_CACHE.get(r);const res=grupoMatch0(r);GRP_CACHE.set(r,res);return res}
+function grupoMatch0(r){const m=/Compartir grupo con:\s*([^\n]*)/i.exec(String(r.d.Observaciones||""));if(!m)return [];
+  const pool=(S.allRows||[]).filter(x=>String(x.id)!==String(r.id));const fam=r.d.Account_Name&&r.d.Account_Name.id;const out=[];
+  m[1].split(/[,;\/&+]|\s+y\s+|\s+and\s+/i).forEach(part=>{const tk=attNameKey(part).split(" ").filter(w=>w.length>1&&!GRP_STOP.has(w));if(!tk.length)return;
+    const c=[];pool.forEach(x=>{const xt=attNameKey(x.name).split(" ").filter(Boolean);if(!xt.length)return;
+      const ex=tk.filter(w=>xt.includes(w)),fz=tk.filter(w=>!xt.includes(w)&&w.length>=4&&xt.some(y=>y.length>=4&&grpLev(w,y)<=(w.length>6?2:1)));
+      const sameFam=!!fam&&x.d.Account_Name&&x.d.Account_Name.id===fam;let k=null;
+      if(ex.length>=2&&ex.length>=Math.min(tk.length,xt.length))k="ok";
+      else if(tk.length===1&&ex.length===1&&sameFam)k="ok";
+      else if(ex.length+fz.length>=2||(ex.length===1&&sameFam)||(tk.length===1&&ex.length===1&&tk[0].length>=4&&xt.indexOf(tk[0])>0))k="pos";
+      if(k)c.push({x,k,sc:(k==="ok"?10:0)+ex.length*2+fz.length})});
+    if(!c.length)return;c.sort((a,b)=>b.sc-a.sc);
+    const top=c.filter(y=>y.sc===c[0].sc);const ok=top[0].k==="ok"&&top.length===1;
+    (ok?[top[0]]:c.slice(0,3)).forEach(y=>{if(!out.some(o=>o.id===y.x.id))out.push({id:y.x.id,name:y.x.name,code:y.x.code,kind:ok?"ok":"pos",txt:part.trim()})})});
+  return out}
+function grupoHtml(r){const g=grupoMatch(r);if(!g.length)return "";return g.map(o=>o.kind==="ok"?esc(o.name)+' <span class="muted">'+esc(o.code)+"</span>":'<span class="flag" title="Escribieron «'+esc(o.txt)+'»: confirmar a mano">Confirmar</span> ¿'+esc(o.name)+'? <span class="muted">escribieron «'+esc(o.txt)+"»</span>").join("<br>")}
 function parseProduct(n){
   n=n||"";const m=/Campus Experience\s+(ONE|MAX|F)\s+(Media Jornada|Jornada Completa|Interno)/i.exec(n);
   if(!m)return null;return {prog:m[1].toUpperCase(),mod:m[2].replace(/\b\w/g,c=>c.toUpperCase()).replace("Media jornada","Media Jornada").replace("Jornada completa","Jornada Completa")};
@@ -2399,7 +2415,7 @@ function build(){
       /* productos extra (Form 3 y web): siempre por cantidad; si viene vacía cuenta 1 */
       if(pn&&!p){const q=Math.max(1,parseInt(l.Cantidad,10)||1);extras.push(pn+(q>1?" ×"+q:""));
         if(pn==="Uniforme Oficial Adidas")kitExtra+=q;else if(pn==="Uniforme Portero Oficial Adidas")gkExtra+=q;else if(pn==="Mochila Oficial Adidas")bag+=q;else if(pn==="Jersey Oficial Adidas")jersey+=q;
-        else if(/autob[uú]s/i.test(pn))buses.push({n:busName(pn),q});else if(/noche extra/i.test(pn)){nights+=q;if(l.Fecha_inicio)nightDates.push(l.Fecha_inicio)}}});
+        else if(isBusProd(pn))buses.push({n:pn,q});else if(/noche extra/i.test(pn)){nights+=q;if(l.Fecha_inicio)nightDates.push(l.Fecha_inicio)}}});
     weeks.sort((a,b)=>(a.n||99)-(b.n||99));
     const name=(d.Player&&d.Player.name)||String(d.Deal_Name||"").split(" - ").slice(1).join(" - ")||d.Deal_Name;
     return {id:d.id,d,name,code:d.Reservation_Code||"",age:ageAt(d.A_o_de_nacimiento,weeks[0]&&weeks[0].start),weeks,extras,xAmt:Math.round(xAmt*100)/100,kitExtra,gkExtra,bag,jersey,buses,nights,nightDates:nightDates.sort(),health:[],
@@ -2526,7 +2542,7 @@ function fval(x,k){const d=x.d,r=x.r;
     case "lang":return d.Idioma_comunicaciones||"Sin dato";
     case "img":return x.img==="Sí"||x.img==="No"?x.img:"Sin dato";
     case "size":return d.Talla_equipacion||"Sin dato";
-    case "xbus":return (r.buses||[]).length?(busDup(r)?"Bus duplicado":r.buses.map(b=>b.n).join(" + ")):"Sin bus";
+    case "xbus":return (r.buses||[]).length?(busDup(r)?"Bus duplicado":r.buses.map(b=>b.n).join(" + ")):"Sin servicio de bus";
     case "kb":return String(x.kb);
     case "klb":return String(x.klb);
     case "gk":return x.here?String(x.gk||0):(r.gkExtra?"En otra semana":"0");
@@ -3060,7 +3076,11 @@ function reqItems(st,k){
   const out=[];const byFam={};
   st.players.forEach(r=>{const f=r.d.Account_Name&&r.d.Account_Name.id;if(f)(byFam[f]=byFam[f]||[]).push(r)});
   Object.entries(byFam).forEach(([f,rs])=>{if(rs.length>1)out.push({id:"sib-"+f,kids:rs.map(r=>r.id),text:"Hermanos · "+txt(rs[0].d.Account_Name),src:"Automática"})});
-  st.players.forEach(r=>{const g=grupoCon(r);const t=[g?"Compartir grupo con: "+g.txt:""].concat(REQ_FIELDS.map(f=>{const v=txt(r.d[f.z]);return v?f.l+": "+v:""})).filter(Boolean).join(" · ");if(t)out.push({id:"z-"+r.id,kids:[r.id],text:t,src:"Zoho"})});
+  /* compartir grupo (Form 2): solo con nombre que coincide con un inscrito; los parecidos se marcan para confirmar */
+  const seenPair=new Set();st.players.forEach(r=>grupoMatch(r).forEach(o=>{const pair=[String(r.id),String(o.id)].sort().join("|");if(o.kind==="ok"){if(seenPair.has(pair))return;seenPair.add(pair)}
+    const here=!!st.byId[o.id];out.push({id:"g-"+r.id+"-"+o.id,kids:here?[r.id,o.id]:[r.id],chk:o.kind!=="ok",
+      text:o.kind==="ok"?"Compartir grupo"+(here?"":" con "+o.name+" (no está en esta semana o modalidad)"):"Posible coincidencia: escribieron «"+o.txt+"» → ¿"+o.name+"?"+(here?"":" (otra semana o modalidad)")+". Confirmar a mano",src:"Form 2"})}));
+  st.players.forEach(r=>{const t=REQ_FIELDS.map(f=>{const v=txt(r.d[f.z]);return v?f.l+": "+v:""}).filter(Boolean).join(" · ");if(t)out.push({id:"z-"+r.id,kids:[r.id],text:t,src:"Zoho"})});
   (reqDoc(k).items||[]).forEach(it=>{const kids=(it.kids||[]).filter(id=>st.byId[id]);if(kids.length)out.push({id:it.id,kids,text:it.text||"Ir juntos",src:"Manual"})});
   const done=reqDoc(k).done||{};out.forEach(it=>it.done=!!done[it.id]);
   return out;
@@ -3082,7 +3102,7 @@ function renderReqs(st){
   if(items.length){h+='<div class="rqlist">'+items.map(it=>{
     const teams=it.kids.map(id=>teamIdx(st,id));const together=it.kids.length>1&&teams.every(t=>t&&t===teams[0]);
     const where=it.kids.length>1?(together?'<span class="rs ok">Juntos en '+esc(tl(teams[0]))+"</span>":'<span class="rs no">Separados</span>'):'<span class="rs">'+esc(tl(teams[0]))+"</span>";
-    return '<div class="rqi'+(it.done?" done":"")+'"><div class="rk"><b>'+it.kids.map(nm).map(esc).join(" + ")+"</b><span>"+esc(it.text)+" · "+it.src+"</span></div>"+where+
+    return '<div class="rqi'+(it.done?" done":"")+(it.chk?" chk":"")+'"><div class="rk"><b>'+(it.chk?'<span class="flag">Confirmar</span> ':"")+it.kids.map(nm).map(esc).join(" + ")+"</b><span>"+esc(it.text)+" · "+it.src+"</span></div>"+where+
       '<span style="display:flex;gap:6px">'+(it.done?'<button class="btn" type="button" data-rqundo="'+esc(it.id)+'">Reabrir</button>':'<button class="btn donebtn" type="button" data-rqdone="'+esc(it.id)+'">Hecha</button>')+(it.src==="Manual"?'<button class="btn" type="button" data-rqdel="'+esc(it.id)+'">Quitar</button>':"")+"</span></div>"}).join("")+"</div>"}
   box.innerHTML=h;
   const st2={};items.forEach(it=>it.kids.forEach(id=>{const o=st2[id]=st2[id]||{n:0,d:0,t:[]};o.n++;if(it.done)o.d++;o.t.push(it.text+(it.done?" (hecha)":""))}));
