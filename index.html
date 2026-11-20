@@ -2007,7 +2007,7 @@ html.sb-min .sfh{display:block;font-family:var(--f-wide);font-style:italic;font-
     <div id="lpWeeks" class="wkgrid" aria-label="Semanas y sedes"></div>
     <div id="lpBody" class="stack" hidden>
       <div class="paygrid lpgrid" id="lpBoxes" role="group" aria-label="Estado"></div>
-      <div class="filters"><input type="search" id="lpQ" placeholder="Buscar jugador, código o tutor" aria-label="Buscar"><select id="lpPay" aria-label="Pago"><option value="">Todos los pagos</option><option value="ok">Pago al día</option><option value="late">Pago atrasado</option></select><select id="lpDoc" aria-label="Documentación"><option value="">Toda la documentación</option><option value="none">No enviada</option><option value="rev">Pendiente de revisión</option><option value="inc">Incompleta</option><option value="comp">Completa</option><option value="med">Revisar condiciones médicas</option></select><select id="lpSort" aria-label="Ordenar"><option value="name">Ordenar por nombre</option><option value="ape">Ordenar por apellido</option><option value="form">Ordenar por fecha del formulario</option></select><span class="count" id="lpCount"></span></div>
+      <div class="filters"><input type="search" id="lpQ" placeholder="Buscar jugador, código o tutor" aria-label="Buscar"><select id="lpPay" aria-label="Pago"><option value="">Todos los pagos</option><option value="ok">Pago al día</option><option value="late">Pago atrasado</option></select><select id="lpDoc" aria-label="Documentación"><option value="">Toda la documentación</option><option value="none">No enviada</option><option value="rev">Pendiente de revisión</option><option value="inc">Incompleta</option><option value="comp">Completa</option><option value="med">Revisar condiciones médicas</option></select><select id="lpSort" aria-label="Ordenar"><option value="name">Ordenar por nombre</option><option value="ape">Ordenar por apellido</option><option value="form">Ordenar por fecha de inscripción</option></select><span class="count" id="lpCount"></span></div>
       <div id="lpList" class="paylist"></div>
     </div>
   </section>
@@ -2263,12 +2263,10 @@ const FIELDS=[
  {k:"docp",l:"Documento del participante",sec:"part",z:"Documento_participante",sens:true,hide:true},
  {k:"prev",l:"Ha participado antes",sec:"part",z:"Ha_participado_anteriormente_en_un_Campus_Experie",hide:true},
  // Servicios (pendientes de formulario)
- {k:"xbusi",l:"Bus ida",sec:"serv",z:"Bus_ida"},
- {k:"xbusv",l:"Bus vuelta",sec:"serv",z:"Bus_vuelta"},
- {k:"xbus",l:"Extra bus",sec:"serv",hide:true,f:r=>[r.d.Bus_ida?"Ida: "+r.d.Bus_ida:"",r.d.Bus_vuelta?"Vuelta: "+r.d.Bus_vuelta:""].filter(Boolean).join(" · "),zz:["Bus_ida","Bus_vuelta"]},
- {k:"nights",l:"Noches extra",sec:"serv",f:r=>[r.d.Numero_Noches_Extra?r.d.Numero_Noches_Extra+(+r.d.Numero_Noches_Extra===1?" noche":" noches"):"",r.d.Noches_Extra||""].filter(Boolean).join(" · "),zz:["Noches_Extra","Numero_Noches_Extra"]},
+ {k:"xbus",l:"Servicio de bus",sec:"serv",fmt:"html",f:r=>busHtml(r)},
+ {k:"nights",l:"Noches extra",sec:"serv",f:r=>r.nights?r.nights+(r.nights===1?" noche":" noches")+(r.nightDates&&r.nightDates.length?" ("+r.nightDates.map(fmtD).join(", ")+")":""):""},
  {k:"transfer",l:"Transfer",sec:"serv",pend:true},
- {k:"ircon",l:"Solicitud de ir con alguien",sec:"serv",f:r=>[r.d.Please_let_us_know_the_name_of_the_other_player,r.d.Rooming_request].map(v=>String(v||"").trim()).filter((v,i,a)=>v&&a.indexOf(v)===i).join(" · ")},
+ {k:"ircon",l:"Compartir grupo con",sec:"serv",f:r=>{const g=grupoCon(r);return g?g.txt:""}},
  {k:"rooming",l:"Petición de rooming",sec:"serv",z:"Rooming_request",req:true,hide:true},
  {k:"withp",l:"Quiere ir con (otro jugador)",sec:"serv",z:"Please_let_us_know_the_name_of_the_other_player",req:true,hide:true},
  {k:"travel",l:"Viaja solo o acompañado",sec:"serv",z:"El_la_participante_viajar_solo_a_o_acompa_ado_a",req:true,hide:true},
@@ -2317,7 +2315,7 @@ const DEAL_PARTS=[];for(let i=0;i<DEAL_FIELDS.length;i+=40)DEAL_PARTS.push(DEAL_
 /* canceladas y con importe de devolución (Refund amount): para Devoluciones y Cancelaciones. No son inscripciones activas */
 const X_FIELDS=["Deal_Name","Player","Event_Name","Stage","Total","Paid","Refund","Reservation_Code","Email","Email_persona","Forma_de_pago","Balance_Due1","Modified_Time","Contact_Name","Account_Name","Telefono_Tutor_legal","A_o_de_nacimiento","Gender","Codigo_descuento","First_Instalment_Amount","First_Instalment_Status","First_Instalment_Due_Date","Second_Instalment_Amount","Second_Instalment_Status","Second_Instalment_Due_Date","Third_Instalment_Amount","Third_Instalment_Status","Third_Instalment_Due_Date"];
 const X_WHERE=" from Deals where Event_Name.Name in "+EVS+" and (Stage = 'Cancelled' or Refund is not null)";
-const Q_WEEKS="select Parent_Id, Producto, Semana1, Fecha_inicio, Fecha_fin, Importe from Campus_y_servicios_extra where Parent_Id.Event_Name.Name in "+EVS+" and Parent_Id.Stage not in "+STAGES_OUT;
+const Q_WEEKS="select Parent_Id, Producto, Semana1, Fecha_inicio, Fecha_fin, Importe, Cantidad from Campus_y_servicios_extra where Parent_Id.Event_Name.Name in "+EVS+" and Parent_Id.Stage not in "+STAGES_OUT;
 const Q_AUTH="select Name, Email, DNI_o_Pasaporte, Application from Personas_Autorizadas where Application.Event_Name.Name in "+EVS;
 function plazo(r,p){const d=r.d,a=d[p+"_Instalment_Amount"];if(a==null)return "";if(p!=="First"&&/totalidad|pago total/i.test(String(d.Forma_de_pago||"")))return "";const st=d[p+"_Instalment_Status"],due=d[p+"_Instalment_Due_Date"];return eur(a)+(st?" · "+(st==="Paid"?"Pagado":st):"")+(due?" · vence "+fmtDL(due):"")}
 function fieldVal(r,f){if(f.pend)return null;if(f.f)return f.f(r);const v=r.d[f.z];return v}
@@ -2332,6 +2330,7 @@ function fieldHtml(r,f){
     case "yesno":return v==="No"?'<span class="ci-no">No</span>':esc(v);
     case "bool":return v===true?"Sí":v===false?'<span class="ci-no">No</span>':esc(v);
     case "lookup":return esc(txt(v));
+    case "html":return v;
     case "stage":return v==="Paid"?'<span class="pill s-paid">Pagado</span>':v==="1st Payment"?'<span class="pill s-part">Primer pago</span>':v==="2nd Payment"?'<span class="pill s-part">Segundo pago</span>':esc(v);
     case "copy":return '<span class="cpv">'+esc(v)+'</span> <button class="copy" type="button" data-copytext="'+esc(v)+'">Copiar</button>';
     default:return esc(txt(v));
@@ -2357,6 +2356,16 @@ function rowsOf(p){
   if(p.data&&p.data.data===undefined&&p.status==="success")return [];
   return null;
 }
+/* servicio de bus: siempre ida y vuelta; más de un producto de bus o cantidad 2 = servicio duplicado */
+const busName=n=>String(n||"").replace(/^Campus Experience\s+/i,"").replace(/autobus/i,"Autobús").replace(/\bNo Interno\b/,"no interno");
+const busDup=r=>(r.buses||[]).length>1||(r.buses||[]).some(b=>b.q>1);
+function busHtml(r){const b=r.buses||[];if(!b.length)return "";return (busDup(r)?'<span class="flag" title="Tiene más de un servicio de bus: revisar">Bus duplicado</span> ':"")+b.map(x=>esc(x.n)+(x.q>1?" ×"+x.q:"")).join(" · ")}
+/* «Compartir grupo con: …» del Form 2: llega al principio de Observaciones */
+function grupoCon(r){const m=/Compartir grupo con:\s*([^\n]*)/i.exec(String(r.d.Observaciones||""));if(!m)return null;const v=m[1].trim().replace(/[.\s]+$/,"");
+  if(!v||(/^no\b/i.test(v)&&v.length<25))return null;
+  if(/^(tbc|tbd|por confirmar)$/i.test(v))return {name:"",txt:"Por confirmar, sin nombre"};
+  if(/^(s[ií]|sim|yes|y|ok|vale)$/i.test(v))return {name:"",txt:"Sí, sin nombre"};
+  return {name:v,txt:v}}
 function parseProduct(n){
   n=n||"";const m=/Campus Experience\s+(ONE|MAX|F)\s+(Media Jornada|Jornada Completa|Interno)/i.exec(n);
   if(!m)return null;return {prog:m[1].toUpperCase(),mod:m[2].replace(/\b\w/g,c=>c.toUpperCase()).replace("Media jornada","Media Jornada").replace("Jornada completa","Jornada Completa")};
@@ -2370,20 +2379,23 @@ function build(){
   (S.weeks||[]).forEach(w=>{const pid=w.Parent_Id&&w.Parent_Id.id;if(!pid)return;(wk[pid]=wk[pid]||[]).push(w)});
   S.allRows=S.deals.map(d=>{
     const lines=wk[d.id]||[];
-    const weeks=[],extras=[];let kitExtra=0,gkExtra=0,xAmt=0;
+    const weeks=[],extras=[],buses=[],nightDates=[];let kitExtra=0,gkExtra=0,bag=0,jersey=0,nights=0,xAmt=0;
     lines.forEach(l=>{const pn=l.Producto&&l.Producto.name;const p=parseProduct(pn);
       if(p&&p.prog!=="F"){const n=parseInt(String(l.Semana1||"").replace(/\D/g,""),10)||null;weeks.push({n,prog:p.prog,mod:p.mod,start:l.Fecha_inicio,end:l.Fecha_fin,lid:l.id,imp:l.Importe==null?null:+l.Importe})}
       else xAmt+=(+l.Importe||0);
-      if(pn&&!p){extras.push(pn);if(pn==="Uniforme Oficial Adidas")kitExtra++;if(pn==="Uniforme Portero Oficial Adidas")gkExtra++}});
+      /* productos extra (Form 3 y web): siempre por cantidad; si viene vacía cuenta 1 */
+      if(pn&&!p){const q=Math.max(1,parseInt(l.Cantidad,10)||1);extras.push(pn+(q>1?" ×"+q:""));
+        if(pn==="Uniforme Oficial Adidas")kitExtra+=q;else if(pn==="Uniforme Portero Oficial Adidas")gkExtra+=q;else if(pn==="Mochila Oficial Adidas")bag+=q;else if(pn==="Jersey Oficial Adidas")jersey+=q;
+        else if(/autob[uú]s/i.test(pn))buses.push({n:busName(pn),q});else if(/noche extra/i.test(pn)){nights+=q;if(l.Fecha_inicio)nightDates.push(l.Fecha_inicio)}}});
     weeks.sort((a,b)=>(a.n||99)-(b.n||99));
     const name=(d.Player&&d.Player.name)||String(d.Deal_Name||"").split(" - ").slice(1).join(" - ")||d.Deal_Name;
-    return {id:d.id,d,name,code:d.Reservation_Code||"",age:ageAt(d.A_o_de_nacimiento,weeks[0]&&weeks[0].start),weeks,extras,xAmt:Math.round(xAmt*100)/100,kitExtra,gkExtra,health:[],
+    return {id:d.id,d,name,code:d.Reservation_Code||"",age:ageAt(d.A_o_de_nacimiento,weeks[0]&&weeks[0].start),weeks,extras,xAmt:Math.round(xAmt*100)/100,kitExtra,gkExtra,bag,jersey,buses,nights,nightDates:nightDates.sort(),health:[],
       tutor:txt(d.Contact_Name),hay:(name+" "+(d.Reservation_Code||"")).toLowerCase(),camp:campOf(d.Event_Name&&d.Event_Name.name)};
   });
   S.rows=S.allRows.filter(r=>r.camp==="mad");
   const act=new Set(S.allRows.map(r=>String(r.id)));
   S.xRows=(S.xDeals||[]).filter(d=>!act.has(String(d.id))).map(d=>{const name=(d.Player&&d.Player.name)||String(d.Deal_Name||"").split(" - ").slice(1).join(" - ")||d.Deal_Name;
-    return {id:d.id,d,name,code:d.Reservation_Code||"",age:null,weeks:[],extras:[],kitExtra:0,gkExtra:0,health:[],tutor:txt(d.Contact_Name),hay:(name+" "+(d.Reservation_Code||"")).toLowerCase(),camp:campOf(d.Event_Name&&d.Event_Name.name),x:true}});
+    return {id:d.id,d,name,code:d.Reservation_Code||"",age:null,weeks:[],extras:[],kitExtra:0,gkExtra:0,bag:0,jersey:0,buses:[],nights:0,nightDates:[],health:[],tutor:txt(d.Contact_Name),hay:(name+" "+(d.Reservation_Code||"")).toLowerCase(),camp:campOf(d.Event_Name&&d.Event_Name.name),x:true}});
   render();try{renderDev();renderCan()}catch(e){}try{renderAgentes();attRenderAll()}catch(e){}
 }
 function opsOf(id){return S.ops[id]||{}}
@@ -2460,7 +2472,7 @@ const COLS=[
  {k:"weeks",t:"Weeks",n:"2"},
  {k:"year",t:"Año nacimiento",n:"3",sort:true},
  {k:"team",t:"Team",n:"4",sort:true},
- {k:"xbus",t:"Extra bus",n:"5",pend:FIELDS_PEND("xbus")},
+ {k:"xbus",t:"Servicio de bus",n:"5"},
  {k:"bus",t:"Bus",n:"6"},
  {k:"gen",t:"Género",n:"7",sort:true},
  {k:"pos",t:"Posición participante",n:"8",sort:true},
@@ -2470,10 +2482,11 @@ const COLS=[
  {k:"med",t:"Problemas médicos",n:"12",pend:FIELDS_PEND("med")},
  {k:"img",t:"Consentimiento imagen",n:"13",sort:true},
  {k:"size",t:"Talla equipación",n:"14",sort:true},
- {k:"kinc",t:"Equipaciones incluidas",n:"15",kg:true},
- {k:"kext",t:"Equipaciones extra",n:"15",kg:true},
- {k:"ktot",t:"Total equipaciones",n:"15",kg:true,sort:true},
- {k:"gk",t:"Uds camisetas portero/a",n:"16",sort:true}
+ {k:"kb",t:"Equipación blanca",n:"15",kg:true,sort:true},
+ {k:"klb",t:"Equipación light blue",n:"15",kg:true,sort:true},
+ {k:"gk",t:"Camiseta portero/a",n:"16",kg:true,sort:true},
+ {k:"bag",t:"Mochila",n:"17",kg:true,sort:true},
+ {k:"jer",t:"Jersey",n:"18",kg:true,sort:true}
 ];
 function listItems(){
   let it=weekItems(R.week);
@@ -2481,8 +2494,9 @@ function listItems(){
   else if(R.week===WALL||isCampKey(R.week))it=uniqR(it);
   const nrm=t=>String(t).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();const q=nrm(R.q.trim());if(q)it=it.filter(x=>nrm(x.r.hay).includes(q));
   return it.map(x=>{const r=x.r,w=x.w,d=r.d;const inc=KITS_INC[w.prog+"|"+w.mod]||{b:0,lb:0};const fw=firstWeek(r);const here=fw===w.n;
-    const ext=here?r.kitExtra:0,gk=here?r.gkExtra:0;
-    return {r,w,d,inc,here,fw,ext,gk,tot:inc.b+inc.lb+ext+gk,team:teamOf(r,w),year:d.A_o_de_nacimiento?d.A_o_de_nacimiento.slice(0,4):"",
+    /* el material extra (equipación, portero, mochila, jersey) cuenta en la primera semana del jugador */
+    const ext=here?r.kitExtra:0,gk=here?r.gkExtra:0,bag=here?(r.bag||0):0,jer=here?(r.jersey||0):0;
+    return {r,w,d,inc,here,fw,ext,gk,bag,jer,kb:inc.b+ext,klb:inc.lb,tot:inc.b+inc.lb+ext+gk,team:teamOf(r,w),year:d.A_o_de_nacimiento?d.A_o_de_nacimiento.slice(0,4):"",
       gen:d.Gender==="Male"?"Masculino":d.Gender==="Female"?"Femenino":(d.Gender||""),img:d.Consentimientos_imagen_fotos_voz_RM||""}});
 }
 function cellF(r,k){const f=FIELDS.find(x=>x.k===k);if(!f||f.pend)return '<span class="muted">—</span>';return fieldHtml(r,f)}
@@ -2499,13 +2513,15 @@ function fval(x,k){const d=x.d,r=x.r;
     case "lang":return d.Idioma_comunicaciones||"Sin dato";
     case "img":return x.img==="Sí"||x.img==="No"?x.img:"Sin dato";
     case "size":return d.Talla_equipacion||"Sin dato";
-    case "kinc":return [x.inc.b?x.inc.b+" blanca"+(x.inc.b>1?"s":""):"",x.inc.lb?x.inc.lb+" light blue":""].filter(Boolean).join(" + ")||"Ninguna";
-    case "kext":return x.here?String(x.ext||0):(r.kitExtra?"En otra semana":"0");
-    case "ktot":return String(x.tot);
+    case "xbus":return (r.buses||[]).length?(busDup(r)?"Bus duplicado":r.buses.map(b=>b.n).join(" + ")):"Sin bus";
+    case "kb":return String(x.kb);
+    case "klb":return String(x.klb);
     case "gk":return x.here?String(x.gk||0):(r.gkExtra?"En otra semana":"0");
+    case "bag":return x.here?String(x.bag||0):(r.bag?"En otra semana":"0");
+    case "jer":return x.here?String(x.jer||0):(r.jersey?"En otra semana":"0");
   }return null}
 function renderList(){
-  const sortv=(x,k)=>k==="name"?x.r.name.toLowerCase():k==="year"?x.year:k==="team"?x.team:k==="gen"?x.gen:k==="pos"?(x.d.Posicion_participante||""):k==="lang"?(x.d.Idioma_comunicaciones||""):k==="img"?x.img:k==="size"?SIZE_ORDER.indexOf(x.d.Talla_equipacion):k==="ktot"?x.tot:k==="gk"?x.gk:"";
+  const sortv=(x,k)=>k==="name"?x.r.name.toLowerCase():k==="year"?x.year:k==="team"?x.team:k==="gen"?x.gen:k==="pos"?(x.d.Posicion_participante||""):k==="lang"?(x.d.Idioma_comunicaciones||""):k==="img"?x.img:k==="size"?SIZE_ORDER.indexOf(x.d.Talla_equipacion):k==="kb"?x.kb:k==="klb"?x.klb:k==="gk"?x.gk:k==="bag"?x.bag:k==="jer"?x.jer:"";
   const base=listItems();
   Object.keys(R.f).forEach(k=>{if(!R.f[k])delete R.f[k]});
   const items=base.filter(x=>Object.entries(R.f).every(([k,v])=>fval(x,k)===v)).sort((a,b)=>{const A=sortv(a,R.sort.k),B=sortv(b,R.sort.k);return (A<B?-1:A>B?1:0)*R.sort.d||a.r.name.localeCompare(b.r.name)});
@@ -2527,9 +2543,11 @@ function renderList(){
   const dash='<span class="muted">—</span>';
   $("rows").innerHTML=items.map(x=>{const r=x.r,w=x.w,d=x.d;
     const wk='<div class="wkchips">'+r.weeks.map(v=>'<span class="wkc'+(v.n===w.n?" on":"")+'" title="'+esc(apLabel(v.prog,v.mod))+'">W'+v.n+"</span>").join("")+"</div>";
-    const inc=[x.inc.b?'<span class="kit"><b>'+x.inc.b+'</b><span class="kk">blanca'+(x.inc.b>1?"s":"")+"</span></span>":"",x.inc.lb?'<span class="kit"><b>'+x.inc.lb+'</b><span class="kk">light blue</span></span>':""].filter(Boolean).join(" · ")||dash;
-    const ext=x.here?(x.ext?'<span class="kit"><b>'+x.ext+'</b><span class="kk">blanca'+(x.ext>1?"s":"")+"</span></span>":"0"):(r.kitExtra?'<span class="muted" title="Las equipaciones extra se cuentan en su primera semana">en W'+x.fw+"</span>":"0");
-    const gk=x.here?(x.gk||"0"):(r.gkExtra?'<span class="muted" title="Se cuentan en su primera semana">en W'+x.fw+"</span>":"0");
+    const oth=(n,t)=>n?' <span class="muted" title="'+t+' extra: se cuentan en su primera semana">+'+n+" en W"+x.fw+"</span>":"";
+    const kb='<span class="kitot" title="Pack '+x.inc.b+' + extra '+x.ext+'">'+x.kb+"</span>"+(x.ext?' <span class="kk">('+x.inc.b+" + "+x.ext+" extra)</span>":"")+(!x.here?oth(r.kitExtra,"Equipaciones"):"");
+    const klb='<span class="kitot">'+x.klb+"</span>";
+    const xn=(v,tot,t)=>x.here?String(v||0):(tot?'<span class="muted" title="'+t+': se cuentan en su primera semana">en W'+x.fw+"</span>":"0");
+    const gk=xn(x.gk,r.gkExtra,"Camisetas de portero"),bag=xn(x.bag,r.bag,"Mochilas"),jer=xn(x.jer,r.jersey,"Jerseys");
     const img=x.img==="Sí"?"Sí":x.img==="No"?'<span class="ci-no">No</span>':'<span class="muted">Sin dato</span>';
     const cells=[
       '<td class="nm"><div class="name nmrow"><span class="nmt" title="'+esc(r.name)+'">'+esc(r.name)+'</span>'+vipTag(r)+(R.week===WALL?campTag(r):"")+'</div><div class="sub code">'+esc(r.code)+"</div></td>",
@@ -2545,10 +2563,11 @@ function renderList(){
       "<td>"+cellF(r,"diet")+"</td>","<td>"+cellF(r,"alg")+"</td>","<td>"+cellF(r,"med")+"</td>",
       "<td>"+img+"</td>",
       "<td>"+esc(d.Talla_equipacion||"—")+"</td>",
-      '<td class="kg">'+inc+"</td>",
-      '<td class="kg">'+ext+"</td>",
-      '<td class="kg"><span class="kitot">'+x.tot+"</span></td>",
-      "<td>"+gk+"</td>"];
+      '<td class="kg">'+kb+"</td>",
+      '<td class="kg">'+klb+"</td>",
+      '<td class="kg">'+gk+"</td>",
+      '<td class="kg">'+bag+"</td>",
+      '<td class="kg">'+jer+"</td>"];
     return '<tr data-id="'+esc(r.id)+'" tabindex="0"'+(R.hl===r.id?' class="hl"':"")+'>'+cells.join("")+"</tr>"}).join("");
   if(R.hl){const tr=$("rows").querySelector("tr.hl");if(tr)requestAnimationFrame(()=>tr.scrollIntoView({block:"center",behavior:"smooth"}))}
 }
@@ -2585,11 +2604,13 @@ function drawBody(r){
   const weeks='<div class="wtable">'+r.weeks.map(w=>{const inc=KITS_INC[w.prog+"|"+w.mod]||{b:0,lb:0};const team=teamOf(r,w);
     return '<div class="wrow2'+(ctx===w.n?" cur":"")+'"><span class="wn">W'+w.n+'</span><span class="chip p-'+w.prog+'">'+esc(apLabel(w.prog,w.mod))+'</span><span class="wd">'+fmtDL(w.start)+" – "+fmtDL(w.end)+'</span><span class="wm"><b>Team</b> '+(team?esc(team):"—")+'</span><span class="wm"><b>Bus</b> —</span></div>'}).join("")+"</div>";
   let incB=0,incLB=0;r.weeks.forEach(w=>{const k=KITS_INC[w.prog+"|"+w.mod]||{b:0,lb:0};incB+=k.b;incLB+=k.lb});
+  const kb2=(l,n,d)=>'<div class="kbox"><span class="kl">'+l+'</span><span class="kv2">'+n+'</span><span class="kd">'+d+"</span></div>";
   const equip='<div class="kgrid">'+
-    '<div class="kbox"><span class="kl">Incluidas</span><span class="kv2">'+(incB+incLB)+'</span><span class="kd">'+[incB?incB+" blanca"+(incB>1?"s":""):"",incLB?incLB+" light blue":""].filter(Boolean).join(" · ")+'</span></div>'+
-    '<div class="kbox"><span class="kl">Extra</span><span class="kv2">'+r.kitExtra+'</span><span class="kd">'+(r.kitExtra?r.kitExtra+" blanca"+(r.kitExtra>1?"s":""):"Ninguna")+'</span></div>'+
-    '<div class="kbox"><span class="kl">Portero</span><span class="kv2">'+r.gkExtra+'</span><span class="kd">'+(r.gkExtra?"Camiseta portero":"Ninguna")+'</span></div>'+
-    '<div class="kbox tot"><span class="kl">Total equipaciones</span><span class="kv2">'+(incB+incLB+r.kitExtra+r.gkExtra)+'</span><span class="kd">Incluidas + extra + portero</span></div></div>'+
+    kb2("Equipación blanca",incB+r.kitExtra,"Pack "+incB+" + extra "+r.kitExtra)+
+    kb2("Light blue",incLB,incLB?"Incluidas en el pack":"Ninguna")+
+    kb2("Portero",r.gkExtra,r.gkExtra?"Camiseta portero":"Ninguna")+
+    kb2("Mochila",r.bag||0,r.bag?"Mochila oficial":"Ninguna")+
+    kb2("Jersey",r.jersey||0,r.jersey?"Jersey oficial":"Ninguno")+"</div>"+
     (r.extras.length?'<p class="sub" style="margin:8px 0 0">Productos extra en Zoho: '+esc(r.extras.join(" · "))+"</p>":"");
   const al=(S.auth&&S.auth[r.id])||[];
   const auth=!S.authOk?'<p class="muted" style="margin:0">No se han podido leer los autorizados de Zoho. Pulsa Actualizar para reintentar.</p>':
@@ -2706,8 +2727,9 @@ function exportCsv(){
   const head=COLS.map(c=>c.t);
   const q=v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"';
   const lines=[head.map(q).join(";")].concat(items.map(x=>{const r=x.r,w=x.w,d=x.d;
-    return [r.name,apLabel(w.prog,w.mod),r.weeks.map(v=>"W"+v.n).join(", "),x.year,x.team,"","",x.gen,d.Posicion_participante,d.Idioma_comunicaciones,"","","",x.img||"Sin dato",d.Talla_equipacion,
-      [x.inc.b?x.inc.b+" blanca":"",x.inc.lb?x.inc.lb+" light blue":""].filter(Boolean).join(" + "),x.here?x.ext:(r.kitExtra?"en W"+x.fw:0),x.tot,x.here?x.gk:(r.gkExtra?"en W"+x.fw:0)].map(q).join(";")}));
+    const ow=(v,tot)=>x.here?v:(tot?"en W"+x.fw:0);
+    return [r.name,apLabel(w.prog,w.mod),r.weeks.map(v=>"W"+v.n).join(", "),x.year,x.team,(r.buses||[]).map(b=>b.n+(b.q>1?" x"+b.q:"")).join(" + "),"",x.gen,d.Posicion_participante,d.Idioma_comunicaciones,"","","",x.img||"Sin dato",d.Talla_equipacion,
+      x.kb,x.klb,ow(x.gk,r.gkExtra),ow(x.bag,r.bag),ow(x.jer,r.jersey)].map(q).join(";")}));
   return "﻿"+lines.join("\r\n");
 }
 
@@ -3025,7 +3047,7 @@ function reqItems(st,k){
   const out=[];const byFam={};
   st.players.forEach(r=>{const f=r.d.Account_Name&&r.d.Account_Name.id;if(f)(byFam[f]=byFam[f]||[]).push(r)});
   Object.entries(byFam).forEach(([f,rs])=>{if(rs.length>1)out.push({id:"sib-"+f,kids:rs.map(r=>r.id),text:"Hermanos · "+txt(rs[0].d.Account_Name),src:"Automática"})});
-  st.players.forEach(r=>{const t=REQ_FIELDS.map(f=>{const v=txt(r.d[f.z]);return v?f.l+": "+v:""}).filter(Boolean).join(" · ");if(t)out.push({id:"z-"+r.id,kids:[r.id],text:t,src:"Zoho"})});
+  st.players.forEach(r=>{const g=grupoCon(r);const t=[g?"Compartir grupo con: "+g.txt:""].concat(REQ_FIELDS.map(f=>{const v=txt(r.d[f.z]);return v?f.l+": "+v:""})).filter(Boolean).join(" · ");if(t)out.push({id:"z-"+r.id,kids:[r.id],text:t,src:"Zoho"})});
   (reqDoc(k).items||[]).forEach(it=>{const kids=(it.kids||[]).filter(id=>st.byId[id]);if(kids.length)out.push({id:it.id,kids,text:it.text||"Ir juntos",src:"Manual"})});
   const done=reqDoc(k).done||{};out.forEach(it=>it.done=!!done[it.id]);
   return out;
@@ -5017,6 +5039,8 @@ function lpDocs(r){const f2=lpBool(r.d.Form_2),comp=lpBool(r.d.Comprobaci_n_docu
 const lpMed=r=>!!String(r.d.Especificacion_condiciones_medicas||"").trim()||r.d.Condiciones_medicas==="Sí";
 const LP_MEDTAG='<span class="lpmed" title="Tiene rellena la especificación de condiciones médicas">Revisar condiciones médicas</span>';
 const lpDone=r=>{let pay=false;try{pay=payState(r).k!=="late"}catch(e){}const ds=lpDocs(r);return {pay,doc:ds.ok,ds,ok:pay&&ds.ok}};
+/* fecha de inscripción: «Fecha rellenado CE Form» si viene; si no, cuándo se creó la inscripción */
+const lpInsc=r=>String(r.d.Fecha_rellenado_CE_Form||r.d.Created_Time||"");
 const lpSur=n=>String(n||"").trim().split(/\s+/).slice(1).join(" ");
 /* bloque de documentación (Limpieza y ficha); con edición se marca lo que falta */
 function lpDocHtml(r,ed){const s=lpDocs(r);const [t,sub]=LP_DS[s.k];
@@ -5039,13 +5063,13 @@ function renderLimpieza(){if($("view-limpieza").hidden)return;
   const it=lpItems(w).map(x=>Object.assign({},x,{s:lpDone(x.r)}));const ok=it.filter(x=>x.s.ok),pe=it.filter(x=>!x.s.ok);
   $("lpBoxes").innerHTML=[["pend","Pendientes","Falta el pago al día o la documentación",pe.length],["ok","Completadas","Pago al día y documentación completa, sin nada pendiente",ok.length]].map(([k,t,sub,n])=>'<button type="button" class="pbx lb-'+k+'" data-lpf="'+k+'" aria-pressed="'+(ATT.lpF===k)+'"><span class="pt2">'+t+'</span><span class="pc2">'+n+'</span><span class="ps2">'+sub+"</span></button>").join("");
   const q=attNrm(ATT.lpQ.trim());let L=(ATT.lpF==="ok"?ok:pe).filter(x=>(!q||attNrm(x.r.hay+" "+x.r.tutor).includes(q))&&(!ATT.lpPay||(ATT.lpPay==="late")!==x.s.pay)&&(!ATT.lpDoc||(ATT.lpDoc==="med"?lpMed(x.r):x.s.ds.k===ATT.lpDoc)));
-  const fd=x=>String(x.r.d.Fecha_rellenado_CE_Form||"");
+  const fd=x=>lpInsc(x.r);
   L.sort(ATT.lpSort==="ape"?(a,b)=>lpSur(a.r.name).localeCompare(lpSur(b.r.name),"es")||a.r.name.localeCompare(b.r.name,"es"):ATT.lpSort==="form"?(a,b)=>(!fd(a)-!fd(b))||fd(a).localeCompare(fd(b))||a.r.name.localeCompare(b.r.name,"es"):(a,b)=>a.r.name.localeCompare(b.r.name,"es"));
   $("lpCount").textContent=L.length+" jugadores";
   $("lpList").innerHTML=L.length?L.map(x=>{const r=x.r,doc=ATT.docs["d-"+r.id]||{},log=Array.isArray(doc.log)?doc.log:[],last=log[log.length-1];const ic=incForDeal(r.id).length;
     const mk=x.w&&x.w.prog?'<span class="lpmod"><span class="mk2" style="background:var(--'+String(x.w.prog).toLowerCase()+')"></span>'+esc(x.w.prog)+" · "+esc(MODLBL[x.w.mod]||x.w.mod||"")+"</span>":"";
-    const ds=x.s.ds,fr=r.d.Fecha_rellenado_CE_Form;
-    return '<div class="prow lprow '+(x.s.ok?"is-ok":"is-pe")+'" data-attd="'+esc(r.id)+'" tabindex="0"><span class="pnm"><b class="nmrow"><span class="nmt" title="'+esc(r.name)+'">'+esc(r.name)+"</span>"+campTag(r)+'</b><span class="code">'+esc(r.code)+(r.tutor?" · "+esc(r.tutor):"")+(fr?" · Form "+esc(fmtD(attDay(fr))):"")+"</span>"+(lpMed(r)?LP_MEDTAG:"")+"</span>"+mk+
+    const ds=x.s.ds,fr=lpInsc(r);
+    return '<div class="prow lprow '+(x.s.ok?"is-ok":"is-pe")+'" data-attd="'+esc(r.id)+'" tabindex="0"><span class="pnm"><b class="nmrow"><span class="nmt" title="'+esc(r.name)+'">'+esc(r.name)+"</span>"+campTag(r)+'</b><span class="code">'+esc(r.code)+(r.tutor?" · "+esc(r.tutor):"")+(fr?" · Inscrito el "+esc(fmtD(attDay(fr))):"")+"</span>"+(lpMed(r)?LP_MEDTAG:"")+"</span>"+mk+
       '<span class="lpchk'+(x.s.pay?" ok":"")+'">'+(x.s.pay?"✓ Pago al día":"✗ Pago atrasado")+'</span><span class="lpdoc"><span class="lpchk d-'+ds.k+'">'+LP_DS[ds.k][0]+'</span><small>'+esc(ds.txt)+"</small></span>"+
       '<span class="lpct">'+(log.length+ic?"<b>"+(log.length+ic)+"</b> contacto"+(log.length+ic>1?"s":"")+(last?"<small>último "+esc(fmtD(last.day||attDay(last.at)))+(last.byName?" · "+esc(last.byName):"")+"</small>":""):'<span class="muted">Sin contactos</span>')+"</span></div>"}).join("")
     :'<div class="eqempty"><h3 class="wide" style="margin:0">'+(ATT.lpF==="ok"?"Ninguna completada todavía":"Nada pendiente")+"</h3>"+(ATT.lpF==="ok"?"<p>Pasan a completadas con el pago al día, la casilla «Comprobación documentos» marcada en el CRM y nada pendiente apuntado.</p>":"")+"</div>"}
