@@ -207,7 +207,7 @@ Catalyst publica primero en el entorno de Development. Desde la consola desplega
 - **Permisos:** los comprueba la función en cada petición.
 - **CSRF:** las peticiones que modifican algo exigen la cabecera `X-CE`, y opcionalmente que vengan del origen permitido.
 - **Zoho:** solo lectura. Si Zoho no responde, vale la última comprobación correcta de las 12 horas anteriores.
-- **Límite conocido:** los datos de inscripciones de Zoho los filtra la interfaz. Un usuario con acceso a Registros, Equipos, Horarios o Contabilidad los recibe en su navegador. Lo que se guarda en el software sí está protegido por completo por los permisos.
+- **Límite conocido:** los datos de inscripciones de Zoho los filtra la interfaz. Un usuario con acceso a Registros, Equipos, Horarios, Buses, Contabilidad, Incidencias o Atención al público los recibe en su navegador. Lo que se guarda en el software sí está protegido por completo por los permisos.
 
 ## Qué está probado
 Todo el recorrido se ha probado en local con una simulación del SDK de Catalyst y del Data Store:
