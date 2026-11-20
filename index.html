@@ -1887,6 +1887,13 @@ html.sb-min .sb-cap{visibility:hidden;height:8px;padding:0}
 .si .chev:hover{background:var(--sb-on);color:var(--sb-ink)}
 .si .chev svg{width:14px;height:14px}
 .sg.open>.si .chev{transform:rotate(90deg)}
+.ss.ssm .chev{flex:none;width:22px;height:22px;margin:-3px -4px -3px auto;border-radius:7px;display:grid;place-items:center;color:var(--sb-ink2);transition:transform .25s,background .18s}
+.ss.ssm .n+.chev{margin-left:6px}
+.ss.ssm .chev:hover{background:var(--sb-on);color:var(--sb-ink)} .ss.ssm .chev svg{width:12px;height:12px}
+.sm>.ss.ssm{width:100%}
+.sm.open>.ss.ssm .chev{transform:rotate(90deg)}
+.smsub{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s cubic-bezier(.2,.8,.2,1)} .sm.open>.smsub{grid-template-rows:1fr}
+.ssbox .sm+.sm>.ss.ssm,.ssbox .sm+.ss.ssm,.ssbox .ss+.sm>.ss.ssm{margin-top:4px}
 .si.on{background:var(--sb-on);color:var(--sb-ink)}
 .si.on::before{content:"";position:absolute;left:-12px;top:9px;bottom:9px;width:3px;border-radius:0 3px 3px 0;background:var(--sb-pink)}
 .si.on .ic{color:var(--sb-pink)}
@@ -5897,7 +5904,10 @@ function renderSide(){
   const regN=ACL&&!CAN("registros.campus")&&!CAN("registros.todos")?(S.rows||[]).length:AR.length;if(ACL&&!CAN("contabilidad.pagos"))late=0;
   const bd={registros:regN?'<span class="sbdg">'+regN+"</span>":"",pagos:late?'<span class="sbdg hot" title="'+late+' impagos">'+late+"</span>":""};
   const modH=(m,ss)=>viewOk(m)?'<button type="button" class="ss ssm" data-sv="'+m+'" data-ss="'+ss+'"><span class="ic">'+SB_IC[m]+"</span><span>"+SB_LBL[m]+"</span>"+(m==="pagos"&&late?'<span class="n" style="color:var(--sb-pink)">'+late+" impagos</span>":"")+(m==="facturas"&&invErr?'<span class="n" style="color:var(--sb-pink)">'+invErr+" errores</span>":"")+(m==="incidencias"&&myInc?'<span class="n" style="color:var(--sb-pink)">'+myInc+" te tocan</span>":"")+"</button>":"";
-  const subOfG=g=>g==="operativa"?(viewOk("horarios")?modH("horarios","0")+sbSub("horarios"):"")+(viewOk("equipos")?modH("equipos","0")+sbSub("equipos"):"")+(viewOk("buses")?modH("buses",""):"")+(viewOk("incidencias")?modH("incidencias",""):""):g==="administracion"?(viewOk("pagos")?modH("pagos","")+sbSub("pagos"):"")+(viewOk("facturas")?modH("facturas",""):"")+(viewOk("ingresos")?modH("ingresos",""):""):g==="atencion"?(viewOk("bbdd")?modH("bbdd",""):"")+(viewOk("limpieza")?modH("limpieza",""):"")+(viewOk("attstats")?modH("attstats",""):""):g==="registros"?sbSub("registros"):"";
+  /* apartado con sus semanas plegables (Horarios, Equipos, Contabilidad): se abre con la flecha o al entrar en él */
+  const modF=(m,ss)=>{if(!viewOk(m))return "";const sub=sbSub(m);if(!sub)return modH(m,ss);const k="m:"+m,open=SB_OPEN.has(k);
+    return '<div class="sm'+(open?" open":"")+'" data-m="'+k+'">'+modH(m,ss).replace(/<\/button>$/,'<span class="chev" data-sx="'+k+'" role="button" aria-label="Desplegar '+SB_LBL[m]+'" aria-expanded="'+open+'">'+CHEV+"</span></button>")+'<div class="smsub"><div class="ssin">'+sub+"</div></div></div>"};
+  const subOfG=g=>g==="operativa"?modF("horarios","0")+modF("equipos","0")+(viewOk("buses")?modH("buses",""):"")+(viewOk("incidencias")?modH("incidencias",""):""):g==="administracion"?modF("pagos","")+(viewOk("facturas")?modH("facturas",""):"")+(viewOk("ingresos")?modH("ingresos",""):""):g==="atencion"?(viewOk("bbdd")?modH("bbdd",""):"")+(viewOk("limpieza")?modH("limpieza",""):"")+(viewOk("attstats")?modH("attstats",""):""):g==="registros"?sbSub("registros"):"";
   const invErr=viewOk("facturas")?invErrCount():null;
   const myInc=viewOk("incidencias")?incMyCount():0;
   const bdg={operativa:myInc?'<span class="sbdg hot" title="Incidencias en las que estás y te toca actuar">'+myInc+"</span>":"",registros:bd.registros,administracion:(late||invErr)?'<span class="sbdg hot" title="'+(late||0)+" impagos · "+(invErr||0)+' errores de facturas">'+((late||0)+(invErr||0))+"</span>":""};
@@ -5985,9 +5995,9 @@ function sbGo(v,ss){
   show(v);
   if(v==="registros"){const w=ss==null||ss==="0"?0:isCampKey(ss)?ss:+ss;regGo(w,"")}
   if(v==="pagos"&&ss&&ss!=="0"){const b=$("accTabs").querySelector('[data-acc="'+ss+'"]');if(b)b.click()}
-  SB_OPEN=new Set([GRP_OF[v]||v]);sbSaveOpen();$("sbNav").querySelectorAll(".sg").forEach(g=>g.classList.toggle("open",SB_OPEN.has(g.dataset.g)));if(document.activeElement&&document.activeElement.closest&&document.activeElement.closest("#side"))document.activeElement.blur();
+  SB_OPEN=new Set([GRP_OF[v]||v].concat(["horarios","equipos","pagos"].includes(v)?["m:"+v]:[]));sbSaveOpen();$("sbNav").querySelectorAll(".sg").forEach(g=>g.classList.toggle("open",SB_OPEN.has(g.dataset.g)));$("sbNav").querySelectorAll(".sm").forEach(g=>g.classList.toggle("open",SB_OPEN.has(g.dataset.m)));if(document.activeElement&&document.activeElement.closest&&document.activeElement.closest("#side"))document.activeElement.blur();
   sbMark()}
-$("side").addEventListener("click",e=>{const x=e.target.closest("[data-sx]");if(x){e.preventDefault();e.stopPropagation();const v=x.dataset.sx;const g=x.closest(".sg");if(SB_OPEN.has(v))SB_OPEN.delete(v);else SB_OPEN.add(v);g.classList.toggle("open",SB_OPEN.has(v));sbSaveOpen();return}
+$("side").addEventListener("click",e=>{const x=e.target.closest("[data-sx]");if(x){e.preventDefault();e.stopPropagation();const v=x.dataset.sx;const g=x.closest(".sm")||x.closest(".sg");if(g.classList.contains("sm"))x.setAttribute("aria-expanded",String(!SB_OPEN.has(v)));if(SB_OPEN.has(v))SB_OPEN.delete(v);else SB_OPEN.add(v);g.classList.toggle("open",SB_OPEN.has(v));sbSaveOpen();return}
   const b=e.target.closest("[data-sv]");if(!b)return;e.preventDefault();sbGo(b.dataset.sv,b.dataset.ss)});
 function sbToggle(){const r=document.documentElement;if(matchMedia("(max-width:900px)").matches){r.classList.toggle("sb-open");return}r.classList.toggle("sb-min");const m=r.classList.contains("sb-min");$("sbTog").setAttribute("aria-label",m?"Desplegar menú":"Plegar menú");try{localStorage.setItem("ce-sb-min",m?"1":"0")}catch(e){}}
 $("sbTog").addEventListener("click",sbToggle);
