@@ -675,23 +675,30 @@ body{margin:0;background:var(--color-bg);color:var(--color-fg);font:14px/1.45 va
 .ce main .card.nat-fact{padding:22px 26px 24px}
 .ce main .card.nat-fact .big{font-size:clamp(3rem,6vw,4.6rem)}
 
-/* ===== Extras: desglose de equipación y transporte ===== */
-.ce .xd-grid{margin-top:14px}
-.ce .xd{display:flex;flex-direction:column;gap:10px}
-.ce .xd-h{display:flex;justify-content:space-between;align-items:flex-end;gap:14px}
-.ce .xd-h>div{min-width:0}
+/* ===== Extras: desglose de equipación y transporte (una tarjeta por producto) ===== */
+.ce .xd-grid{display:flex;flex-direction:column;gap:14px;margin-top:14px}
+.ce .xd{display:flex;flex-direction:column;gap:16px}
+.ce .xd-h{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;padding-bottom:14px;border-bottom:1px solid color-mix(in srgb,var(--tileink) 14%,transparent)}
+.ce .xd-h>div{min-width:0;display:flex;flex-direction:column;gap:4px}
 .ce .xd-h h3{margin:0}
-.ce .xd-v{font-family:"Instrument Serif","Cormorant Garamond",Georgia,serif;font-style:italic;font-weight:400;font-size:clamp(2.2rem,3.4vw,2.9rem);line-height:1;color:var(--pink);white-space:nowrap}
-.ce .xd .ar{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) 72px 84px}
-.ce .xd .ar .an b{font-family:Archivo,"Arial Black",Impact,sans-serif;font-style:italic;font-weight:900;font-size:.95rem;color:var(--tileink);text-align:left;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ce .xd .ar.hi .an b{color:var(--pink)}
-.ce .xd .ar .an span{display:none}
-.ce .xd .ar .bt i{background:var(--c,var(--pink))}
-.ce .xd .ar .av b{font-size:1.05rem}
-.ce .xd .ar .ap{font-size:1.25rem;white-space:nowrap}
-.ce .xd .ar.zero{opacity:.5}
-.ce .xd .xd-f{font:italic 400 1rem "Instrument Serif","Cormorant Garamond",Georgia,serif;color:var(--tileink);opacity:.85;margin:0}
-@media(max-width:520px){.ce .xd .ar{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) 54px 70px}}
+.ce .xd-h .n{margin:0}
+.ce .xd-tot{display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex:none}
+.ce .xd-tot b{font-family:"Instrument Serif","Cormorant Garamond",Georgia,serif;font-style:italic;font-weight:400;font-size:clamp(2.2rem,3.6vw,3rem);line-height:1;color:var(--pink);white-space:nowrap}
+.ce .xd-tot span{font:italic 400 1rem "Instrument Serif","Cormorant Garamond",Georgia,serif;color:var(--tileink);opacity:.85;white-space:nowrap}
+.ce .xd-tiles{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,13.5rem),1fr))}
+.ce .xd-t{position:relative;display:flex;flex-direction:column;gap:5px;padding:16px 18px 14px;border-radius:10px;border-top:4px solid var(--pc);background:color-mix(in srgb,var(--tileink) 6%,transparent);color:var(--tileink);min-height:168px;transition:transform .2s var(--cds-ease-out)}
+.ce .xd-t:hover{transform:translateY(-3px)}
+.ce .xd-t .xt-v{font-size:2.5rem}
+.ce .xd-t .xt-n{margin-top:2px;line-height:1.15}
+.ce .xd-t .xt-a{font-size:1.08rem}
+.ce .xd-t .xd-s{margin-top:auto;display:flex;align-items:center;gap:10px}
+.ce .xd-t .xd-s .xt-bar{flex:1;margin:0}
+.ce .xd-t .xd-s em{font:italic 400 1.05rem "Instrument Serif","Cormorant Garamond",Georgia,serif;min-width:3ch;text-align:right}
+.ce .xd-t.zero{border-top-color:color-mix(in srgb,var(--tileink) 22%,transparent)}
+.ce .xd-t.zero .xt-v{color:color-mix(in srgb,var(--tileink) 45%,transparent)}
+.ce .xd-t.zero .xt-a{opacity:.6}
+.ce .xd-f{font:italic 400 1rem "Instrument Serif","Cormorant Garamond",Georgia,serif;color:var(--tileink);opacity:.8;margin:0}
+@media(max-width:620px){.ce .xd-h{flex-direction:column;align-items:flex-start}.ce .xd-tot{align-items:flex-start}}
 /* ===== Mapa de calor de España (Madrid · provincia de residencia) ===== */
 .ce .mapbox{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:clamp(18px,3vw,36px);align-items:start}
 .ce .mapbox.mw{grid-template-columns:1fr;gap:22px}
@@ -1241,7 +1248,7 @@ body{margin:0;background:var(--color-bg);color:var(--color-fg);font:14px/1.45 va
   <section class="blk" id="extras">
     <div class="bh"><span class="num">04</span><h2>Extras</h2><p id="ex-p">Equipación (uniformes, mochila y jersey), Campus Protection Plan, noches extra y transporte</p></div>
     <div class="xt-grid" id="ex-cards" data-source="extras_cat"></div>
-    <div class="grid ex2 xd-grid">
+    <div class="xd-grid">
       <div class="card xd" id="xd-eq" data-source="extras"></div>
       <div class="card xd" id="xd-tr" data-source="extras"></div>
     </div>
@@ -1917,26 +1924,29 @@ dash.onData(()=>{
     $('.xt-v',d).textContent=amt;$('.xt-n',d).textContent=name;$('.xt-a',d).textContent=l1;$('.xt-b',d).textContent=l2;$('.xt-bar i',d).style.width=Math.max(share,0)+'%';return d;};
   const tot=xtile('#ea456c',eur(KX.extras_tot||0),'Total extras',String(KX.extras_share).replace('.',',')+'% de la facturación',f(KX.extras_ins)+' jugadores con algún extra ('+KX.extras_ins_pct+'%)',100,false);tot.classList.add('xt-all');hover(tot,'Facturación total de extras');
   let rk=0;xg.replaceChildren(tot,...xc.map(r=>{const z=r.v<=0;const d=xtile(XCOL[r.l]||col(7),z?'—':eur(r.v),(XLBL[r.l]||r.l),z?(XNOTE[r.l]||'sin ventas todavía'):f(r.u)+(r.u===1?' unidad vendida':' unidades vendidas'),z?'':r.p+'% de los jugadores lo contratan',r.v/xt*100,z);if(!z){const b=document.createElement('span');b.className='xt-rk';b.textContent=String(++rk);d.prepend(b);}hover(d,r.l+': '+eur(r.v)+' ('+pct(r.v,xt)+' de los extras)');return d;}));
-  // desglose de extras: equipación y transporte, producto a producto (los del catálogo salen aunque no tengan ventas)
-  {const XP=D.extras.data||[],PN={'Uniforme Oficial Adidas':'Uniforme oficial','Uniforme Portero Oficial Adidas':'Uniforme de portero','Mochila Oficial Adidas ONE':'Mochila ONE','Jersey Oficial Adidas':'Jersey','Campus Experience Autobus No Interno':'Autobús (no internos)','Servicio de Transfer Aeropuerto':'Transfer aeropuerto'};
+  // desglose de extras: equipación y transporte; una tarjeta por producto (los del catálogo salen aunque no tengan ventas)
+  {const XP=D.extras.data||[],PN={'Uniforme Oficial Adidas':'Uniforme oficial','Uniforme Portero Oficial Adidas':'Uniforme de portero','Mochila Oficial Adidas ONE':'Mochila ONE','Jersey Oficial Adidas':'Jersey','Campus Experience Autobus No Interno':'Autobús para no internos','Servicio de Transfer Aeropuerto':'Transfer al aeropuerto'};
    const nm=p=>PN[p]||String(p).replace(/^Campus Experience /,'');
-   const GR=[{el:'#xd-eq',cat:'Equipaciones',t:'Equipación',d:'Uniformes, mochila y jersey',cat0:['Uniforme Oficial Adidas','Uniforme Portero Oficial Adidas','Mochila Oficial Adidas ONE','Jersey Oficial Adidas'],c:['#0f2145','#ea456c','#8c2f5a','#f08ea6']},
-             {el:'#xd-tr',cat:'Buses y transfers',t:'Transporte',d:'Autobuses y transfers',cat0:['Campus Experience Autobus No Interno','Servicio de Transfer Aeropuerto'],c:['#0f2145','#ea456c','#8c2f5a','#f08ea6']}];
+   const PAL=['#ea456c','#0f2145','#8c2f5a','#f08ea6','#5e6a83'];
+   const GR=[{el:'#xd-eq',cat:'Equipaciones',t:'Equipación',d:'Uniformes, mochila y jersey que se compran aparte',cat0:['Uniforme Oficial Adidas','Uniforme Portero Oficial Adidas','Mochila Oficial Adidas ONE','Jersey Oficial Adidas'],foot:'No incluye las equipaciones que ya van con cada modalidad (están en «Equipaciones»).'},
+             {el:'#xd-tr',cat:'Buses y transfers',t:'Transporte',d:'Autobuses y transfers contratados',cat0:['Campus Experience Autobus No Interno','Servicio de Transfer Aeropuerto']}];
    GR.forEach(g=>{const box=$(g.el);if(!box)return;
      const rows=XP.filter(r=>r.category===g.cat&&r.product!=='(sin ventas todavía)').map(r=>({p:r.product,u:+r.units,a:+r.amount}));
      g.cat0.forEach(p=>{if(!rows.some(r=>r.p===p))rows.push({p,u:0,a:0});});
      rows.sort((a,b)=>b.a-a.a||b.u-a.u);
-     const ta=d3.sum(rows,r=>r.a),tu=d3.sum(rows,r=>r.u),mx=d3.max(rows,r=>r.a)||1;
-     box.closest('.card').hidden=NATX&&g.cat!=='Equipaciones'&&!ta;
-     const head=mk('<div><h3></h3><p class="n"></p></div><b class="xd-v"></b>','xd-h');
-     $('h3',head).textContent=g.t;$('.n',head).textContent=g.d+' · '+f(tu)+(tu===1?' unidad vendida':' unidades vendidas');$('.xd-v',head).textContent=ta?eur(ta):'—';
-     const list=mk('','agelist');
-     rows.forEach((r,i)=>{const d=mk('<div class="an"><b></b></div><div class="bt"><i></i></div><div class="av"><b></b><span></span></div><div class="ap"></div>','ar'+(i===0&&r.a?' hi':'')+(r.u?'':' zero'));
-       $('.an b',d).textContent=nm(r.p);const bi=$('.bt i',d);bi.style.width=(r.a/mx*100)+'%';bi.style.setProperty('--c',g.c[i%g.c.length]);
-       $('.av b',d).textContent=f(r.u);$('.av span',d).textContent=r.u===1?'unidad':'unidades';$('.ap',d).textContent=r.u?eur(r.a):'—';
-       hover(d,nm(r.p)+': '+(r.u?f(r.u)+(r.u===1?' unidad · ':' unidades · ')+eur(r.a)+' ('+pct(r.a,ta)+' de '+g.t.toLowerCase()+')':'sin ventas todavía'));list.appendChild(d);});
-     const kids=[head,list];
-     if(g.cat==='Equipaciones'){const fo=document.createElement('p');fo.className='xd-f';fo.textContent='Aparte de las equipaciones incluidas con cada modalidad (ver «Equipaciones»).';kids.push(fo);}
+     const ta=d3.sum(rows,r=>r.a),tu=d3.sum(rows,r=>r.u);
+     box.hidden=NATX&&g.cat!=='Equipaciones'&&!ta;
+     const head=mk('<div><h3></h3><p class="n"></p></div><div class="xd-tot"><b></b><span></span></div>','xd-h');
+     $('h3',head).textContent=g.t;$('.n',head).textContent=g.d;$('.xd-tot b',head).textContent=ta?eur(ta):'—';$('.xd-tot span',head).textContent=f(tu)+(tu===1?' unidad vendida':' unidades vendidas');
+     const tiles=mk('','xd-tiles');
+     rows.forEach((r,i)=>{const z=!r.u,sh=ta?Math.round(r.a/ta*100):0;
+       const d=mk('<b class="xt-v"></b><span class="xt-n"></span><em class="xt-a"></em><div class="xd-s"><div class="xt-bar"><i></i></div><em></em></div>','xd-t'+(z?' zero':''));
+       d.style.setProperty('--pc',PAL[i%PAL.length]);
+       $('.xt-v',d).textContent=z?'—':eur(r.a);$('.xt-n',d).textContent=nm(r.p);
+       $('.xt-a',d).textContent=z?'Sin ventas todavía':f(r.u)+(r.u===1?' unidad':' unidades')+' · '+eur(Math.round(r.a/r.u))+' cada una';
+       $('.xt-bar i',d).style.width=sh+'%';$('.xd-s em',d).textContent=z?'':sh+'%';
+       hover(d,nm(r.p)+': '+(z?'sin ventas todavía':eur(r.a)+', el '+sh+'% de '+g.t.toLowerCase()));tiles.appendChild(d);});
+     const kids=[head,tiles];if(g.foot){const fo=document.createElement('p');fo.className='xd-f';fo.textContent=g.foot;kids.push(fo);}
      box.replaceChildren(...kids);});}
   // equipaciones
   const KMX=D.kits_matrix.data.map(r=>({w:+r.week,t:r.talla,v:[+r.blanca,+r.light_blue,+r.portero]}));
