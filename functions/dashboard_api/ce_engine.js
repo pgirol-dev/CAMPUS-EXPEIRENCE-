@@ -56,6 +56,11 @@ function provOf(r){
   var zp=z.length===5&&+z.slice(0,2)>=1&&+z.slice(0,2)<=52?z.slice(0,2):null;
   if(!c&&!st)return 'ND';
   return zp||st||'ND';}
+/* país de residencia (dirección postal del contacto), con el nombre en español; 'ND' sin dato */
+var PAIS_AL={"espana":"España","spain":"España","espanya":"España","reinodeespana":"España","esp":"España","es":"España","andorra":"Andorra","portugal":"Portugal","francia":"Francia","france":"Francia","italia":"Italia","italy":"Italia","alemania":"Alemania","germany":"Alemania","deutschland":"Alemania","reinounido":"Reino Unido","reinounidodegranbretanaeirlandadelnorte":"Reino Unido","uk":"Reino Unido","unitedkingdom":"Reino Unido","inglaterra":"Reino Unido","england":"Reino Unido","escocia":"Reino Unido","scotland":"Reino Unido","granbretana":"Reino Unido","irlanda":"Irlanda","ireland":"Irlanda","paisesbajos":"Países Bajos","holanda":"Países Bajos","netherlands":"Países Bajos","belgica":"Bélgica","belgium":"Bélgica","luxemburgo":"Luxemburgo","suiza":"Suiza","switzerland":"Suiza","austria":"Austria","dinamarca":"Dinamarca","denmark":"Dinamarca","suecia":"Suecia","sweden":"Suecia","noruega":"Noruega","norway":"Noruega","finlandia":"Finlandia","finland":"Finlandia","islandia":"Islandia","iceland":"Islandia","polonia":"Polonia","poland":"Polonia","republicacheca":"República Checa","chequia":"República Checa","czechia":"República Checa","czechrepublic":"República Checa","eslovaquia":"Eslovaquia","slovakia":"Eslovaquia","hungria":"Hungría","hungary":"Hungría","rumania":"Rumanía","romania":"Rumanía","bulgaria":"Bulgaria","grecia":"Grecia","greece":"Grecia","chipre":"Chipre","cyprus":"Chipre","croacia":"Croacia","croatia":"Croacia","eslovenia":"Eslovenia","slovenia":"Eslovenia","serbia":"Serbia","bosniayherzegovina":"Bosnia y Herzegovina","bosnia":"Bosnia y Herzegovina","montenegro":"Montenegro","albania":"Albania","macedoniadelnorte":"Macedonia del Norte","macedonia":"Macedonia del Norte","lituania":"Lituania","lithuania":"Lituania","letonia":"Letonia","latvia":"Letonia","estonia":"Estonia","ucrania":"Ucrania","ukraine":"Ucrania","moldavia":"Moldavia","moldova":"Moldavia","bielorrusia":"Bielorrusia","belarus":"Bielorrusia","rusia":"Rusia","russia":"Rusia","federacionrusa":"Rusia","georgia":"Georgia","armenia":"Armenia","azerbaiyan":"Azerbaiyán","azerbaijan":"Azerbaiyán","turquia":"Turquía","turkey":"Turquía","turkiye":"Turquía","israel":"Israel","libano":"Líbano","lebanon":"Líbano","jordania":"Jordania","jordan":"Jordania","arabiasaudi":"Arabia Saudí","arabiasaudita":"Arabia Saudí","saudiarabia":"Arabia Saudí","emiratosarabesunidos":"Emiratos Árabes Unidos","eau":"Emiratos Árabes Unidos","uae":"Emiratos Árabes Unidos","emiratosarabes":"Emiratos Árabes Unidos","unitedarabemirates":"Emiratos Árabes Unidos","catar":"Catar","qatar":"Catar","kuwait":"Kuwait","barein":"Baréin","bahrein":"Baréin","bahrain":"Baréin","oman":"Omán","egipto":"Egipto","egypt":"Egipto","marruecos":"Marruecos","morocco":"Marruecos","argelia":"Argelia","algeria":"Argelia","tunez":"Túnez","tunisia":"Túnez","nigeria":"Nigeria","ghana":"Ghana","senegal":"Senegal","costademarfil":"Costa de Marfil","ivorycoast":"Costa de Marfil","camerun":"Camerún","cameroon":"Camerún","guineaecuatorial":"Guinea Ecuatorial","equatorialguinea":"Guinea Ecuatorial","angola":"Angola","kenia":"Kenia","kenya":"Kenia","tanzania":"Tanzania","uganda":"Uganda","etiopia":"Etiopía","ethiopia":"Etiopía","sudafrica":"Sudáfrica","southafrica":"Sudáfrica","botsuana":"Botsuana","botswana":"Botsuana","namibia":"Namibia","mozambique":"Mozambique","zimbabue":"Zimbabue","zimbabwe":"Zimbabue","estadosunidos":"Estados Unidos","estadosunidosdeamerica":"Estados Unidos","eeuu":"Estados Unidos","usa":"Estados Unidos","unitedstates":"Estados Unidos","unitedstatesofamerica":"Estados Unidos","canada":"Canadá","mexico":"México","guatemala":"Guatemala","elsalvador":"El Salvador","honduras":"Honduras","nicaragua":"Nicaragua","costarica":"Costa Rica","panama":"Panamá","cuba":"Cuba","republicadominicana":"República Dominicana","dominicanrepublic":"República Dominicana","puertorico":"Puerto Rico","colombia":"Colombia","venezuela":"Venezuela","ecuador":"Ecuador","peru":"Perú","bolivia":"Bolivia","chile":"Chile","argentina":"Argentina","uruguay":"Uruguay","paraguay":"Paraguay","brasil":"Brasil","brazil":"Brasil","china":"China","japon":"Japón","japan":"Japón","coreadelsur":"Corea del Sur","korea":"Corea del Sur","southkorea":"Corea del Sur","republicadecorea":"Corea del Sur","taiwan":"Taiwán","india":"India","pakistan":"Pakistán","tailandia":"Tailandia","thailand":"Tailandia","vietnam":"Vietnam","malasia":"Malasia","malaysia":"Malasia","singapur":"Singapur","singapore":"Singapur","indonesia":"Indonesia","filipinas":"Filipinas","philippines":"Filipinas","australia":"Australia","nuevazelanda":"Nueva Zelanda","newzealand":"Nueva Zelanda","kazajistan":"Kazajistán","kazakhstan":"Kazajistán","uzbekistan":"Uzbekistán","iran":"Irán","irak":"Irak","iraq":"Irak","siria":"Siria","syria":"Siria","mongolia":"Mongolia","nepal":"Nepal","banglades":"Bangladés","bangladesh":"Bangladés"};
+function paisOf(r){var raw=String(r['Contact_Name.Mailing_Country']||'').trim(),c=nrm(raw);
+  if(!c)return PROV_TXT[nrm(r['Contact_Name.Mailing_State'])]?'España':'ND';
+  return PAIS_AL[c]||raw.charAt(0).toUpperCase()+raw.slice(1);}
 function build(rs,ex){
   var PRE='2026-10-08';
   var LN={};ex.forEach(function(e){var p=e[0],pid=e[2],sem=e[4];var c=mcode(p);if(c&&sem){(LN[pid]=LN[pid]||[]).push([c,lastWord(sem)]);}});
@@ -78,7 +83,7 @@ function build(rs,ex){
   function hours_series(w){var c=new Counter();rs.forEach(function(r){c.add(parseInt(r.Created_Time.slice(11,13),10),w?w(r):1);});var o=[];for(var h=0;h<24;h++)o.push([h,c.get(h)]);return o;}
   var fact=0,cobr=0;rs.forEach(function(r){fact+=nz(r.Total);cobr+=nz(r.Paid);});
   var LI={},EXT=new Counter();
-  ex.forEach(function(e){var p=e[0],imp=e[1],pid=e[2],sem=e[4];var c=mcode(p);if(c&&sem)(LI[pid]=LI[pid]||[]).push([MN[c],imp||0]);else if(String(p).indexOf('Campus Experience')!==0)EXT.add(pid,imp||0);});
+  ex.forEach(function(e){var p=e[0],imp=e[1],pid=e[2],sem=e[4];var c=mcode(p);if(c&&sem)(LI[pid]=LI[pid]||[]).push([MN[c],imp||0]);else if(!c)EXT.add(pid,imp||0);/* todo lo que no es una semana de campus es un extra (también «Campus Experience Autobus…») */});
   var mcnt=new Counter(),mrev=new Counter(),extrev=0;
   rs.forEach(function(r){var T=nz(r.Total);var e=Math.min(Math.max(EXT.get(r.id),0),T);extrev+=e;var prog=T-e;var ls=LI[r.id];
     if(!ls){var m=mod(r);mcnt.add(m);mrev.add(m,prog);return;}
@@ -99,7 +104,7 @@ function build(rs,ex){
     gen_:top(rs,function(r){return {Male:'Masculino',Female:'Femenino'}[r.Gender]||'N/D';}),
     pos:top(rs,function(r){return r.Posicion_participante||'N/D';}),
     nat:top(rs,function(r){return r.Nationality||'N/D';},10),
-    prov:top(rs,provOf,80),age:top(rs,age,40),
+    prov:top(rs,provOf,80),pais:top(rs,paisOf,300),age:top(rs,age,40),
     src:top(rs,chan,40),promo:top(rs,function(r){return r.Codigo_descuento||'Sin código';},40),
     col:col,pay:top(rs,function(r){return r.Forma_de_pago||'N/D';}),
     stage:stages.map(function(s){var a=rs.filter(function(r){return r.Stage===s;});return [s,a.length,r2(a.reduce(function(t,r){return t+nz(r.Total);},0)),r2(a.reduce(function(t,r){return t+nz(r.Paid);},0))];})};
@@ -112,7 +117,7 @@ function build(rs,ex){
   var RW={};Object.keys(LN).forEach(function(pid){LN[pid].forEach(function(x){if(x[0]!=='MI'&&x[0]!=='OI')return;var w=+x[1];if(!RW[w])RW[w]={max:0,one:0};RW[w][x[0]==='MI'?'max':'one']+=1;});});
   out.resid=Object.keys(RW).map(Number).sort(function(a,b){return a-b;}).map(function(w){return {week:w,max:RW[w].max,one:RW[w].one};});
   out.campwk=Array.from(wc.m.entries()).sort(function(a,b){return lastWord(a[0])-lastWord(b[0]);});
-  function cat(p,nn){var q=(p||'').toLowerCase();if(q.indexOf('uniforme')===0)return 'Equipaciones';if(q.indexOf('protection')>=0)return 'Campus Protection Plan (CPP)';
+  function cat(p,nn){var q=(p||'').toLowerCase();if(q.indexOf('uniforme')===0||q.indexOf('mochila')===0||q.indexOf('jersey')===0)return 'Equipaciones';if(q.indexOf('protection')>=0)return 'Campus Protection Plan (CPP)';
     if(q.indexOf('noche')>=0||nn==='Sí'||nn==='Si')return 'Noches extra';if(q.indexOf('bus')>=0||q.indexOf('transfer')>=0||q.indexOf('autob')>=0)return 'Buses y transfers';return null;}
   var CATS=['Equipaciones','Campus Protection Plan (CPP)','Noches extra','Buses y transfers'];
   var agg={};CATS.forEach(function(c){agg[c]={u:0,imp:0,ins:new Set(),prod:new Counter(),prodimp:new Counter()};});
@@ -153,7 +158,7 @@ function conv(d){
   (d.rweek||[]).forEach(function(e){t.push({view:'rweek',key:e[0],start:e[1],end:e[2],count:e[3]});});
   (d.rhour||[]).forEach(function(e){t.push({view:'rhour',key:e[0],start:'',end:'',count:e[1]});});
   var rev={};d.modrev.forEach(function(e){rev[e[0]]=e[1];});var dm=[];
-  [['mod','mod'],['gen','gen_'],['pos','pos'],['age','age'],['nat','nat'],['prov','prov'],['src','src'],['promo','promo'],['col','col'],['pay','pay']].forEach(function(p){
+  [['mod','mod'],['gen','gen_'],['pos','pos'],['age','age'],['nat','nat'],['prov','prov'],['pais','pais'],['src','src'],['promo','promo'],['col','col'],['pay','pay']].forEach(function(p){
     d[p[1]].forEach(function(e){dm.push({dim:p[0],label:e[0],count:e[1],revenue:p[0]==='mod'?(e[0] in rev?rev[e[0]]:''):''});});});
   d.campwk.forEach(function(e){dm.push({dim:'campwk',label:e[0],count:e[1],revenue:''});});
   d.modrev.forEach(function(e){dm.push({dim:'rev',label:e[0],count:e[1],revenue:''});});
@@ -228,7 +233,7 @@ function check(D,minN){
   if(!(n>0))e.push('Madrid sin registros');if(minN&&n<minN)e.push('Madrid tiene menos registros ('+n+') que la última versión ('+minN+')');
   if(Math.abs(K.cobr+K.pend-K.fact)>1)e.push('cobrado + pendiente ≠ facturación');
   if(D.timeline.filter(function(r){return r.view==='week';}).reduce(function(a,r){return a+r.count;},0)!==n)e.push('el gráfico semanal no suma el total');
-  ['gen','pos','age','src','promo','col','pay','paymod','prov'].forEach(function(x){if(dim(x)!==n)e.push('el reparto «'+x+'» no suma el total');});
+  ['gen','pos','age','src','promo','col','pay','paymod','prov','pais'].forEach(function(x){if(dim(x)!==n)e.push('el reparto «'+x+'» no suma el total');});
   var rwk=D.timeline.filter(function(r){return r.view==='rweek';});if(rwk.length&&rwk.reduce(function(a,r){return a+r.count;},0)!==dim('campwk'))e.push('el ritmo de registros no suma las semanas contratadas');
   if(dim('mod')!==dim('campwk'))e.push('modalidades ≠ semanas contratadas');
   if(Math.abs(dim('rev')-K.fact)>1)e.push('el reparto de facturación no suma el total');
