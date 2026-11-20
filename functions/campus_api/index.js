@@ -95,13 +95,15 @@ const zohoConfigured = () => !!MOCK || !!(CFG.zoho.clientId && CFG.zoho.clientSe
    1) una sola petición a la vez dentro de la instancia; 2) se guarda en el Data Store (CEMeta) y lo reutilizan las demás;
    3) si Zoho lo rechaza, se espera 2 minutos antes de volver a pedirlo. */
 const ZT = { inflight: null, failAt: 0, failMsg: "" };
+/* huella del refresh token: si se cambia en las variables de entorno, el token guardado del anterior deja de valer */
+const zohoRt = () => crypto.createHash("sha256").update(String(CFG.zoho.refreshToken || "")).digest("hex").slice(0, 12);
 async function zohoToken() {
-  if (Z.token && Date.now() < Z.exp - 60000) return Z.token;
+  if (Z.token && Z.rt === zohoRt() && Date.now() < Z.exp - 60000) return Z.token;
   if (ZT.inflight) return ZT.inflight;
   ZT.inflight = (async () => {
     const st = Z.st;
     if (st) { try { const r = await st.meta.get("zoho_at"); const o = r && r.v ? JSON.parse(r.v) : null;
-      if (o && o.t && Date.now() < o.exp - 60000) { Z.token = o.t; Z.exp = o.exp; return Z.token; }
+      if (o && o.t && o.rt === zohoRt() && Date.now() < o.exp - 60000) { Z.token = o.t; Z.exp = o.exp; Z.rt = o.rt; return Z.token; }
       if (o && o.failAt && Date.now() - o.failAt < 120000) throw Object.assign(new Error("Zoho no da acceso ahora mismo (" + (o.msg || "límite de peticiones") + "). Vuelve a intentarlo en un par de minutos."), { status: 503 });
     } catch (e) { if (e.status) throw e; } }
     if (Date.now() - ZT.failAt < 120000) throw Object.assign(new Error("Zoho no da acceso ahora mismo (" + ZT.failMsg + "). Vuelve a intentarlo en un par de minutos."), { status: 503 });
@@ -114,8 +116,8 @@ async function zohoToken() {
       if (st) { try { await st.meta.set("zoho_at", JSON.stringify({ failAt: ZT.failAt, msg: ZT.failMsg })); } catch (e) {} }
       throw Object.assign(new Error("No se pudo obtener el token de Zoho: " + ZT.failMsg), { status: 502 });
     }
-    Z.token = j.access_token; Z.exp = Date.now() + (j.expires_in || 3600) * 1000;
-    if (st) { try { await st.meta.set("zoho_at", JSON.stringify({ t: Z.token, exp: Z.exp })); } catch (e) {} }
+    Z.token = j.access_token; Z.exp = Date.now() + (j.expires_in || 3600) * 1000; Z.rt = zohoRt();
+    if (st) { try { await st.meta.set("zoho_at", JSON.stringify({ t: Z.token, exp: Z.exp, rt: Z.rt })); } catch (e) {} }
     return Z.token;
   })();
   try { return await ZT.inflight; } finally { ZT.inflight = null; }
