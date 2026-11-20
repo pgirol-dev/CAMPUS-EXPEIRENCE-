@@ -83,14 +83,19 @@ async function zohoCoql(q) {
 const dashBuild = makeDashboard(q => zohoCoql(q));
 const DASH = { data: null, t: 0, busy: null };
 const dashN = d => { const r = d && (d.kpis || []).find(x => x.metric === "n"); return r ? +r.value : 0; };
+/* versión del formato de datos: súbela cuando el motor añada campos nuevos (p. ej. «pais»). Si los datos guardados
+   son de otra versión, se vuelven a leer de Zoho al momento en lugar de esperar a que caduquen. */
+const DATA_V = "2026-11-20";
 async function dashGet(st, force) {
   /* otra instancia de la función puede haber actualizado: se mira la marca guardada */
   let saved = 0; try { const r = await st.meta.get("dash_ts"); saved = r ? +r.v || 0 : 0; } catch (e) {}
   if (saved > DASH.t) { try { const d = (await st.docs.list("dash")).data; if (d) { DASH.data = d; DASH.t = saved; } } catch (e) {} }
   const age = Date.now() - DASH.t;
-  if (DASH.data && age < (force ? 60000 : CFG.ttl)) return { data: DASH.data };
+  const sameV = DASH.data && DASH.data.v === DATA_V;
+  if (DASH.data && sameV && age < (force ? 60000 : CFG.ttl)) return { data: DASH.data };
   if (!DASH.busy) DASH.busy = (async () => {
     const D = await dashBuild(dashN(DASH.data));
+    D.v = DATA_V;
     const now = Date.now();
     await st.docs.put("dash", "data", D, null); await st.meta.set("dash_ts", String(now));
     DASH.data = D; DASH.t = now; return D;
