@@ -2183,6 +2183,7 @@ html.sb-min .sfh{display:block;font-family:var(--f-wide);font-style:italic;font-
   </section>
   <section id="view-buses" class="stack" hidden>
     <div class="eqhead"><div class="eqtitlebox"><h2 class="eqtitle">Buses</h2><nav class="crumbs" id="busCrumbs" aria-label="Ruta"></nav></div></div>
+    <div class="incscope sedebar" id="busFilt" role="group" aria-label="Servicio"></div>
     <div id="busWeeks" class="wkgrid" aria-label="Semanas"></div>
     <div id="busBody" class="stack" hidden>
       <div class="filters"><input type="search" id="busQ" placeholder="Buscar jugador o código" aria-label="Buscar"><span class="count" id="busCount"></span></div>
@@ -2435,7 +2436,7 @@ function build(){
     const lines=wk[d.id]||[];
     const weeks=[],extras=[],buses=[],nightDates=[];let kitExtra=0,gkExtra=0,bag=0,jersey=0,nights=0,xAmt=0;
     lines.forEach(l=>{const pn=l.Producto&&l.Producto.name;const p=parseProduct(pn);
-      if(p&&p.prog!=="F"){const n=parseInt(String(l.Semana1||"").replace(/\D/g,""),10)||null;weeks.push({n,prog:p.prog,mod:p.mod,start:l.Fecha_inicio,end:l.Fecha_fin,lid:l.id,imp:l.Importe==null?null:+l.Importe,bus:String(l.Servicio_de_autob_s||"").trim(),tr:/^s[ií]/i.test(String(l.Servicio_transfer_aeropuerto||""))})}
+      if(p&&p.prog!=="F"){const n=parseInt(String(l.Semana1||"").replace(/\D/g,""),10)||null;weeks.push({n,prog:p.prog,mod:p.mod,start:l.Fecha_inicio,end:l.Fecha_fin,lid:l.id,imp:l.Importe==null?null:+l.Importe,bus:String(l.Servicio_de_autob_s||"").trim().replace(/^-None-$/,""),tr:/^s[ií]/i.test(String(l.Servicio_transfer_aeropuerto||""))})}
       else xAmt+=(+l.Importe||0);
       /* productos extra (Form 3 y web): siempre por cantidad; si viene vacía cuenta 1 */
       if(pn&&!p){const q=Math.max(1,parseInt(l.Cantidad,10)||1);extras.push(pn+(q>1?" ×"+q:""));
@@ -5133,7 +5134,9 @@ function renderLimpieza(){if($("view-limpieza").hidden)return;
       '<span class="lpct">'+(log.length+ic?"<b>"+(log.length+ic)+"</b> contacto"+(log.length+ic>1?"s":"")+(last?"<small>último "+esc(fmtD(last.day||attDay(last.at)))+(last.byName?" · "+esc(last.byName):"")+"</small>":""):'<span class="muted">Sin contactos</span>')+"</span></div>"}).join("")
     :'<div class="eqempty"><h3 class="wide" style="margin:0">'+(ATT.lpF==="ok"?"Ninguna completada todavía":"Nada pendiente")+"</h3>"+(ATT.lpF==="ok"?"<p>Pasan a completadas con el pago al día, la casilla «Comprobación documentos» marcada en el CRM y nada pendiente apuntado.</p>":"")+"</div>"}
 /* ---------- OPERATIVA › BUSES: servicio de bus de cada semana (Madrid) ---------- */
-var BUS={w:0,q:""};
+var BUS={w:0,q:"",f:""};
+/* servicios del desplegable «Servicio de autobús» del CRM; si aparece uno nuevo en una inscripción, se añade solo */
+const BUS_SVCS=["Zona Santiago Bernabéu","Ciudad Real Madrid","Residencia"],BUS_TR="Transfer aeropuerto";
 const madRows=()=>(S.allRows||[]).filter(r=>!r.camp||r.camp==="mad");
 function busPeople(){return madRows().filter(r=>(r.weeks||[]).some(w=>w.bus||w.tr))}
 function busWeekItems(n){const out=[];madRows().forEach(r=>(r.weeks||[]).forEach(w=>{if(w.n===n&&(w.bus||w.tr))out.push({r,w})}));return out}
@@ -5141,17 +5144,21 @@ const BUS_COL=["var(--pink)","#7f8fb3","#2fcf9f","#c3a572","#b98ad6"];
 function renderBuses2(){if($("view-buses").hidden)return;const has=(S.allRows||[]).length>0;const n=BUS.w;
   $("busCrumbs").innerHTML=n?'<button type="button" data-busgo="0">Buses</button><span class="sep">›</span><span class="cur">Week '+n+"</span>":'<span class="cur">Servicio de bus por semana · Madrid</span>';
   $("busWeeks").hidden=!!n;$("busBody").hidden=!n;
-  const svcs=[...new Set(madRows().flatMap(r=>r.weeks.map(w=>w.bus).filter(Boolean)))].sort();const col=sv=>BUS_COL[svcs.indexOf(sv)%BUS_COL.length];
+  const svcs=[...new Set(BUS_SVCS.concat(madRows().flatMap(r=>r.weeks.map(w=>w.bus).filter(Boolean))))];const col=sv=>sv===BUS_TR?"#93a0ba":BUS_COL[svcs.indexOf(sv)%BUS_COL.length];
+  /* filtro por servicio (sirve en las semanas y dentro de cada semana) */
+  const okF=w=>!BUS.f||(BUS.f===BUS_TR?w.tr:w.bus===BUS.f);
+  const cntAll=k=>{let c=0;madRows().forEach(r=>r.weeks.forEach(w=>{if(k===BUS_TR?w.tr:w.bus===k)c++}));return c};
+  $("busFilt").innerHTML='<button type="button" class="incpill" data-busf="" aria-pressed="'+(!BUS.f)+'">Todos los servicios</button>'+svcs.concat([BUS_TR]).map(k=>{const c=cntAll(k);return '<button type="button" class="incpill'+(c?"":" zero")+'" data-busf="'+esc(k)+'" aria-pressed="'+(BUS.f===k)+'"><i class="bsw" style="background:'+col(k)+'"></i>'+esc(k)+'<span class="n">'+c+"</span></button>"}).join("");
   if(!n){const ppl=busPeople();const bad=ppl.filter(r=>!busCheck(r).ok).length;const allIt=[];for(let k=1;k<=9;k++)allIt.push(...busWeekItems(k));
     const by={};allIt.forEach(x=>{if(x.w.bus)by[x.w.bus]=(by[x.w.bus]||0)+1});const trn=allIt.filter(x=>x.w.tr).length;
     let h='<button type="button" class="wkbox wkall" tabindex="-1" style="cursor:default"><span class="wtop"><span class="wt">Buses</span><span class="wd">Madrid · temporada 2027</span></span><span class="wstats"><span class="wsn"><b class="wn">'+(has?ppl.length:"—")+'</b><small>participantes con bus</small></span><span class="wsn"><b>'+(has?allIt.filter(x=>x.w.bus).length:"—")+"</b><small>semanas con bus</small></span>"+
       Object.entries(by).map(([k,v])=>'<span class="wsn"><b>'+v+'</b><small><i class="bsw" style="background:'+col(k)+'"></i>'+esc(k)+"</small></span>").join("")+(trn?'<span class="wsn"><b>'+trn+"</b><small>transfer aeropuerto</small></span>":"")+(bad?'<span class="wsn"><b style="color:var(--pink)">'+bad+"</b><small>bus sin cuadrar</small></span>":"")+"</span></button>";
     h+='<span class="wsec">Madrid</span>';
-    for(let k=1;k<=9;k++){const it=busWeekItems(k);const c={};it.forEach(x=>{if(x.w.bus)c[x.w.bus]=(c[x.w.bus]||0)+1});const nb=it.filter(x=>x.w.bus).length,nt=it.filter(x=>x.w.tr).length;
+    for(let k=1;k<=9;k++){const it=busWeekItems(k).filter(x=>okF(x.w));const c={};it.forEach(x=>{if(x.w.bus)c[x.w.bus]=(c[x.w.bus]||0)+1});const nb=it.filter(x=>x.w.bus).length,nt=it.filter(x=>x.w.tr).length;
       h+='<button class="wkbox" type="button" data-busw="'+k+'"><span class="wt">Week '+k+'</span><span class="wd">'+(weekDates(k)||"&nbsp;")+'</span><span class="wn">'+(has?nb:"—")+'</span><span class="wd">'+(nt?nt+" transfer":"&nbsp;")+'</span><span class="wbar">'+(nb?Object.entries(c).map(([sv,v])=>'<i style="width:'+(v/nb*100)+"%;background:"+col(sv)+'" title="'+esc(sv)+": "+v+'"></i>').join(""):"")+"</span></button>"}
     $("busWeeks").innerHTML=h;return}
-  const q=attNrm(BUS.q.trim());const it=busWeekItems(n).filter(x=>!q||attNrm(x.r.hay+" "+x.r.tutor).includes(q));
-  const groups=[...new Set(it.map(x=>x.w.bus).filter(Boolean))].sort().map(sv=>[sv,it.filter(x=>x.w.bus===sv),col(sv)]);const tr=it.filter(x=>x.w.tr);if(tr.length)groups.push(["Transfer aeropuerto",tr,"#5e6a83"]);
+  const q=attNrm(BUS.q.trim());const it=busWeekItems(n).filter(x=>okF(x.w)&&(!q||attNrm(x.r.hay+" "+x.r.tutor).includes(q)));
+  const groups=BUS.f===BUS_TR?[]:svcs.filter(sv=>!BUS.f||sv===BUS.f).map(sv=>[sv,it.filter(x=>x.w.bus===sv),col(sv)]).filter(g=>g[1].length);const tr=it.filter(x=>x.w.tr);if(tr.length&&(!BUS.f||BUS.f===BUS_TR))groups.push([BUS_TR,tr,col(BUS_TR)]);
   $("busCount").textContent=it.length+" participantes";
   $("busList").innerHTML=groups.length?groups.map(([t,xs,c])=>'<div class="busgrp"><div class="bush" style="--bc:'+c+'"><span class="wt">'+esc(t)+'</span><span class="bn">'+xs.length+"</span><small>participante"+(xs.length===1?"":"s")+'</small></div><div class="tablebox"><table class="bustab"><thead><tr><th>Participante</th><th>Modalidad</th><th>Año</th><th>Tutor · teléfono</th><th>Pago del bus</th></tr></thead><tbody>'+
       xs.sort((a,b)=>a.r.name.localeCompare(b.r.name,"es")).map(({r,w})=>{const ck=busCheck(r);return '<tr data-busr="'+esc(r.id)+'" tabindex="0"><td class="nm"><b class="name">'+esc(r.name)+'</b><div class="sub code">'+esc(r.code)+'</div></td><td><span class="chip p-'+w.prog+'">'+esc(apLabel(w.prog,w.mod))+"</span></td><td>"+esc(r.d.A_o_de_nacimiento?String(r.d.A_o_de_nacimiento).slice(0,4):"—")+"</td><td>"+esc(r.tutor||"—")+'<div class="sub">'+esc(r.d.Telefono_Tutor_legal||"")+"</div></td><td>"+(ck.ok?'<span class="pill s-paid">Pagado</span>':BUS_BAD(r)+'<div class="sub">'+esc(ck.msg)+"</div>")+"</td></tr>"}).join("")+"</tbody></table></div></div>").join("")
@@ -5159,6 +5166,7 @@ function renderBuses2(){if($("view-buses").hidden)return;const has=(S.allRows||[
 $("busWeeks").addEventListener("click",e=>{const b=e.target.closest("[data-busw]");if(!b)return;BUS.w=+b.dataset.busw;BUS.q="";$("busQ").value="";renderBuses2();window.scrollTo(0,0)});
 $("busCrumbs").addEventListener("click",e=>{if(e.target.closest("[data-busgo]")){BUS.w=0;renderBuses2()}});
 $("busQ").addEventListener("input",e=>{BUS.q=e.target.value;renderBuses2()});
+$("busFilt").addEventListener("click",e=>{const b=e.target.closest("[data-busf]");if(!b)return;BUS.f=b.dataset.busf;renderBuses2()});
 $("busList").addEventListener("click",e=>{const tr=e.target.closest("[data-busr]");if(tr){S.ctxWeek=BUS.w;openDrawer(tr.dataset.busr)}});
 $("busList").addEventListener("keydown",e=>{if(e.key==="Enter"){const tr=e.target.closest("[data-busr]");if(tr)tr.click()}});
 /* ---------- HISTORIAL DE CONTACTOS (panel) ---------- */
