@@ -105,9 +105,11 @@ module.exports = function makeStore(req) {
       for (const r of old) await table("CEDocs").deleteRow(num(r.ROWID));
     },
   };
+  /* lectura directa (sin la caché en memoria que index.js pone encima de meta.get): set necesita el ROWID real */
+  const metaRaw = async k => { const r = await first("CEMeta", "k = " + q(k)); return r ? { id: String(r.ROWID), v: r.v } : null; };
   const meta = {
-    get: async k => { const r = await first("CEMeta", "k = " + q(k)); return r ? { id: String(r.ROWID), v: r.v } : null; },
-    set: async (k, v) => { const r = await meta.get(k); if (r) await table("CEMeta").updateRow({ ROWID: num(r.id), v: String(v) }); else await table("CEMeta").insertRow({ k, v: String(v) }); },
+    get: metaRaw,
+    set: async (k, v) => { const r = await metaRaw(k); if (r) await table("CEMeta").updateRow({ ROWID: num(r.id), v: String(v) }); else await table("CEMeta").insertRow({ k, v: String(v) }); },
   };
   const audit = {
     add: async f => { try { await table("CEAudit").insertRow(f); } catch (e) {} },

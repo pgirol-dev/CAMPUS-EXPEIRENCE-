@@ -388,7 +388,7 @@ async function handle(req, res) {
     const docs = await st.docs.list(col);
     /* volcados iniciales de los Excel (BBDD 2026; Unpaids y Prerreservas): cada uno se carga una sola vez */
     if (col === "attc") for (const [id, k] of [["x-b26", "seed_attc_xb26"], ["x-27", "seed_attc_x27"]]) { if (docs[id]) continue; try { const seen = await st.meta.get(k); const f = require("path").join(__dirname, "seed", "attc_" + id + ".json");
-      if (!seen && require("fs").existsSync(f)) { const d = JSON.parse(require("fs").readFileSync(f, "utf8")); await st.docs.put("attc", id, d, null); await st.meta.set(k, new Date().toISOString()); await touch("attc"); docs[id] = d; } } catch (e) { console.error(e); } }
+      if (!seen && require("fs").existsSync(f)) { const d = JSON.parse(require("fs").readFileSync(f, "utf8")); await st.docs.put("attc", id, d, null); docs[id] = d; await st.meta.set(k, new Date().toISOString()); await touch("attc"); } } catch (e) { console.error(e); } }
     return send(res, 200, { docs });
   }
   if ((m = /^\/api\/db\/([a-z]+)\/(.+)$/.exec(p)) && (M === "PUT" || M === "DELETE")) {
