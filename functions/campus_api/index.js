@@ -8,6 +8,7 @@
 */
 "use strict";
 const crypto = require("crypto");
+const SEEDED = new Set(); /* volcados de Excel ya revisados en esta instancia */
 
 const env = (k, d) => (process.env[k] === undefined || process.env[k] === "" ? d : process.env[k]);
 const CFG = {
@@ -386,9 +387,12 @@ async function handle(req, res) {
   if ((m = /^\/api\/db\/([a-z]+)$/.exec(p)) && M === "GET") {
     const col = m[1]; if (!COLS[col]) return fail(res, 404, "Colección desconocida"); if (!COLS[col].read(U)) return fail(res, 403, "Sin acceso");
     const docs = await st.docs.list(col);
-    /* volcados iniciales de los Excel (BBDD 2026; Unpaids y Prerreservas): cada uno se carga una sola vez */
-    if (col === "attc") for (const [id, k] of [["x-b26", "seed_attc_xb26"], ["x-27", "seed_attc_x27"]]) { if (docs[id]) continue; try { const seen = await st.meta.get(k); const f = require("path").join(__dirname, "seed", "attc_" + id + ".json");
-      if (!seen && require("fs").existsSync(f)) { const d = JSON.parse(require("fs").readFileSync(f, "utf8")); await st.docs.put("attc", id, d, null); docs[id] = d; await st.meta.set(k, new Date().toISOString()); await touch("attc"); } } catch (e) { console.error(e); } }
+    /* volcados de los Excel (BBDD 2026; Unpaids y Prerreservas): cada versión del archivo (campo «at») se carga una sola vez y solo si es más nueva que la guardada */
+    if (col === "attc") for (const [id, k] of [["x-b26", "seed_attc_xb26"], ["x-27", "seed_attc_x27"]]) { try { const f = require("path").join(__dirname, "seed", "attc_" + id + ".json"); if (!require("fs").existsSync(f)) continue;
+      const d = JSON.parse(require("fs").readFileSync(f, "utf8")); const kv = k + "@" + (d.at || ""); if (SEEDED.has(kv)) continue;
+      const old = docs[id]; const newer = !old || String(old.at || "") < String(d.at || "");
+      if (newer && !(await st.meta.get(kv))) { await st.docs.put("attc", id, d, null); docs[id] = d; await st.meta.set(kv, new Date().toISOString()); await touch("attc"); }
+      SEEDED.add(kv); } catch (e) { console.error(e); } }
     return send(res, 200, { docs });
   }
   if ((m = /^\/api\/db\/([a-z]+)\/(.+)$/.exec(p)) && (M === "PUT" || M === "DELETE")) {

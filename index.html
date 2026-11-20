@@ -1198,6 +1198,18 @@ table.bdtab{min-width:1300px} table.bdtab td small{color:var(--ink-3)}
 .lpchk{display:inline-block;padding:3px 9px;border-radius:96px;font-size:11px;font-weight:800;white-space:nowrap;background:var(--bad-soft);color:var(--bad)} .lpchk.ok{background:color-mix(in srgb,var(--green) 18%,transparent);color:var(--ink)}
 .lpct{display:flex;flex-direction:column;font-size:12px} .lpct small{color:var(--ink-3)}
 @media (max-width:900px){.prow.lprow{grid-template-columns:1fr 1fr}}
+.prow.lprow{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) auto minmax(150px,1.1fr) minmax(130px,.9fr)}
+@media (max-width:900px){.prow.lprow{grid-template-columns:1fr 1fr}}
+.lpdoc{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:0} .lpdoc small{font-size:11.5px;color:var(--ink-3);line-height:1.3}
+.lpchk.d-rev{background:color-mix(in srgb,var(--navy) 12%,transparent);color:var(--navy)} .lpchk.d-none{background:var(--bad-soft);color:var(--bad)} .lpchk.d-inc{background:var(--bad);color:var(--on-hot)} .lpchk.d-comp{background:color-mix(in srgb,var(--green) 18%,transparent);color:var(--ink)}
+:root[data-theme="dark"] .lpchk.d-rev{color:var(--ink)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .lpchk.d-rev{color:var(--ink)}}
+.lpmed{display:inline-block;margin-top:4px;padding:2px 8px;border-radius:96px;border:1.5px solid var(--bad);color:var(--bad);font-size:10.5px;font-weight:800;width:max-content}
+.lpdocbox{display:flex;flex-direction:column;gap:8px;background:var(--surface-2);border-radius:12px;padding:12px 14px}
+.lpdh{display:flex;align-items:center;gap:10px;flex-wrap:wrap} .lpdh small{color:var(--ink-3);font-size:12px}
+.lpdm{margin:0;font-weight:700;font-size:13.5px} .lpdm.ok{color:var(--ink-2,var(--ink))}
+.lpdcs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 12px} .lpdc{display:flex;align-items:center;gap:7px;font-size:13px;cursor:pointer} .lpdc input{width:16px;height:16px;accent-color:var(--pink)}
+.attlinks{display:flex;gap:8px;flex-wrap:wrap} .attlinks .btn{text-decoration:none}
 .sth{font-family:var(--f-wide);font-style:italic;font-weight:900;font-stretch:125%;text-transform:uppercase;font-size:1rem;margin:10px 0 0} .sth small{font-family:var(--f-body);font-style:normal;font-weight:600;font-stretch:100%;text-transform:none;font-size:12px;color:var(--ink-3)}
 .stgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr));gap:12px}
 .stcard{background:var(--surface-2);border-radius:6px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;min-width:0}
@@ -1984,6 +1996,7 @@ html.sb-min .sfh{display:block;font-family:var(--f-wide);font-style:italic;font-
     <div class="eqhead"><div class="eqtitlebox"><h2 class="eqtitle">Base de datos</h2><nav class="crumbs" id="bdCrumbs" aria-label="Ruta"></nav></div><span class="bdacts"><label class="btn bdimp" title="Importa el historial de llamadas del Excel (pestañas «BBDD …»)">Importar Excel<input type="file" id="bdImp" accept=".xlsx" hidden></label><button class="btn" type="button" id="bdRefresh">Actualizar</button></span></div>
     <div id="bdLists" class="bdgrid" aria-label="Listas"></div>
     <div id="bdBody" class="stack" hidden>
+      <div class="incscope sedebar" id="bdSede" role="group" aria-label="Sede" hidden></div>
       <div class="filters"><input type="search" id="bdQ" placeholder="Buscar jugador, tutor, email, teléfono o código" aria-label="Buscar"><select id="bdAtt" aria-label="ATT"></select><select id="bdSt" aria-label="Estado"></select><span class="count" id="bdCount"></span></div>
       <div class="tablebox"><table class="oplist bdtab"><thead id="bdHead"></thead><tbody id="bdRows"></tbody></table><div class="empty" id="bdEmpty" hidden></div></div>
       <button class="btn" type="button" id="bdMore" hidden>Ver más</button>
@@ -1994,7 +2007,7 @@ html.sb-min .sfh{display:block;font-family:var(--f-wide);font-style:italic;font-
     <div id="lpWeeks" class="wkgrid" aria-label="Semanas y sedes"></div>
     <div id="lpBody" class="stack" hidden>
       <div class="paygrid lpgrid" id="lpBoxes" role="group" aria-label="Estado"></div>
-      <div class="filters"><input type="search" id="lpQ" placeholder="Buscar jugador, código o tutor" aria-label="Buscar"><span class="count" id="lpCount"></span></div>
+      <div class="filters"><input type="search" id="lpQ" placeholder="Buscar jugador, código o tutor" aria-label="Buscar"><select id="lpPay" aria-label="Pago"><option value="">Todos los pagos</option><option value="ok">Pago al día</option><option value="late">Pago atrasado</option></select><select id="lpDoc" aria-label="Documentación"><option value="">Toda la documentación</option><option value="none">No enviada</option><option value="rev">Pendiente de revisión</option><option value="inc">Incompleta</option><option value="comp">Completa</option><option value="med">Revisar condiciones médicas</option></select><select id="lpSort" aria-label="Ordenar"><option value="name">Ordenar por nombre</option><option value="ape">Ordenar por apellido</option><option value="form">Ordenar por fecha del formulario</option></select><span class="count" id="lpCount"></span></div>
       <div id="lpList" class="paylist"></div>
     </div>
   </section>
@@ -2282,7 +2295,7 @@ const FIELDS=[
  {k:"c2",l:"Segunda persona de contacto",sec:"fam",pend:true,pendTxt:"Pendiente del formulario 2"},
  {k:"tdni",l:"Documento del tutor",sec:"fam",z:"DNI_Pasaporte_tutor",sens:true},
  // Documentación
- {k:"docs2",l:"Documentación",sec:"docu",pend:true,pendTxt:"Pendiente del formulario 2"},
+ {k:"docs2",l:"Documentación",sec:"docu",pend:true,pendTxt:"Pendiente del formulario 2",hide:true},
  // Pago
  {k:"stage",l:"Estado",sec:"pago",z:"Stage",fmt:"stage"},
  {k:"total",l:"Total",sec:"pago",z:"Total",fmt:"eur"},
@@ -2297,7 +2310,7 @@ const FIELDS=[
  {k:"obs",l:"Observaciones",sec:"otros",z:"Observaciones"}
 ];
 const SECTIONS=[["part","Participante"],["semanas","Semanas contratadas"],["equip","Equipaciones"],["serv","Servicios"],["salud","Salud y dieta"],["cons","Consentimientos"],["fam","Familia y contacto"],["auth","Autorizados para recogida"],["pago","Pago"],["docu","Documentación"],["otros","Otros"]];
-const BASE_FIELDS=["Deal_Name","Player","Tipo_Modalidad","Comprobaci_n_documentos","Agencia","Created_Time","Colectivos","Weeks","Modified_Time","Event_Name","Refund","First_Instalment_Paid_At","Second_Instalment_Paid_At","Third_Instalment_Paid_At"];
+const BASE_FIELDS=["Deal_Name","Player","Tipo_Modalidad","Comprobaci_n_documentos","Form_2","Fecha_rellenado_CE_Form","Agencia","Created_Time","Colectivos","Weeks","Modified_Time","Event_Name","Refund","First_Instalment_Paid_At","Second_Instalment_Paid_At","Third_Instalment_Paid_At"];
 const DEAL_FIELDS=[...new Set(BASE_FIELDS.concat(FIELDS.flatMap(f=>(f.z?[f.z]:[]).concat(f.zz||[]))))];
 const DEAL_WHERE=" from Deals where Event_Name.Name in "+EVS+" and Stage not in "+STAGES_OUT;
 const DEAL_PARTS=[];for(let i=0;i<DEAL_FIELDS.length;i+=40)DEAL_PARTS.push(DEAL_FIELDS.slice(i,i+40));
@@ -2591,7 +2604,7 @@ function drawBody(r){
      '<div class="row"><label class="chk"><input type="checkbox" id="dWa"'+(o.whatsapp?" checked":"")+'> Añadido al grupo de WhatsApp</label><label class="chk"><input type="checkbox" id="dDocs"'+(o.docs?" checked":"")+"> Documentación revisada</label></div>"+
      '<label class="f" for="dNotes">Notas operativas<textarea id="dNotes">'+esc(o.notas)+"</textarea></label>"+
      '<div class="savebar"><button class="btn primary" type="button" id="dSave"'+(canSave?"":" disabled")+'>Guardar seguimiento</button>'+(canSave?meta:'<span class="st">El seguimiento no se puede guardar en esta vista.</span>')+"</div></div>";
-  const body={semanas:weeks,equip,auth,seg:segui};
+  const body={semanas:weeks,equip,auth,seg:segui,docu:(typeof lpDocHtml==="function"?lpDocHtml(r,typeof attEdit==="function"&&attEdit()&&!!S.db):"")+kv("docu")};
   const SECS=SECTIONS.concat(typeof viewOk==="function"&&viewOk("incidencias")?[["inc","Incidencias"]]:[]);if(SECS.length>SECTIONS.length)body.inc=incDrawerHtml(r);
   $("dBody").innerHTML='<nav class="dnav">'+SECS.map(([k,l])=>'<button type="button" data-jump="'+k+'">'+esc(l)+"</button>").join("")+"</nav>"+
     SECS.map(([k,l])=>'<div class="sec" id="sec-'+k+'"><h3>'+esc(l)+"</h3>"+(body[k]!=null?body[k]:kv(k))+"</div>").join("")+
@@ -4896,7 +4909,7 @@ $("canList").addEventListener("keydown",e=>{if(e.key!=="Enter")return;const row=
    Estadísticas: resumen de cada lista, gestiones por día y contacto con las inscripciones 2027 (incluye Incidencias y tickets de Zoho Desk).
    Los contactos se guardan en el software (colección «attc», un documento por persona). El CRM no se toca. */
 var ATT={docs:{},list:"",q:"",fAtt:"",fSt:"",lim:200,b26:null,b26busy:false,b26err:"",x27:null,x27busy:false,x27err:"",panel:null,edit:null,
-  lpW:0,lpF:"pend",lpQ:"",desk:null,deskBusy:false,deskErr:"",me:null};
+  lpW:0,lpF:"pend",lpQ:"",lpPay:"",lpDoc:"",lpSort:"name",desk:null,deskBusy:false,deskErr:"",me:null};
 const ATT_ST=["No contesta","No contesta X2","En su tejado","Volver a llamar","Fuera de horario","Inscrito","No interesado","No apto","Duplicado","Error de datos","Otras sedes","Agencia/grupo","Hermanos","Incidencia"];
 const ATT_TONE=st=>/^Trash$/i.test(st)?"off":/^Inscrito/.test(st)?"ok":/tejado/i.test(st)?"hot":/No contesta|Volver a llamar|Fuera de horario/.test(st)?"wait":st?"off":"none";
 const ATT_VIA=[["telefono","Teléfono"],["whatsapp","WhatsApp"],["email","Email"],["persona","En persona"],["otros","Otros"]];
@@ -4913,6 +4926,12 @@ if(!window.CE_ACL||window.CE_ACL.admin)document.documentElement.classList.add("i
 const attNrm=t=>String(t||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
 const attLang=d=>/ingl/i.test(String(d.Idioma_comunicaciones||""))?"ENG":/castell|espa/i.test(String(d.Idioma_comunicaciones||""))?"ESP":"";
 const attDay=iso=>iso?String(iso).slice(0,10):"";
+/* nombres de ATT del Excel → nombre completo (feedback ATTP 20/11): «Bea» y «Katia» cuentan como una sola persona */
+const ATT_ALIAS={"bea":"Beatriz de Miguel","beatriz":"Beatriz de Miguel","beatriz de miguel":"Beatriz de Miguel","katia":"Katia Ramajo","katia ramajo":"Katia Ramajo"};
+const attWho=n=>{const t=String(n||"").trim();return ATT_ALIAS[attNrm(t)]||t};
+/* clave de nombre para cruzar jugadores (minúsculas, sin acentos ni signos) */
+const attNameKey=n=>attNrm(n).replace(/[^a-z0-9ñ ]/g," ").split(/\s+/).filter(Boolean).join(" ");
+const attCampOf=d=>{const n=d&&d.Event_Name?(d.Event_Name.name||d.Event_Name):"";const c=CAMPS.find(c=>c.ev.includes(String(n)));return c?c.id:"mad"};
 const ATT_PAGE=2000;
 /* lectura propia con páginas de 2000 (las BBDD tienen miles de filas) */
 async function attFetch(q,opt){const all=[];
@@ -4930,8 +4949,8 @@ async function attLoad(force){if(!S.mcp)return;const opt={cache:{staleTime:60000
   if(!ATT.x27busy&&(force||!ATT.x27)){ATT.x27busy=true;ATT.x27err="";
     attFetch(Q_X27(),opt).then(r=>{ATT.x27=r}).catch(e=>{ATT.x27err="No se han podido leer los unpaids y prerreservas"+(e&&e.message?" ("+e.message+")":"")+"."}).finally(()=>{ATT.x27busy=false;attRender()})}}
 /* inscritos 2027 activos: por jugador y por email del tutor */
-function attEnrolled(){const P=new Set(),E=new Set(),PM=new Set();(S.allRows||[]).forEach(r=>{const d=r.d;const pid=d.Player&&d.Player.id;if(pid){P.add(String(pid));(r.weeks||[]).forEach(w=>PM.add(pid+"|"+w.prog+"|"+w.mod));PM.add(pid+"|"+String(d.Tipo_Modalidad||""))}
-  [d.Email,d.Email_persona].forEach(e=>{e=String(e||"").trim().toLowerCase();if(e)E.add(e)})});return {P,E,PM}}
+function attEnrolled(){const P=new Set(),E=new Set(),PM=new Set(),N=new Set();(S.allRows||[]).forEach(r=>{const d=r.d;const pid=d.Player&&d.Player.id;const nk=attNameKey(r.name);if(nk.includes(" "))N.add(nk);if(pid){P.add(String(pid));(r.weeks||[]).forEach(w=>PM.add(pid+"|"+w.prog+"|"+w.mod));PM.add(pid+"|"+String(d.Tipo_Modalidad||""))}
+  [d.Email,d.Email_persona].forEach(e=>{e=String(e||"").trim().toLowerCase();if(e)E.add(e)})});return {P,E,PM,N}}
 function attRowOf(d,list,key){const pl=d.Player&&d.Player.name||String(d.Deal_Name||"").split(/ - |-(?=\S)/).slice(1).join(" ").trim();
   return {key,list,d,id:String(d.id),pid:d.Player?String(d.Player.id||""):"",day:attDay(d.Created_Time),name:pl||"—",tutor:txt(d.Contact_Name)||"",phone:String(d.Telefono_Tutor_legal||""),email:String(d.Email||"").trim(),
     nat:String(d.Nationality||""),lang:attLang(d),mod:String(d.Tipo_Modalidad||""),col:String(d.Colectivos||""),code:d.Codigo||d.Reservation_Code||""}}
@@ -4939,21 +4958,23 @@ function attRows(list){const EN=attEnrolled();let out=[];
   if(list==="besp"||list==="beng"){if(!ATT.b26)return null;
     out=ATT.b26.filter(d=>(/^espa/i.test(String(d.Nationality||"").trim()))===(list==="besp")).map(d=>attRowOf(d,list,"c-"+(d.Codigo||d.id)))}
   else if(list==="unp"||list==="pre"){if(!ATT.x27)return null;
-    /* Unpaids: las que siguen sin pagar y, además, las que ya se pasaron a Trash pero tienen llamadas apuntadas (para no perder su historial) */
-    const hasLog=id=>!!(attXls("d-"+id).log||[]).length||!!(ATT.docs["d-"+id]&&(ATT.docs["d-"+id].log||[]).length);
-    const xs=ATT.x27.filter(d=>list==="unp"?(d.Stage==="Unpaid"||(d.Stage==="Trash"&&hasLog(d.id))):d.Stage==="Reservation Payment Completed");
-    out=xs.map(d=>Object.assign(attRowOf(d,list,"d-"+d.id),{trash:d.Stage==="Trash"}));
-    if(list==="unp"){const seen={};out.filter(x=>!x.trash).forEach(x=>{const k=x.pid+"|"+x.mod;(seen[k]=seen[k]||[]).push(x)});
-      out.forEach(x=>{x.dup=!x.trash&&!!x.pid&&((seen[x.pid+"|"+x.mod]||[]).length>1||EN.PM.has(x.pid+"|"+x.mod))})}
-    else out=out.filter(x=>!(x.pid&&EN.P.has(x.pid))&&!(x.email&&EN.E.has(x.email.toLowerCase())))}
+    /* Unpaids: solo las que siguen en «Unpaid» (las de Trash desaparecen; su historial sigue contando en Estadísticas) */
+    const xs=ATT.x27.filter(d=>list==="unp"?d.Stage==="Unpaid":d.Stage==="Reservation Payment Completed");
+    out=xs.map(d=>Object.assign(attRowOf(d,list,"d-"+d.id),{camp:attCampOf(d)}));
+    if(list==="unp"){/* duplicada: el jugador tiene otra inscripción 2027 en cualquier fase (otra unpaid, 1st payment, paid…), por jugador o por nombre */
+      const byP={},byN={};out.forEach(x=>{if(x.pid)(byP[x.pid]=byP[x.pid]||[]).push(x);const nk=attNameKey(x.name);if(nk.includes(" "))(byN[nk]=byN[nk]||[]).push(x)});
+      out.forEach(x=>{const nk=attNameKey(x.name),byName=nk.includes(" ");x.dup=(!!x.pid&&((byP[x.pid]||[]).length>1||EN.P.has(x.pid)))||(byName&&((byN[nk]||[]).length>1||EN.N.has(nk)))})}
+    else out=out.filter(x=>{const nk=attNameKey(x.name);return !(x.pid&&EN.P.has(x.pid))&&!(x.email&&EN.E.has(x.email.toLowerCase()))&&!(nk.includes(" ")&&EN.N.has(nk))})}
   else return [];
   out.forEach(x=>{const doc=ATT.docs[x.key]||{};x.doc=doc;x.log=attLog(x.key);
     x.ins=(x.pid&&EN.P.has(x.pid))||(!!x.email&&EN.E.has(x.email.toLowerCase()));if(list==="unp")x.ins=x.pid&&EN.P.has(x.pid);
-    const last=x.log[x.log.length-1];x.st=x.ins?"Inscrito":last?last.st||"":"";x.att=doc.att||attXls(x.key).att||(last&&last.byName)||"";x.lastDay=last?last.day||attDay(last.at):""});
+    const last=x.log[x.log.length-1];x.st=x.ins?"Inscrito":last?last.st||"":"";x.att=attWho(doc.att)||attXls(x.key).att||(last&&last.byName)||"";x.lastDay=last?last.day||attDay(last.at):""});
   return out}
 /* historial importado del Excel (un solo documento «x-b26»): solo lectura; los contactos nuevos van al documento de cada persona */
-function attXls(key){const X=ATT.docs[/^c-/.test(key)?"x-b26":/^d-/.test(key)?"x-27":""];if(!X||!X.items)return {};return X.items[key.slice(2)]||{}}
-function attLog(key){const own=(ATT.docs[key]&&Array.isArray(ATT.docs[key].log))?ATT.docs[key].log.map((e,i)=>Object.assign({i},e)):[];const xl=(attXls(key).log||[]).map(e=>Object.assign({src:"excel",via:"telefono",dir:"out"},e));
+function attXls(key){const X=ATT.docs[/^c-/.test(key)?"x-b26":/^d-/.test(key)?"x-27":""];if(!X||!X.items)return {};const it=X.items[key.slice(2)];if(!it)return {};return it.att?Object.assign({},it,{att:attWho(it.att)}):it}
+/* une el Excel con lo apuntado en el software; si un contacto se apuntó en los dos sitios (mismo día y estado) sale una sola vez */
+function attLog(key){const own=(ATT.docs[key]&&Array.isArray(ATT.docs[key].log))?ATT.docs[key].log.map((e,i)=>Object.assign({i},e,{byName:attWho(e.byName)})):[];
+  const xl=(attXls(key).log||[]).filter(e=>!own.some(o=>o.day&&o.day===e.day&&o.st===e.st)).map(e=>Object.assign({src:"excel",via:"telefono",dir:"out"},e,{byName:attWho(e.byName)}));
   return xl.concat(own).sort((a,b)=>String(a.day||"").localeCompare(String(b.day||"")))}
 function attListStats(rows){const n=rows.length,g=rows.filter(x=>x.log.length).length,ins=rows.filter(x=>x.st==="Inscrito").length;return {n,g,p:n-g,ins,av:n?g/n:0,pi:n?ins/n:0}}
 const pct=v=>(v*100).toLocaleString("es-ES",{maximumFractionDigits:1})+"%";
@@ -4969,14 +4990,15 @@ function renderBbdd(){if($("view-bbdd").hidden)return;
         (l.off?'<span class="bdoff">Pendiente de conectar</span>':busy?'<span class="bdoff">Leyendo Zoho…</span>':'<span class="bdn"><b>'+s.n+'</b><small>registros</small></span><span class="bdmini"><span><b>'+s.g+"</b> gestionados</span><span><b>"+s.p+"</b> pendientes</span><span><b>"+s.ins+'</b> inscritos</span></span><span class="wbar"><i style="width:'+(s.av*100)+'%;background:var(--navy)"></i><i style="width:'+(s.pi*100)+'%;background:var(--green)"></i></span>')+"</button>"}).join("")+
       (ATT.b26err||ATT.x27err?'<p class="devmsg" style="grid-column:1/-1">'+esc([ATT.b26err,ATT.x27err].filter(Boolean).join(" "))+"</p>":"")+
       (ATT.docs["x-b26"]?'<p class="ingnote" style="grid-column:1/-1">Historial del Excel importado: '+ATT.docs["x-b26"].n+" personas y "+ATT.docs["x-b26"].contacts+" contactos ("+esc(ATT.docs["x-b26"].file||"")+", "+esc(new Date(ATT.docs["x-b26"].at).toLocaleString("es-ES",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}))+(ATT.docs["x-b26"].byName?" · "+esc(ATT.docs["x-b26"].byName):"")+"). Esos contactos salen con la marca «Excel» y no se corrigen aquí.</p>":"")+
-      (ATT.docs["x-27"]?'<p class="ingnote" style="grid-column:1/-1">Historial de Unpaids y Prerreservas importado: '+ATT.docs["x-27"].n+" inscripciones y "+ATT.docs["x-27"].contacts+" contactos. Las unpaids que ya están en Trash salen al final de la lista con la marca «En Trash».</p>":"");return}
+      (ATT.docs["x-27"]?'<p class="ingnote" style="grid-column:1/-1">Historial de Unpaids y Prerreservas importado: '+ATT.docs["x-27"].n+" inscripciones y "+ATT.docs["x-27"].contacts+" contactos. Las unpaids que pasan a Trash o a otra fase salen de la lista; su historial se guarda y sigue contando en Estadísticas.</p>":"");return}
   const rows=attRows(L.k);
   if(rows==null){$("bdRows").innerHTML="";$("bdHead").innerHTML="";$("bdCount").textContent="";$("bdEmpty").hidden=false;$("bdEmpty").innerHTML="<h3>Leyendo Zoho CRM…</h3>";$("bdMore").hidden=true;return}
   const atts=[...new Set(rows.map(x=>x.att).filter(Boolean))].sort();
   $("bdAtt").innerHTML='<option value="">Todos los ATT</option><option value="-"'+(ATT.fAtt==="-"?" selected":"")+'>Sin asignar</option>'+atts.map(a=>'<option'+(ATT.fAtt===a?" selected":"")+">"+esc(a)+"</option>").join("");
   $("bdSt").innerHTML='<option value="">Todos los estados</option><option value="-"'+(ATT.fSt==="-"?" selected":"")+'>Sin gestionar</option>'+ATT_ST.map(s=>'<option'+(ATT.fSt===s?" selected":"")+">"+esc(s)+"</option>").join("")+(L.k==="unp"?'<option value="dup"'+(ATT.fSt==="dup"?" selected":"")+">Duplicados</option>":"");
+  $("bdSede").hidden=L.k!=="unp";if(L.k==="unp")$("bdSede").innerHTML=sedeBar("unp",rows.map(x=>x.camp));
   const q=attNrm(ATT.q.trim());
-  let it=rows.filter(x=>(!ATT.fAtt||(ATT.fAtt==="-"?!x.att:x.att===ATT.fAtt))&&(!ATT.fSt||(ATT.fSt==="-"?!x.st:ATT.fSt==="dup"?x.dup:x.st===ATT.fSt))&&(!q||attNrm(x.name+" "+x.tutor+" "+x.email+" "+x.phone+" "+x.code).includes(q)));
+  let it=rows.filter(x=>(L.k!=="unp"||sedeOk("unp",x.camp))&&(!ATT.fAtt||(ATT.fAtt==="-"?!x.att:x.att===ATT.fAtt))&&(!ATT.fSt||(ATT.fSt==="-"?!x.st:ATT.fSt==="dup"?x.dup:x.st===ATT.fSt))&&(!q||attNrm(x.name+" "+x.tutor+" "+x.email+" "+x.phone+" "+x.code).includes(q)));
   it.sort((a,b)=>(!!a.trash-!!b.trash)||(b.day||"").localeCompare(a.day||"")||a.name.localeCompare(b.name));
   $("bdCount").textContent=it.length+" de "+rows.length;
   $("bdHead").innerHTML="<tr><th>Fecha</th><th>Jugador · Tutor</th><th>Teléfono</th><th>Email</th><th>Nacionalidad</th><th>Idioma</th><th>Modalidad</th><th>Colectivo</th><th>ATT</th><th>Estado</th><th>Contactos</th></tr>";
@@ -4984,7 +5006,26 @@ function renderBbdd(){if($("view-bbdd").hidden)return;
   $("bdRows").innerHTML=it.slice(0,ATT.lim).map(x=>'<tr data-attk="'+esc(x.key)+'" tabindex="0"><td>'+(x.day?fmtDL(x.day):"—")+'</td><td class="nm"><b class="name">'+esc(x.name)+"</b>"+(x.dup?' <span class="attdup">Duplicado</span>':"")+(x.trash?' <span class="attst t-off" title="La inscripción ya está en Trash en el CRM">En Trash</span>':"")+"<br><small>"+esc(x.tutor||"—")+(x.code?" · "+esc(x.code):"")+"</small></td><td>"+esc(x.phone||"—")+"</td><td>"+esc(x.email||"—")+"</td><td>"+esc(x.nat||"—")+"</td><td>"+(x.lang?'<span class="bdlang sm l-'+x.lang.toLowerCase()+'">'+x.lang+"</span>":"—")+"</td><td>"+esc(x.mod||"—")+"</td><td>"+esc(x.col||"—")+"</td><td>"+esc(x.att||"—")+"</td><td>"+attChip(x.st,x.ins)+"</td><td>"+(x.log.length?"<b>"+x.log.length+"</b> · "+esc(x.lastDay?fmtD(x.lastDay):""):"—")+"</td></tr>").join("");
   $("bdMore").hidden=it.length<=ATT.lim;$("bdMore").textContent="Ver más ("+(it.length-ATT.lim)+" más)"}
 /* ---------- LIMPIEZA ---------- */
-const lpDone=r=>{let pay=false;try{pay=payState(r).k!=="late"}catch(e){}const doc=r.d.Comprobaci_n_documentos===true||r.d.Comprobaci_n_documentos==="true";return {pay,doc,ok:pay&&doc}};
+/* Documentación (feedback ATTP 20/11): cuatro estados con «Form 2» y «Comprobación documentos» del CRM; lo que falta se apunta en el software (el CRM no se toca) */
+const LP_DOCS=[["dni","DNI del tutor"],["seg","Seguro médico"],["nac","Certificado de nacimiento"],["foto","Foto del participante"],["sal","Salida sin acompañante"],["med","Autorización de medicación"]];
+const LP_DL=Object.fromEntries(LP_DOCS);
+const LP_DS={none:["No enviada","Todavía no ha mandado el Form 2"],rev:["Pendiente de revisión","Ha mandado el Form 2: falta revisarlo"],inc:["Incompleta","Revisada: falta documentación"],comp:["Completa","Comprobada en el CRM"]};
+const lpBool=v=>v===true||v==="true";
+function lpDocs(r){const f2=lpBool(r.d.Form_2),comp=lpBool(r.d.Comprobaci_n_documentos);const doc=ATT.docs["d-"+r.id]||{};const miss=Array.isArray(doc.docs)?doc.docs.filter(k=>LP_DL[k]):[];
+  const k=comp?"comp":f2&&miss.length?"inc":f2?"rev":"none";const pend=k==="comp"?miss.filter(x=>x==="sal"||x==="med"):k==="inc"?miss:null;
+  return {k,pend,ok:k==="comp"&&!pend.length,txt:pend==null?"Falta toda la documentación":pend.length?"Falta: "+pend.map(x=>LP_DL[x]).join(", "):"No falta nada"}}
+const lpMed=r=>!!String(r.d.Especificacion_condiciones_medicas||"").trim()||r.d.Condiciones_medicas==="Sí";
+const LP_MEDTAG='<span class="lpmed" title="Tiene rellena la especificación de condiciones médicas">Revisar condiciones médicas</span>';
+const lpDone=r=>{let pay=false;try{pay=payState(r).k!=="late"}catch(e){}const ds=lpDocs(r);return {pay,doc:ds.ok,ds,ok:pay&&ds.ok}};
+const lpSur=n=>String(n||"").trim().split(/\s+/).slice(1).join(" ");
+/* bloque de documentación (Limpieza y ficha); con edición se marca lo que falta */
+function lpDocHtml(r,ed){const s=lpDocs(r);const [t,sub]=LP_DS[s.k];
+  let h='<div class="lpdocbox" data-lpdocbox="'+esc(r.id)+'"><div class="lpdh"><span class="lpchk d-'+s.k+'">'+t+"</span><small>"+sub+"</small></div>";
+  const opts=s.k==="comp"?LP_DOCS.filter(x=>x[0]==="sal"||x[0]==="med"):s.k==="none"?[]:LP_DOCS;const cur=new Set(s.pend||[]);
+  h+='<p class="lpdm'+(s.ok?" ok":"")+'">'+esc(s.txt)+"</p>";
+  if(ed&&opts.length)h+='<span class="inclab">'+(s.k==="comp"?"¿Falta algo más?":"Documentación pendiente")+'</span><div class="lpdcs">'+opts.map(([k,l])=>'<label class="lpdc"><input type="checkbox" data-lpdoc="'+esc(r.id)+'" value="'+k+'"'+(cur.has(k)?" checked":"")+"> "+esc(l)+"</label>").join("")+"</div>"+(s.k==="rev"?'<small class="muted">Al marcar algo pasa a «Incompleta».</small>':"");
+  const doc=ATT.docs["d-"+r.id]||{};if(doc.docsAt)h+='<small class="muted">Último cambio '+esc(new Date(doc.docsAt).toLocaleString("es-ES",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}))+(doc.docsBy?" · "+esc(doc.docsBy):"")+"</small>";
+  return h+"</div>"}
 function lpItems(w){if(isCampKey(w))return (S.allRows||[]).filter(r=>r.camp===w.slice(2)).map(r=>({r,w:r.weeks[0]||{}}));return weekItems(w)}
 function renderLimpieza(){if($("view-limpieza").hidden)return;
   const has=(S.allRows||[]).length>0;const w=ATT.lpW;
@@ -4996,18 +5037,28 @@ function renderLimpieza(){if($("view-limpieza").hidden)return;
     [["nac","Nacionales"],["inst","Institucionales"]].forEach(([k,l])=>{const cs=CAMPS.filter(c=>c.kind===k);if(!cs.length)return;h+='<span class="wsec">'+l+"</span>";cs.forEach(c=>{h+=box("c:"+c.id,c.n,campDates(c.id),lpItems("c:"+c.id),"wc-"+k)})});
     $("lpWeeks").innerHTML=h;return}
   const it=lpItems(w).map(x=>Object.assign({},x,{s:lpDone(x.r)}));const ok=it.filter(x=>x.s.ok),pe=it.filter(x=>!x.s.ok);
-  $("lpBoxes").innerHTML=[["pend","Pendientes","Falta el pago al día o la documentación",pe.length],["ok","Completadas","Pago al día y documentación comprobada",ok.length]].map(([k,t,sub,n])=>'<button type="button" class="pbx lb-'+k+'" data-lpf="'+k+'" aria-pressed="'+(ATT.lpF===k)+'"><span class="pt2">'+t+'</span><span class="pc2">'+n+'</span><span class="ps2">'+sub+"</span></button>").join("");
-  const q=attNrm(ATT.lpQ.trim());let L=(ATT.lpF==="ok"?ok:pe).filter(x=>!q||attNrm(x.r.hay+" "+x.r.tutor).includes(q));
-  L.sort((a,b)=>a.r.name.localeCompare(b.r.name));
+  $("lpBoxes").innerHTML=[["pend","Pendientes","Falta el pago al día o la documentación",pe.length],["ok","Completadas","Pago al día y documentación completa, sin nada pendiente",ok.length]].map(([k,t,sub,n])=>'<button type="button" class="pbx lb-'+k+'" data-lpf="'+k+'" aria-pressed="'+(ATT.lpF===k)+'"><span class="pt2">'+t+'</span><span class="pc2">'+n+'</span><span class="ps2">'+sub+"</span></button>").join("");
+  const q=attNrm(ATT.lpQ.trim());let L=(ATT.lpF==="ok"?ok:pe).filter(x=>(!q||attNrm(x.r.hay+" "+x.r.tutor).includes(q))&&(!ATT.lpPay||(ATT.lpPay==="late")!==x.s.pay)&&(!ATT.lpDoc||(ATT.lpDoc==="med"?lpMed(x.r):x.s.ds.k===ATT.lpDoc)));
+  const fd=x=>String(x.r.d.Fecha_rellenado_CE_Form||"");
+  L.sort(ATT.lpSort==="ape"?(a,b)=>lpSur(a.r.name).localeCompare(lpSur(b.r.name),"es")||a.r.name.localeCompare(b.r.name,"es"):ATT.lpSort==="form"?(a,b)=>(!fd(a)-!fd(b))||fd(a).localeCompare(fd(b))||a.r.name.localeCompare(b.r.name,"es"):(a,b)=>a.r.name.localeCompare(b.r.name,"es"));
   $("lpCount").textContent=L.length+" jugadores";
   $("lpList").innerHTML=L.length?L.map(x=>{const r=x.r,doc=ATT.docs["d-"+r.id]||{},log=Array.isArray(doc.log)?doc.log:[],last=log[log.length-1];const ic=incForDeal(r.id).length;
     const mk=x.w&&x.w.prog?'<span class="lpmod"><span class="mk2" style="background:var(--'+String(x.w.prog).toLowerCase()+')"></span>'+esc(x.w.prog)+" · "+esc(MODLBL[x.w.mod]||x.w.mod||"")+"</span>":"";
-    return '<div class="prow lprow '+(x.s.ok?"is-ok":"is-pe")+'" data-attd="'+esc(r.id)+'" tabindex="0"><span class="pnm"><b class="nmrow"><span class="nmt" title="'+esc(r.name)+'">'+esc(r.name)+"</span>"+campTag(r)+'</b><span class="code">'+esc(r.code)+(r.tutor?" · "+esc(r.tutor):"")+"</span></span>"+mk+
-      '<span class="lpchk'+(x.s.pay?" ok":"")+'">'+(x.s.pay?"✓ Pago al día":"✗ Pago atrasado")+'</span><span class="lpchk'+(x.s.doc?" ok":"")+'">'+(x.s.doc?"✓ Documentación":"✗ Documentación")+"</span>"+
+    const ds=x.s.ds,fr=r.d.Fecha_rellenado_CE_Form;
+    return '<div class="prow lprow '+(x.s.ok?"is-ok":"is-pe")+'" data-attd="'+esc(r.id)+'" tabindex="0"><span class="pnm"><b class="nmrow"><span class="nmt" title="'+esc(r.name)+'">'+esc(r.name)+"</span>"+campTag(r)+'</b><span class="code">'+esc(r.code)+(r.tutor?" · "+esc(r.tutor):"")+(fr?" · Form "+esc(fmtD(attDay(fr))):"")+"</span>"+(lpMed(r)?LP_MEDTAG:"")+"</span>"+mk+
+      '<span class="lpchk'+(x.s.pay?" ok":"")+'">'+(x.s.pay?"✓ Pago al día":"✗ Pago atrasado")+'</span><span class="lpdoc"><span class="lpchk d-'+ds.k+'">'+LP_DS[ds.k][0]+'</span><small>'+esc(ds.txt)+"</small></span>"+
       '<span class="lpct">'+(log.length+ic?"<b>"+(log.length+ic)+"</b> contacto"+(log.length+ic>1?"s":"")+(last?"<small>último "+esc(fmtD(last.day||attDay(last.at)))+(last.byName?" · "+esc(last.byName):"")+"</small>":""):'<span class="muted">Sin contactos</span>')+"</span></div>"}).join("")
-    :'<div class="eqempty"><h3 class="wide" style="margin:0">'+(ATT.lpF==="ok"?"Ninguna completada todavía":"Nada pendiente")+"</h3>"+(ATT.lpF==="ok"?"<p>Pasan a completadas con el pago al día y la casilla «Comprobación documentos» marcada en el CRM.</p>":"")+"</div>"}
+    :'<div class="eqempty"><h3 class="wide" style="margin:0">'+(ATT.lpF==="ok"?"Ninguna completada todavía":"Nada pendiente")+"</h3>"+(ATT.lpF==="ok"?"<p>Pasan a completadas con el pago al día, la casilla «Comprobación documentos» marcada en el CRM y nada pendiente apuntado.</p>":"")+"</div>"}
 /* ---------- HISTORIAL DE CONTACTOS (panel) ---------- */
 function incForDeal(id){try{return incList().filter(d=>String(d.pid)===String(id)).flatMap(d=>d.log.filter(e=>e.k==="resp"&&e.contact===true).map(e=>({inc:d,e})))}catch(e){return []}}
+/* Zoho Desk: el ticket se crea a mano en Desk (el software solo lee de Zoho); departamento según la sede */
+const DESK_DEPT={mad:"campus-experience-madrid",nac:"campus-nacionales",inst:"campus-institucionales"};
+const deskNew=camp=>"https://desk.zoho.eu/agent/islagency/"+(DESK_DEPT[sedeOfCamp(camp||"mad")]||DESK_DEPT.mad)+"/tickets/new";
+/* hermanos y familia: otras personas de la misma lista con el mismo teléfono, email o nombre de tutor */
+function attFamily(P){const I=P.info;const pool=I.list==="lim"?(S.allRows||[]).map(r=>({key:"d-"+r.id,name:r.name,phone:String(r.d.Telefono_Tutor_legal||""),email:String(r.d.Email||""),tutor:r.tutor||"",id:String(r.id)})):(attRows(I.list)||[]);
+  const ph=t=>String(t||"").replace(/\D/g,"").slice(-9);const me={ph:ph(I.phone),em:String(I.email||"").trim().toLowerCase(),tu:attNameKey(I.tutor)};const seen=new Set([P.key]);
+  return pool.filter(x=>{if(seen.has(x.key))return false;const ok=(me.ph.length>=9&&ph(x.phone)===me.ph)||(!!me.em&&String(x.email||"").trim().toLowerCase()===me.em)||(me.tu.includes(" ")&&attNameKey(x.tutor)===me.tu);if(ok)seen.add(x.key);return ok})
+    .slice(0,12).map(x=>({key:x.key,name:x.name,id:x.id}))}
 function attOpen(key,info){ATT.panel={key,info};ATT.edit=null;attPanelRender()}
 function attClose(){ATT.panel=null;ATT.edit=null;$("attPanel").hidden=true;$("attScrim").hidden=true}
 function attPanelRender(){const P=ATT.panel;if(!P){attClose();return}const I=P.info,doc=Object.assign({},attXls(P.key).att?{att:attXls(P.key).att}:{},ATT.docs[P.key]||{}),log=attLog(P.key);
@@ -5016,6 +5067,8 @@ function attPanelRender(){const P=ATT.panel;if(!P){attClose();return}const I=P.i
   const items=log.map(e=>({k:"c",day:e.day||attDay(e.at),e})).concat(incs.map(x=>({k:"i",day:attDay(x.e.at),x}))).sort((a,b)=>(b.day||"").localeCompare(a.day||""));
   let h='<div class="ipx"><div class="tt"><b>'+esc(I.name)+"</b><small>"+esc([I.tutor,I.code,I.where].filter(Boolean).join(" · "))+'</small><span class="tags">'+(I.st?attChip(I.st,I.ins):"")+(I.extra||"")+'</span></div><button type="button" class="x" data-attclose aria-label="Cerrar">×</button></div><div class="ipb">';
   h+='<div class="attinfo">'+[["Teléfono",I.phone],["Email",I.email],["Nacionalidad",I.nat],["Idioma",I.lang],["Modalidad",I.mod],["Colectivo",I.col]].filter(x=>x[1]).map(([l,v])=>"<span><small>"+l+"</small>"+esc(v)+"</span>").join("")+"</div>";
+  h+='<div class="attlinks">'+(I.crmId?'<a class="btn" href="'+ZOHO_REC+esc(I.crmId)+'" target="_blank" rel="noopener">Abrir en el CRM</a>':"")+'<a class="btn" data-deskcopy="'+esc(I.email||"")+'" href="'+deskNew(I.camp)+'" target="_blank" rel="noopener" title="Abre Zoho Desk para crear el ticket. El email del tutor se copia para pegarlo.">Abrir ticket en Desk</a></div>';
+  if(I.list==="lim"){const rr=(S.allRows||[]).find(x=>String(x.id)===String(I.dealId));if(rr)h+=lpDocHtml(rr,ed)}
   h+='<div class="attatt"><span class="inclab">ATT que gestiona</span>'+(ed?'<select data-attassign aria-label="ATT que gestiona"><option value="">Sin asignar</option>'+known.concat(doc.att&&!known.includes(doc.att)?[doc.att]:[]).map(n=>'<option'+(doc.att===n?" selected":"")+">"+esc(n)+"</option>").join("")+'<option value="__me">Yo</option></select>':"<b>"+esc(doc.att||"Sin asignar")+"</b>")+"</div>";
   if(ed&&!E)h+='<button type="button" class="bigbtn" data-attnew>+ Añadir contacto</button>';
   if(E){const via=E.via||"telefono",dir=E.dir||"out";
@@ -5024,6 +5077,7 @@ function attPanelRender(){const P=ATT.panel;if(!P){attClose();return}const I=P.i
       '<span class="inclab">Vía</span><div class="incwk">'+ATT_VIA.map(([k,l])=>'<button type="button" class="incopt" data-attvia="'+k+'" aria-pressed="'+(via===k)+'">'+l+"</button>").join("")+"</div>"+
       '<label class="attf"><small>Estado</small><select data-attfs><option value="">— Elige —</option>'+ATT_ST.map(s=>'<option'+(E.st===s?" selected":"")+">"+esc(s)+"</option>").join("")+"</select></label>"+
       '<label class="attf"><small>Qué nos dijeron</small><textarea class="inctxt" data-attfo placeholder="Lo que nos dijo la familia">'+esc(E.obs||"")+"</textarea></label>"+
+      (E.i==null&&E.fam&&E.fam.length?'<span class="inclab">Apuntar también en (misma familia)</span><div class="lpdcs">'+E.fam.map(f=>'<label class="lpdc"><input type="checkbox" data-attfam="'+esc(f.key)+'"'+(E.famOff&&E.famOff.includes(f.key)?"":" checked")+"> "+esc(f.name)+"</label>").join("")+"</div>":"")+
       '<div class="incbar attbar"><button type="button" class="btn primary" data-attsave>Guardar</button><button type="button" class="btn" data-attcancel>Cancelar</button>'+(E.i!=null?'<button type="button" class="btn dangerbtn" data-attdel>Borrar contacto</button>':"")+"</div></div>"}
   h+='<span class="inclab">Historial de contactos · '+items.length+"</span>";
   h+=items.length?'<ol class="inctl attl">'+items.map(it=>{if(it.k==="i"){const d=it.x.inc,e=it.x.e;return '<li class="k-resp"><div class="ic-h"><b>'+esc(fmtDL(it.day))+"</b><span>"+esc(e.byName||"—")+'</span><span class="ic-via">Incidencia · '+esc(INC_VL[e.via]||e.via||"")+"</span></div><p>"+esc(e.txt||"")+"</p></li>"}
@@ -5036,11 +5090,13 @@ function attRenderAll(){try{renderBbdd()}catch(e){}try{renderLimpieza()}catch(e)
 function attRender(){attRenderAll()}
 $("attPanel").addEventListener("change",async e=>{const P=ATT.panel;if(!P)return;
   if(e.target.matches("[data-attassign]")){let v=e.target.value;if(v==="__me")v=(await attMe()).name||"";const doc=Object.assign({},ATT.docs[P.key]||{log:[]});doc.att=v;await attPut(P.key,doc,"ATT asignado");return}
+  if(ATT.edit&&e.target.matches("[data-attfam]")){const k=e.target.dataset.attfam,off=new Set(ATT.edit.famOff||[]);if(e.target.checked)off.delete(k);else off.add(k);ATT.edit.famOff=[...off];return}
   if(ATT.edit){if(e.target.matches("[data-attfd]"))ATT.edit.day=e.target.value;if(e.target.matches("[data-attfs]"))ATT.edit.st=e.target.value}});
 $("attPanel").addEventListener("input",e=>{if(ATT.edit&&e.target.matches("[data-attfo]"))ATT.edit.obs=e.target.value});
 $("attPanel").addEventListener("click",async e=>{let b;const P=ATT.panel;if(!P)return;
+  if((b=e.target.closest("[data-deskcopy]"))){const m=b.dataset.deskcopy;if(m){try{navigator.clipboard.writeText(m).then(()=>toast("Email copiado: pégalo en el ticket"),()=>{})}catch(err){}}return}
   if(e.target.closest("[data-attclose]")){attClose();return}
-  if(e.target.closest("[data-attnew]")){ATT.edit={day:todayISO(),via:"telefono",dir:"out",st:"",obs:""};attPanelRender();return}
+  if(e.target.closest("[data-attnew]")){let fam=[];try{fam=attFamily(P)}catch(err){}ATT.edit={day:todayISO(),via:"telefono",dir:"out",st:"",obs:"",fam,famOff:[]};attPanelRender();return}
   if(e.target.closest("[data-attcancel]")){ATT.edit=null;attPanelRender();return}
   if((b=e.target.closest("[data-attdir]"))){ATT.edit.dir=b.dataset.attdir;attPanelRender();return}
   if((b=e.target.closest("[data-attvia]"))){ATT.edit.via=b.dataset.attvia;attPanelRender();return}
@@ -5053,7 +5109,12 @@ $("attPanel").addEventListener("click",async e=>{let b;const P=ATT.panel;if(!P)r
     else doc.log.push(Object.assign(entry,{at:new Date().toISOString(),by:S.me||null,byName:me.name||""}));
     doc.log.sort((a,b)=>String(a.day||"").localeCompare(String(b.day||""))||String(a.at||"").localeCompare(String(b.at||"")));
     if(!doc.att&&me.name)doc.att=me.name;if(P.info.dealId)doc.deal=String(P.info.dealId);doc.list=P.info.list||doc.list||"";
-    ATT.edit=null;await attPut(P.key,doc,E.i!=null?"Contacto corregido":"Contacto guardado")}});
+    const fam=E.i==null?(E.fam||[]).filter(f=>!(E.famOff||[]).includes(f.key)):[];
+    ATT.edit=null;const ok=await attPut(P.key,doc,fam.length?"":E.i!=null?"Contacto corregido":"Contacto guardado");
+    if(ok&&fam.length){let n=0;for(const f of fam){const d2=Object.assign({log:[]},ATT.docs[f.key]||{});d2.log=(d2.log||[]).slice();
+        d2.log.push(Object.assign({},entry,{at:new Date().toISOString(),by:S.me||null,byName:me.name||"",fam:P.key}));d2.log.sort((a,b)=>String(a.day||"").localeCompare(String(b.day||""))||String(a.at||"").localeCompare(String(b.at||"")));
+        if(!d2.att&&me.name)d2.att=me.name;if(P.info.list==="unp"||P.info.list==="pre"||P.info.list==="lim")d2.deal=f.id;d2.list=P.info.list||d2.list||"";if(await attPut(f.key,d2,""))n++}
+      toast("Contacto guardado"+(n?" también en "+n+" más de la familia":""))}}});
 /* confirmación dentro del software (el aviso del navegador no funciona dentro de claude.ai) */
 function ceConfirm(t,p,yes){return new Promise(res=>{const m=$("ceConf");$("ceConfT").textContent=t;$("ceConfP").textContent=p||"";$("ceConfYes").textContent=yes||"Aceptar";$("ceConfYes").classList.toggle("dangerbtn",/borrar|salir/i.test(yes||""));m.hidden=false;$("ceConfNo").focus();
   const done=v=>{m.hidden=true;$("ceConfYes").onclick=$("ceConfNo").onclick=null;m.onclick=null;document.removeEventListener("keydown",kd,true);res(v)};
@@ -5064,11 +5125,12 @@ $("attScrim").addEventListener("click",attClose);
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&ATT.panel)attClose()});
 /* abrir el historial desde las listas */
 $("bdRows").addEventListener("click",e=>{const tr=e.target.closest("[data-attk]");if(!tr)return;const x=(attRows(ATT.list)||[]).find(y=>y.key===tr.dataset.attk);if(!x)return;
-  attOpen(x.key,{name:x.name,tutor:x.tutor,code:x.code,phone:x.phone,email:x.email,nat:x.nat,lang:x.lang,mod:x.mod,col:x.col,st:x.st,ins:x.ins,list:x.list,dealId:x.list==="unp"||x.list==="pre"?x.id:null,extra:x.dup?'<span class="attdup">Duplicado</span>':""})});
+  attOpen(x.key,{name:x.name,tutor:x.tutor,code:x.code,phone:x.phone,email:x.email,nat:x.nat,lang:x.lang,mod:x.mod,col:x.col,st:x.st,ins:x.ins,list:x.list,dealId:x.list==="unp"||x.list==="pre"?x.id:null,crmId:x.id,camp:x.camp||"mad",extra:x.dup?'<span class="attdup">Duplicado</span>':""})});
 $("bdRows").addEventListener("keydown",e=>{if(e.key==="Enter"){const tr=e.target.closest("[data-attk]");if(tr)tr.click()}});
 $("lpList").addEventListener("click",e=>{const row=e.target.closest("[data-attd]");if(!row)return;const r=(S.allRows||[]).find(x=>String(x.id)===row.dataset.attd);if(!r)return;const d=r.d;const s=lpDone(r);
   attOpen("d-"+r.id,{name:r.name,tutor:r.tutor,code:r.code,where:wLabel(ATT.lpW),phone:String(d.Telefono_Tutor_legal||""),email:String(d.Email||""),nat:String(d.Nationality||""),lang:attLang(d),mod:(r.weeks[0]?r.weeks[0].prog+" · "+(MODLBL[r.weeks[0].mod]||r.weeks[0].mod):""),list:"lim",dealId:r.id,
-    extra:'<span class="lpchk'+(s.pay?" ok":"")+'">'+(s.pay?"✓ Pago al día":"✗ Pago atrasado")+'</span><span class="lpchk'+(s.doc?" ok":"")+'">'+(s.doc?"✓ Documentación":"✗ Documentación")+"</span>"})});
+    crmId:r.id,camp:r.camp,email2:String(d.Email||""),
+    extra:'<span class="lpchk'+(s.pay?" ok":"")+'">'+(s.pay?"✓ Pago al día":"✗ Pago atrasado")+"</span>"+(lpMed(r)?LP_MEDTAG:"")})});
 $("lpList").addEventListener("keydown",e=>{if(e.key==="Enter"){const row=e.target.closest("[data-attd]");if(row)row.click()}});
 $("bdLists").addEventListener("click",e=>{const b=e.target.closest("[data-bdl]");if(!b||b.getAttribute("aria-disabled")==="true"){if(b)toast("Los leads aún no están en el CRM");return}ATT.list=b.dataset.bdl;ATT.q="";ATT.fAtt="";ATT.fSt="";ATT.lim=200;$("bdQ").value="";renderBbdd();window.scrollTo(0,0)});
 $("bdCrumbs").addEventListener("click",e=>{if(e.target.closest("[data-bdgo]")){ATT.list="";renderBbdd()}});
@@ -5077,6 +5139,7 @@ $("bdAtt").addEventListener("change",e=>{ATT.fAtt=e.target.value;ATT.lim=200;ren
 $("bdSt").addEventListener("change",e=>{ATT.fSt=e.target.value;ATT.lim=200;renderBbdd()});
 $("bdMore").addEventListener("click",()=>{ATT.lim+=300;renderBbdd()});
 $("bdRefresh").addEventListener("click",()=>attLoad(true));
+SEDE.unp={s:"all",c:""};SEDE_R.unp=()=>renderBbdd();
 /* importar el historial del Excel «Master BBDD Call Center» (solo administrador): pestañas «BBDD …»; se cruza por el CÓDIGO de la inscripción 2026 */
 async function readXlsx(file){const buf=new Uint8Array(await file.arrayBuffer());const dv=new DataView(buf.buffer);let e=buf.length-22;
   while(e>=0&&!(buf[e]===0x50&&buf[e+1]===0x4b&&buf[e+2]===5&&buf[e+3]===6))e--;if(e<0)throw new Error("No es un archivo Excel (.xlsx)");
@@ -5110,6 +5173,13 @@ $("lpWeeks").addEventListener("click",e=>{const b=e.target.closest("[data-lpw]")
 $("lpCrumbs").addEventListener("click",e=>{if(e.target.closest("[data-lpgo]")){ATT.lpW=0;renderLimpieza()}});
 $("lpBoxes").addEventListener("click",e=>{const b=e.target.closest("[data-lpf]");if(!b)return;ATT.lpF=b.dataset.lpf;renderLimpieza()});
 $("lpQ").addEventListener("input",e=>{ATT.lpQ=e.target.value;renderLimpieza()});
+[["lpPay","lpPay"],["lpDoc","lpDoc"],["lpSort","lpSort"]].forEach(([id,k])=>$(id).addEventListener("change",e=>{ATT[k]=e.target.value;renderLimpieza()}));
+/* marcar la documentación pendiente (Limpieza y ficha) */
+document.addEventListener("change",async e=>{const c=e.target.closest&&e.target.closest("input[data-lpdoc]");if(!c)return;const id=c.dataset.lpdoc;const r=(S.allRows||[]).find(x=>String(x.id)===id);if(!r)return;
+  if(!attEdit()){c.checked=!c.checked;toast("No tienes permiso para cambiar la documentación");return}
+  const key="d-"+id;const doc=Object.assign({log:[]},ATT.docs[key]||{});const set=new Set(Array.isArray(doc.docs)?doc.docs:[]);if(c.checked)set.add(c.value);else set.delete(c.value);
+  const me=await attMe();doc.docs=LP_DOCS.map(x=>x[0]).filter(k=>set.has(k));doc.docsAt=new Date().toISOString();doc.docsBy=me.name||"";doc.deal=id;
+  await attPut(key,doc,"Documentación pendiente guardada");const box=document.querySelector('#dBody [data-lpdocbox="'+id+'"]');if(box)box.outerHTML=lpDocHtml(r,attEdit())});
 /* ---------- ESTADÍSTICAS ---------- */
 const DESK_ORG="20109649402",DESK_FROM="2026-09-01";
 async function deskLoad(force){if(!S.mcp||ATT.deskBusy)return;if(ATT.desk&&!force)return;ATT.deskBusy=true;ATT.deskErr="";
@@ -5139,8 +5209,12 @@ function renderAttStats(){if($("view-attstats").hidden)return;
   data.forEach(({l,rows})=>{if(!rows)return;const s=attListStats(rows);G+=s.g;I+=s.ins;N+=s.n;P+=s.p;
     rows.forEach(x=>x.log.forEach((e,i)=>{const d=e.day||attDay(e.at);if(e.via==="telefono"||!e.via)calls.push({d,l:l.k,a:e.byName||"Sin asignar",r:Math.min(i,2),st:e.st});
       if(d){(byDay[d]=byDay[d]||{t:0})[l.k]=(byDay[d][l.k]||0)+1;byDay[d].t++}const a=e.byName||"Sin asignar";byAtt[a]=(byAtt[a]||0)+1}))});
+  /* unpaids que ya pasaron a Trash: no salen en la lista, pero sus llamadas siguen contando */
+  const TR=new Set();(ATT.x27||[]).filter(d=>d.Stage==="Trash").forEach(d=>{const k="d-"+d.id;const lg=attLog(k);if(!lg.length)return;TR.add(k);
+    lg.forEach((e,i)=>{const dd=e.day||attDay(e.at);if(e.via==="telefono"||!e.via)calls.push({d:dd,l:"unp",a:e.byName||"Sin asignar",r:Math.min(i,2),st:e.st});
+      if(dd){(byDay[dd]=byDay[dd]||{t:0}).unp=(byDay[dd].unp||0)+1;byDay[dd].t++}const a=e.byName||"Sin asignar";byAtt[a]=(byAtt[a]||0)+1})});
   /* contactos de Limpieza (inscripciones 2027) también son llamadas si van por teléfono */
-  Object.entries(ATT.docs).forEach(([k,doc])=>{if(!/^d-/.test(k)||!Array.isArray(doc.log))return;if(data.some(x=>x.rows&&x.rows.some(r=>r.key===k)))return;doc.log.forEach(e=>{const d=e.day||attDay(e.at);if(e.via==="telefono")calls.push({d,l:"lim",a:e.byName||"Sin asignar",r:0,st:e.st});if(d){(byDay[d]=byDay[d]||{t:0}).lim=(byDay[d].lim||0)+1;byDay[d].t++}})});
+  Object.entries(ATT.docs).forEach(([k,doc])=>{if(!/^d-/.test(k)||!Array.isArray(doc.log)||TR.has(k))return;if(data.some(x=>x.rows&&x.rows.some(r=>r.key===k)))return;doc.log.forEach(e=>{const d=e.day||attDay(e.at);if(e.via==="telefono")calls.push({d,l:"lim",a:attWho(e.byName)||"Sin asignar",r:0,st:e.st});if(d){(byDay[d]=byDay[d]||{t:0}).lim=(byDay[d].lim||0)+1;byDay[d].t++}})});
   const loading=data.some(x=>!x.rows);
   let h='<div class="sthero">'+stTile(loading?"…":nfmt(N),"Registros en las listas","var(--navy)",lists.length+" listas activas")+stTile(loading?"…":nfmt(G),"Gestionados","var(--pink)",N?pct(G/N)+" de avance":"")+stTile(loading?"…":nfmt(I),"Inscritos","var(--green)",N?pct(I/N)+" de conversión":"")+stTile(nfmt(calls.length),"Llamadas","#2f3e40",calls.filter(c=>c.d===today).length+" hoy · "+calls.filter(c=>c.d>=d7).length+" en 7 días")+"</div>";
   /* cada lista */
