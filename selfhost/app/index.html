@@ -2768,7 +2768,7 @@ async function load(fresh){
 let refreshing=false;
 function startRefresh(){
   if(refreshing)return;refreshing=true;
-  setInterval(()=>{if(document.visibilityState==="visible")load(true)},300000);
+  setInterval(()=>{if(document.visibilityState==="visible"){load(true);try{if(ATT.x27)attLoad(true,"x27")}catch(e){}}},300000);
 }
 
 function exportCsv(){
@@ -5018,12 +5018,12 @@ async function attFetch(q,opt){const all=[];
   return all}
 const Q_B26="select Codigo, Deal_Name, Player, Contact_Name, Email, Telefono_Tutor_legal, Nationality, Idioma_comunicaciones, Tipo_Modalidad, Colectivos, Created_Time from Deals where Deal_Name like '2026 RMF CE Madrid%' and Stage = 'Paid'";
 const Q_X27=()=>"select Deal_Name, Player, Contact_Name, Email, Telefono_Tutor_legal, Nationality, Idioma_comunicaciones, Tipo_Modalidad, Colectivos, Created_Time, Stage, Reservation_Code, Total, Event_Name from Deals where Event_Name.Name in "+EVS+" and Stage in ('Unpaid','Reservation Payment Completed','Trash')";
-async function attLoad(force){if(!S.mcp)return;const opt={cache:{staleTime:60000,gcTime:600000,refresh:!!force}};
-  if(!ATT.b26busy&&(force||!ATT.b26)){ATT.b26busy=true;ATT.b26err="";attRender();
+async function attLoad(force,only){if(!S.mcp)return;const opt={cache:{staleTime:60000,gcTime:600000,refresh:!!force}};
+  if(only!=="x27"&&!ATT.b26busy&&(force||!ATT.b26)){ATT.b26busy=true;ATT.b26err="";attRender();
     attFetch(Q_B26,opt)
       .then(r=>{ATT.b26=r}).catch(e=>{ATT.b26err="No se ha podido leer la BBDD 2026 de Zoho CRM"+(e&&e.message?" ("+e.message+")":"")+"."}).finally(()=>{ATT.b26busy=false;attRender()})}
   if(!ATT.x27busy&&(force||!ATT.x27)){ATT.x27busy=true;ATT.x27err="";
-    attFetch(Q_X27(),opt).then(r=>{ATT.x27=r}).catch(e=>{ATT.x27err="No se han podido leer los unpaids y prerreservas"+(e&&e.message?" ("+e.message+")":"")+"."}).finally(()=>{ATT.x27busy=false;attRender()})}}
+    attFetch(Q_X27(),opt).then(r=>{ATT.x27=r;ATT.x27At=Date.now()}).catch(e=>{ATT.x27err="No se han podido leer los unpaids y prerreservas"+(e&&e.message?" ("+e.message+")":"")+"."}).finally(()=>{ATT.x27busy=false;attRender()})}}
 /* inscritos 2027 activos: por jugador y por email del tutor */
 function attEnrolled(){const P=new Set(),E=new Set(),PM=new Set(),N=new Set();(S.allRows||[]).forEach(r=>{const d=r.d;const pid=d.Player&&d.Player.id;const nk=attNameKey(r.name);if(nk.includes(" "))N.add(nk);if(pid){P.add(String(pid));(r.weeks||[]).forEach(w=>PM.add(pid+"|"+w.prog+"|"+w.mod));PM.add(pid+"|"+String(d.Tipo_Modalidad||""))}
   [d.Email,d.Email_persona].forEach(e=>{e=String(e||"").trim().toLowerCase();if(e)E.add(e)})});return {P,E,PM,N}}
@@ -5044,7 +5044,10 @@ function attRows(list){const EN=attEnrolled();let out=[];
   else return [];
   out.forEach(x=>{const doc=ATT.docs[x.key]||{};x.doc=doc;x.log=attLog(x.key);
     x.ins=(x.pid&&EN.P.has(x.pid))||(!!x.email&&EN.E.has(x.email.toLowerCase()));if(list==="unp")x.ins=x.pid&&EN.P.has(x.pid);
-    const last=x.log[x.log.length-1];x.st=x.ins?"Inscrito":last?last.st||"":"";x.att=attWho(doc.att)||attXls(x.key).att||(last&&last.byName)||"";x.lastDay=last?last.day||attDay(last.at):""});
+    let last=x.log[x.log.length-1];
+    /* «Duplicado» apuntado a mano deja de valer cuando ya no hay duplicado (p. ej. la otra inscripción pasó a Trash): vale el estado anterior */
+    if(list==="unp"&&!x.dup&&last&&last.st==="Duplicado"){const prev=x.log.slice(0,-1).reverse().find(e=>e.st&&e.st!=="Duplicado");x.dupOld=true;last=prev?Object.assign({},last,{st:prev.st}):Object.assign({},last,{st:""})}
+    x.st=x.ins?"Inscrito":last?last.st||"":"";x.att=attWho(doc.att)||attXls(x.key).att||(last&&last.byName)||"";x.lastDay=last?last.day||attDay(last.at):""});
   return out}
 /* historial importado del Excel (un solo documento «x-b26»): solo lectura; los contactos nuevos van al documento de cada persona */
 function attXls(key){const X=ATT.docs[/^c-/.test(key)?"x-b26":/^d-/.test(key)?"x-27":""];if(!X||!X.items)return {};const it=X.items[key.slice(2)];if(!it)return {};return it.att?Object.assign({},it,{att:attWho(it.att)}):it}
@@ -5058,6 +5061,7 @@ function attChip(st,auto){return st?'<span class="attst t-'+ATT_TONE(st)+'"'+(au
 /* ---------- BASE DE DATOS ---------- */
 function renderBbdd(){if($("view-bbdd").hidden)return;
   if((!ATT.b26&&!ATT.b26busy)||(!ATT.x27&&!ATT.x27busy))attLoad(false);
+  else if(ATT.x27At&&Date.now()-ATT.x27At>120000&&!ATT.x27busy)attLoad(true,"x27");
   const L=ATT_LISTS.find(l=>l.k===ATT.list);
   $("bdCrumbs").innerHTML=L?'<button type="button" data-bdgo="">Base de datos</button><span class="sep">›</span><span class="cur">'+esc(L.n)+(L.lang?" · "+L.lang:"")+"</span>":'<span class="cur">Listas para las llamadas comerciales</span>';
   $("bdLists").hidden=!!L;$("bdBody").hidden=!L;
