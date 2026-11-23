@@ -6009,13 +6009,13 @@ const LG_KITS=[["minikit","Minikit"],["lightblue","Light blue"],["black","Black"
 const LG_WPI=[["botella","Botella"],["mochila-one","Mochila ONE"],["mochila-max","Mochila MAX"],["gymsack","Gymsack"],["gorra","Gorra"],["portabotas","Portabotas"],["lanyard","Lanyard"],["pulsera","Pulsera"]];
 const LG_STAFF=[["royal","Azul royal","Monitores, supports y field coordinator"],["navy","Azul navy","Coach"],["burdeos","Burdeos","Heads y directores"]];
 const LG_LOC_K=[["ent","Entrada al almacén"],["sal","Salida a sede"],["dev","Devolución de sede"],["rec","Recuento"],["seo","Enviar a serigrafía"],["sei","Vuelta de serigrafía"],["baja","Baja (pérdida o rotura)"]];
-const LG_DEF=()=>({margin:5,objetivo:8000,unidad:"insc",
+const LG_DEF=()=>({margin:5,objetivo:8000,unidad:"sem",
   sedes:[["vbb","VBB"],["uam","UAM"],["uem","UEM"],["villa","Villa"],["fleming","Fleming"],["luisa","Luis A."],["sa","Santa Ana"]].map(([id,n])=>({id,n})).concat(CAMPS.filter(c=>c.kind!=="madrid").map(c=>({id:"c-"+c.id,n:c.n}))),
   kits:{"one-ext":{minikit:1},"one-int":{minikit:2},"max-ext":{minikit:1,lightblue:1},"max-int":{minikit:1,lightblue:1},"nac":{minikit:1},"inst":{minikit:1}},
   inst:{},
   wp:{"one-ext":["botella","mochila-one","gorra","lanyard","pulsera"],"one-int":["botella","mochila-one","gorra","lanyard","pulsera"],"max-ext":["botella","mochila-max","gorra","portabotas","lanyard","pulsera"],"max-int":["botella","mochila-max","gorra","portabotas","lanyard","pulsera"],"nac":["botella","mochila-one","gorra","lanyard","pulsera"],"inst":["botella","gymsack","gorra","lanyard","pulsera"]},
   wpOff:{},
-  med:{"128":"31-33","140":"34-36","152":"37-39","164":"40-42","S":"40-42","M":"40-42","L":"43-45","XL":"43-45"},
+  med:{"128":"31-33","140":"34-36","152":"37-39","164":"37-39","S":"40-42","M":"40-42","L":"43-45","XL":"43-45"},
   mini:{talla:20,lanyard:100},staff:{}});
 const LG={doc:null,arts:{},movs:{},nec:{sc:"all",prev:false},inv:{q:"",cat:"",nc:false},cfgTab:"gen",cfgW:1,cfgM:"one-ext",panel:"",busy:false,saveT:0};
 function lgCfg(){const d=LG_DEF(),s=LG.doc||{};const o=Object.assign({},d,s);["kits","wp","med","mini"].forEach(k=>{o[k]=Object.assign({},d[k],s[k]||{})});if(!Array.isArray(o.sedes)||!o.sedes.length)o.sedes=d.sedes;return o}
