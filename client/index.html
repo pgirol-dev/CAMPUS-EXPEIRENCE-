@@ -6055,7 +6055,7 @@ function lgNeeds(sc){const cfg=lgCfg();const N={};const add=(f,t,q)=>{if(!q)retu
     /* extras de equipación (Form 1 y Form 3): todos se entregan en la primera semana del participante */
     if(u.first){const r=u.r;if(r.kitExtra){add("minikit-kit",t,r.kitExtra);add("minikit-med",cfg.med[t]||"?",r.kitExtra)}if(r.gkExtra)add("portero-cam",t,r.gkExtra);
       /* la mochila extra es la que dice el producto: «Mochila Oficial Adidas ONE» (la única a la venta hoy, también para jugadores MAX) y, cuando salga, «… MAX» */
-      add("mochila-one","",r.bagOne||0);add("mochila-max","",r.bagMax||0)if(r.jersey)add("jersey",t,r.jersey)}
+      add("mochila-one","",r.bagOne||0);add("mochila-max","",r.bagMax||0);if(r.jersey)add("jersey",t,r.jersey)}
     const off=cfg.wpOff["w"+u.w+"|"+u.mod]||[];(cfg.wp[u.mod]||[]).filter(x=>!off.includes(x)).forEach(x=>add(x,"",1))});
   return {N,n,sin}}
 function lgCurva(){const c={};let n=0;(S.allRows||[]).forEach(r=>{const t=lgTalla(r.d.Talla_equipacion);if(t){c[t]=(c[t]||0)+1;n++}});
