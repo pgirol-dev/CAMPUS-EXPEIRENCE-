@@ -3897,6 +3897,12 @@ const MODSHORT=ap=>{const [p,m]=ap.split("|");return p+" "+(MOD_SHORT[m]||m)};
 /* ---------- render ---------- */
 function timeCol(mn,mx,RH){let h='<div class="hcol htime"><div class="hhead"></div><div class="hbody">';for(let t=mn;t<mx;t+=15)h+='<span class="hl'+(t%60?"":" hh")+'" style="top:'+((t-mn)/15*RH)+'px">'+ts(t)+"</span>";return h+"</div></div>"}
 function gridLines(mn,mx,RH){let h="";for(let t=mn;t<mx;t+=15)h+='<i class="hrline'+(t%60?" q":"")+'" style="top:'+((t-mn)/15*RH)+'px"></i>';return h}
+/* el horario se vuelve a pintar entero al editar: se conserva el scroll (lateral y vertical) mientras sigas en la misma semana, día y vista;
+   así el scroll solo se mueve cuando lo mueves tú */
+function hKeepScroll(board,paint){const old=board.querySelector(".hscroll");const key=[CW(),H.dow,H.view,H.sim?1:0].join("|");
+  const keep=old&&board.dataset.sk===key;const sl=keep?old.scrollLeft:0,st=keep?old.scrollTop:0;const wy=window.scrollY,wx=window.scrollX;
+  paint();board.dataset.sk=key;const nw=board.querySelector(".hscroll");if(nw&&keep){nw.scrollLeft=sl;nw.scrollTop=st}
+  if(keep&&(window.scrollY!==wy||window.scrollX!==wx))window.scrollTo(wx,wy)}
 function renderHorarios(){try{sbSync()}catch(e){}
   if($("view-horarios").hidden)return;
   if(hNac(H.week)&&(H.view==="buses"||H.view==="sim"))H.view="grid";H.sim=H.view==="sim";if(H.sim&&!H.simWeek)H.simWeek=(typeof H.week==="number"&&H.week)||1;
@@ -3960,7 +3966,7 @@ function renderHorarios(){try{sbSync()}catch(e){}
       h+='<button type="button" class="hb c-'+cc+(b.a==="FUN"?" c-fun":"")+(/^bus\b/i.test(b.a)?" c-bus":"")+(why?" bad":"")+(isAp&&ast==="ok"?" appr":"")+(tall?"":" thin")+(H.edit&&H.edit.ci===ci&&H.edit.bi===bi?" on":"")+'" data-hb="'+ci+"."+bi+'" style="top:'+((s-mn)/15*RH+1)+"px;height:"+((e-s)/15*RH-2)+'px" title="'+esc(c.n+" · "+b.a+(rl?" · "+rl:"")+" · "+b.s+"–"+b.e+(why0?" · "+why0.join(" · "):"")+(isAp&&ast==="ok"?" · Aprobado":""))+'"><span class="ba">'+esc(isBusBlk(b)?busLabel(b,BN[c.ap+"|"+c.n+"|"+bi]):b.a)+"</span>"+(isBusBlk(b)?"":rl?'<span class="br">'+esc(rl)+"</span>":(need&&need!=="cer"?'<span class="br nr">'+(b.nf?"No cabe":"Sin instalación")+"</span>":""))+(tall?'<span class="bt">'+b.s+"–"+b.e+"</span>":"")+(why?'<span class="bx">!</span>':isAp&&ast==="ok"?'<span class="bx ok">✓</span>':rev?'<span class="bx rv" title="Revisión de reglas">·</span>':"")+(H.manual&&!H.tool?'<span class="rz"></span><span class="bdel" data-bdel="'+ci+"."+bi+'" title="Borrar caja" role="button" aria-label="Borrar caja">×</span>':"")+"</button>"});
     h+="</div></div>"});
   h+="</div>";
-  board.innerHTML=pre+'<div class="hscroll">'+h+"</div>";
+  hKeepScroll(board,()=>{board.innerHTML=pre+'<div class="hscroll">'+h+"</div>"});
   board.dataset.mn=mn;board.dataset.rh=RH;H.cols=cols;
   renderHEdit();renderPick();
 }
@@ -4229,7 +4235,7 @@ function renderHRes(iss){
       const st=cap&&used>cap?"over":cap&&used===cap?"full":"";
       h+='<div class="occ c-'+c+" "+st+'" style="top:'+((xs[i]-mn)/15*RH+1)+"px;height:"+((xs[j]+15-xs[i])/15*RH-2)+'px" title="'+esc(gnames(xs[i])+" · "+used+(cap?"/"+cap:"")+" "+unit+(st==="over"?" · Sobrepasa":st==="full"?" · Completo":""))+'"><b>'+esc(gnames(xs[i]))+'</b><span class="ou">'+used+(cap?"/"+cap:"")+" "+unit+"</span>"+(st?'<span class="ost">'+(st==="over"?"Sobrepasa":"Completo")+"</span>":"")+"</div>";i=j+1}
     h+="</div></div>"});
-  h+="</div>";board.innerHTML='<div class="hscroll">'+h+"</div>";
+  h+="</div>";hKeepScroll(board,()=>{board.innerHTML='<div class="hscroll">'+h+"</div>"});
 }
 /* ---------- BUSES ----------
    Trayectos: cada cambio de ubicación de un grupo (Fleming, VBB, UAM, RESA, S.A., L.A., UEM, BNB, VILLA).
