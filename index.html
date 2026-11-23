@@ -2510,17 +2510,18 @@ function build(){
   (S.weeks||[]).forEach(w=>{const pid=w.Parent_Id&&w.Parent_Id.id;if(!pid)return;(wk[pid]=wk[pid]||[]).push(w)});
   S.allRows=S.deals.map(d=>{
     const lines=wk[d.id]||[];
-    const weeks=[],extras=[],buses=[],nightDates=[];let kitExtra=0,gkExtra=0,bag=0,jersey=0,nights=0,xAmt=0;
+    const weeks=[],extras=[],buses=[],nightDates=[];let kitExtra=0,gkExtra=0,bag=0,bagOne=0,bagMax=0,jersey=0,nights=0,xAmt=0;
     lines.forEach(l=>{const pn=l.Producto&&l.Producto.name;const p=parseProduct(pn);
       if(p&&p.prog!=="F"){const n=parseInt(String(l.Semana1||"").replace(/\D/g,""),10)||null;weeks.push({n,prog:p.prog,mod:p.mod,start:l.Fecha_inicio,end:l.Fecha_fin,lid:l.id,imp:l.Importe==null?null:+l.Importe,bus:String(l.Servicio_de_autob_s||"").trim().replace(/^-None-$/,""),tr:/^s[ií]/i.test(String(l.Servicio_transfer_aeropuerto||""))})}
       else xAmt+=(+l.Importe||0);
-      /* productos extra (Form 3 y web): siempre por cantidad; si viene vacía cuenta 1 */
+      /* productos extra (Form 1 de inscripción, Form 3 y web): siempre por cantidad; si viene vacía cuenta 1 */
       if(pn&&!p){const q=Math.max(1,parseInt(l.Cantidad,10)||1);extras.push(pn+(q>1?" ×"+q:""));
-        if(pn==="Uniforme Oficial Adidas")kitExtra+=q;else if(pn==="Uniforme Portero Oficial Adidas")gkExtra+=q;else if(pn==="Mochila Oficial Adidas")bag+=q;else if(pn==="Jersey Oficial Adidas")jersey+=q;
+        /* extras de equipación (Form 1 de inscripción y Form 3): por el principio del nombre, porque llegan variantes como «Mochila Oficial Adidas ONE» */
+        if(/^Uniforme Portero Oficial Adidas/i.test(pn))gkExtra+=q;else if(/^Uniforme Oficial Adidas/i.test(pn))kitExtra+=q;else if(/^Mochila Oficial Adidas/i.test(pn)){bag+=q;if(/\bMAX\b/i.test(pn))bagMax+=q;else if(/\bONE\b/i.test(pn))bagOne+=q}else if(/^Jersey Oficial Adidas/i.test(pn))jersey+=q;
         else if(isBusProd(pn))buses.push({n:pn,q});else if(/noche extra/i.test(pn)){nights+=q;if(l.Fecha_inicio)nightDates.push(l.Fecha_inicio)}}});
     weeks.sort((a,b)=>(a.n||99)-(b.n||99));
     const name=(d.Player&&d.Player.name)||String(d.Deal_Name||"").split(" - ").slice(1).join(" - ")||d.Deal_Name;
-    return {id:d.id,d,name,code:d.Reservation_Code||"",age:ageAt(d.A_o_de_nacimiento,weeks[0]&&weeks[0].start),weeks,extras,xAmt:Math.round(xAmt*100)/100,kitExtra,gkExtra,bag,jersey,buses,nights,nightDates:nightDates.sort(),health:[],
+    return {id:d.id,d,name,code:d.Reservation_Code||"",age:ageAt(d.A_o_de_nacimiento,weeks[0]&&weeks[0].start),weeks,extras,xAmt:Math.round(xAmt*100)/100,kitExtra,gkExtra,bag,bagOne,bagMax,jersey,buses,nights,nightDates:nightDates.sort(),health:[],
       tutor:txt(d.Contact_Name),hay:(name+" "+(d.Reservation_Code||"")).toLowerCase(),camp:campOf(d.Event_Name&&d.Event_Name.name)};
   });
   S.rows=S.allRows.filter(r=>r.camp==="mad");
@@ -6038,8 +6039,9 @@ function lgNeeds(sc){const cfg=lgCfg();const N={};const add=(f,t,q)=>{if(!q)retu
   lgUnits().filter(u=>lgInScope(u,sc)).forEach(u=>{n++;const t=u.t||"?";if(!u.t)sin++;
     let kits=Object.assign({},cfg.kits[u.mod]||{});if(u.mod==="inst"){const tot=lgSum(kits);kits={};kits[cfg.inst[u.r.camp]||"minikit"]=tot}
     Object.entries(kits).forEach(([K,q])=>{add(K+"-kit",t,+q);add(K+"-med",cfg.med[t]||"?",+q)});
+    /* extras de equipación (Form 1 y Form 3): todos se entregan en la primera semana del participante */
     if(u.first){const r=u.r;if(r.kitExtra){add("minikit-kit",t,r.kitExtra);add("minikit-med",cfg.med[t]||"?",r.kitExtra)}if(r.gkExtra)add("portero-cam",t,r.gkExtra);
-      if(r.bag)add(u.prog==="MAX"?"mochila-max":"mochila-one","",r.bag);if(r.jersey)add("jersey",t,r.jersey)}
+      if(r.bag){const one=r.bagOne||0,max=r.bagMax||0,rest=r.bag-one-max;add("mochila-one","",one+(u.prog==="MAX"?0:rest));add("mochila-max","",max+(u.prog==="MAX"?rest:0))}if(r.jersey)add("jersey",t,r.jersey)}
     const off=cfg.wpOff["w"+u.w+"|"+u.mod]||[];(cfg.wp[u.mod]||[]).filter(x=>!off.includes(x)).forEach(x=>add(x,"",1))});
   return {N,n,sin}}
 function lgCurva(){const c={};let n=0;(S.allRows||[]).forEach(r=>{const t=lgTalla(r.d.Talla_equipacion);if(t){c[t]=(c[t]||0)+1;n++}});
