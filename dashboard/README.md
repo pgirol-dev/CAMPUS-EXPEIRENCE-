@@ -10,6 +10,7 @@ Versión del dashboard que antes vivía en claude.ai, ahora dentro del software 
   - guarda el resultado en el Data Store (`CEDocs`, col `dash`, y la marca `dash_ts` en `CEMeta`) y lo reutiliza durante 15 minutos (`CE_DASH_TTL_MIN`).
   - Si Zoho falla, se muestran los últimos datos guardados con un aviso. Si los registros de Madrid bajan más de un 10 % de golpe, no se aceptan los datos nuevos.
 - **Versión de los datos (`DATA_V` en `functions/dashboard_api/index.js`):** si el motor añade campos nuevos, se sube la versión; los datos guardados de otra versión se vuelven a leer de Zoho en la primera visita, sin esperar los 15 minutos.
+- **Recarga automática:** si la pestaña lleva abierta más de 15 minutos, la página se recarga sola al volver a ella o cada 5 minutos (no si se está escribiendo en un campo). Así no se quedan en pantalla datos de días anteriores. El ritmo de la Portada muestra la fecha de «Hoy» y de los últimos 7 días.
 - **Botón «Actualizar»:** `POST /server/dashboard_api/api/dashboard/refresh` (como mucho una lectura de Zoho por minuto). Queda en el registro de actividad.
 - Atención al público ya no forma parte del dashboard (está en el software operativo).
 

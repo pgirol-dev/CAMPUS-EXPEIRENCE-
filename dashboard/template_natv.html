@@ -1605,8 +1605,9 @@ function drawRG(){const el=$('#rg-tl');if(!el||!DATA)return;const srcs=rgSrcs(),
   const vis=Object.keys(ORG).filter(k=>!RG.hidden.has(k)),d=tlRows(srcs.filter(s=>vis.includes(s.o)),RG.met,'day').filter(x=>x.key!=='pre'),sv=x=>vis.reduce((a,k)=>a+(x.p[k]||0),0);
   const last=d.slice(-7),prev=d.slice(-14,-7),hoy=d.length?sv(d[d.length-1]):0,ayer=d.length>1?sv(d[d.length-2]):0,s7=last.reduce((a,x)=>a+sv(x),0),p7=prev.reduce((a,x)=>a+sv(x),0);
   const tr=p7?Math.round((s7-p7)/p7*100):null,fu=n=>f(n)+' '+(n===1?U[0]:U[1]);
-  $('#rg-k').innerHTML='<div class="card kpi" style="--ac:var(--pink)"><span class="lab">Hoy</span><span class="big">'+f(hoy)+'</span><span class="sub">'+U[1]+' · ayer <b>'+f(ayer)+'</b></span></div>'
-    +'<div class="card kpi" style="--ac:var(--navy)"><span class="lab">Últimos 7 días</span><span class="big">'+f(s7)+'</span><span class="sub">media de <b>'+(s7/7).toLocaleString('es-ES',{maximumFractionDigits:1})+'</b> al día</span></div>'
+  const dlab=x=>{if(!x)return '';const[,m,dd]=x.key.split('-').map(Number);return dd+' '+MS[m-1];};
+  $('#rg-k').innerHTML='<div class="card kpi" style="--ac:var(--pink)"><span class="lab">Hoy · '+dlab(d[d.length-1])+'</span><span class="big">'+f(hoy)+'</span><span class="sub">'+U[1]+' · ayer <b>'+f(ayer)+'</b></span></div>'
+    +'<div class="card kpi" style="--ac:var(--navy)"><span class="lab">Últimos 7 días'+(last.length?' · '+dlab(last[0])+'–'+dlab(last[last.length-1]):'')+'</span><span class="big">'+f(s7)+'</span><span class="sub">media de <b>'+(s7/7).toLocaleString('es-ES',{maximumFractionDigits:1})+'</b> al día</span></div>'
     +'<div class="card kpi" style="--ac:var(--gold)"><span class="lab">Tendencia</span><span class="big">'+(tr===null?'—':(tr>0?'+':'')+f(tr)+' %')+'</span><span class="sub">frente a los 7 días anteriores (<b>'+fu(p7)+'</b>)</span></div>';}
 seg('#rg-tab',b=>{RG.tab=b.dataset.v;drawRG();});
 seg('#rg-mode',b=>{RG.mode=b.dataset.m;drawRG();});

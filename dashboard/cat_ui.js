@@ -23,4 +23,10 @@ btn.addEventListener('click',async function(){
   }catch(e){say('No se ha podido actualizar: '+(e.message||e)+'. El dashboard sigue con los datos anteriores.','err');}
   finally{busy=false;btn.disabled=false;btn.textContent='Actualizar';}
 });
+/* los datos se cargan al abrir la página: si la pestaña lleva abierta más de 15 minutos, se recarga sola
+   (al volver a ella o cada 5 minutos), salvo que se esté escribiendo en un campo */
+var T0=Date.now(),MAXAGE=15*60000;
+function stale(){if(busy||Date.now()-T0<MAXAGE)return;var a=document.activeElement;if(a&&/^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName))return;location.reload();}
+document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')stale();});
+setInterval(function(){if(document.visibilityState==='visible')stale();},5*60000);
 })();
