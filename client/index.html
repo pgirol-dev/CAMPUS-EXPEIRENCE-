@@ -5113,13 +5113,13 @@ function attRows(list){const EN=attEnrolled();let out=[];
       out.forEach(x=>{const nk=attNameKey(x.name),byName=nk.includes(" ");x.dup=(!!x.pid&&((byP[x.pid]||[]).length>1||EN.P.has(x.pid)))||(byName&&((byN[nk]||[]).length>1||EN.N.has(nk)))})}
     else out=out.filter(x=>{const nk=attNameKey(x.name);return !(x.pid&&EN.P.has(x.pid))&&!(x.email&&EN.E.has(x.email.toLowerCase()))&&!(nk.includes(" ")&&EN.N.has(nk))})}
   else if(list==="fesp"||list==="feng"){if(!ATT.fa||!ATT.x27)return null;
-    /* las familias con una inscripción en Unpaid se gestionan en Unpaids y no salen aquí; las ya inscritas se quedan marcadas «Inscrito» */
+    /* las familias con una inscripción en Unpaid se gestionan en Unpaids y no salen aquí; las ya inscritas (por email o teléfono del tutor) tampoco salen */
     const ph=t=>String(t||"").replace(/\D/g,"").slice(-9);const UE=new Set(),UP=new Set();
     ATT.x27.filter(d=>d.Stage==="Unpaid").forEach(d=>{const e=String(d.Email||"").trim().toLowerCase();if(e)UE.add(e);const p=ph(d.Telefono_Tutor_legal);if(p.length>=9)UP.add(p)});
-    const kids={};(S.allRows||[]).forEach(r=>{[r.d.Email,r.d.Email_persona].forEach(e=>{e=String(e||"").trim().toLowerCase();if(e)(kids[e]=kids[e]||[]).push(r.name)})});
-    out=ATT.fa.filter(l=>((/ingl/i.test(String(l.En_que_idioma_desea_recibir_las_comunicaciones||"")))?"feng":"fesp")===list).filter(l=>{const e=String(l.Email||"").trim().toLowerCase();const p=ph(l.Phone||l.Mobile);return !(e&&UE.has(e))&&!(p.length>=9&&UP.has(p))})
-      .map(l=>{const e=String(l.Email||"").trim().toLowerCase();const ks=[...new Set(kids[e]||[])];
-        return {key:"l-"+l.id,list,d:l,id:String(l.id),pid:"",lead:true,day:attDay(l.Created_Time),name:String(l.Full_Name||"—"),tutor:ks.length?"Inscrito: "+ks.join(", "):"Tutor/a",phone:String(l.Phone||l.Mobile||""),email:String(l.Email||"").trim(),
+    const KE=new Set(),KP=new Set();(S.allRows||[]).forEach(r=>{[r.d.Email,r.d.Email_persona].forEach(e=>{e=String(e||"").trim().toLowerCase();if(e)KE.add(e)});const p=ph(r.d.Telefono_Tutor_legal);if(p.length>=9)KP.add(p)});
+    out=ATT.fa.filter(l=>((/ingl/i.test(String(l.En_que_idioma_desea_recibir_las_comunicaciones||"")))?"feng":"fesp")===list).filter(l=>{const e=String(l.Email||"").trim().toLowerCase();const p=ph(l.Phone||l.Mobile);return !(e&&(UE.has(e)||KE.has(e)))&&!(p.length>=9&&(UP.has(p)||KP.has(p)))})
+      .map(l=>{
+        return {key:"l-"+l.id,list,d:l,id:String(l.id),pid:"",lead:true,day:attDay(l.Created_Time),name:String(l.Full_Name||"—"),tutor:"Tutor/a",phone:String(l.Phone||l.Mobile||""),email:String(l.Email||"").trim(),
           nat:String(l.Nacionalidad_tutor_legal||""),lang:/ingl/i.test(String(l.En_que_idioma_desea_recibir_las_comunicaciones||""))?"ENG":"ESP",mod:"",col:"",code:""}})}
   else return [];
   out.forEach(x=>{const doc=ATT.docs[x.key]||{};x.doc=doc;x.log=attLog(x.key);

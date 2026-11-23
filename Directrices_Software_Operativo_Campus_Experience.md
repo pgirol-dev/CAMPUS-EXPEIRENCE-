@@ -697,3 +697,4 @@ Se asignan automáticamente en este orden, un equipo por nombre y sin repetir de
   - **Franjas hasta las 00:00** en todos los horarios (horario y ocupación).
   - **Reglas:** los internos (ONE y MAX) pueden empezar a entrenar el lunes a las 9:00 (externos, 9:15). Dos preparaciones físicas a la vez solo están mal si son en la misma sede; en sedes distintas, sí. Se mantiene que en Valdebebas todas van en el mismo campo. En Santa Ana y UEM la preparación física puede ir fuera o dentro del campo.
   - **Buses:** los autobuses salen uno al lado del otro con scroll lateral (como el resto de Horarios) y los trayectos se alinean por filas de hora entre buses (una fila por hora con salidas). Las tarjetas de trayecto no cambian.
+- 23/11: **Form abandonado: las familias ya inscritas desaparecen de la lista** (antes salían marcadas «Inscrito»). Se reconocen por el email o el teléfono del tutor de una inscripción 2027. Las de Unpaid siguen sin salir (se gestionan en Unpaids).
