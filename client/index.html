@@ -5015,7 +5015,9 @@ const ATT_LISTS=[
   {k:"besp",n:"BBDD 2026",lang:"ESP",sub:"Inscritos 2026 de nacionalidad española"},
   {k:"beng",n:"BBDD 2026",lang:"ENG",sub:"Inscritos 2026 de otras nacionalidades"},
   {k:"unp",n:"Unpaids",sub:"Inscripciones 2027 sin pagar · marca los duplicados"},
-  {k:"pre",n:"Prerreservas",sub:"Salen solas cuando ya se han inscrito"}];
+  {k:"pre",n:"Prerreservas",sub:"Salen solas cuando ya se han inscrito"},
+  {k:"fesp",n:"Form abandonado",lang:"ESP",sub:"Empezaron la inscripción y no la terminaron"},
+  {k:"feng",n:"Form abandonado",lang:"ENG",sub:"Empezaron la inscripción y no la terminaron"}];
 const attEdit=()=>CAN("atencion.bbdd",2)||CAN("atencion.limpieza",2);
 if(!window.CE_ACL||window.CE_ACL.admin)document.documentElement.classList.add("is-admin");
 const attNrm=t=>String(t||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
@@ -5037,12 +5039,18 @@ async function attFetch(q,opt){const all=[];
   return all}
 const Q_B26="select Codigo, Deal_Name, Player, Contact_Name, Email, Telefono_Tutor_legal, Nationality, Idioma_comunicaciones, Tipo_Modalidad, Colectivos, Created_Time from Deals where Deal_Name like '2026 RMF CE Madrid%' and Stage = 'Paid'";
 const Q_X27=()=>"select Deal_Name, Player, Contact_Name, Email, Telefono_Tutor_legal, Nationality, Idioma_comunicaciones, Tipo_Modalidad, Colectivos, Created_Time, Stage, Reservation_Code, Total, Event_Name from Deals where Event_Name.Name in "+EVS+" and Stage in ('Unpaid','Reservation Payment Completed','Trash')";
+/* Form abandonado: posibles clientes convertidos con la etiqueta «CE Form Abandonado» (la etiqueta se filtra aquí) */
+const Q_FA="select Full_Name, Email, Phone, Mobile, Created_Time, Tag, En_que_idioma_desea_recibir_las_comunicaciones, Nacionalidad_tutor_legal from Leads where Converted__s = true and Created_Time >= '2026-11-01T00:00:00+01:00'";
+const faTagged=l=>(l.Tag||[]).some(t=>/form abandonado/i.test(t&&t.name||""));
+const faTest=l=>/@(islagency\.com|test\.com)$/i.test(String(l.Email||"").trim())||/\b(qa|prueba|test|tester)\b/i.test(String(l.Full_Name||""));
 async function attLoad(force,only){if(!S.mcp)return;const opt={cache:{staleTime:60000,gcTime:600000,refresh:!!force}};
   if(only!=="x27"&&!ATT.b26busy&&(force||!ATT.b26)){ATT.b26busy=true;ATT.b26err="";attRender();
     attFetch(Q_B26,opt)
       .then(r=>{ATT.b26=r}).catch(e=>{ATT.b26err="No se ha podido leer la BBDD 2026 de Zoho CRM"+(e&&e.message?" ("+e.message+")":"")+"."}).finally(()=>{ATT.b26busy=false;attRender()})}
   if(!ATT.x27busy&&(force||!ATT.x27)){ATT.x27busy=true;ATT.x27err="";
-    attFetch(Q_X27(),opt).then(r=>{ATT.x27=r;ATT.x27At=Date.now()}).catch(e=>{ATT.x27err="No se han podido leer los unpaids y prerreservas"+(e&&e.message?" ("+e.message+")":"")+"."}).finally(()=>{ATT.x27busy=false;attRender()})}}
+    attFetch(Q_X27(),opt).then(r=>{ATT.x27=r;ATT.x27At=Date.now()}).catch(e=>{ATT.x27err="No se han podido leer los unpaids y prerreservas"+(e&&e.message?" ("+e.message+")":"")+"."}).finally(()=>{ATT.x27busy=false;attRender()})}
+  if(!ATT.fabusy&&(force||!ATT.fa)){ATT.fabusy=true;ATT.faerr="";
+    attFetch(Q_FA,opt).then(r=>{ATT.fa=r.filter(l=>faTagged(l)&&!faTest(l))}).catch(e=>{ATT.faerr="No se ha podido leer el Form abandonado"+(e&&e.message?" ("+e.message+")":"")+"."}).finally(()=>{ATT.fabusy=false;attRender()})}}
 /* inscritos 2027 activos: por jugador y por email del tutor */
 function attEnrolled(){const P=new Set(),E=new Set(),PM=new Set(),N=new Set();(S.allRows||[]).forEach(r=>{const d=r.d;const pid=d.Player&&d.Player.id;const nk=attNameKey(r.name);if(nk.includes(" "))N.add(nk);if(pid){P.add(String(pid));(r.weeks||[]).forEach(w=>PM.add(pid+"|"+w.prog+"|"+w.mod));PM.add(pid+"|"+String(d.Tipo_Modalidad||""))}
   [d.Email,d.Email_persona].forEach(e=>{e=String(e||"").trim().toLowerCase();if(e)E.add(e)})});return {P,E,PM,N}}
@@ -5060,6 +5068,15 @@ function attRows(list){const EN=attEnrolled();let out=[];
       const byP={},byN={};out.forEach(x=>{if(x.pid)(byP[x.pid]=byP[x.pid]||[]).push(x);const nk=attNameKey(x.name);if(nk.includes(" "))(byN[nk]=byN[nk]||[]).push(x)});
       out.forEach(x=>{const nk=attNameKey(x.name),byName=nk.includes(" ");x.dup=(!!x.pid&&((byP[x.pid]||[]).length>1||EN.P.has(x.pid)))||(byName&&((byN[nk]||[]).length>1||EN.N.has(nk)))})}
     else out=out.filter(x=>{const nk=attNameKey(x.name);return !(x.pid&&EN.P.has(x.pid))&&!(x.email&&EN.E.has(x.email.toLowerCase()))&&!(nk.includes(" ")&&EN.N.has(nk))})}
+  else if(list==="fesp"||list==="feng"){if(!ATT.fa||!ATT.x27)return null;
+    /* las familias con una inscripción en Unpaid se gestionan en Unpaids y no salen aquí; las ya inscritas se quedan marcadas «Inscrito» */
+    const ph=t=>String(t||"").replace(/\D/g,"").slice(-9);const UE=new Set(),UP=new Set();
+    ATT.x27.filter(d=>d.Stage==="Unpaid").forEach(d=>{const e=String(d.Email||"").trim().toLowerCase();if(e)UE.add(e);const p=ph(d.Telefono_Tutor_legal);if(p.length>=9)UP.add(p)});
+    const kids={};(S.allRows||[]).forEach(r=>{[r.d.Email,r.d.Email_persona].forEach(e=>{e=String(e||"").trim().toLowerCase();if(e)(kids[e]=kids[e]||[]).push(r.name)})});
+    out=ATT.fa.filter(l=>((/ingl/i.test(String(l.En_que_idioma_desea_recibir_las_comunicaciones||"")))?"feng":"fesp")===list).filter(l=>{const e=String(l.Email||"").trim().toLowerCase();const p=ph(l.Phone||l.Mobile);return !(e&&UE.has(e))&&!(p.length>=9&&UP.has(p))})
+      .map(l=>{const e=String(l.Email||"").trim().toLowerCase();const ks=[...new Set(kids[e]||[])];
+        return {key:"l-"+l.id,list,d:l,id:String(l.id),pid:"",lead:true,day:attDay(l.Created_Time),name:String(l.Full_Name||"—"),tutor:ks.length?"Inscrito: "+ks.join(", "):"Tutor/a",phone:String(l.Phone||l.Mobile||""),email:String(l.Email||"").trim(),
+          nat:String(l.Nacionalidad_tutor_legal||""),lang:/ingl/i.test(String(l.En_que_idioma_desea_recibir_las_comunicaciones||""))?"ENG":"ESP",mod:"",col:"",code:""}})}
   else return [];
   out.forEach(x=>{const doc=ATT.docs[x.key]||{};x.doc=doc;x.log=attLog(x.key);
     x.ins=(x.pid&&EN.P.has(x.pid))||(!!x.email&&EN.E.has(x.email.toLowerCase()));if(list==="unp")x.ins=x.pid&&EN.P.has(x.pid);
@@ -5079,7 +5096,7 @@ const pct=v=>(v*100).toLocaleString("es-ES",{maximumFractionDigits:1})+"%";
 function attChip(st,auto){return st?'<span class="attst t-'+ATT_TONE(st)+'"'+(auto?' title="Se marca solo: tiene inscripción 2027 en el CRM"':"")+">"+esc(st)+(auto?" ·&nbsp;auto":"")+"</span>":'<span class="attst t-none">Sin gestionar</span>'}
 /* ---------- BASE DE DATOS ---------- */
 function renderBbdd(){if($("view-bbdd").hidden)return;
-  if((!ATT.b26&&!ATT.b26busy)||(!ATT.x27&&!ATT.x27busy))attLoad(false);
+  if((!ATT.b26&&!ATT.b26busy)||(!ATT.x27&&!ATT.x27busy)||(!ATT.fa&&!ATT.fabusy&&!ATT.faerr))attLoad(false);
   else if(ATT.x27At&&Date.now()-ATT.x27At>120000&&!ATT.x27busy)attLoad(true,"x27");
   const L=ATT_LISTS.find(l=>l.k===ATT.list);
   $("bdCrumbs").innerHTML=L?'<button type="button" data-bdgo="">Base de datos</button><span class="sep">›</span><span class="cur">'+esc(L.n)+(L.lang?" · "+L.lang:"")+"</span>":'<span class="cur">Listas para las llamadas comerciales</span>';
@@ -5087,7 +5104,7 @@ function renderBbdd(){if($("view-bbdd").hidden)return;
   if(!L){$("bdLists").innerHTML=ATT_LISTS.map(l=>{const rows=l.off?[]:attRows(l.k);const busy=!l.off&&rows==null;const s=rows?attListStats(rows):null;
       return '<button type="button" class="bdbox'+(l.off?" off":"")+'" data-bdl="'+l.k+'"'+(l.off?' aria-disabled="true"':"")+'><span class="bdt"><span class="wt">'+esc(l.n)+"</span>"+(l.lang?'<span class="bdlang l-'+l.lang.toLowerCase()+'">'+l.lang+"</span>":"")+'</span><span class="ps2">'+esc(l.sub)+"</span>"+
         (l.off?'<span class="bdoff">Pendiente de conectar</span>':busy?'<span class="bdoff">Leyendo Zoho…</span>':'<span class="bdn"><b>'+s.n+'</b><small>registros</small></span><span class="bdmini"><span><b>'+s.g+"</b> gestionados</span><span><b>"+s.p+"</b> pendientes</span><span><b>"+s.ins+'</b> inscritos</span></span><span class="wbar"><i style="width:'+(s.av*100)+'%;background:var(--navy)"></i><i style="width:'+(s.pi*100)+'%;background:var(--green)"></i></span>')+"</button>"}).join("")+
-      (ATT.b26err||ATT.x27err?'<p class="devmsg" style="grid-column:1/-1">'+esc([ATT.b26err,ATT.x27err].filter(Boolean).join(" "))+"</p>":"")+
+      (ATT.b26err||ATT.x27err||ATT.faerr?'<p class="devmsg" style="grid-column:1/-1">'+esc([ATT.b26err,ATT.x27err,ATT.faerr].filter(Boolean).join(" "))+"</p>":"")+
       (ATT.docs["x-b26"]?'<p class="ingnote" style="grid-column:1/-1">Historial del Excel importado: '+ATT.docs["x-b26"].n+" personas y "+ATT.docs["x-b26"].contacts+" contactos ("+esc(ATT.docs["x-b26"].file||"")+", "+esc(new Date(ATT.docs["x-b26"].at).toLocaleString("es-ES",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}))+(ATT.docs["x-b26"].byName?" · "+esc(ATT.docs["x-b26"].byName):"")+"). Esos contactos salen con la marca «Excel» y no se corrigen aquí.</p>":"")+
       (ATT.docs["x-27"]?'<p class="ingnote" style="grid-column:1/-1">Historial de Unpaids y Prerreservas importado: '+ATT.docs["x-27"].n+" inscripciones y "+ATT.docs["x-27"].contacts+" contactos. Las unpaids que pasan a Trash o a otra fase salen de la lista; su historial se guarda y sigue contando en Estadísticas.</p>":"");return}
   const rows=attRows(L.k);
@@ -5204,7 +5221,7 @@ function attPanelRender(){const P=ATT.panel;if(!P){attClose();return}const I=P.i
   const items=log.map(e=>({k:"c",day:e.day||attDay(e.at),e})).concat(incs.map(x=>({k:"i",day:attDay(x.e.at),x}))).sort((a,b)=>(b.day||"").localeCompare(a.day||""));
   let h='<div class="ipx"><div class="tt"><b>'+esc(I.name)+"</b><small>"+esc([I.tutor,I.code,I.where].filter(Boolean).join(" · "))+'</small><span class="tags">'+(I.st?attChip(I.st,I.ins):"")+(I.extra||"")+'</span></div><button type="button" class="x" data-attclose aria-label="Cerrar">×</button></div><div class="ipb">';
   h+='<div class="attinfo">'+[["Teléfono",I.phone],["Email",I.email],["Nacionalidad",I.nat],["Idioma",I.lang],["Modalidad",I.mod],["Colectivo",I.col]].filter(x=>x[1]).map(([l,v])=>"<span><small>"+l+"</small>"+esc(v)+"</span>").join("")+"</div>";
-  h+='<div class="attlinks">'+(I.crmId?'<a class="btn" href="'+ZOHO_REC+esc(I.crmId)+'" target="_blank" rel="noopener">Abrir en el CRM</a>':"")+'<a class="btn" data-deskcopy="'+esc(I.email||"")+'" href="'+deskNew(I.camp)+'" target="_blank" rel="noopener" title="Abre Zoho Desk para crear el ticket. El email del tutor se copia para pegarlo.">Abrir ticket en Desk</a></div>';
+  h+='<div class="attlinks">'+(I.crmId?'<a class="btn" href="'+(I.lead?ZOHO_REC.replace(/Potentials\/$/,"Leads/"):ZOHO_REC)+esc(I.crmId)+'" target="_blank" rel="noopener">Abrir en el CRM</a>':"")+'<a class="btn" data-deskcopy="'+esc(I.email||"")+'" href="'+deskNew(I.camp)+'" target="_blank" rel="noopener" title="Abre Zoho Desk para crear el ticket. El email del tutor se copia para pegarlo.">Abrir ticket en Desk</a></div>';
   if(I.list==="lim"){const rr=(S.allRows||[]).find(x=>String(x.id)===String(I.dealId));if(rr)h+=lpDocHtml(rr,ed)}
   h+='<div class="attatt"><span class="inclab">ATT que gestiona</span>'+(ed?'<select data-attassign aria-label="ATT que gestiona"><option value="">Sin asignar</option>'+known.concat(doc.att&&!known.includes(doc.att)?[doc.att]:[]).map(n=>'<option'+(doc.att===n?" selected":"")+">"+esc(n)+"</option>").join("")+'<option value="__me">Yo</option></select>':"<b>"+esc(doc.att||"Sin asignar")+"</b>")+"</div>";
   if(ed&&!E)h+='<button type="button" class="bigbtn" data-attnew>+ Añadir contacto</button>';
@@ -5262,7 +5279,7 @@ $("attScrim").addEventListener("click",attClose);
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&ATT.panel)attClose()});
 /* abrir el historial desde las listas */
 $("bdRows").addEventListener("click",e=>{const tr=e.target.closest("[data-attk]");if(!tr)return;const x=(attRows(ATT.list)||[]).find(y=>y.key===tr.dataset.attk);if(!x)return;
-  attOpen(x.key,{name:x.name,tutor:x.tutor,code:x.code,phone:x.phone,email:x.email,nat:x.nat,lang:x.lang,mod:x.mod,col:x.col,st:x.st,ins:x.ins,list:x.list,dealId:x.list==="unp"||x.list==="pre"?x.id:null,crmId:x.id,camp:x.camp||"mad",extra:x.dup?'<span class="attdup">Duplicado</span>':""})});
+  attOpen(x.key,{name:x.name,tutor:x.tutor,code:x.code,phone:x.phone,email:x.email,nat:x.nat,lang:x.lang,mod:x.mod,col:x.col,st:x.st,ins:x.ins,list:x.list,dealId:x.list==="unp"||x.list==="pre"?x.id:null,crmId:x.id,lead:!!x.lead,camp:x.camp||"mad",extra:x.dup?'<span class="attdup">Duplicado</span>':""})});
 $("bdRows").addEventListener("keydown",e=>{if(e.key==="Enter"){const tr=e.target.closest("[data-attk]");if(tr)tr.click()}});
 $("lpList").addEventListener("click",e=>{const row=e.target.closest("[data-attd]");if(!row)return;const r=(S.allRows||[]).find(x=>String(x.id)===row.dataset.attd);if(!r)return;const d=r.d;const s=lpDone(r);
   attOpen("d-"+r.id,{name:r.name,tutor:r.tutor,code:r.code,where:wLabel(ATT.lpW),phone:String(d.Telefono_Tutor_legal||""),email:String(d.Email||""),nat:String(d.Nationality||""),lang:attLang(d),mod:(r.weeks[0]?r.weeks[0].prog+" · "+(MODLBL[r.weeks[0].mod]||r.weeks[0].mod):""),list:"lim",dealId:r.id,
@@ -6004,7 +6021,7 @@ function hubRender(v){
   if(v==="operativa")$("hubOperativa").innerHTML=["horarios","equipos","buses","incidencias"].filter(viewOk).map(m=>m==="buses"?hubCard(m,{mods:(()=>{const n=busPeople().length;return [n?n+" con bus":"Madrid por semanas"]})()}):m==="incidencias"?hubCard(m,{mods:(()=>{const a=incList().filter(d=>d.st!=="closed");const u=a.filter(d=>d.urg).length;return [a.length?a.length+(a.length>1?" abiertas":" abierta"):"Sin abiertas"].concat(u?[u+(u>1?" URGENTES":" URGENTE")]:[])})()}):hubCard(m)).join("");
   if(v==="administracion")$("hubAdministracion").innerHTML=["pagos","facturas","ingresos"].filter(viewOk).map(m=>m==="ingresos"?hubCard(m,{mods:(()=>{const n=ingPendCount();return n==null?["Zoho Books"]:[n?n+" días por cuadrar":"Todo cuadrado"]})()}):m==="pagos"?hubCard(m,{mods:["Pagos","Devoluciones","Cancelaciones","Agentes"].filter((x,i)=>subOk("pagos",["pagos","dev","can","ag"][i]))}):hubCard(m,{mods:(()=>{const n=invErrCount();return n==null?["Zoho Books"]:[n?n+" errores":"Todo cuadra"]})()})).join("");
 }
-window.__hub=v=>{hubRender(v);if(v==="atencion")$("hubAtencion").innerHTML=["bbdd","limpieza","attstats"].filter(viewOk).map(m=>hubCard(m,{mods:m==="bbdd"?["Leads","BBDD 2026","Unpaids","Prerreservas"]:m==="limpieza"?["Completadas","Pendientes"]:["Resumen por lista","Por fecha","Tickets"]})).join("")};
+window.__hub=v=>{hubRender(v);if(v==="atencion")$("hubAtencion").innerHTML=["bbdd","limpieza","attstats"].filter(viewOk).map(m=>hubCard(m,{mods:m==="bbdd"?["Leads","BBDD 2026","Unpaids","Prerreservas","Form abandonado"]:m==="limpieza"?["Completadas","Pendientes"]:["Resumen por lista","Por fecha","Tickets"]})).join("")};
 document.querySelector("main").addEventListener("click",e=>{const b=e.target.closest(".hub [data-sv]");if(!b)return;e.preventDefault();sbGo(b.dataset.sv)});
 function sbSaveOpen(){try{localStorage.setItem("ce-sb-open",JSON.stringify([...SB_OPEN]))}catch(e){}}
 function sbGo(v,ss){

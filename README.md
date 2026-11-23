@@ -8,7 +8,7 @@ Herramienta del equipo operativo de Campus Experience (Real Madrid, ISL Agency) 
 - **Operativa:** Horarios (con simulador que guarda y «Pasar al horario real», historial, papelera y aceptar avisos), Equipos e Incidencias.
 - **Administración:** Contabilidad (pagos, devoluciones, cancelaciones y agentes), Facturas e Ingresos.
 - **Operativa › Buses:** servicio de bus y transfer contratados por semana (Madrid), con la comprobación del pago del bus.
-- **Atención al público:** Base de datos (listas para las llamadas comerciales, con hermanos, duplicados y sedes en Unpaids), Limpieza (inscripciones completadas y pendientes, cuatro estados de documentación con lo que falta, aviso médico, filtros y orden) y Estadísticas. Enlaces al CRM y a Zoho Desk desde cada historial.
+- **Atención al público:** Base de datos (listas para las llamadas comerciales: BBDD 2026, Unpaids, Prerreservas y Form abandonado; con hermanos, duplicados y sedes en Unpaids), Limpieza (inscripciones completadas y pendientes, cuatro estados de documentación con lo que falta, aviso médico, filtros y orden) y Estadísticas. Enlaces al CRM y a Zoho Desk desde cada historial.
 - **Marketing** y **Recursos Humanos:** próximamente.
 - **Dashboard** de registros Campus Experience 2027 (solo en Catalyst): `client/dashboard.html`, en el menú lateral. Incluye el **ritmo de inscripción general** y el **mapamundi** en la Portada (Registros | Jugadores) y, en la vista Madrid, el **mapa de calor de España** y **Residencias** (UAM/UEM); el permiso para editarla se da en Administración › Usuarios (Dashboard › Residencias).
 - **Sistema › Usuarios y accesos:** solo en las versiones con login.
