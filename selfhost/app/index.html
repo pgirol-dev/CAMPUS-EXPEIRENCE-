@@ -6041,7 +6041,8 @@ function lgNeeds(sc){const cfg=lgCfg();const N={};const add=(f,t,q)=>{if(!q)retu
     Object.entries(kits).forEach(([K,q])=>{add(K+"-kit",t,+q);add(K+"-med",cfg.med[t]||"?",+q)});
     /* extras de equipación (Form 1 y Form 3): todos se entregan en la primera semana del participante */
     if(u.first){const r=u.r;if(r.kitExtra){add("minikit-kit",t,r.kitExtra);add("minikit-med",cfg.med[t]||"?",r.kitExtra)}if(r.gkExtra)add("portero-cam",t,r.gkExtra);
-      if(r.bag){const one=r.bagOne||0,max=r.bagMax||0,rest=r.bag-one-max;add("mochila-one","",one+(u.prog==="MAX"?0:rest));add("mochila-max","",max+(u.prog==="MAX"?rest:0))}if(r.jersey)add("jersey",t,r.jersey)}
+      /* la mochila extra es la que dice el producto (hoy solo se vende la ONE, también a jugadores MAX); sin modelo en el nombre = ONE */
+      if(r.bag){const max=r.bagMax||0;add("mochila-one","",r.bag-max);add("mochila-max","",max)}if(r.jersey)add("jersey",t,r.jersey)}
     const off=cfg.wpOff["w"+u.w+"|"+u.mod]||[];(cfg.wp[u.mod]||[]).filter(x=>!off.includes(x)).forEach(x=>add(x,"",1))});
   return {N,n,sin}}
 function lgCurva(){const c={};let n=0;(S.allRows||[]).forEach(r=>{const t=lgTalla(r.d.Talla_equipacion);if(t){c[t]=(c[t]||0)+1;n++}});
