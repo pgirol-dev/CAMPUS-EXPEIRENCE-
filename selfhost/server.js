@@ -58,6 +58,7 @@ const CATALOG = [
   { k: "incidencias", b: "Operativa", l: "Incidencias", subs: [["general", "Incidencias"]] },
   { k: "contabilidad", b: "Administración", l: "Contabilidad", subs: [["pagos", "Pagos"], ["devoluciones", "Devoluciones"], ["cancelaciones", "Cancelaciones"], ["agentes", "Agentes"], ["facturas", "Control de facturas"], ["ingresos", "Ingresos"]] },
   { k: "atencion", b: "Atención al público", l: "Atención al público", subs: [["bbdd", "Base de datos"], ["limpieza", "Limpieza"], ["estadisticas", "Estadísticas"]] },
+  { k: "logistica", b: "Logística", l: "Logística", subs: [["necesidades", "Necesidades"], ["inventario", "Inventario"], ["configuracion", "Configuración"]] },
   { k: "marketing", b: "Marketing", l: "Marketing", subs: [["general", "Marketing"]] },
   { k: "rrhh", b: "Recursos Humanos", l: "Recursos Humanos", subs: [["general", "Recursos Humanos"]] },
 ];
@@ -90,8 +91,12 @@ const COLS = {
   agliq: { read: u => lvl(u, "contabilidad.agentes") >= 1, write: u => lvl(u, "contabilidad.agentes") >= 2 },
   hsim:  { read: u => lvl(u, "horarios.simulador") >= 1, write: u => lvl(u, "horarios.simulador") >= 2 },
   hsimd: { read: u => lvl(u, "horarios.simulador") >= 1, write: u => lvl(u, "horarios.simulador") >= 2 },
+  /* logística: configuración, artículos (con su inventario inicial) y movimientos de stock */
+  lgcfg: { read: u => anyOf(u, "logistica"), write: u => lvl(u, "logistica.configuracion") >= 2 },
+  lgart: { read: u => anyOf(u, "logistica"), write: u => lvl(u, "logistica.inventario") >= 2 },
+  lgmov: { read: u => anyOf(u, "logistica"), write: u => lvl(u, "logistica.inventario") >= 2 },
 };
-const canZoho = u => ["registros", "equipos", "horarios", "buses", "contabilidad", "incidencias", "atencion"].some(a => anyOf(u, a));
+const canZoho = u => ["registros", "equipos", "horarios", "buses", "contabilidad", "incidencias", "atencion", "logistica"].some(a => anyOf(u, a));
 
 /* ---------- base de datos ---------- */
 const db = new DatabaseSync(path.join(CFG.dataDir, "campus.db"));

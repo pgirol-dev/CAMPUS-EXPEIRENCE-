@@ -231,3 +231,8 @@ Zoho indica que `zcatalyst-sdk-node` está en proceso de sustitución por el nue
 - **Copia de seguridad diaria:** desde las 3:00 (Madrid), la primera consulta a `/api/changes` la hace. Dos ranuras `CEDocs` col `backup` id `A`/`B`; el puntero está en `CEMeta` clave `backup`. La nueva sustituye a la anterior solo si se ha completado bien. Administrador: `GET /api/admin/backup`, `GET /api/admin/backup/data`, `POST /api/admin/backup/run`, `POST /api/admin/backup/restore {cols}`.
 - Colección nueva `hsimd`: horarios del simulador (un documento por día y modalidad), permiso `horarios.simulador`.
 - `store.js`: `docs.get(col,id)`; las escrituras grandes se insertan en tandas de 100 filas y, si hay trozos de dos escrituras a la vez, se usa la versión completa más reciente.
+
+## Logística (23/11)
+- Permisos nuevos: `logistica.necesidades`, `logistica.inventario`, `logistica.configuracion` (bloque «Logística»). Con cualquiera de ellos se puede leer Zoho CRM (Necesidades usa las inscripciones).
+- Colecciones nuevas (protegidas con historial y papelera): `lgcfg` (documento `main`: configuración), `lgart` (un documento por artículo, con su inventario inicial en `ini`) y `lgmov` (movimientos de stock). Leer: cualquier permiso de Logística. Escribir: `lgcfg` con Configuración (editar); `lgart` y `lgmov` con Inventario (editar).
+- El inventario inicial (Excel CONTROL DE ROPA 12/11 y CONTROL DE MATERIALES) va dentro del software y se carga una vez con el botón «Cargar inventario inicial» de Inventario.

@@ -6,7 +6,7 @@
    Nunca se borra nada de forma automática.
    El mismo archivo lo usan Zoho Catalyst (functions/campus_api) y el servidor propio (selfhost). */
 "use strict";
-const PROTECT = new Set(["hor", "hweek", "hsim", "hsimd", "teams", "reqs", "hbus", "happr", "attc", "agliq"]);
+const PROTECT = new Set(["hor", "hweek", "hsim", "hsimd", "teams", "reqs", "hbus", "happr", "attc", "agliq", "lgcfg", "lgart", "lgmov"]);
 const KEEP = 20;
 const SKIP = new Set(["hist", "trash", "backup", "dash"]);
 const madrid = () => { const p = {}; new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Madrid", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", hourCycle: "h23" }).formatToParts(new Date()).forEach(x => { p[x.type] = x.value; }); return { day: p.year + "-" + p.month + "-" + p.day, h: +p.hour }; };
