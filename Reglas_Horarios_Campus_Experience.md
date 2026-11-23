@@ -360,3 +360,10 @@ Implementa las mejoras solicitadas en el CRM respetando todas las reglas de este
 - **Choque entre 8.1 y 8.3:** con 4 actividades Experience y 5 días, cada grupo hace como mínimo 5 Experience a la semana, es decir, ya una repetición. Añadir otra Experience en los huecos de más de 30 min (8.1) obligaría a repetir más de una vez (8.3).
   - Aplicado provisionalmente: manda 8.3. Solo se añade una Experience extra en un hueco si no supera el máximo semanal (por ejemplo, internos el día del Tour BNB). Si no, el hueco queda con una FUN y un Descanso.
   - Pendiente de que Pau confirme o añada más actividades Experience.
+
+## Cambios del 23/11 (notas de Irene, confirmadas por Pau)
+- Ceremonia: ocupa medio campo; a la vez solo cabe 1 grupo de 3 equipos más.
+- Duraciones: Wake up 30', Ducha + Laundry 30', Golden Hour 30', Velada 1 h 30 (1 h 15 si el curfew pasaría de las 23:30). Desaparece «Ducha + Maletas».
+- Franjas horarias hasta las 00:00.
+- Internos (ONE y MAX): el lunes pueden entrenar desde las 9:00.
+- Preparación física: dos a la vez solo en sedes distintas; en Valdebebas, todas en el mismo campo; en Santa Ana y UEM, fuera o dentro del campo.

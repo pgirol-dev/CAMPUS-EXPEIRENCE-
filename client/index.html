@@ -1478,9 +1478,9 @@ html.ro-h .isnin{pointer-events:none;border-bottom-color:transparent}
 .wkbox.hwk.done .wteams{color:var(--green);font-weight:700}
 
 /* horarios v5: colores del documento (verde fútbol, azul claro piscina, rosa actividades, verde distinto prep) */
-:root{--fut:#1f9d6b;--fut-ink:#fff;--prep:color-mix(in srgb,#1f9d6b 30%,#e4e4e4);--prep-ink:#14432f;--pool:#bfdcf7;--pool-ink:#0f2145;--act:#f4dc7a;--fun:#fbf0c4;--meal:#f9d3ad;--bus:#3d4f52;--bus-ink:#ffffff}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--fut:#2fcf9f;--fut-ink:#10241c;--prep:color-mix(in srgb,#2fcf9f 28%,#1f2430);--prep-ink:#cfeee2;--pool:color-mix(in srgb,#5fa8ec 38%,#1f2430);--pool-ink:#e8eeee;--act:color-mix(in srgb,#f4dc7a 34%,#1f2430);--fun:color-mix(in srgb,#f4dc7a 16%,#1f2430);--meal:color-mix(in srgb,#f5b37a 34%,#1f2430)}}
-:root[data-theme="dark"]{--fut:#2fcf9f;--fut-ink:#10241c;--prep:color-mix(in srgb,#2fcf9f 28%,#1f2430);--prep-ink:#cfeee2;--pool:color-mix(in srgb,#5fa8ec 38%,#1f2430);--pool-ink:#e8eeee;--act:color-mix(in srgb,#f4dc7a 34%,#1f2430);--fun:color-mix(in srgb,#f4dc7a 16%,#1f2430);--meal:color-mix(in srgb,#f5b37a 34%,#1f2430)}
+:root{--cer-l:color-mix(in srgb,#ea456c 22%,#ffffff);--gold:#f6dca6;--gold-ink:#5a3f06;--fut:#1f9d6b;--fut-ink:#fff;--prep:color-mix(in srgb,#1f9d6b 30%,#e4e4e4);--prep-ink:#14432f;--pool:#bfdcf7;--pool-ink:#0f2145;--act:#f4dc7a;--fun:#fbf0c4;--meal:#f9d3ad;--bus:#3d4f52;--bus-ink:#ffffff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--cer-l:color-mix(in srgb,#ea456c 30%,#1f2430);--gold:color-mix(in srgb,#e8b04a 40%,#1f2430);--gold-ink:#fbeccc;--fut:#2fcf9f;--fut-ink:#10241c;--prep:color-mix(in srgb,#2fcf9f 28%,#1f2430);--prep-ink:#cfeee2;--pool:color-mix(in srgb,#5fa8ec 38%,#1f2430);--pool-ink:#e8eeee;--act:color-mix(in srgb,#f4dc7a 34%,#1f2430);--fun:color-mix(in srgb,#f4dc7a 16%,#1f2430);--meal:color-mix(in srgb,#f5b37a 34%,#1f2430)}}
+:root[data-theme="dark"]{--cer-l:color-mix(in srgb,#ea456c 30%,#1f2430);--gold:color-mix(in srgb,#e8b04a 40%,#1f2430);--gold-ink:#fbeccc;--fut:#2fcf9f;--fut-ink:#10241c;--prep:color-mix(in srgb,#2fcf9f 28%,#1f2430);--prep-ink:#cfeee2;--pool:color-mix(in srgb,#5fa8ec 38%,#1f2430);--pool-ink:#e8eeee;--act:color-mix(in srgb,#f4dc7a 34%,#1f2430);--fun:color-mix(in srgb,#f4dc7a 16%,#1f2430);--meal:color-mix(in srgb,#f5b37a 34%,#1f2430)}
 .hb.c-fut{background:var(--fut);color:var(--fut-ink);box-shadow:none}
 .hb.c-prep{background:var(--prep);color:var(--prep-ink);box-shadow:inset 3px 0 0 var(--fut)}
 .hb.c-pis{background:var(--pool);color:var(--pool-ink);box-shadow:inset 3px 0 0 var(--navy)}
@@ -1508,6 +1508,11 @@ html.ro-h .isnin{pointer-events:none;border-bottom-color:transparent}
 .occ.c-exp{background:var(--act);color:var(--ink)}
 .occ.c-comedor{background:var(--meal);color:var(--ink)}
 .occ .ou{display:block;font-size:9.5px;opacity:.8}
+.occ.cer{background:var(--cer-l);color:var(--navy)}
+.occ.cermix{background:linear-gradient(90deg,var(--cer-l) 0 6px,var(--fut) 6px)}
+.occ.cer.over,.occ.cermix.over{background:var(--bad);color:var(--on-hot)}
+.hb.c-gold{background:var(--gold);color:var(--gold-ink);box-shadow:inset 3px 0 0 #d9a441}
+.dot.c-gold{background:var(--gold)}
 .occ.full{background:#f4dc7a!important;color:#2f3e40!important}
 .occ.over{background:var(--bad)!important;color:var(--on-hot)!important}
 .hbody.na{background:repeating-linear-gradient(45deg,transparent 0 6px,color-mix(in srgb,var(--ink) 6%,transparent) 6px 12px)}
@@ -1540,6 +1545,16 @@ html.ro-h .isnin{pointer-events:none;border-bottom-color:transparent}
 .bsum{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
 .bsum .bk{font-size:12.5px;font-weight:600;color:var(--ink-2)}
 .bsum .bk b{font-family:var(--f-serif);font-style:italic;font-weight:400;font-size:1.9rem;color:var(--pink);margin-right:4px}
+.bustab{display:grid;grid-template-columns:52px repeat(var(--nb),minmax(280px,300px));column-gap:10px;width:max-content;padding:0 8px 8px 0}
+.bustab .btc{background:var(--surface);border-top:1px solid var(--line)}
+.bustab .bth0,.bustab .bhr{position:sticky;left:0;z-index:3;background:var(--surface-2);border-top-color:transparent}
+.bustab .bth0{top:0;z-index:5}
+.bustab .bthd{position:sticky;top:0;z-index:4;border-top:0;border-radius:6px 6px 0 0}
+.bustab .bhr{font-weight:800;font-variant-numeric:tabular-nums;font-size:12px;padding:10px 6px 0 8px;border-top:1px solid var(--line)}
+.bustab .bcell{min-height:36px}
+.bustab .bcell.alt{background:color-mix(in srgb,var(--surface) 92%,var(--ink) 8%)}
+.bustab .bcell .blegs{padding:4px 6px}
+.busv .hscroll{max-height:calc(100vh - 140px);margin-top:10px}
 .buscols{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:10px}
 .bcol{background:var(--surface-2);border-radius:6px;overflow:hidden}
 .bh{background:var(--navy);color:var(--navy-ink);padding:8px 12px;display:flex;flex-direction:column;gap:2px}
@@ -3331,7 +3346,7 @@ const H_ORDER=["ONE|Media Jornada","MAX|Media Jornada","ONE|Jornada Completa","M
 const H_APS=()=>H_ORDER.filter(ap=>APARTADOS.some(([p,m])=>p+"|"+m===ap));
 function dayAps(week,dow){return H_APS().filter(ap=>MODDAYS[ap].includes(dow)&&apCount(week,ap))}
 function weekDays(week){return [1,2,3,4,5,6,0].filter(d=>dayAps(week,d).length)}
-function tplFor(ap,i){const T=HTPL[ap]||[];return T.length?T[i%T.length].map(b=>Object.assign({},b)):[]}
+function tplFor(ap,i){const T=HTPL[ap]||[];if(!T.length)return [];const L=T[i%T.length].map(b=>Object.assign({},b));return durFix(L)||L}
 /* ---------- configuración de la semana ---------- */
 function wkCfg(week){const c=H.sim?(H.simCfg[hw(week)]||H.wk[hw(week)]):H.wk[hw(week)];const NAC=hNac(week);const out=NAC?{sedes:[],mods:{},resi:""}:{sedes:clone(SEDES_DEF),mods:clone(MODS_DEF),resi:week>=5?"UEM":"RESA"};
   if(c){if(Array.isArray(c.sedes)&&(c.v===4||NAC))out.sedes=clone(c.sedes);if(c.mods)Object.assign(out.mods,clone(c.mods));if(c.resi)out.resi=c.resi}
@@ -3348,6 +3363,27 @@ function locOf(cfg,b){if(/^Bus|· Bus|^A pie/.test(b.a))return "";
   if(/Fleming/i.test(b.a))return "FLEMING";return ""}
 function resLabel(cfg,b){if(!b.sd)return "";if(b.sd==="ext")return /valdebebas/i.test(b.u||"")?"VBB":(b.u||"");const s=findSede(cfg,b.sd);if(!s)return b.u||"";if(!b.u)return s.n;return b.u.startsWith(s.n)||/UAM|RESA|UEM|VBB|BNB/.test(b.u)?b.u:s.n+" · "+b.u}
 /* bloques antiguos (texto) → modelo nuevo */
+/* duraciones estándar (notas de Irene, nov 2026): Wake up 30', Ducha + Laundry 30', Golden Hour 30', Velada 1 h 30.
+   «Ducha + Maletas» ya no existe: pasa a «Ducha + Laundry». durFix ajusta un día ya creado sin mover el resto:
+   acorta los bloques largos, adelanta el Wake up y rellena los huecos que quedan con «Tiempo libre».
+   Devuelve null si no hay nada que cambiar. */
+const DEF_DUR={"Wake up":30,"Ducha + Laundry":30,"Golden Hour":30,"Velada":90};
+function durFix(blocks){if(!Array.isArray(blocks)||!blocks.length)return null;let ch=false;
+  const B=blocks.map(b=>Object.assign({},b)).sort((p,q)=>tm(p.s)-tm(q.s));const freed=[];
+  B.forEach((b,i)=>{if(b.a==="Ducha + Maletas"){b.a="Ducha + Laundry";b.c="des";ch=true}});
+  B.forEach((b,i)=>{const s=tm(b.s),e=tm(b.e),d=e-s;
+    if(b.a==="Wake up"&&d!==30){const prevE=i?tm(B[i-1].e):0;const ns=Math.max(7*60,prevE,e-30);if(ns!==s&&ns<e){b.s=ts(ns);ch=true}}
+    else if((b.a==="Ducha + Laundry"||b.a==="Golden Hour")&&d>30){b.e=ts(s+30);ch=true;const nx=B[i+1];
+      if(b.a==="Ducha + Laundry"&&nx&&nx.a==="Golden Hour"&&tm(nx.s)===e){nx.s=ts(s+30)}else freed.push([s+30,e,b])}
+    else if(b.a==="Velada"&&d>90){b.e=ts(s+90);ch=true;freed.push([s+90,e,b])}});
+  if(!ch)return null;
+  freed.forEach(([a,z,src])=>{const cov=B.filter(o=>o!==src&&tm(o.s)<z&&tm(o.e)>a);let x=a;cov.sort((p,q)=>tm(p.s)-tm(q.s)).forEach(o=>{if(tm(o.s)>x)B.push(Object.assign({},src,{s:ts(x),e:ts(tm(o.s)),a:"Tiempo libre",c:"des",u:"",t:""}));x=Math.max(x,tm(o.e))});
+    if(x<z)B.push(Object.assign({},src,{s:ts(x),e:ts(z),a:"Tiempo libre",c:"des",u:"",t:""}))});
+  return B.sort((p,q)=>tm(p.s)-tm(q.s))}
+/* aplica durFix a los horarios del simulador ya creados y guarda los que cambian (una vez por documento) */
+function simDurMigrate(){const ks=[];Object.entries(H.simDocs).forEach(([k,d])=>{let c=false;const groups=d.groups.map(g=>{const nb=durFix(g.blocks);if(nb){c=true;return Object.assign({},g,{blocks:nb})}return g});
+    if(c){H.simDocs[k]={groups};if(!(H._durMig=H._durMig||{})[k]){H._durMig[k]=1;ks.push(k)}}});
+  if(ks.length&&S.db)hSaveSimDocs(0,ks)}
 function normBlock(b){const x=Object.assign({},b);if(!x.c)x.c=ACT_CAT[x.a]||"log";
   if(!x.sd&&x.r){const L=legacyRes(x.r);if(L)Object.assign(x,L)}
   if(x.sd==="vbb"&&x.t==="campo"&&x.u&&!/^Campo/.test(x.u))x.u="Campo "+x.u;
@@ -3392,13 +3428,14 @@ function dayIssues(week,dow){
           if(r){const na=resAvail(r,dow,s,e);if(na)err(i,"avail",r.n+" "+na);
             const unit=r.t==="campo"?teams:(r.t==="comedor"||r.t==="piscina")?size:1;
             if(t!=="cer")put(r.t,b.sd+"|"+r.n,s,e,{ap,g,i,v:unit});
+            else if(r.t==="campo")put(r.t,b.sd+"|"+r.n,s,e,{ap,g,i,v:Math.ceil((+r.cap||6)/2),dk:"cer|·|Ceremonia",cer:1}); // la ceremonia ocupa medio campo
             if(r.t==="comedor")((entries[b.sd+"|"+r.n]=entries[b.sd+"|"+r.n]||{})[s]=entries[b.sd+"|"+r.n][s]||[]).push({ap,g,i})}
           else if(b.u&&t!=="cer")err(i,"none","Instalación «"+b.u+"» no existe esta semana")}
         if(NAC)return; // nacionales: solo reglas de instalaciones, capacidad y solapes
         // entrenamientos y partidos
         if(b.c==="fut"){
           if(dur(b)!==60&&!(fri&&isMJ(ap)&&dur(b)===45))err(i,"dur","Entrenamientos y partidos duran 1 h");
-          const st=mon?9*60+15:9*60;if(s<st)err(i,"win","Los campos empiezan a las "+ts(st));
+          const st=mon&&!isInt(ap)?9*60+15:9*60;if(s<st)err(i,"win","Los campos empiezan a las "+ts(st)+(mon&&!isInt(ap)?" (los internos, a las 9:00)":""));
           const lim=isMJ(ap)?13*60:ap==="ONE|Jornada Completa"?17*60+45:ap==="MAX|Jornada Completa"?18*60+45:19*60+30;
           if(isMJ(ap)&&e>13*60){if(e<=13*60+15){if(!mon)err(i,"appr","Media jornada termina a las 13:15: requiere aprobación",{appr:apprKey(dow,ap,g,b)})}else err(i,"win","Media jornada debe terminar como máximo a las "+(mon?"13:15":"13:00"))}
           else if(e>lim)err(i,"win","Debe terminar como máximo a las "+ts(lim));
@@ -3412,7 +3449,6 @@ function dayIssues(week,dow){
           if(dur(b)!==60)err(i,"dur","La preparación física dura 1 h");
           if(NOFIELD(s,e))err(i,"nofield","No puede haber preparación física entre las 14:30 y las 15:30");
           if(b.sd==="vbb"&&!(b.u||"").startsWith("Campo"))err(i,"prep","En Valdebebas la preparación física se hace dentro de un campo");
-          if((b.sd==="sa"||b.sd==="uem")&&!/Fuera de campo/.test(b.u||""))err(i,"prep","En Santa Ana y UEM la preparación física se hace fuera del campo");
           prepAll.push({ap,g,i,s,e,sd:b.sd,u:b.u});
         }
         // piscina
@@ -3437,7 +3473,7 @@ function dayIssues(week,dow){
         if(isExp(b)){const d0=dur(b);if(!(d0===60||d0===45||(fri&&isMJ(ap)&&d0===30)))err(i,"dur","Actividades Experience duran 1 h o 45 min");const st=mon?9*60+15:9*60;if(!isInt(ap)&&s<st)err(i,"win","Las actividades empiezan a las "+ts(st))}
         if(b.a==="FUN"&&dur(b)!==30)err(i,"dur","FUN dura 30 minutos");
         if(b.a==="Tour BNB"){if(!isInt(ap))err(i,"bnb","El Tour BNB es solo para internos");const d0=dur(b);if(d0<105||d0>150)err(i,"dur","El Tour BNB dura entre 1 h 45 y 2 h 30");if(!(dow>=2&&dow<=4))err(i,"bnb","El Tour BNB es de martes a jueves")}
-        if(b.a==="Velada"){if(!isInt(ap))err(i,"vel","Las veladas son solo de internos");const d0=dur(b);if(d0!==75&&d0!==105)err(i,"dur","La velada dura 1 h 15 o 1 h 45");const cena=bl.find(o=>o.a==="Cena");if(cena&&s<tm(cena.e))err(i,"vel","La velada va después de la cena")}
+        if(b.a==="Velada"){if(!isInt(ap))err(i,"vel","Las veladas son solo de internos");const d0=dur(b);if(d0!==75&&d0!==90)err(i,"dur","La velada dura 1 h 30 (o 1 h 15 si no cabe)");const cena=bl.find(o=>o.a==="Cena");if(cena&&s<tm(cena.e))err(i,"vel","La velada va después de la cena")}
         if(b.a==="Curfew Time"&&(s<22*60+30||s>23*60+30))err(i,"win","El Curfew empieza entre 22:30 y 23:30");
         if(b.a==="Ceremonia de clausura"){if(!fri)err(i,"cer","La clausura es los viernes");if(dur(b)!==45)err(i,"dur","La clausura dura 45 minutos");
           if(isMJ(ap)&&!((b.s==="12:15"&&b.e==="13:00")||(b.s==="12:30"&&b.e==="13:15")))err(i,"cer","Media jornada: clausura de 12:15 a 13:00 (o 12:30 a 13:15)");
@@ -3488,12 +3524,12 @@ function dayIssues(week,dow){
   const usedF=new Set(Object.keys(occ.campo||{}).concat(Object.keys(occ.prep||{})));
   Object.keys(occ.exp||{}).forEach(key=>{const [sd,u]=key.split("|");const r=findRes(cfg,sd,u);if(r&&r.req&&r.req.length&&!r.req.some(c=>usedF.has(sd+"|"+c))){Object.values(occ.exp[key]).forEach(arr=>arr.forEach(a=>{const k=a.ap+"|"+a.g+"|"+a.i;if(!flags.has(k))flags.set(k,[]);const w=u+": "+r.req.join(" o ")+" no se usa hoy";if(!flags.get(k).includes(w))flags.get(k).push(w)}));list.push({k:"expf",r:u,s:0,e:0,day:true,txt:"Espacio Experience sin su campo en uso ese día ("+r.req.join(" o ")+")"})}});
   // preparación física: nunca dos a la vez; en VBB, mismo campo
-  prepAll.forEach((p,x)=>prepAll.forEach((q,y)=>{if(y>x&&q.s<p.e&&q.e>p.s){[p,q].forEach(z=>{const k=z.ap+"|"+z.g+"|"+z.i;if(!flags.has(k))flags.set(k,[]);flags.get(k).push("Dos preparaciones físicas a la vez")});list.push({k:"prep2",ap:p.ap,g:p.g+" y "+q.g,a:"Preparación física",s:Math.max(p.s,q.s),e:Math.min(p.e,q.e),txt:"Dos preparaciones físicas a la vez"})}}));
+  prepAll.forEach((p,x)=>prepAll.forEach((q,y)=>{if(y>x&&p.sd===q.sd&&q.s<p.e&&q.e>p.s){[p,q].forEach(z=>{const k=z.ap+"|"+z.g+"|"+z.i;if(!flags.has(k))flags.set(k,[]);flags.get(k).push("Dos preparaciones físicas a la vez")});list.push({k:"prep2",ap:p.ap,g:p.g+" y "+q.g,a:"Preparación física",s:Math.max(p.s,q.s),e:Math.min(p.e,q.e),txt:"Dos preparaciones físicas a la vez en la misma sede"})}}));
   const vp=[...new Set(prepAll.filter(p=>p.sd==="vbb").map(p=>p.u))];if(vp.length>1)list.push({k:"prepc",ap:"",g:"Preparación física",a:"",s:0,e:0,txt:"En VBB todas las preparaciones físicas deben ir en el mismo campo ("+vp.join(", ")+")",day:true});
   // capacidad
   const over={};
   Object.entries(occ).forEach(([cat,byKey])=>Object.entries(byKey).forEach(([key,slots])=>{const [sd,u]=key.split("|");const r=findRes(cfg,sd,u);if(!r)return;const cap=+r.cap||0;
-    Object.entries(slots).forEach(([x,arr])=>{const seen={};let used=0;arr.forEach(a=>{const kk=a.ap+"|"+a.g;if(!seen[kk]){seen[kk]=1;used+=a.v}});
+    Object.entries(slots).forEach(([x,arr])=>{const seen={};let used=0;arr.forEach(a=>{const kk=a.dk||a.ap+"|"+a.g;if(!seen[kk]){seen[kk]=1;used+=a.v}});
       if(cap&&used>cap){arr.forEach(a=>{const k=a.ap+"|"+a.g+"|"+a.i;if(!flags.has(k))flags.set(k,[]);const w="Instalación completa ("+used+"/"+cap+" "+UNIT[cat]+")";if(!flags.get(k).includes(w))flags.get(k).push(w)});
         const gs=Object.keys(seen).map(z=>z.split("|").slice(2).join("|"));const sig=key+"|"+gs.sort().join(",");const o=over[sig]||(over[sig]={k:"cap",r:r.n,gs,s:+x,e:+x+15,used,cap,unit:UNIT[cat]});o.s=Math.min(o.s,+x);o.e=Math.max(o.e,+x+15);o.used=Math.max(o.used,used)}})}));
   Object.values(over).forEach(o=>list.push(o));
@@ -3720,7 +3756,7 @@ function genINT(G,st,cfg,dow,ap,opt){if(opt.av==null){return genINT(G,st,cfg,dow
   for(const am of amSedes)for(const pm of pmSedes)for(const d0 of [firstCom(G,st,cfg,dow,resi,7*60+30,9*60+30)].filter(x=>x!=null))for(let c0=12*60+30;c0<=14*60+45;c0+=GQ)for(const poolFirst of [true,false]){
     const tx=[];const out=[];
     const rD=tryCom(G,st,tx,cfg,dow,resi,d0,d0+30,G.size);if(!rD)continue;tx.push(rD);
-    out.push(BK(Math.max(7*60,d0-15),d0,"Wake up",{sd:resi}));out.push(BK(d0,d0+30,"Desayuno",{sd:resi,u:rD.u,t:"comedor"}));
+    out.push(BK(Math.max(7*60,d0-30),d0,"Wake up",{sd:resi}));out.push(BK(d0,d0+30,"Desayuno",{sd:resi,u:rD.u,t:"comedor"}));
     // mañana
     const tA=trOf(am),fsAm=fs;let dep=fsAm-15-tA;if(dep<d0+30)dep=d0+30;
     out.push(BK(dep,dep+tA,walk(am)?"A pie al campo":"Bus a "+findSede(cfg,am).n));let t=dep+tA;
@@ -3746,9 +3782,9 @@ function genINT(G,st,cfg,dow,ap,opt){if(opt.av==null){return genINT(G,st,cfg,dow
     if(!ok)continue;
     if(needX&&!opt.bnb){o3.push(BK(u,u+60,"Actividades Experience",{sd:resi,u:"",t:"exp"}));u+=60}
     if(fri){if(u>19*60+15)continue;o3._back=u;const sc=scoreBlocks(o3,ap)+fillPen(st,tx3)+(am==="vbb"?0:25)+(pm==="vbb"?0:10)+placed.r.idle+(u-17*60)/15;if(!best||sc<best.sc)best={sc,tx:tx3,out:o3};continue}
-    o3.push(BK(u,u+60,"Ducha + Laundry",{sd:resi}));u+=60;
+    o3.push(BK(u,u+30,"Ducha + Laundry",{sd:resi}),BK(u+30,u+60,"Golden Hour",{sd:resi}));u+=60;
     let cn=Math.ceil(u/GQ)*GQ;let rCn=null;for(;cn<=21*60+15;cn+=GQ){rCn=tryCom(G,st,tx3,cfg,dow,resi,cn,cn+30,G.size);if(rCn)break}
-    if(!rCn)continue;tx3.push(rCn);if(cn>u)o3.push(BK(u,cn,"Golden Hour",{sd:resi}));o3.push(BK(cn,cn+30,"Cena",{sd:resi,u:rCn.u,t:"comedor"}));
+    if(!rCn)continue;tx3.push(rCn);if(cn>u)o3.push(BK(u,cn,"Tiempo libre",{sd:resi}));o3.push(BK(cn,cn+30,"Cena",{sd:resi,u:rCn.u,t:"comedor"}));
     o3._cenaEnd=cn+30;
     let sc=scoreBlocks(o3,ap)+fillPen(st,tx3)+(am==="vbb"?0:25)+(pm==="vbb"?0:10)+placed.r.idle+(cn-u)/15;
     if(!best||sc<best.sc)best={sc,tx:tx3,out:o3}}
@@ -3759,30 +3795,32 @@ function genINTbnbAM(G,st,cfg,dow,ap){const MAX=isMAX(ap);const resi=cfg.resi===
   let best=null;const d0=firstCom(G,st,cfg,dow,resi,7*60+30,9*60+30);if(d0==null)return null;
   for(const pm of ms)for(let c0=12*60+30;c0<=14*60;c0+=GQ){const tx=[];const o=[];
     const rD=tryCom(G,st,tx,cfg,dow,resi,d0,d0+30,G.size);if(!rD)continue;tx.push(rD);
-    o.push(BK(Math.max(7*60,d0-15),d0,"Wake up",{sd:resi}),BK(d0,d0+30,"Desayuno",{sd:resi,u:rD.u,t:"comedor"}));
+    o.push(BK(Math.max(7*60,d0-30),d0,"Wake up",{sd:resi}),BK(d0,d0+30,"Desayuno",{sd:resi,u:rD.u,t:"comedor"}));
     const s0=Math.max(d0+45,9*60);const end=s0+tb+120+tb;if(end+15>c0)continue;
     o.push(BK(s0,s0+tb,"Bus a BNB"),BK(s0+tb,s0+tb+120,"Tour BNB",{sd:"bnb",u:"Tour BNB",t:"tour"}),BK(s0+tb+120,end,"Bus a "+RL),BK(end,end+15,"Snack",{sd:resi}));
     const rC=tryCom(G,st,tx,cfg,dow,resi,c0,c0+30,G.size);if(!rC)continue;tx.push(rC);o.push(BK(c0,c0+30,"Comida",{sd:resi,u:rC.u,t:"comedor"}));
     const tP=pm===resi?15:travel(RL,findSede(cfg,pm).n);const dep=c0+45;o.push(BK(dep,dep+tP,pm===resi?"A pie al campo":"Bus a "+findSede(cfg,pm).n));
     const L=[IT.E,IT.E,IT.P].concat(MAX&&dow<=4?[IT.PF]:[]);const r=placeFlex(G,st,tx,cfg,dow,ap,pm,L,dep+tP+15,19*60+30,o,true);if(!r.ok)continue;
     o.push(BK(r.t,r.t+15,"Snack"),BK(r.t+15,r.t+15+tP,pm===resi?"A pie a la residencia":"Bus a "+RL));let u=r.t+15+tP;
-    o.push(BK(u,u+45,"Ducha + Laundry",{sd:resi}));u+=45;let cn=Math.ceil(u/GQ)*GQ,rCn=null;for(;cn<=21*60+30;cn+=GQ){rCn=tryCom(G,st,tx,cfg,dow,resi,cn,cn+30,G.size);if(rCn)break}if(!rCn)continue;tx.push(rCn);
+    o.push(BK(u,u+30,"Ducha + Laundry",{sd:resi}),BK(u+30,u+60,"Golden Hour",{sd:resi}));u+=60;let cn=Math.ceil(u/GQ)*GQ,rCn=null;for(;cn<=21*60+30;cn+=GQ){rCn=tryCom(G,st,tx,cfg,dow,resi,cn,cn+30,G.size);if(rCn)break}if(!rCn)continue;tx.push(rCn);if(cn>u)o.push(BK(u,cn,"Tiempo libre",{sd:resi}));
     o.push(BK(cn,cn+30,"Cena",{sd:resi,u:rCn.u,t:"comedor"}));o._cenaEnd=cn+30;const sc=scoreBlocks(o,ap)+fillPen(st,tx)+(pm==="vbb"?0:10);if(!best||sc<best.sc)best={sc,tx,out:o}}
   return best}
-/* velada (y clausura del viernes) a la vez para todo el programa; curfew entre 22:30 y 23:30 */
+/* velada (y clausura del viernes) a la vez para todo el programa; curfew entre 22:30 y 23:30.
+   La velada dura 1 h 30; si así el curfew pasaría de las 23:30, se acorta a 1 h 15 */
+const velDur=V=>V+90<=23*60+30?90:75;
 function syncEvening(res,cfg,dow,st){const resi=cfg.resi==="UEM"?"uem":"resa";
   if(dow===5){ // viernes: clausura a la misma hora para ONE y MAX internos, al terminar los entrenamientos
     const all=["ONE|Interno","MAX|Interno"].flatMap(ap=>(res[ap]||[]).filter(g=>!g.fail&&!g.pend).map(g=>({ap,g})));if(!all.length)return;
     const C=Math.ceil(Math.max(...all.map(x=>x.g._back||19*60+15))/GQ)*GQ;const cer={sd:resi==="uem"?"uem":"uam",u:resi==="uem"?"Campo UEM":"Pabellón UAM",t:"cer"};
-    const maxL=[];all.forEach(({ap,g})=>{{let t0=g._back;if(!isMAX(ap)&&C-t0>=60){g.blocks.push(BK(t0,t0+60,"Ducha + Maletas",{sd:resi}));t0+=60}if(C>t0)g.blocks.push(BK(t0,C,"Descanso",{sd:resi}))}g.blocks.push(BK(C,C+45,"Ceremonia de clausura",cer));const t=C+45;
-      if(!isMAX(ap)){const co=Math.max(20*60,t);if(co>t)g.blocks.push(BK(t,co,"Ducha + Maletas",{sd:resi}));g.blocks.push(BK(co,co+30,"Check-out",CKS("Residencia")));return}
-      g.blocks.push(BK(t,t+60,"Ducha + Laundry",{sd:resi}));let cn=t+60,r=null;for(;cn<=21*60+30;cn+=GQ){r=g._g&&st?tryCom(g._g,st,[],cfg,dow,resi,cn,cn+30,g._g.size):{u:"Comedor "+(resi==="uem"?"UEM":"RESA")};if(r)break}
-      if(!r){cn=t+60;r={u:""}}else if(g._g&&st)commit(st,[r]);if(cn>t+60)g.blocks.push(BK(t+60,cn,"Golden Hour",{sd:resi}));g.blocks.push(BK(cn,cn+30,"Cena",{sd:resi,u:r.u,t:"comedor"}));g._cenaEnd=cn+30;maxL.push(g)});
-    if(maxL.length){const V=Math.max(...maxL.map(g=>g._cenaEnd));maxL.forEach(g=>{if(V>g._cenaEnd)g.blocks.push(BK(g._cenaEnd,V,"Tiempo libre",{sd:resi}));g.blocks.push(BK(V,V+75,"Velada",{sd:resi}));const cf=Math.max(22*60+30,V+75);g.blocks.push(BK(cf,cf+15,"Curfew Time",{sd:resi}))})}
+    const maxL=[];all.forEach(({ap,g})=>{{let t0=g._back;if(!isMAX(ap)&&C-t0>=30){g.blocks.push(BK(t0,t0+30,"Ducha + Laundry",{sd:resi}));t0+=30}if(C>t0)g.blocks.push(BK(t0,C,"Descanso",{sd:resi}))}g.blocks.push(BK(C,C+45,"Ceremonia de clausura",cer));const t=C+45;
+      if(!isMAX(ap)){const co=Math.max(20*60,t);if(co>t)g.blocks.push(BK(t,co,"Descanso",{sd:resi}));g.blocks.push(BK(co,co+30,"Check-out",CKS("Residencia")));return}
+      g.blocks.push(BK(t,t+30,"Ducha + Laundry",{sd:resi}),BK(t+30,t+60,"Golden Hour",{sd:resi}));let cn=t+60,r=null;for(;cn<=21*60+30;cn+=GQ){r=g._g&&st?tryCom(g._g,st,[],cfg,dow,resi,cn,cn+30,g._g.size):{u:"Comedor "+(resi==="uem"?"UEM":"RESA")};if(r)break}
+      if(!r){cn=t+60;r={u:""}}else if(g._g&&st)commit(st,[r]);if(cn>t+60)g.blocks.push(BK(t+60,cn,"Tiempo libre",{sd:resi}));g.blocks.push(BK(cn,cn+30,"Cena",{sd:resi,u:r.u,t:"comedor"}));g._cenaEnd=cn+30;maxL.push(g)});
+    if(maxL.length){const V=Math.max(...maxL.map(g=>g._cenaEnd));maxL.forEach(g=>{if(V>g._cenaEnd)g.blocks.push(BK(g._cenaEnd,V,"Tiempo libre",{sd:resi}));const vd=velDur(V);g.blocks.push(BK(V,V+vd,"Velada",{sd:resi}));const cf=Math.max(22*60+30,V+vd);g.blocks.push(BK(cf,cf+15,"Curfew Time",{sd:resi}))})}
     return}
   ["ONE|Interno","MAX|Interno"].forEach(ap=>{const L=res[ap];if(!L||!L.length)return;
     const ok=L.filter(g=>!g.fail&&!g.pend);if(!ok.length)return;const V=Math.max(...ok.map(g=>g._cenaEnd||21*60));
-    ok.forEach(g=>{let t=V;g.blocks.push(BK(t,t+75,"Velada",{sd:resi}));t+=75;const cf=Math.max(22*60+30,t);g.blocks.push(BK(cf,cf+15,"Curfew Time",{sd:resi}))})})}
+    ok.forEach(g=>{let t=V;const vd=velDur(V);g.blocks.push(BK(t,t+vd,"Velada",{sd:resi}));t+=vd;const cf=Math.max(22*60+30,t);g.blocks.push(BK(cf,cf+15,"Curfew Time",{sd:resi}))})})}
 /* un día completo: devuelve {ap:[{name,blocks}]} */
 function genDay(week,dow,opts){opts=opts||{};const cfg=wkCfg(week);const st=newState();const res={};
   const order=VBB_PRIO.filter(ap=>dayAps(week,dow).includes(ap));
@@ -3965,7 +4003,7 @@ function renderHorarios(){try{sbSync()}catch(e){}
   let pre=noTeams.length?'<div class="hnote">Sin equipos todavía en '+noTeams.map(a=>esc(apLabel(...a.split("|")))).join(", ")+'. <button class="btn" type="button" data-goeq="'+noTeams[0]+'">Ir a Equipos</button></div>':"";
   if(!cols.length){board.innerHTML=pre;return}
   let mn=7*60,mx=19*60+30;cols.forEach(c=>c.bl.forEach(b=>{mn=Math.min(mn,tm(b.s));mx=Math.max(mx,tm(b.e))}));
-  mn=Math.floor(mn/60)*60;mx=Math.ceil(mx/60)*60;
+  mn=Math.floor(mn/60)*60;mx=24*60; // franjas siempre hasta las 00:00
   const RH=18,rows=(mx-mn)/15;
   let BN={};try{BN=busNumOf(dayBusPlan(iss.cfg,CW(),H.dow))}catch(e){}
   let band='<div class="hbt"></div>';let i=0;
@@ -3976,7 +4014,7 @@ function renderHorarios(){try{sbSync()}catch(e){}
     if(!c.bl.length)h+='<span class="hnone">Por hacer</span>';
     c.bl.forEach((b,bi)=>{const s=tm(b.s),e=tm(b.e);const why0=iss.flags.get(c.ap+"|"+c.n+"|"+bi);const why=why0&&why0.some(w=>HARD_RE.test(w))?why0.filter(w=>HARD_RE.test(w)):null;const rev=why0&&!why;const cc=b.c||ACT_CAT[b.a]||"log";const tall=(e-s)>=45;const rl=resLabel(iss.cfg,b);const need=b.t;
       const ak=apprKey(H.dow,c.ap,c.n,b),ast=apprOf(CW(),ak);const isAp=iss.list.some(x=>x.k==="appr"&&x.ap===c.ap&&x.g===c.n&&x.s===s&&x.a===b.a);
-      h+='<button type="button" class="hb c-'+cc+(b.a==="FUN"?" c-fun":"")+(/^bus\b/i.test(b.a)?" c-bus":"")+(why?" bad":"")+(isAp&&ast==="ok"?" appr":"")+(tall?"":" thin")+(H.edit&&H.edit.ci===ci&&H.edit.bi===bi?" on":"")+'" data-hb="'+ci+"."+bi+'" style="top:'+((s-mn)/15*RH+1)+"px;height:"+((e-s)/15*RH-2)+'px" title="'+esc(c.n+" · "+b.a+(rl?" · "+rl:"")+" · "+b.s+"–"+b.e+(why0?" · "+why0.join(" · "):"")+(isAp&&ast==="ok"?" · Aprobado":""))+'"><span class="ba">'+esc(isBusBlk(b)?busLabel(b,BN[c.ap+"|"+c.n+"|"+bi]):b.a)+"</span>"+(isBusBlk(b)?"":rl?'<span class="br">'+esc(rl)+"</span>":(need&&need!=="cer"?'<span class="br nr">'+(b.nf?"No cabe":"Sin instalación")+"</span>":""))+(tall?'<span class="bt">'+b.s+"–"+b.e+"</span>":"")+(why?'<span class="bx">!</span>':isAp&&ast==="ok"?'<span class="bx ok">✓</span>':rev?'<span class="bx rv" title="Revisión de reglas">·</span>':"")+(H.manual&&!H.tool?'<span class="rz"></span><span class="bdel" data-bdel="'+ci+"."+bi+'" title="Borrar caja" role="button" aria-label="Borrar caja">×</span>':"")+"</button>"});
+      h+='<button type="button" class="hb c-'+cc+(b.a==="FUN"?" c-fun":"")+(b.a==="Golden Hour"?" c-gold":"")+(/^bus\b/i.test(b.a)?" c-bus":"")+(why?" bad":"")+(isAp&&ast==="ok"?" appr":"")+(tall?"":" thin")+(H.edit&&H.edit.ci===ci&&H.edit.bi===bi?" on":"")+'" data-hb="'+ci+"."+bi+'" style="top:'+((s-mn)/15*RH+1)+"px;height:"+((e-s)/15*RH-2)+'px" title="'+esc(c.n+" · "+b.a+(rl?" · "+rl:"")+" · "+b.s+"–"+b.e+(why0?" · "+why0.join(" · "):"")+(isAp&&ast==="ok"?" · Aprobado":""))+'"><span class="ba">'+esc(isBusBlk(b)?busLabel(b,BN[c.ap+"|"+c.n+"|"+bi]):b.a)+"</span>"+(isBusBlk(b)?"":rl?'<span class="br">'+esc(rl)+"</span>":(need&&need!=="cer"?'<span class="br nr">'+(b.nf?"No cabe":"Sin instalación")+"</span>":""))+(tall?'<span class="bt">'+b.s+"–"+b.e+"</span>":"")+(why?'<span class="bx">!</span>':isAp&&ast==="ok"?'<span class="bx ok">✓</span>':rev?'<span class="bx rv" title="Revisión de reglas">·</span>':"")+(H.manual&&!H.tool?'<span class="rz"></span><span class="bdel" data-bdel="'+ci+"."+bi+'" title="Borrar caja" role="button" aria-label="Borrar caja">×</span>':"")+"</button>"});
     h+="</div></div>"});
   h+="</div>";
   hKeepScroll(board,()=>{board.innerHTML=pre+'<div class="hscroll">'+h+"</div>"});
@@ -4147,7 +4185,7 @@ const ISS_TXT={
   cap:["Instalación completa","En ese tramo se supera el aforo del espacio con los grupos indicados.",["Mueve uno de los grupos a otra hora o a otro espacio.","O amplía el aforo en Instalaciones si es correcto."]],
   stag:["Demasiados grupos entrando al comedor","Como máximo pueden entrar 2 grupos a la vez al comedor.",["Escalona las entradas cada 15 minutos."]],
   expf:["Espacio Experience sin su campo","Ese espacio Experience solo se puede usar si su campo asociado se usa ese día.",["Usa el campo asociado ese día o cambia de espacio Experience."]],
-  prep2:["Dos preparaciones físicas a la vez","Nunca puede haber dos sesiones de preparación física simultáneas.",["Mueve una de las dos."]],
+  prep2:["Dos preparaciones físicas a la vez","En una misma sede no puede haber dos sesiones de preparación física a la vez (en sedes distintas, sí).",["Mueve una de las dos de hora o de sede."]],
   prepc:["Preparación física en campos distintos","En Valdebebas todas las preparaciones físicas del día deben ir en el mismo campo.",["Unifica el campo de las sesiones de preparación física."]],
   cnt:["Faltan o sobran actividades","El día del grupo no tiene las actividades obligatorias de su modalidad (entrenamientos, partido, comidas, snacks…).",["Revisa el día del grupo y añade o quita lo que indica el aviso."]],
   exp:["Sin Actividad Experience","Cada día el grupo debe tener al menos una Actividad Experience (salvo el día del Tour BNB).",["Añade una Actividad Experience."]],
@@ -4235,18 +4273,18 @@ function renderHRes(iss){
   if(!keys.length){board.innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">No hay '+OCC_CATS.find(x=>x[0]===H.occ)[1].toLowerCase()+" esta semana</h3></div>";return}
   const order=([c,k])=>{const [sd,u]=k.split("|");const si=cfg.sedes.findIndex(x=>x.id===sd);const s=cfg.sedes[si];return (si<0?99:si)*1000+(s?s.res.findIndex(r=>r.n===u):0)};
   keys.sort((a,b)=>order(a)-order(b));
-  let mn=24*60,mx=0;keys.forEach(([c,k])=>Object.keys((iss.occ[c]||{})[k]||{}).forEach(x=>{mn=Math.min(mn,+x);mx=Math.max(mx,+x+15)}));if(mx===0){mn=9*60;mx=19*60}mn=Math.floor(mn/60)*60;mx=Math.ceil(mx/60)*60;
+  let mn=24*60,mx=0;keys.forEach(([c,k])=>Object.keys((iss.occ[c]||{})[k]||{}).forEach(x=>{mn=Math.min(mn,+x);mx=Math.max(mx,+x+15)}));if(mx===0){mn=9*60}mn=Math.floor(mn/60)*60;mx=24*60;
   const RH=18,rows=(mx-mn)/15;
   let h='<div class="hgrid res" style="--rows:'+rows+';--rh:'+RH+'px;--cols:'+keys.length+'">'+timeCol(mn,mx,RH);
   keys.forEach(([c,k])=>{const [sd,u]=k.split("|");const s=findSede(cfg,sd);const r=findRes(cfg,sd,u);const slots=(iss.occ[c]||{})[k]||{};const cap=r?+r.cap||0:0;const unit=UNIT[c];
     const na=r&&(r.off||[]).includes(H.dow);
     h+='<div class="hcol" style="min-width:132px"><div class="hhead"><span class="gname">'+esc(u)+'</span><span class="gsub">'+esc(s?s.n:sd)+" · "+(na?"No disponible hoy":cap?"Caben "+cap+" "+unit:"Sin límite")+'</span></div><div class="hbody'+(na?" na":"")+'">'+gridLines(mn,mx,RH);
     const xs=Object.keys(slots).map(Number).sort((a,b)=>a-b);let i=0;
-    const sig=x=>[...new Set(slots[x].map(a=>a.g))].sort().join(", ")+"#"+slots[x].map(a=>a.ap+"|"+a.g+"|"+a.i).sort().join(",");const gnames=x=>[...new Set(slots[x].map(a=>a.g))].sort().join(", ");
+    const gl=a=>a.cer?"Ceremonia":a.g;const sig=x=>[...new Set(slots[x].map(gl))].sort().join(", ")+"#"+slots[x].map(a=>a.ap+"|"+a.g+"|"+a.i).sort().join(",");const gnames=x=>{const n=[...new Set(slots[x].map(gl))];return n.filter(z=>z==="Ceremonia").concat(n.filter(z=>z!=="Ceremonia").sort()).join(", ")};
     while(i<xs.length){const z=sig(xs[i]);let j=i;while(j+1<xs.length&&xs[j+1]===xs[j]+15&&sig(xs[j+1])===z)j++;
-      const seen={};let used=0;slots[xs[i]].forEach(a=>{const kk=a.ap+"|"+a.g;if(!seen[kk]){seen[kk]=1;used+=a.v}});
-      const st=cap&&used>cap?"over":cap&&used===cap?"full":"";
-      h+='<div class="occ c-'+c+" "+st+'" style="top:'+((xs[i]-mn)/15*RH+1)+"px;height:"+((xs[j]+15-xs[i])/15*RH-2)+'px" title="'+esc(gnames(xs[i])+" · "+used+(cap?"/"+cap:"")+" "+unit+(st==="over"?" · Sobrepasa":st==="full"?" · Completo":""))+'"><b>'+esc(gnames(xs[i]))+'</b><span class="ou">'+used+(cap?"/"+cap:"")+" "+unit+"</span>"+(st?'<span class="ost">'+(st==="over"?"Sobrepasa":"Completo")+"</span>":"")+"</div>";i=j+1}
+      const seen={};let used=0;slots[xs[i]].forEach(a=>{const kk=a.dk||a.ap+"|"+a.g;if(!seen[kk]){seen[kk]=1;used+=a.v}});
+      const st=cap&&used>cap?"over":cap&&used===cap?"full":"";const hc=slots[xs[i]].some(a=>a.cer)?(slots[xs[i]].every(a=>a.cer)?" cer":" cermix"):"";
+      h+='<div class="occ c-'+c+hc+" "+st+'" style="top:'+((xs[i]-mn)/15*RH+1)+"px;height:"+((xs[j]+15-xs[i])/15*RH-2)+'px" title="'+esc(gnames(xs[i])+" · "+used+(cap?"/"+cap:"")+" "+unit+(st==="over"?" · Sobrepasa":st==="full"?" · Completo":""))+'"><b>'+esc(gnames(xs[i]))+'</b><span class="ou">'+used+(cap?"/"+cap:"")+" "+unit+"</span>"+(st?'<span class="ost">'+(st==="over"?"Sobrepasa":"Completo")+"</span>":"")+"</div>";i=j+1}
     h+="</div></div>"});
   h+="</div>";hKeepScroll(board,()=>{board.innerHTML='<div class="hscroll">'+h+"</div>"});
 }
@@ -4342,15 +4380,18 @@ function renderBuses(cfg){
   if(BP.problems.length)h+='<div class="hals">'+BP.problems.map(x=>'<div class="hal soft"><span class="hr">'+esc(x.r||x.g||"")+'</span><span class="ht">'+hFmtRange(x.s,x.e)+'</span><span class="hg">'+esc(x.txt)+'</span><span class="hw">'+esc(x.ap?MODSHORT(x.ap):"")+"</span></div>").join("")+"</div>";
   if(unk.length)h+='<div class="hnote">'+unk.length+" trayectos sin tiempo definido en las reglas (15 min provisionales): "+[...new Set(unk.map(t=>t.from+"–"+t.to))].join(", ")+".</div>";
   const tOpts=(v)=>'<option value="">—</option>'+Array.from({length:73},(_,i)=>ts(6*60+i*15)).map(x=>'<option'+(x===v?" selected":"")+">"+x+"</option>").join("");
-  h+='<div class="buscols">';
-  buses.forEach(b=>{const bad=b.max>b.size;h+='<div class="bcol'+(bad?" over":"")+'"><div class="bh"><span class="gname">Bus '+b.n+'</span><span class="gsub">'+ts(b.start)+"–"+ts(b.end)+" · "+b.max+" pasajeros"+'</span><span class="bcost">'+(b.cost.c!=null?eur(b.cost.c)+" · "+esc(b.cost.t):esc(b.cost.t))+'</span>'+
-      '<div class="bed"><label>Plazas <select data-buscap="'+b.n+'">'+BUS_PICK.concat(BUS_PICK.includes(+b.size)?[]:[+b.size]).map(z=>'<option value="'+z+'"'+(+b.size===z?" selected":"")+">"+z+" plazas</option>").join("")+'</select></label><label>Disponible <select data-busav="'+b.n+'" data-f="s">'+tOpts(b.av&&b.av.s)+'</select>–<select data-busav="'+b.n+'" data-f="e">'+tOpts(b.av&&b.av.e)+"</select></label></div></div><div class=\"blegs\">";
-    b.legs.forEach(l=>{if(l.empty){h+='<div class="bleg empty"><span class="bt2">'+ts(l.dep)+'</span><span class="btr">'+esc(l.from+" → "+l.to)+'</span><span class="bg">En vacío</span></div>';return}
-      h+='<div class="bleg'+(l.unk?" unk":"")+'"><span class="bt2">'+ts(l.dep)+'</span><span class="btr">'+esc(l.from+" → "+l.to)+'</span><span class="bs">'+l.seats+"/"+b.size+'</span><div class="bgs">'+l.gs.map(t=>'<span class="btg2"><b>'+esc(t.g)+'</b> <small>'+esc(MODSHORT(t.ap))+'</small><select data-busmv="'+tix(t)+'" aria-label="Cambiar de bus">'+Array.from({length:maxN},(_,i)=>i+1).map(n=>'<option value="'+n+'"'+(n===b.n?" selected":"")+">Bus "+n+"</option>").join("")+'<option value="new">Bus nuevo</option></select><button type="button" class="bmini" data-busedit="'+tix(t)+'" title="Editar trayecto">Editar</button><button type="button" class="bmini x" data-busdel="'+tix(t)+'" title="Quitar del bus">×</button></span>').join("")+"</div></div>"});
-    h+="</div></div>"});
-  h+="</div>";
+  /* buses uno al lado del otro (scroll lateral) y trayectos alineados por filas de hora */
+  const legH=l=>Math.floor(l.dep/60)*60;const hours=[...new Set(buses.flatMap(b=>b.legs.map(legH)))].sort((a,c)=>a-c);
+  const legHtml=(b,l)=>{if(l.empty)return '<div class="bleg empty"><span class="bt2">'+ts(l.dep)+'</span><span class="btr">'+esc(l.from+" → "+l.to)+'</span><span class="bg">En vacío</span></div>';
+      return '<div class="bleg'+(l.unk?" unk":"")+'"><span class="bt2">'+ts(l.dep)+'</span><span class="btr">'+esc(l.from+" → "+l.to)+'</span><span class="bs">'+l.seats+"/"+b.size+'</span><div class="bgs">'+l.gs.map(t=>'<span class="btg2"><b>'+esc(t.g)+'</b> <small>'+esc(MODSHORT(t.ap))+'</small><select data-busmv="'+tix(t)+'" aria-label="Cambiar de bus">'+Array.from({length:maxN},(_,i)=>i+1).map(n=>'<option value="'+n+'"'+(n===b.n?" selected":"")+">Bus "+n+"</option>").join("")+'<option value="new">Bus nuevo</option></select><button type="button" class="bmini" data-busedit="'+tix(t)+'" title="Editar trayecto">Editar</button><button type="button" class="bmini x" data-busdel="'+tix(t)+'" title="Quitar del bus">×</button></span>').join("")+"</div></div>"};
+  h+='<div class="hscroll"><div class="bustab" style="--nb:'+buses.length+'"><div class="btc bth0"></div>';
+  buses.forEach(b=>{const bad=b.max>b.size;h+='<div class="btc bthd bcol'+(bad?" over":"")+'"><div class="bh"><span class="gname">Bus '+b.n+'</span><span class="gsub">'+ts(b.start)+"–"+ts(b.end)+" · "+b.max+" pasajeros"+'</span><span class="bcost">'+(b.cost.c!=null?eur(b.cost.c)+" · "+esc(b.cost.t):esc(b.cost.t))+'</span>'+
+      '<div class="bed"><label>Plazas <select data-buscap="'+b.n+'">'+BUS_PICK.concat(BUS_PICK.includes(+b.size)?[]:[+b.size]).map(z=>'<option value="'+z+'"'+(+b.size===z?" selected":"")+">"+z+" plazas</option>").join("")+'</select></label><label>Disponible <select data-busav="'+b.n+'" data-f="s">'+tOpts(b.av&&b.av.s)+'</select>–<select data-busav="'+b.n+'" data-f="e">'+tOpts(b.av&&b.av.e)+"</select></label></div></div></div>"});
+  hours.forEach((hr,ri)=>{h+='<div class="btc bhr'+(ri%2?" alt":"")+'">'+ts(hr)+"</div>";
+    buses.forEach(b=>{const L=b.legs.filter(l=>legH(l)===hr);h+='<div class="btc bcell'+(ri%2?" alt":"")+(b.max>b.size?" over":"")+'">'+(L.length?'<div class="blegs">'+L.map(l=>legHtml(b,l)).join("")+"</div>":"")+"</div>"})});
+  h+="</div></div>";
   if(BP.removed.length)h+='<h3 class="wide bsec">Trayectos sin bus</h3><div class="btrips">'+BP.removed.map(t=>'<div class="btg"><b>'+esc(t.g)+'</b><small>'+esc(MODSHORT(t.ap))+'</small><span>'+ts(t.dep)+" "+esc(t.from+" → "+t.to)+'</span><button class="btn mini2" type="button" data-busrest="'+tix(t)+'">Volver a ponerlo</button></div>').join("")+"</div>";
-  h+="</div>";board.innerHTML=h;hTripRender();
+  h+="</div>";hKeepScroll(board,()=>{board.innerHTML=h});hTripRender();
 }
 /* editor de un trayecto (origen, destino y hora): cambia la caja de bus del horario o la crea */
 function hTripRender(){const box=$("hTrip");if(!box)return;const T=H.tripEd;if(!T||VW()!=="buses"){box.hidden=true;return}
@@ -4371,6 +4412,7 @@ const PAL=[
  {k:"PIS",l:"Piscina",a:"Piscina",d:60,pool:true},{k:"COM",l:"Comida",a:"Comida",d:30},{k:"SN",l:"Snack",a:"Snack",d:15},
  {k:"DES",l:"Desayuno",a:"Desayuno",d:30},{k:"CEN",l:"Cena",a:"Cena",d:30},{k:"BUS",l:"Bus",a:"Bus",d:15},{k:"DSC",l:"Descanso",a:"Descanso",d:15},
  {k:"CER",l:"Clausura",a:"Ceremonia de clausura",d:45},
+ {k:"WU",l:"Wake up",a:"Wake up",d:30},{k:"DL",l:"Ducha + Laundry",a:"Ducha + Laundry",d:30},{k:"GH",l:"Golden Hour",a:"Golden Hour",d:30},{k:"VEL",l:"Velada",a:"Velada",d:90},
  {k:"CI",l:"Check-in",a:"Check-in",d:15},{k:"CO",l:"Check-out",a:"Check-out",d:15},{k:"CRM",l:"Ceremonia",a:"Ceremonia",d:15},{k:"WP",l:"Welcome Pack",a:"Welcome Pack",d:30}];
 const durL=d=>d>=60?(d%60?Math.floor(d/60)+" h "+d%60+"'":d/60+" h"):d+"'";
 const palNeed=it=>it.pool?"piscina":needType(BK(0,1,it.a));
@@ -4408,7 +4450,7 @@ function renderHPal(cfg,aps){
   const box=$("hPal");if(!H.manual||!aps.length){box.hidden=true;H.tool="";return}box.hidden=false;
   const tool=H.tool||"";const days=weekDays(CW()).filter(d=>d!==H.dow);
   let h='<div class="mrow"><span class="pl1">Editar horario</span><button type="button" class="pc pc-ed" data-tool="" aria-pressed="'+(!tool)+'">Mover y editar</button><span class="msep"></span>'+
-    PAL.map(p=>{const c=ACT_CAT[p.a]||"log";return '<button type="button" class="pc pk" data-tool="'+p.k+'" aria-pressed="'+(tool===p.k)+'"><i class="dot c-'+c+(p.a==="FUN"?" c-fun":"")+(/^bus\b/i.test(p.a)?" c-bus":"")+'"></i>'+esc(p.l)+'<small>'+durL(p.pool?90:p.d)+"</small></button>"}).join("")+"</div>";
+    PAL.map(p=>{const c=ACT_CAT[p.a]||"log";return '<button type="button" class="pc pk" data-tool="'+p.k+'" aria-pressed="'+(tool===p.k)+'"><i class="dot c-'+c+(p.a==="FUN"?" c-fun":"")+(p.a==="Golden Hour"?" c-gold":"")+(/^bus\b/i.test(p.a)?" c-bus":"")+'"></i>'+esc(p.l)+'<small>'+durL(p.pool?90:p.d)+"</small></button>"}).join("")+"</div>";
   h+='<div class="mrow m2"><label class="mchk"><input type="checkbox" id="hPalAll"'+(H.palAll?" checked":"")+'> En todos los grupos de la modalidad</label><button type="button" class="btn mini" data-hundo'+((H.undo||[]).length?"":" disabled")+'>Deshacer</button>'+
     (days.length?'<span class="mlab">Copiar este día a</span>'+days.map(d=>'<button type="button" class="btn mini" data-cday="'+d+'">'+DOWS[d].slice(0,3)+"</button>").join("")+(days.length>1?'<button type="button" class="btn mini" data-cday="all">Todos</button>':""):"")+"</div>";
   if(H.clip){const cl=H.clip;h+='<div class="mrow m3"><span class="mlab">Copiado: <b>'+esc(cl.n)+"</b> · "+DOWS[cl.dow].toLowerCase()+'</span><span class="mlab">Pulsa «Pegar» en otro grupo, o</span><button type="button" class="btn mini" data-pasteall>Pegar en todos los de '+esc(MODSHORT(cl.ap))+"</button>"+
@@ -4448,7 +4490,7 @@ function renderHEdit(){
 }
 function hEditClose(){H.edit=null;const b=$("hEdit");if(b)b.hidden=true}
 (function(){
-  $("hActs").innerHTML=Object.keys(ACT_CAT).concat(["Bus","Bus Fleming","Check-in","Check-out","Vestuario","Welcome Pack"]).filter((a,i,arr)=>!/^check-?(in|out)\s+\S/i.test(a)&&arr.indexOf(a)===i).map(a=>'<option value="'+esc(a)+'">').join("");
+  $("hActs").innerHTML=Object.keys(ACT_CAT).concat(["Bus","Bus Fleming","Check-in","Check-out","Vestuario","Welcome Pack"]).filter((a,i,arr)=>a!=="Ducha + Maletas"&&!/^check-?(in|out)\s+\S/i.test(a)&&arr.indexOf(a)===i).map(a=>'<option value="'+esc(a)+'">').join("");
   $("hWeekGrid").addEventListener("click",e=>{const b=e.target.closest("[data-hweek]");if(!b)return;const hv=b.dataset.hweek;H.week=isCampKey(hv)?hv:+hv;const d=weekDays(CW())[0];H.dow=d==null?1:d;H.view="grid";H.open="";H.confirm="";hEditClose();renderHorarios();window.scrollTo(0,0)});
   $("hCrumbs").addEventListener("click",e=>{if(e.target.closest("[data-hback]")){H.week=0;H.manual=false;H.open="";hEditClose();renderHorarios();window.scrollTo(0,0)}});
   $("hDays").addEventListener("click",e=>{const b=e.target.closest("[data-hdow]");if(!b||b.disabled)return;H.dow=+b.dataset.hdow;H.confirm="";hEditClose();renderHorarios()});
@@ -4585,6 +4627,8 @@ function hEditClose(){H.edit=null;const b=$("hEdit");if(b)b.hidden=true}
     const s=mn+Math.max(0,Math.floor(y/RH))*15;H.edit={ci:+col.dataset.hcol,bi:-1,nb:{s:ts(s),e:ts(Math.min(s+60,24*60)),a:""}};renderHorarios();
   });
   $("hEcancel").addEventListener("click",()=>{hEditClose();renderHorarios()});
+  /* al elegir una actividad con duración estándar, la hora de fin se ajusta sola (se puede cambiar después) */
+  $("hEa").addEventListener("change",()=>{const d=DEF_DUR[$("hEa").value.trim()];if(!d)return;const s0=tm($("hEs").value);if(isNaN(s0))return;const e=ts(Math.min(s0+d,24*60));if([...$("hEe").options].some(o=>o.value===e))$("hEe").value=e});
   $("hEdel").addEventListener("click",()=>{if(!H.edit)return;const c=H.cols[H.edit.ci];const groups=apGroupsEdit(c.ap);const g=groups.find(x=>x.name===c.n);const del=g&&g.blocks[H.edit.bi];if(!del)return;
     if($("hEall").checked)groups.forEach(o=>{o.blocks=o.blocks.filter(b=>!(b.s===del.s&&b.a===del.a))});else g.blocks.splice(H.edit.bi,1);
     hEditClose();hCommit([[H.dow,c.ap,groups]],"Borrado")});
@@ -5825,7 +5869,7 @@ renderRegistros();
     if(!db)return;S.db=db;
     db.collection("reqs").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});EQ.reqs=m;renderEquipos()},()=>{});
     db.collection("teams").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});if(!EQ.saving)EQ.docs=m;renderEquipos();renderHorarios()},()=>{});
-    db.collection("hsimd").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v&&Array.isArray(v.groups))m[d.id]={groups:v.groups}});H.simDocs=m;renderHorarios()},()=>{});
+    db.collection("hsimd").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v&&Array.isArray(v.groups))m[d.id]={groups:v.groups}});H.simDocs=m;simDurMigrate();renderHorarios()},()=>{});
     db.collection("hsim").onSnapshot(snap=>{snap.docs.forEach(d=>{const v=d.data();if(!v)return;if(v.teams&&!(H.simDirty&&Date.now()-H.simDirty<5000))H.simTeams[d.id]=Object.assign({},H.simTeams[d.id]||{},v.teams);if(v.cfg)H.simCfg[d.id]=v.cfg;if(v.appr)H.simAppr[d.id]=v.appr;if(v.bus)Object.assign(H.simBus,v.bus)});renderHorarios()},()=>{});
     db.collection("hbus").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});H.busOv=m;renderHorarios()},()=>{});
     db.collection("happr").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});H.appr=m;renderHorarios()},()=>{});
