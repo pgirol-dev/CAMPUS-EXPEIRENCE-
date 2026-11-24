@@ -566,7 +566,7 @@ Se asignan automáticamente en este orden, un equipo por nombre y sin repetir de
   - Los datos de Zoho los filtra la interfaz, no el servidor: quien tiene acceso a Registros, Equipos, Horarios o Contabilidad recibe las inscripciones en su navegador.
   - Instalación para IT en `selfhost/INSTALACION.md` (Node 22.13+ o Docker, HTTPS y credenciales Self Client de Zoho en solo lectura).
 - 10/11: Nueva organización del software (decisión de Pau).
-  - **Inicio** solo dice «Campus Experience» y pide elegir la temporada. Ahora mismo solo existe Campus Experience 2027; la 2028 se creará en verano.
+  - **Inicio** solo dice «Campus Experience» y pide elegir la temporada. Ahora mismo solo existe Campus Experience 2027; la 2028 se creará en verano. La tarjeta de la temporada lleva el año grande, el botón «Entrar» arriba a la derecha, el dibujo de un campo de fútbol en líneas finas de fondo y abajo cuatro cifras separadas por líneas: participantes, semanas en Madrid, campus nacionales e institucionales.
   - Dentro de la temporada hay seis bloques:
     - **Registros**, igual que antes.
     - **Operativa**: Horarios y Equipos (se irán añadiendo más).

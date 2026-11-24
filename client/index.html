@@ -1806,15 +1806,23 @@ html.sb-min .sb-acts{display:none}
 .hello.plain::after{content:none}
 .hubcap{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);margin-bottom:-8px}
 .seasons{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:14px}
-.season{all:unset;box-sizing:border-box;cursor:pointer;position:relative;overflow:hidden;display:flex;flex-direction:column;gap:18px;padding:22px 24px;border-radius:10px;background:var(--navy);color:var(--navy-ink);min-height:220px;transition:transform .3s cubic-bezier(.2,.7,.2,1),box-shadow .3s}
-.season:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.season{all:unset;box-sizing:border-box;cursor:pointer;position:relative;overflow:hidden;isolation:isolate;display:flex;flex-direction:column;gap:6px;padding:26px 28px 22px;border-radius:12px;background:linear-gradient(160deg,color-mix(in srgb,var(--navy) 88%,#ff8aa5) 0%,var(--navy) 55%);color:var(--navy-ink);min-height:230px;box-shadow:inset 0 0 0 1px color-mix(in srgb,#fff 7%,transparent);transition:transform .3s cubic-bezier(.2,.7,.2,1),box-shadow .3s}
+.season:hover{transform:translateY(-3px);box-shadow:inset 0 0 0 1px color-mix(in srgb,#ff8aa5 30%,transparent),var(--shadow)}
 .season:focus-visible{outline:2px solid var(--pink);outline-offset:3px}
-.season::after{content:"";position:absolute;right:-60px;top:-60px;width:200px;height:200px;border-radius:50%;border:2px solid color-mix(in srgb,#ff8aa5 45%,transparent)}
-.season .sy{font-family:var(--f-serif);font-style:italic;font-size:clamp(4rem,9vw,6rem);line-height:.85;color:#ff8aa5}
-.season .sn{font-family:var(--f-wide);font-style:italic;font-weight:900;font-stretch:125%;text-transform:uppercase;font-size:1.1rem}
-.season .sst{display:flex;gap:18px;flex-wrap:wrap;margin-top:auto;font-size:12px;opacity:.9}
-.season .sst b{display:block;font-family:var(--f-serif);font-style:italic;font-weight:400;font-size:1.6rem;line-height:1}
-.season .sgo{position:absolute;right:20px;bottom:18px;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:8px 14px;border-radius:96px;background:#ff8aa5;color:#1a1f2a}
+.season .spitch{position:absolute;z-index:-1;right:-70px;top:50%;transform:translateY(-50%);width:250px;height:250px;color:#ff8aa5;opacity:.26;-webkit-mask-image:linear-gradient(100deg,transparent 18%,#000 70%);mask-image:linear-gradient(100deg,transparent 18%,#000 70%);transition:opacity .4s,transform .6s cubic-bezier(.2,.7,.2,1)}
+.season:hover .spitch{opacity:.3;transform:translateY(-50%) rotate(-6deg)}
+.season .sy{font-family:var(--f-serif);font-style:italic;font-size:clamp(4rem,9vw,5.6rem);line-height:.85;color:#ff8aa5;letter-spacing:-.01em}
+.season .sn{font-family:var(--f-wide);font-style:italic;font-weight:800;font-stretch:125%;font-size:.95rem;letter-spacing:.02em;opacity:.92;padding-left:4px}
+.season .shd{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.season .sft{margin-top:auto;padding-top:16px;border-top:1px solid color-mix(in srgb,#fff 12%,transparent)}
+.season .sst{display:grid;grid-template-columns:repeat(auto-fit,minmax(64px,1fr))}
+.season .sst>span{display:flex;flex-direction:column;gap:3px;padding:0 10px;font-size:11px;line-height:1.25;color:color-mix(in srgb,var(--navy-ink) 70%,transparent);border-left:1px solid color-mix(in srgb,#fff 12%,transparent)}
+.season .sst>span:first-child{padding-left:2px;border-left:0}
+.season .sst b{font-family:var(--f-serif);font-style:italic;font-weight:400;font-size:1.6rem;line-height:1;color:var(--navy-ink)}
+.season .sgo{flex:none;margin-top:6px;display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;padding:8px 12px 8px 16px;border-radius:96px;background:#ff8aa5;color:#1a1f2a;transition:gap .3s,background .3s}
+.season .sgo svg{width:16px;height:16px}
+.season:hover .sgo{gap:12px;background:#ffa3b8}
+
 .hubhead{display:flex;flex-direction:column;gap:6px}
 .hubk{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
 .mcard{cursor:pointer}
@@ -6810,8 +6818,9 @@ function hubCard(v,o){o=o||{};const soon=SOON.has(v);
     +'<span class="bk-ft">'+(o.mods&&o.mods.length?'<span class="bk-mods">'+o.mods.map(m=>"<i>"+esc(m)+"</i>").join("")+"</span>":"<span></span>")+'<span class="bk-go" aria-hidden="true">'+SVG('<path d="M5 12h14M13 6l6 6-6 6"/>')+"</span></span></a>"}
 function hubRender(v){
   const AR=S.allRows||[];
-  if(v==="inicio"){const camps=CAMPS.filter(c=>c.kind!=="madrid").length;
-    $("hubSeasons").innerHTML='<button type="button" class="season" data-sv="temporada"><span class="sy">'+SEASON+'</span><span class="sn">Campus Experience '+SEASON+'</span><span class="sst"><span><b>'+(AR.length||"—")+'</b>participantes</span><span><b>9</b>semanas en Madrid</span><span><b>'+camps+'</b>campus nacionales</span></span><span class="sgo">Entrar</span></button>'}
+  if(v==="inicio"){const nNac=CAMPS.filter(c=>c.kind==="nac").length,nInst=CAMPS.filter(c=>c.kind==="inst").length;
+    const pitch='<svg class="spitch" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><rect x="10" y="10" width="180" height="180" rx="2"/><path d="M100 10v180"/><circle cx="100" cy="100" r="34"/><circle cx="100" cy="100" r="2.2" fill="currentColor"/><path d="M10 62h30v76H10M190 62h-30v76h30"/><path d="M40 82a20 20 0 0 1 0 36M160 82a20 20 0 0 0 0 36"/></svg>';
+    $("hubSeasons").innerHTML='<button type="button" class="season" data-sv="temporada" aria-label="Entrar en la temporada '+SEASON+'">'+pitch+'<span class="shd"><span class="sy">'+SEASON+'</span><span class="sgo">Entrar'+SVG('<path d="M5 12h14M13 6l6 6-6 6"/>')+'</span></span><span class="sn">Campus Experience</span><span class="sft"><span class="sst"><span><b>'+(AR.length||"—")+'</b>participantes</span><span><b>9</b>semanas en Madrid</span><span><b>'+nNac+'</b>nacionales</span>'+(nInst?'<span><b>'+nInst+'</b>institucionales</span>':"")+'</span></span></button>'}
   if(v==="temporada")$("hubBlocks").innerHTML=BLOCKS.filter(b=>viewOk(b[0])).map(([b,mods])=>hubCard(b,{mods:b==="registros"?(AR.length?[AR.length+" participantes"]:[]):mods.filter(viewOk).map(m=>SB_LBL[m])})).join("");
   if(v==="operativa")$("hubOperativa").innerHTML=["horarios","equipos","buses","incidencias"].filter(viewOk).map(m=>m==="buses"?hubCard(m,{mods:(()=>{const n=busPeople().length;return [n?n+" con bus":"Madrid por semanas"]})()}):m==="incidencias"?hubCard(m,{mods:(()=>{const a=incList().filter(d=>d.st!=="closed");const u=a.filter(d=>d.urg).length;return [a.length?a.length+(a.length>1?" abiertas":" abierta"):"Sin abiertas"].concat(u?[u+(u>1?" URGENTES":" URGENTE")]:[])})()}):hubCard(m)).join("");
   if(v==="administracion")$("hubAdministracion").innerHTML=["pagos","facturas","ingresos"].filter(viewOk).map(m=>m==="ingresos"?hubCard(m,{mods:(()=>{const n=ingPendCount();return n==null?["Zoho Books"]:[n?n+" días por cuadrar":"Todo cuadrado"]})()}):m==="pagos"?hubCard(m,{mods:["Pagos","Devoluciones","Cancelaciones","Agentes"].filter((x,i)=>subOk("pagos",["pagos","dev","can","ag"][i]))}):hubCard(m,{mods:(()=>{const n=invErrCount();return n==null?["Zoho Books"]:[n?n+" errores":"Todo cuadra"]})()})).join("");

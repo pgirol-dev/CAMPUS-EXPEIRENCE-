@@ -3,7 +3,7 @@
 Herramienta del equipo operativo de Campus Experience (Real Madrid, ISL Agency) para dejar de trabajar con Excel.
 
 ## Estructura del software
-- **Inicio:** se elige la temporada (Campus Experience 2027).
+- **Inicio:** se elige la temporada (Campus Experience 2027) en una tarjeta con participantes, semanas en Madrid, nacionales e institucionales.
 - **Registros**
 - **Operativa:** Horarios (con simulador que guarda y «Pasar al horario real», historial, papelera y aceptar avisos), Equipos e Incidencias.
 - **Administración:** Contabilidad (pagos, devoluciones, cancelaciones y agentes), Facturas y Cuentas (antes Ingresos: cobros y devoluciones de Zoho Books por día y banco, cuadre diario y extracto en PDF de los días cuadrados).
