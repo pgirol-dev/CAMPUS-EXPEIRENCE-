@@ -4951,6 +4951,8 @@ const devEdit=()=>!window.CE_ACL||!!window.CE_ACL.admin||(((window.CE_ACL.perms|
 const accCan=k=>!window.CE_ACL||!!window.CE_ACL.admin||!!(window.CE_ACL.perms||{})["contabilidad."+k];
 /* solo la campaña 2027: rectificativas desde la primera factura de la campaña, y solo de facturas de las series 2027 */
 const is2027Inv=n=>{n=String(n||"");return n.startsWith(INV_PREFIX)||n.startsWith(INV_AND_PREFIX)||/^[A-Z]+\d*27\./.test(n)};
+/* rectificativa de la campaña 2027: su numeración es de 2027 (R-C-2027-…, RALI27.…) o rectifica una factura de las series 2027. Las de 2026 no entran */
+const is2027CN=c=>{const n=String(c.creditnote_number||"");return /(^|\D)2027(\D|$)/.test(n)||/^R[A-Z]*27\./.test(n)||is2027Inv(c.invoice_number)||(c.applied||[]).some(a=>is2027Inv(a.invoice_number))};
 function cnFrom(){const ds=(INV.list||[]).map(i=>i.date).filter(Boolean).sort();return ds[0]||"2026-06-01"}
 async function loadCN(force){
   if(!S.mcp||CN.busy)return;if(!accCan("devoluciones")&&!accCan("cancelaciones")&&!accCan("ingresos"))return;
@@ -5839,7 +5841,7 @@ function ingRows(){const byId={};(S.allRows||[]).forEach(r=>{byId[String(r.id)]=
   /* devoluciones (Cuentas): cada nota de crédito (rectificativa) de Books cuenta en negativo, por su importe, el día en que se creó,
      en el mismo banco que su factura. Solo notas de crédito de la campaña 2027. */
   let cnDeal={};try{const X=accIndex();Object.entries(X.cnByDeal||{}).forEach(([id,cs])=>cs.forEach(c=>{cnDeal[c._org+":"+c.creditnote_id]=id}))}catch(e){}
-  (CN.list||[]).filter(c=>c.status!=="void"&&c.status!=="draft"&&(c._org!==BOOKS_ORG_AND||/2027/.test(String(c.creditnote_number||""))||is2027Inv(c.invoice_number)||(c.applied||[]).some(a=>is2027Inv(a.invoice_number))||cnDeal[c._org+":"+c.creditnote_id])).forEach(c=>{
+  (CN.list||[]).filter(c=>c.status!=="void"&&c.status!=="draft"&&is2027CN(c)).forEach(c=>{
     const id=cnDeal[c._org+":"+c.creditnote_id]||null;const r=id?(byId[id]||accDeals().find(x=>String(x.id)===id)||null):null;
     const invN=c.invoice_number||((c.applied||[])[0]||{}).invoice_number||"";const ser=invSeries(invN);
     const camp=r?(r.camp||"mad"):c._org===BOOKS_ORG_AND?"and":ser===INV_PREFIX?"mad":(ING_SER[ser.replace(/27$/,"")]||"");
