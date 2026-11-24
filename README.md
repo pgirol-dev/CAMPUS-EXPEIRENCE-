@@ -1,4 +1,4 @@
-# Software Operativo · ISL (Campus Experience)
+# Software Operativo Experience (ISL · Campus Experience)
 
 Herramienta del equipo operativo de Campus Experience (Real Madrid, ISL Agency) para dejar de trabajar con Excel. Desde el 24/11 es la **capa de empresa ISL**: cada departamento (Campus Experience, LaLiga Select, FF Madrid…) es una pata de esta interfaz.
 
