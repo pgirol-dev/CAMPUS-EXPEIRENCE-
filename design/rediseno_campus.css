@@ -1,0 +1,108 @@
+/* ===== Rediseño 2026 · capa visual (no cambia funcionalidad) =====
+   Base neutra clara, superficies blancas, bordes de 1px, sombras muy suaves.
+   Un único acento (rosa Campus) para las acciones principales y el estado activo. */
+:root{
+  --bg:#f5f5f2;--surface:#ffffff;--surface-2:#f3f3f0;--line:#e4e4df;
+  --ink:#141a2b;--ink-2:#4f5668;--ink-3:#8a8f9c;--tileink:#141a2b;
+  --navy:#0f2145;--navy-ink:#ffffff;--pink:#e8456b;--gold:#6b7386;--gold-2:#6b7386;
+  --accent:#141a2b;--accent-ink:#ffffff;--accent-soft:rgba(20,26,43,.06);
+  --band:#ffffff;--band-ink:#141a2b;--band-line:#e4e4df;--tab-on:#141a2b;--field:#ffffff;
+  --shadow:0 1px 2px rgba(20,26,43,.04),0 12px 32px -14px rgba(20,26,43,.18);
+  --r1:8px;--r2:12px;--r3:16px;
+  --sb-bg:#fbfbf9;--sb-ink:#141a2b;--sb-ink2:#5d6374;--sb-line:#ebebe6;--sb-hov:rgba(20,26,43,.045);--sb-on:#ffffff;--sb-pink:#e8456b;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0d1017;--surface:#141822;--surface-2:#191e2a;--line:#252b38;--band:#141822;--band-ink:var(--ink);--band-line:#252b38;--field:#10141c;
+  --accent:#e8eeee;--accent-ink:#0d1017;--shadow:0 1px 2px rgba(0,0,0,.3),0 16px 40px -18px rgba(0,0,0,.6);
+  --sb-bg:#10131b;--sb-ink:#e8eeee;--sb-ink2:#9aa1b2;--sb-line:#20252f;--sb-hov:rgba(255,255,255,.04);--sb-on:#1a1f2b}}
+:root[data-theme="dark"]{
+  --bg:#0d1017;--surface:#141822;--surface-2:#191e2a;--line:#252b38;--band:#141822;--band-ink:var(--ink);--band-line:#252b38;--field:#10141c;
+  --accent:#e8eeee;--accent-ink:#0d1017;--shadow:0 1px 2px rgba(0,0,0,.3),0 16px 40px -18px rgba(0,0,0,.6);
+  --sb-bg:#10131b;--sb-ink:#e8eeee;--sb-ink2:#9aa1b2;--sb-line:#20252f;--sb-hov:rgba(255,255,255,.04);--sb-on:#1a1f2b}
+body{background:var(--bg);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+/* --- barra lateral: clara, fina, con el activo como «píldora» blanca --- */
+.side{border-right:1px solid var(--sb-line);box-shadow:none}
+.side::after{display:none}
+.sb-nav a,.sb-nav button{border-radius:9px}
+.side [aria-current="page"],.side .on:not(.sb-season){background:var(--sb-on);box-shadow:0 1px 2px rgba(20,26,43,.06),0 0 0 1px var(--sb-line)}
+.sb-season{background:var(--surface);border:1px solid var(--sb-line);box-shadow:0 1px 2px rgba(20,26,43,.04)}
+.sb-season:hover,.sb-season.on{background:var(--surface);border-color:color-mix(in srgb,var(--sb-pink) 45%,var(--sb-line))}
+.sb-logo{box-shadow:none}
+
+/* --- barra superior: translúcida --- */
+.top{background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:saturate(1.6) blur(14px);-webkit-backdrop-filter:saturate(1.6) blur(14px);border-bottom:1px solid var(--line)}
+.tb-back{border:1px solid var(--line);background:var(--surface);box-shadow:0 1px 2px rgba(20,26,43,.04)}
+
+/* --- títulos --- */
+.eqtitle{color:var(--ink);font-size:clamp(2.1rem,4vw,2.9rem);letter-spacing:-.01em}
+.hubcap,.hubk{color:var(--ink-3)}
+
+/* --- tarjetas de bloque (inicio, temporada, hubs): bento claro --- */
+.bkgrid{gap:12px}
+@media (min-width:1100px){.bkgrid>.bk.live:first-child{grid-column:span 2}}
+.bk{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:var(--r3);box-shadow:0 1px 2px rgba(20,26,43,.04);transition:transform .25s cubic-bezier(.2,.7,.2,1),box-shadow .25s,border-color .25s}
+.bk:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:color-mix(in srgb,var(--ink) 14%,var(--line))}
+.bk .bk-ic{background:var(--surface-2);color:var(--ink);border:1px solid var(--line)}
+.bk .bk-st{background:transparent;color:var(--ink-3);border:1px solid var(--line)}
+.bk .bk-mods i{background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
+.bk .bk-go{background:var(--surface-2);color:var(--ink);border:1px solid var(--line);transition:background .2s,color .2s,transform .25s}
+.bk:hover .bk-go{background:var(--pink);border-color:var(--pink);color:#fff;transform:translateX(2px)}
+.bk.soon{background:transparent;border:1px dashed color-mix(in srgb,var(--ink) 18%,transparent);box-shadow:none}
+.bk.soon:hover{transform:none;box-shadow:none}
+
+/* --- tarjetas de semana / campus --- */
+.wkbox{background:var(--surface);border:1px solid var(--line);border-radius:var(--r2);box-shadow:0 1px 2px rgba(20,26,43,.04);transition:transform .2s,box-shadow .2s,border-color .2s}
+.wkbox:hover{transform:translateY(-1px);box-shadow:var(--shadow);border-color:color-mix(in srgb,var(--ink) 14%,var(--line))}
+.wkbox::after{display:none}
+
+/* --- botones y campos --- */
+.btn{border-radius:var(--r1);letter-spacing:.04em;background:var(--surface);border-color:var(--line);box-shadow:0 1px 1px rgba(20,26,43,.03)}
+.btn:hover{border-color:color-mix(in srgb,var(--ink) 25%,var(--line))}
+.btn.primary{background:var(--pink);border-color:var(--pink);color:#fff;box-shadow:0 1px 2px rgba(232,69,107,.25)}
+.btn.primary:hover{background:color-mix(in srgb,var(--pink) 88%,#000);border-color:color-mix(in srgb,var(--pink) 88%,#000)}
+input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea{border-radius:var(--r1)}
+input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--pink) 18%,transparent);border-color:color-mix(in srgb,var(--pink) 55%,var(--line))}
+
+/* --- resumen (Registros y otros): panel claro tipo «hero» del bento --- */
+.wkbox.wkall,.modbox.all{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:var(--r3);box-shadow:0 1px 2px rgba(20,26,43,.04)}
+.wkbox.wkall::before,.wkbox.wkall::after{display:none}
+.wkall .wbar{background:var(--surface-2)}
+.wkall .wbar i:first-child{background:var(--one)!important}
+.wkall .wsn.k1 small::before{background:var(--one)}
+.modbox.all .mt small{color:var(--ink-3)}
+/* números: tinta; el rosa queda para la cifra principal y las acciones */
+.wkbox .wn,.modbox .mn{color:var(--ink)}
+.wkall .wsn b.wn{color:var(--pink)}
+.wkbox .wd{color:var(--ink-3)}
+.wkbox .wbar{height:4px;background:var(--surface-2)}
+.wkbox.wc-nac{background:var(--surface);box-shadow:0 1px 2px rgba(20,26,43,.04)}
+.wkbox.wc-inst{background:var(--surface);box-shadow:inset 0 2px 0 var(--ink),0 1px 2px rgba(20,26,43,.04)}
+.wkbox.wc-inst::after{display:block;opacity:.6}
+.wkbox.wc-inst:hover{box-shadow:inset 0 2px 0 var(--ink),var(--shadow)}
+/* separadores de sección */
+.sec,.seclab{color:var(--ink-3)}
+
+/* --- tarjetas, filas y paneles interiores: superficie blanca con filo de 1px --- */
+.mcard,.kpi,.wrow,.wrow2,.health,.team,.eqempty,.modbox,.kbox,.arow,.reqpanel,.instpanel,.ptab,.prow,.prow2,.pbx,.mny,.crow2,.bdbox,.attst,.attinfo,.lpdocbox,.stcard,.agrow,.agliq,.ingd,.soonpanel,.dinci,.pphtab,.dbx,.tablebox,.hmodebar.real{background:var(--surface);box-shadow:0 0 0 1px var(--line),0 1px 2px rgba(20,26,43,.035)}
+.prow:hover,.prow2:hover,.arow:hover,.agrow:hover{background:color-mix(in srgb,var(--ink) 2.5%,var(--surface))}
+.pbx:hover,.dbx:hover:not([disabled]),.ptab:hover{box-shadow:0 0 0 1px color-mix(in srgb,var(--ink) 16%,var(--line)),var(--shadow)}
+/* filas con aviso: blancas con filo rosa a la izquierda (el aviso sigue siendo evidente sin teñir todo) */
+.prow2.ko{background:color-mix(in srgb,var(--bad) 5%,var(--surface))}
+/* bloques destacados que eran azul marino: claros, con la cifra en el acento */
+.kpi.lead,.mcard.live,.kbox.tot{background:var(--surface);color:var(--ink)}
+.kpi.lead span{color:var(--ink-2)}
+.dh{background:var(--surface);color:var(--ink);border-bottom:1px solid var(--line)}
+.dh .code{color:var(--ink-3)}.dh .sub{color:var(--ink-2)}
+.dh .x{color:var(--ink);border-color:var(--line)}
+/* cifras de las tarjetas de estadística: blancas, filo superior del color del dato */
+.sttile{background:var(--surface);color:var(--ink);box-shadow:0 0 0 1px var(--line),0 1px 2px rgba(20,26,43,.035)}
+.sttile::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--c)}
+.sttile b{color:var(--c)}
+.sttile small{color:var(--ink-3);opacity:1}
+/* cifras grandes en tinta; el rosa solo en la principal */
+.ptab .pc2,.dbx .dd,.pbx .pc2{color:var(--ink)}
+.ptab.on .pc2,.dbx[aria-pressed="true"] .dd{color:#ff8aa5}
+/* tablas */
+table th{color:var(--ink-3);font-weight:600;letter-spacing:.06em}
+.tablebox table tr:hover td{background:color-mix(in srgb,var(--ink) 2%,transparent)}
