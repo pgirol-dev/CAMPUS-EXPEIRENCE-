@@ -319,9 +319,16 @@ tbody tr:hover td{background:color-mix(in srgb,var(--ink) 10%,var(--bg))}
 .wkbox.wc-nac{background:var(--bg);box-shadow:inset 0 0 0 1.5px var(--line)}
 .wkbox.wc-nac::after{border-color:color-mix(in srgb,var(--ink) 18%,transparent)}
 .wkbox.wc-nac .wn{color:var(--ink)}
-.wkbox.wc-inst{background:transparent;box-shadow:inset 0 0 0 1.5px var(--ink-3);border-radius:14px}
-.wkbox.wc-inst::after{border-style:dashed;border-color:color-mix(in srgb,var(--ink) 25%,transparent)}
-.wkbox.wc-inst .wn{color:var(--ink-3)}
+/* institucionales: identidad de la equipación Black (tarjeta negra, filo rosa arriba, esquina rayada) */
+.wkbox.wc-inst{--ib:#15171c;background:var(--ib);color:#f3f3f3;box-shadow:inset 0 3px 0 var(--pink),inset 0 0 0 1px rgba(255,255,255,.07)}
+.wkbox.wc-inst::after{border:0;right:-18px;top:-18px;width:76px;height:76px;background:repeating-linear-gradient(135deg,rgba(255,255,255,.11) 0 2px,transparent 2px 7px)}
+.wkbox.wc-inst .wt{color:#fff}
+.wkbox.wc-inst .wd,.wkbox.wc-inst .wteams{color:rgba(255,255,255,.62)}
+.wkbox.wc-inst .wn{color:var(--pink)}
+.wkbox.wc-inst .wbar{background:rgba(255,255,255,.12)}
+.wkbox.wc-inst:hover{box-shadow:inset 0 3px 0 var(--pink),inset 0 0 0 1px rgba(255,255,255,.12),var(--shadow)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .wkbox.wc-inst{--ib:#0b0c0f}}
+:root[data-theme="dark"] .wkbox.wc-inst{--ib:#0b0c0f}
 .wkbox.wkall{min-height:180px}
 .wkbox.wkall .wt{font-size:2rem}
 .wkall .wsn.k1 small::before,.wkall .wsn.k2 small::before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px;background:var(--navy-ink)}
@@ -4119,7 +4126,7 @@ function renderHorarios(){try{sbSync()}catch(e){}
     if(!hCan("horarios.semanas"))h="";
     if(hCan("horarios.campus")){const AR=S.allRows||[];[["nac","Nacionales"],["inst","Institucionales"]].forEach(([kk,ll])=>{const cs=CAMPS.filter(c=>c.kind===kk);if(cs.length)h+='<span class="wsec">'+ll+"</span>";
       cs.forEach(c=>{const wk="c:"+c.id;const rs=AR.filter(r=>r.camp===c.id);const days=weekDays(wk);const done=days.filter(d=>dayComplete(wk,d)).length;const ok=rs.length&&hWeekComplete(wk);
-        h+='<button class="wkbox hwk wc-nac'+(ok?" done":"")+'" type="button" data-hweek="'+wk+'">'+(ok?'<span class="okc" aria-label="Campus completo" title="Horarios completos y sin avisos">✓</span>':"")+'<span class="wd">'+(campDates(c.id)||"&nbsp;")+'</span><span class="wt">'+esc(c.n)+'</span><span class="wteams">'+(AR.length?(rs.length?(days.length?done+" de "+days.length+" días listos":"Sin equipos"):"Sin inscritos"):"&nbsp;")+"</span></button>"})})}
+        h+='<button class="wkbox hwk wc-'+kk+(ok?" done":"")+'" type="button" data-hweek="'+wk+'">'+(ok?'<span class="okc" aria-label="Campus completo" title="Horarios completos y sin avisos">✓</span>':"")+'<span class="wd">'+(campDates(c.id)||"&nbsp;")+'</span><span class="wt">'+esc(c.n)+'</span><span class="wteams">'+(AR.length?(rs.length?(days.length?done+" de "+days.length+" días listos":"Sin equipos"):"Sin inscritos"):"&nbsp;")+"</span></button>"})})}
     $("hWeekGrid").innerHTML=h;hEditClose();return}
   const cfg=wkCfg(CW());
   $("hSim").hidden=!H.sim;if(H.sim)renderSimPanel();
