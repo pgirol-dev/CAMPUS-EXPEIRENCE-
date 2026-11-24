@@ -390,7 +390,7 @@ function appPage(u) {
   const app = fs.readFileSync(CFG.appHtml, "utf8");
   return '<!doctype html>\n<html lang="es">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n'
     + '<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>\n'
-    + '<script>window.CE_HOME_URL="/inicio";window.CE_ACL=' + JSON.stringify(aclFor(u)).replace(/</g, "\\u003c") + ';</script><script src="/ce-shim.js"></script><link rel="icon" href="/favicon.svg">\n</head>\n<body>\n'
+    + '<script>window.CE_HOME_URL="/inicio";window.CE_ACL=' + JSON.stringify(aclFor(u)).replace(/</g, "\\u003c") + ';</script><script src="/ce-shim.js"></script><link rel="icon" href="/favicon.svg?v=so2">\n</head>\n<body>\n'
     + app + "\n</body>\n</html>\n";
 }
 

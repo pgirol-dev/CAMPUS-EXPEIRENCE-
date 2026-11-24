@@ -17,13 +17,13 @@ const catalystHead = HEAD + BASE_CSS +
   '<script>window.CE_API_BASE="/server/campus_api";window.CE_LOGIN_URL="login.html";window.CE_HOME_URL="inicio.html";window.CE_POLL=true;</script>\n' +
   '<script src="/server/campus_api/acl.js"></script>\n<script src="ce-shim.js"></script>\n' +
   /* acceso al dashboard de registros en el menú: archivo aparte (client/dashboard-menu.js) para que no se pierda al cambiar index.html */
-  '<script src="dashboard-menu.js" defer></script>\n<link rel="icon" href="favicon.svg">\n</head>\n<body>\n';
+  '<script src="dashboard-menu.js" defer></script>\n<link rel="icon" href="favicon.svg?v=so2">\n</head>\n<body>\n';
 fs.mkdirSync(R("client"), { recursive: true });
 fs.writeFileSync(R("client", "index.html"), catalystHead + app + "\n</body>\n</html>\n");
 for (const f of shared) {
   let s = fs.readFileSync(R("selfhost", "public", f), "utf8");
-  if (f === "login.html") s = s.replace('<link rel="icon" href="/favicon.svg">', '<link rel="icon" href="favicon.svg">\n<script>window.CE_API_BASE="/server/campus_api";window.CE_HOME_URL="inicio.html";</script>');
-  if (f === "inicio.html") s = s.replace('<link rel="icon" href="/favicon.svg">', '<link rel="icon" href="favicon.svg">\n<script>window.CE_API_BASE="/server/campus_api";window.CE_LOGIN_URL="login.html";window.CE_CAMPUS_URL="index.html";</script>');
+  if (f === "login.html") s = s.replace('<link rel="icon" href="/favicon.svg?v=so2">', '<link rel="icon" href="favicon.svg?v=so2">\n<script>window.CE_API_BASE="/server/campus_api";window.CE_HOME_URL="inicio.html";</script>');
+  if (f === "inicio.html") s = s.replace('<link rel="icon" href="/favicon.svg?v=so2">', '<link rel="icon" href="favicon.svg?v=so2">\n<script>window.CE_API_BASE="/server/campus_api";window.CE_LOGIN_URL="login.html";window.CE_CAMPUS_URL="index.html";</script>');
   fs.writeFileSync(R("client", f), s);
 }
 
