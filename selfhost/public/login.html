@@ -7,10 +7,10 @@
 <link rel="icon" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@1,62..125,700..900&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@1,62..125,700..900&family=IBM+Plex+Mono:wght@400;500&family=Permanent+Marker&display=swap">
 <style>
 /* Acceso ISL (capa de empresa). Diseño de referencia: design/isl/propuesta_capa_isl.html */
-:root{--navy:#01193c;--cream:#f3f1ea;--mute:#9aa6bd;--pink:#ff8aa5;--bad:#ffb3c2}
+:root{--navy:#01193c;--cream:#f3f1ea;--mute:#b9c1d1;--yel:#f5f78a;--pink:#ef6f87;--bad:#ffb3c2}
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%}
 body{background:var(--navy);color:var(--cream);font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:13px;line-height:1.55}
@@ -23,13 +23,16 @@ body{background:var(--navy);color:var(--cream);font-family:"IBM Plex Mono",ui-mo
 .logo svg{display:block;width:100%;height:auto}
 .side{position:relative;z-index:1;width:min(500px,100%);min-height:100vh;display:flex;flex-direction:column;padding:44px clamp(28px,5vw,64px);text-shadow:0 1px 14px rgba(1,25,60,.45)}
 form{margin:auto 0;width:100%;max-width:340px;display:flex;flex-direction:column;gap:24px}
-h1{font-size:clamp(1.7rem,2.6vw,2.3rem);margin-bottom:8px}
-h1 em{font-style:italic;color:var(--pink)}
+h1{font-size:clamp(2.1rem,3.3vw,3rem);margin-bottom:6px;color:var(--yel);letter-spacing:-.01em}
+h1 em{display:block;font-family:"Permanent Marker",cursive;font-style:normal;font-weight:400;font-stretch:100%;text-transform:none;font-size:.82em;line-height:1;margin:.12em 0 0 .1em;transform:rotate(-3deg);transform-origin:left;letter-spacing:0;color:var(--yel)}
 .sub{margin:-12px 0 0;color:var(--mute);font-size:12px}
 label{display:flex;flex-direction:column;gap:6px;color:var(--mute);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase}
-input{all:unset;box-sizing:border-box;width:100%;padding:10px 0 11px;border-bottom:1px solid rgba(243,241,234,.28);font-size:14px;color:var(--cream);letter-spacing:0;text-transform:none;transition:border-color .25s}
-input::placeholder{color:rgba(243,241,234,.38)}
-input:focus-visible{border-bottom-color:var(--pink)}
+input{-webkit-appearance:none;appearance:none;display:block;box-sizing:border-box;width:100%;margin:0;padding:10px 0 11px;border:0;border-bottom:1px solid rgba(243,241,234,.34);border-radius:0;background:transparent;box-shadow:none;outline:none;font:inherit;font-size:14px;color:var(--cream);letter-spacing:0;text-transform:none;caret-color:var(--yel);transition:border-color .25s}
+input::placeholder{color:rgba(243,241,234,.42);opacity:1}
+input:focus{border-bottom-color:var(--yel)}
+/* autocompletado del navegador: sin fondo blanco ni azul */
+input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus{-webkit-text-fill-color:var(--cream);caret-color:var(--yel);-webkit-box-shadow:0 0 0 1000px transparent inset;box-shadow:0 0 0 1000px transparent inset;transition:background-color 99999s ease-out 0s}
+input:autofill{background:transparent}
 .row{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:4px;flex-wrap:wrap}
 .hint{color:var(--mute);font-size:11px;max-width:20ch;text-align:right}
 .oval{all:unset;cursor:pointer;position:relative;display:inline-grid;place-items:center;padding:15px 30px;text-transform:uppercase;letter-spacing:.06em;font-size:12px;color:var(--cream);isolation:isolate}
