@@ -37,7 +37,7 @@ const CATALOG = [
   { k: "incidencias", b: "Operativa", l: "Incidencias", subs: [["general", "Incidencias"]] },
   { k: "contabilidad", b: "Administración", l: "Contabilidad", subs: [["pagos", "Pagos"], ["devoluciones", "Devoluciones"], ["cancelaciones", "Cancelaciones"], ["agentes", "Agentes"], ["facturas", "Control de facturas"], ["ingresos", "Cuentas"]] },
   { k: "atencion", b: "Atención al público", l: "Atención al público", subs: [["bbdd", "Base de datos"], ["limpieza", "Limpieza"], ["estadisticas", "Estadísticas"]] },
-  { k: "logistica", b: "Logística", l: "Logística", subs: [["necesidades", "Necesidades"], ["inventario", "Inventario"], ["configuracion", "Configuración"]] },
+  { k: "logistica", b: "Logística", l: "Logística", subs: [["necesidades", "Necesidades"], ["inventario", "Inventario"], ["entradas", "Entradas"], ["preparacion", "Preparación"], ["envios", "Envíos a sedes"], ["peticiones", "Peticiones (responsables de sede)"], ["configuracion", "Configuración"]] },
   { k: "marketing", b: "Marketing", l: "Marketing", subs: [["general", "Marketing"]] },
   { k: "rrhh", b: "Recursos Humanos", l: "Recursos Humanos", subs: [["general", "Recursos Humanos"]] },
   // Dashboard › Residencias: todos los usuarios ven el dashboard; «Editar» permite cambiar bloqueos y asignaciones (lo comprueba dashboard_api). No quitar.
@@ -68,9 +68,15 @@ const COLS = {
   hsim:  { read: u => lvl(u, "horarios.simulador") >= 1, write: u => lvl(u, "horarios.simulador") >= 2 },
   hsimd: { read: u => lvl(u, "horarios.simulador") >= 1, write: u => lvl(u, "horarios.simulador") >= 2 },
   /* logística: configuración, artículos (con su inventario inicial) y movimientos de stock */
-  lgcfg: { read: u => anyOf(u, "logistica"), write: u => lvl(u, "logistica.configuracion") >= 2 },
-  lgart: { read: u => anyOf(u, "logistica"), write: u => lvl(u, "logistica.inventario") >= 2 },
-  lgmov: { read: u => anyOf(u, "logistica"), write: u => lvl(u, "logistica.inventario") >= 2 },
+  lgcfg: { read: u => anyOf(u, "logistica"), write: u => lvl(u, "logistica.configuracion") >= 2 || lvl(u, "logistica.envios") >= 2 },
+  lgart: { read: u => anyOf(u, "logistica"), write: u => lvl(u, "logistica.inventario") >= 2 || lvl(u, "logistica.entradas") >= 2 },
+  lgmov: { read: u => anyOf(u, "logistica"), write: u => lvl(u, "logistica.inventario") >= 2 || lvl(u, "logistica.entradas") >= 2 || lvl(u, "logistica.envios") >= 2 },
+  /* peticiones de las sedes (las crean los responsables de sede; responde almacén, con Envíos), envíos a sedes y preparación */
+  lgpet: { read: u => anyOf(u, "logistica"), write: u => lvl(u, "logistica.peticiones") >= 2 || lvl(u, "logistica.envios") >= 2 },
+  lgenv: { read: u => anyOf(u, "logistica"), write: u => lvl(u, "logistica.envios") >= 2 },
+  lgprep: { read: u => anyOf(u, "logistica"), write: u => lvl(u, "logistica.preparacion") >= 2 },
+  /* entradas: pedidos a proveedor (recibir crea movimientos y, si hace falta, artículos nuevos) */
+  lgped: { read: u => anyOf(u, "logistica"), write: u => lvl(u, "logistica.entradas") >= 2 },
 };
 const canZoho = u => ["registros", "equipos", "horarios", "buses", "contabilidad", "incidencias", "atencion", "logistica"].some(a => anyOf(u, a));
 const DOC_ID = /^[A-Za-z0-9_.:|\-]{1,200}$/;
