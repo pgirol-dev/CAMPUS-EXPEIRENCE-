@@ -36,6 +36,7 @@ const CFG = {
   trustProxy: env("TRUST_PROXY", "0") === "1",
   idleMin: +env("SESSION_IDLE_MIN", 480),          // sesión se cierra tras 8 h sin uso
   maxHours: +env("SESSION_MAX_HOURS", 72),          // y como máximo a las 72 h
+  supers: env("CE_SUPERADMINS", "").split(",").map(s => s.trim().toLowerCase()).filter(Boolean),
   zohoRecheckMin: +env("ZOHO_RECHECK_MIN", 30),     // re-comprobación en Zoho durante la sesión
   zohoGraceHours: +env("ZOHO_GRACE_HOURS", 12),     // si Zoho no responde, vale la última comprobación de las últimas 12 h
   zoho: {
@@ -156,7 +157,13 @@ const P = require("./protect.js")({
 }, () => Object.keys(COLS));
 setInterval(() => { P.backupIfDue(false).catch(e => console.log("Copia de seguridad: " + e.message)); }, 30 * 60000).unref();
 const audit = (u, action, detail, ip) => { try { Q.audit.run(nowISO(), u ? u.id : null, u ? u.email : null, action, detail ? String(detail).slice(0, 500) : null, ip || null); } catch (e) {} };
-const hydrate = u => { if (!u) return null; let p = {}; try { p = JSON.parse(u.perms || "{}"); } catch (e) {} u.permsObj = cleanPerms(p); u.is_admin = !!u.is_admin; u.active = !!u.active; return u; };
+const hydrate = u => { if (!u) return null; let p = {}; try { p = JSON.parse(u.perms || "{}"); } catch (e) {} u.permsObj = cleanPerms(p); u.islObj = p && typeof p._isl === "object" ? p._isl : null; u.is_admin = !!u.is_admin; u.active = !!u.active; return u; };
+/* capa ISL: departamentos (igual que en Catalyst; se guardan en perms, clave «_isl»; sin ella, acceso a Campus Experience) */
+const DEPTS = [{ k: "campus", n: "Campus Experience", live: true }, { k: "lls", n: "LaLiga Select", live: false }, { k: "ff", n: "FF Madrid", live: false }];
+/* superadministradores: emails de CE_SUPERADMINS; si no se configura, los administradores del software */
+const isSuper = u => CFG.supers.length ? CFG.supers.includes(String(u.email || "").toLowerCase()) : !!u.is_admin;
+const deptsOf = u => isSuper(u) ? DEPTS.map(d => d.k) : (u.islObj && Array.isArray(u.islObj.depts) ? u.islObj.depts.filter(k => DEPTS.some(d => d.k === k)) : ["campus"]);
+const permsJson = (perms, u) => JSON.stringify(Object.assign(cleanPerms(perms), u && u.islObj ? { _isl: u.islObj } : {}));
 
 /* ---------- contraseñas (scrypt, con sal) ---------- */
 const SC = { N: 32768, r: 8, p: 1, len: 64, maxmem: 96 * 1024 * 1024 };
@@ -336,13 +343,20 @@ async function sessionOf(req) {
   if (now - s.last_seen > CFG.idleMin * 60000 || now - s.created_at > CFG.maxHours * 3600000) { Q.sessDel.run(th); return null; }
   const u = hydrate(Q.userById.get(s.user_id));
   if (!u || !u.active) { Q.sessDel.run(th); return null; }
-  if (now - s.zoho_checked_at > CFG.zohoRecheckMin * 60000) {
-    const g = await zohoGate(u);
-    if (!g.ok) { Q.sessDelUser.run(u.id); audit(u, "sesion_cerrada_zoho", g.msg); return null; }
-    Q.sessZoho.run(now, th);
-  }
   if (now - s.last_seen > 60000) Q.sessTouch.run(now, th);
-  return { u, th };
+  return { u, th, s };
+}
+/* entrada a Campus Experience: departamento + usuario activo en Zoho CRM (cada 30 min) */
+async function campusGate(S) {
+  const u = S.u;
+  if (!deptsOf(u).includes("campus")) return { ok: false, msg: "No tienes acceso a Campus Experience. Habla con el administrador." };
+  const now = Date.now();
+  if (now - (S.s.zoho_checked_at || 0) <= CFG.zohoRecheckMin * 60000) return { ok: true };
+  if (!zohoConfigured()) return { ok: false, msg: "El servidor no tiene configurada la conexión con Zoho CRM." };
+  const g = await zohoGate(u);
+  if (!g.ok) { Q.sessZoho.run(0, S.th); S.s.zoho_checked_at = 0; audit(u, "campus_denegado_zoho", g.msg); return g; }
+  Q.sessZoho.run(now, S.th); S.s.zoho_checked_at = now;
+  return g;
 }
 setInterval(() => { const n = Date.now(); Q.sessGc.run(n - CFG.idleMin * 60000, n - CFG.maxHours * 3600000); }, 10 * 60000).unref();
 
@@ -371,12 +385,12 @@ const aclFor = u => ({ id: "u" + u.id, name: u.name, email: u.email, admin: u.is
 
 /* ---------- páginas ---------- */
 const PUB = path.join(__dirname, "public");
-const STATIC = { "/login": ["login.html", "text/html; charset=utf-8"], "/ce-shim.js": ["ce-shim.js", "text/javascript; charset=utf-8"], "/favicon.svg": ["favicon.svg", "image/svg+xml"] };
+const STATIC = { "/login": ["login.html", "text/html; charset=utf-8"], "/inicio": ["inicio.html", "text/html; charset=utf-8"], "/ce-shim.js": ["ce-shim.js", "text/javascript; charset=utf-8"], "/favicon.svg": ["favicon.svg", "image/svg+xml"] };
 function appPage(u) {
   const app = fs.readFileSync(CFG.appHtml, "utf8");
   return '<!doctype html>\n<html lang="es">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n'
     + '<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>\n'
-    + '<script>window.CE_ACL=' + JSON.stringify(aclFor(u)).replace(/</g, "\\u003c") + ';</script><script src="/ce-shim.js"></script><link rel="icon" href="/favicon.svg">\n</head>\n<body>\n'
+    + '<script>window.CE_HOME_URL="/inicio";window.CE_ACL=' + JSON.stringify(aclFor(u)).replace(/</g, "\\u003c") + ';</script><script src="/ce-shim.js"></script><link rel="icon" href="/favicon.svg">\n</head>\n<body>\n'
     + app + "\n</body>\n</html>\n";
 }
 
@@ -386,14 +400,21 @@ async function handle(req, res) {
 
   if (M === "GET" && STATIC[p]) {
     const [f, type] = STATIC[p];
-    if (p === "/login") { const s = await sessionOf(req); if (s && !s.u.must_change) return send(res, 302, "", { Location: "/" }); }
+    if (p === "/login") { const s = await sessionOf(req); if (s && !s.u.must_change) return send(res, 302, "", { Location: "/inicio" }); }
+    if (p === "/inicio") { const s = await sessionOf(req); if (!s) return send(res, 302, "", { Location: "/login" }); if (s.u.must_change) return send(res, 302, "", { Location: "/login?cambio=1" }); }
     return send(res, 200, fs.readFileSync(path.join(PUB, f)), { "Content-Type": type });
   }
   if (M === "GET" && (p === "/" || p === "/index.html")) {
     const s = await sessionOf(req);
     if (!s) return send(res, 302, "", { Location: "/login" });
     if (s.u.must_change) return send(res, 302, "", { Location: "/login?cambio=1" });
+    const g = await campusGate(s); if (!g.ok) return send(res, 302, "", { Location: "/inicio?aviso=" + encodeURIComponent(g.msg) });
     return send(res, 200, appPage(s.u), { "Content-Type": "text/html; charset=utf-8" });
+  }
+  /* capa ISL: imágenes de la pantalla de acceso y de los departamentos (públicas) */
+  if (M === "GET" && /^\/isl\/[a-z0-9-]+\.(jpg|png)$/.test(p)) {
+    const f = path.join(PUB, p); if (!fs.existsSync(f)) return fail(res, 404, "No encontrado");
+    return send(res, 200, fs.readFileSync(f), { "Content-Type": p.endsWith(".png") ? "image/png" : "image/jpeg", "Cache-Control": "public, max-age=86400" });
   }
   if (M === "GET" && p === "/salud") return send(res, 200, { ok: true });
   if (!p.startsWith("/api/")) return fail(res, 404, "No encontrado");
@@ -412,14 +433,12 @@ async function handle(req, res) {
     const u = hydrate(Q.userByEmail.get(email));
     const ok = await checkPw(pw, u ? u.pass_hash : DUMMY_HASH);
     if (!u || !ok || !u.active) { addFail("e:" + email, "i:" + ip); audit(u, "login_fallido", email, ip); return fail(res, 401, "Usuario o contraseña incorrectos."); }
-    if (!zohoConfigured()) return fail(res, 503, "El servidor no tiene configurada la conexión con Zoho CRM.");
-    const g = await zohoGate(u);
-    if (!g.ok) { audit(u, "login_denegado_zoho", g.msg, ip); return fail(res, 403, g.msg); }
+    /* el acceso ISL no consulta Zoho: Zoho se comprueba al entrar en Campus Experience */
     FAILS.delete("e:" + email);
     const tok = crypto.randomBytes(32).toString("base64url"); const now = Date.now();
-    Q.sessIns.run(sha(tok), u.id, now, now, now, ip, String(req.headers["user-agent"] || "").slice(0, 200));
+    Q.sessIns.run(sha(tok), u.id, now, now, 0, ip, String(req.headers["user-agent"] || "").slice(0, 200));
     db.prepare("UPDATE users SET last_login=? WHERE id=?").run(nowISO(), u.id);
-    audit(u, "login", g.degraded ? "Zoho sin respuesta: se usa la última comprobación" : "", ip);
+    audit(u, "login", "", ip);
     setCookie(res, tok, CFG.maxHours * 3600);
     return send(res, 200, { ok: true, mustChange: !!u.must_change, name: u.name });
   }
@@ -432,7 +451,6 @@ async function handle(req, res) {
   if (!S) return fail(res, 401, "Sesión caducada. Vuelve a entrar.");
   const U = S.u;
 
-  if (p === "/api/me" && M === "GET") return send(res, 200, aclFor(U));
   if (p === "/api/me/password" && M === "POST") {
     const b = await readBody(req, 10000);
     if (!(await checkPw(String(b.current || ""), U.pass_hash))) return fail(res, 400, "La contraseña actual no es correcta.");
@@ -443,6 +461,21 @@ async function handle(req, res) {
     return send(res, 200, { ok: true });
   }
   if (U.must_change) return fail(res, 403, "Tienes que cambiar tu contraseña antes de continuar.");
+
+  /* --- capa ISL: inicio con los departamentos de la persona --- */
+  if (p === "/api/isl/me" && M === "GET") {
+    const mine = deptsOf(U);
+    return send(res, 200, { name: U.name, email: U.email, superAdmin: isSuper(U), depts: DEPTS.filter(d => mine.includes(d.k)).map(d => Object.assign({}, d, d.k === "campus" ? { stats: { inscripciones: null } } : {})) });
+  }
+  if (p === "/api/isl/campus" && M === "POST") {
+    const g = await campusGate(S); if (!g.ok) return fail(res, 403, g.msg);
+    audit(U, "entrada_campus", g.degraded ? "Zoho sin respuesta: se usa la última comprobación" : "", ip);
+    return send(res, 200, { ok: true });
+  }
+
+  /* --- a partir de aquí, Campus Experience --- */
+  { const g = await campusGate(S); if (!g.ok) return fail(res, 403, g.msg); }
+  if (p === "/api/me" && M === "GET") return send(res, 200, aclFor(U));
 
   /* --- datos guardados del software --- */
   let m;
@@ -566,7 +599,7 @@ async function handle(req, res) {
       }
       if (M === "PATCH") {
         const b = await readBody(req, 50000); const sets = [], vals = []; let kick = false, aclChanged = false;
-        if (b.perms !== undefined) { sets.push("perms=?"); vals.push(JSON.stringify(cleanPerms(b.perms))); aclChanged = true; }
+        if (b.perms !== undefined) { sets.push("perms=?"); vals.push(permsJson(b.perms, t)); aclChanged = true; }
         if (b.admin !== undefined) {
           if (!b.admin && t.id === U.id) return fail(res, 400, "No puedes quitarte a ti mismo el rol de administrador.");
           if (!b.admin && lastAdmin) return fail(res, 400, "Tiene que quedar al menos un administrador.");

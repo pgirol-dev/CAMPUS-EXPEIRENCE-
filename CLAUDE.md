@@ -18,6 +18,7 @@ Este repositorio es el **software operativo de Campus Experience** y se publica 
 | El dashboard (cálculo de cifras) | `functions/dashboard_api/ce_engine.js` | — |
 | El dashboard (qué sedes se leen de Zoho) | `SEDES` en `functions/dashboard_api/dashboard.js` | — |
 | El servidor (login, permisos, API) | `functions/campus_api/index.js`, `store.js` | — |
+| Acceso ISL e inicio ISL (capa de empresa) | `selfhost/public/login.html`, `selfhost/public/inicio.html`, fotos en `selfhost/public/isl/` | `node build.js` los copia a `client/` |
 | El acceso «Dashboard» del menú | `client/dashboard-menu.js` (lo enlaza `build.js`; **no** va en `index.html`) | — |
 | El servidor del dashboard | `functions/dashboard_api/` (función aparte; **no** va en `campus_api`) | — |
 

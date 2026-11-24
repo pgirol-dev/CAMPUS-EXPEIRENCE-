@@ -23,6 +23,8 @@ const CFG = {
   idleMin: +env("SESSION_IDLE_MIN", 480),
   maxHours: +env("SESSION_MAX_HOURS", 72),
   loginUrl: env("CE_LOGIN_URL", "/app/login.html"),
+  campusUrl: env("CE_CAMPUS_URL", "/app/index.html"),
+  supers: env("CE_SUPERADMINS", "").split(",").map(s => s.trim().toLowerCase()).filter(Boolean),
   origins: env("CE_ALLOWED_ORIGINS", "").split(",").map(s => s.trim()).filter(Boolean),
   ttl: +env("CE_DASH_TTL_MIN", 15) * 60000,
   zoho: {
@@ -151,7 +153,13 @@ async function sessionOf(req, st) {
   const u = await st.users.byId(s.user_id);
   if (!u || !bool(u.active) || u.zoho_status === "inactive") return null;
   if (now - s.last_seen > 60000) { try { await st.sessions.update(s.id, { last_seen: now }); } catch (e) {} }
-  return { u, mustChange: bool(u.must_change) };
+  /* capa ISL: el dashboard es de Campus Experience. Hace falta el departamento y haber pasado por la entrada a Campus
+     (comprobación de Zoho CRM) en las últimas 12 horas; si no, se manda a Campus, que vuelve a comprobarlo. */
+  let isl = null; try { const pj = JSON.parse(u.perms || "{}"); isl = pj && typeof pj._isl === "object" ? pj._isl : null; } catch (e) {}
+  const sup = CFG.supers.length ? CFG.supers.includes(String(u.email || "").toLowerCase()) : bool(u.is_admin);
+  const campus = sup || !isl || (Array.isArray(isl.depts) && isl.depts.includes("campus"));
+  const zohoOk = now - (+s.zoho_checked_at || 0) < 12 * 3600000;
+  return { u, mustChange: bool(u.must_change), campusOk: campus && zohoOk };
 }
 
 async function handle(req, res) {
@@ -165,6 +173,7 @@ async function handle(req, res) {
     const S = await sessionOf(req, st);
     if (!S) return send(res, 200, "location.replace(" + JSON.stringify(CFG.loginUrl) + ");document.documentElement.style.display=\"none\";", JS);
     if (S.mustChange) return send(res, 200, "location.replace(" + JSON.stringify(CFG.loginUrl + "?cambio=1") + ");document.documentElement.style.display=\"none\";", JS);
+    if (!S.campusOk) return send(res, 200, "location.replace(" + JSON.stringify(CFG.campusUrl) + ");document.documentElement.style.display=\"none\";", JS);
     if (!zohoConfigured()) return send(res, 200, "window.CE_DATA=null;window.CE_DATA_ERR=" + safeJs("Falta configurar Zoho CRM en las variables de entorno de la función dashboard_api.") + ";", JS);
     try {
       const r = await dashGet(st, false);
@@ -178,7 +187,7 @@ async function handle(req, res) {
   if (p === "/api/dashboard/refresh" && M === "POST") {
     if (req.headers["x-ce"] !== "1") return fail(res, 403, "Petición no permitida");
     const o = req.headers.origin; if (o && CFG.origins.length && !CFG.origins.includes(o)) return fail(res, 403, "Origen no permitido");
-    const S = await sessionOf(req, st); if (!S) return fail(res, 401, "Sesión caducada. Vuelve a entrar.");
+    const S = await sessionOf(req, st); if (!S) return fail(res, 401, "Sesión caducada. Vuelve a entrar."); if (!S.campusOk) return fail(res, 403, "Entra en Campus Experience para ver el dashboard.");
     if (!zohoConfigured()) return fail(res, 503, "Falta configurar Zoho CRM en las variables de entorno de la función dashboard_api.");
     try {
       const r = await dashGet(st, true);
@@ -189,7 +198,7 @@ async function handle(req, res) {
 
   /* --- residencias (UAM y UEM): bloqueos y asignaciones; los editan los administradores y quien tenga el permiso «Dashboard › Residencias: Editar» --- */
   if (p === "/api/residencias" && (M === "GET" || M === "PUT")) {
-    const S = await sessionOf(req, st); if (!S) return fail(res, 401, "Sesión caducada. Vuelve a entrar.");
+    const S = await sessionOf(req, st); if (!S) return fail(res, 401, "Sesión caducada. Vuelve a entrar."); if (!S.campusOk) return fail(res, 403, "Entra en Campus Experience para ver el dashboard.");
     const raw = (await st.docs.list("resid")).cfg;
     const cfg = rzClean(raw || {});
     const canEdit = rzCanEdit(S.u);

@@ -14,7 +14,9 @@ catalyst.json                 configuración del proyecto Catalyst (obligatoria 
 client/                       → Web Client Hosting
   client-package.json
   index.html                  la aplicación (generada con build.js)
-  login.html                  pantalla de acceso y primera instalación
+  login.html                  acceso ISL, primera instalación y cambio de contraseña (fuente: selfhost/public/login.html)
+  inicio.html                 inicio ISL con los departamentos (fuente: selfhost/public/inicio.html)
+  isl/                        fotos del acceso y de los departamentos (fuente: selfhost/public/isl/)
   ce-shim.js                  puente entre la aplicación y la API
   favicon.svg
   dashboard.html              dashboard de registros (ver dashboard/README.md)
@@ -173,6 +175,8 @@ Se configuran en la consola (Serverless → Functions → campus_api → Configu
 | `ZOHO_DESK_URL` | opcional: `https://desk.zoho.eu/api/v1` (por defecto) |
 | `CE_SETUP_KEY` | una clave larga inventada, para crear el primer administrador. **Borradla después.** |
 | `CE_LOGIN_URL` | ruta de la pantalla de acceso; por defecto `/app/login.html`. Si el hosting sirve la web en la raíz del dominio, `/login.html` |
+| `CE_HOME_URL` | ruta del inicio ISL; por defecto `/app/inicio.html` |
+| `CE_SUPERADMINS` | emails de los superadministradores ISL, separados por comas (los ponéis vosotros en la consola; también en `dashboard_api`). Si está vacía, son superadministradores los administradores del software |
 | `CE_ALLOWED_ORIGINS` | opcional: dominio de la web, por ejemplo `https://operativa.islagency.com` |
 | `SESSION_IDLE_MIN`, `SESSION_MAX_HOURS`, `ZOHO_RECHECK_MIN`, `ZOHO_GRACE_HOURS` | opcionales: 480, 72, 30 y 12 por defecto |
 | `CE_DASH_TTL_MIN` | opcional: minutos que se reutilizan los datos del dashboard antes de volver a leer Zoho (15 por defecto) |
@@ -197,6 +201,13 @@ Catalyst publica primero en el entorno de Development. Desde la consola desplega
 - `POST /server/dashboard_api/api/dashboard/refresh`: botón «Actualizar» (máximo una lectura de Zoho por minuto; queda en el registro de actividad).
 - `GET|PUT /server/dashboard_api/api/residencias`: bloqueos y asignaciones de las residencias UAM y UEM (Madrid). Leer: cualquier usuario con sesión. Guardar: administradores y usuarios con el permiso **Dashboard › Residencias: Editar** (`dashboard.residencias` = 2, en el catálogo de permisos de `campus_api`). Se guarda en `CEDocs` col `resid`, id `cfg`.
 - Detalle en `dashboard/README.md`.
+
+## Capa ISL (24/11)
+- **Acceso:** `POST /api/login` ya no consulta Zoho. La sesión empieza con `zoho_checked_at = 0`.
+- **Departamentos:** se guardan en la columna `perms` de CEUsers, clave `_isl` (`{"depts":["campus"]}`), sin tocar las tablas. Sin `_isl`, la persona tiene Campus Experience (así siguen los usuarios que ya existían). Al cambiar los permisos de Campus, `_isl` se conserva.
+- **Rutas nuevas:** `GET /api/isl/me` (nombre, superadministrador y departamentos; para Campus, las inscripciones de la caché del dashboard) y `POST /api/isl/campus` (entrada a Campus: departamento + Zoho activo; queda en el registro como `entrada_campus`).
+- **Campus Experience:** `acl.js` y todas las rutas de Campus comprueban el departamento y Zoho (cada `ZOHO_RECHECK_MIN`). Si falla, `acl.js` manda a `inicio.html?aviso=…` y la API responde 403; la sesión ISL sigue abierta.
+- **Dashboard (`dashboard_api`):** pide el departamento Campus y haber pasado por la entrada a Campus en las últimas 12 horas; si no, manda a `CE_CAMPUS_URL` (por defecto `/app/index.html`).
 
 ## Seguridad: resumen
 - **Contraseñas:** scrypt con sal; nadie puede verlas.

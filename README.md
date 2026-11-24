@@ -1,6 +1,12 @@
-# Software Operativo · Campus Experience
+# Software Operativo · ISL (Campus Experience)
 
-Herramienta del equipo operativo de Campus Experience (Real Madrid, ISL Agency) para dejar de trabajar con Excel.
+Herramienta del equipo operativo de Campus Experience (Real Madrid, ISL Agency) para dejar de trabajar con Excel. Desde el 24/11 es la **capa de empresa ISL**: cada departamento (Campus Experience, LaLiga Select, FF Madrid…) es una pata de esta interfaz.
+
+## Capa ISL
+- **Acceso ISL** (`login.html`): email @islagency.com y contraseña (las mismas de siempre). Ya **no** consulta Zoho. Foto del césped a pantalla completa.
+- **Inicio ISL** (`inicio.html`): saludo y una tarjeta por departamento con su foto y su marca. Cada persona ve solo sus departamentos. Los superadministradores ven todos (LaLiga Select y FF Madrid, «Próximamente»).
+- **Entrar en Campus Experience:** se comprueba que la persona tiene el departamento y que está activa en Zoho CRM (y de nuevo cada 30 min). Si no, vuelve al inicio con el aviso. Dentro de Campus nada cambia; en la barra lateral hay un botón para volver al Inicio ISL.
+- Diseño de referencia: `design/isl/propuesta_capa_isl.html`.
 
 ## Estructura del software
 - **Inicio:** se elige la temporada (Campus Experience 2027) en una tarjeta con participantes, semanas en Madrid, nacionales e institucionales.
@@ -26,8 +32,8 @@ Las tres usan la misma aplicación, `index.html`. Después de cambiarla, ejecuta
 ## Cómo se publica
 Cada cambio que llega a `main` se despliega solo en Catalyst (GitHub Actions, `.github/workflows/catalyst-deploy.yml`) en cuanto el secreto `CATALYST_TOKEN` está configurado. Mientras tanto, o si hace falta, se publica a mano con `catalyst deploy`. Detalles en `CATALYST.md`.
 
-Las versiones con login tienen doble control de acceso:
-1. La persona debe ser usuario activo del Zoho CRM de ISL.
+Las versiones con login tienen doble control para entrar en Campus Experience:
+1. La persona debe tener el departamento Campus Experience y ser usuario activo del Zoho CRM de ISL (se comprueba al entrar en Campus, no en el acceso ISL).
 2. Después, el administrador decide qué apartados puede ver o editar.
 
 ## Documentación

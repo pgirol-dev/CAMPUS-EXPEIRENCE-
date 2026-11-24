@@ -3,106 +3,104 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Acceso · Campus Experience</title>
+<title>Acceso · ISL Software operativo</title>
 <link rel="icon" href="favicon.svg">
-<script>window.CE_API_BASE="/server/campus_api";window.CE_APP_URL="index.html";</script>
+<script>window.CE_API_BASE="/server/campus_api";window.CE_HOME_URL="inicio.html";</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@1,62..125,500..900&family=Instrument+Serif:ital@1&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@1,62..125,700..900&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-:root{--bg:#e4e4e4;--ink:#2f3e40;--ink-2:color-mix(in srgb,#2f3e40 80%,#e4e4e4);--line:color-mix(in srgb,#2f3e40 18%,#e4e4e4);--field:#f1f1f1;--navy:#0f2145;--pink:#ea456c;--pink-l:#ff8aa5;--bad:#c2224b;--bad-soft:color-mix(in srgb,#ea456c 14%,#e4e4e4);
-  --f-wide:Archivo,"Arial Black",Impact,sans-serif;--f-serif:"Instrument Serif",Georgia,serif;--f-body:"Helvetica Neue",Helvetica,Arial,sans-serif}
-@media (prefers-color-scheme:dark){:root{--bg:#1f2430;--ink:#e8eeee;--ink-2:color-mix(in srgb,#e8eeee 80%,#1f2430);--line:color-mix(in srgb,#e8eeee 18%,#1f2430);--field:#171b25;--navy:#141a28;--bad:#ff8aa5;--bad-soft:color-mix(in srgb,#ff8aa5 14%,#1f2430)}}
+/* Acceso ISL (capa de empresa). Diseño de referencia: design/isl/propuesta_capa_isl.html */
+:root{--navy:#01193c;--cream:#f3f1ea;--mute:#9aa6bd;--pink:#ff8aa5;--bad:#ffb3c2}
 *{box-sizing:border-box}
-html,body{margin:0;height:100%}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(360px,.95fr);min-height:100vh}
-.brand{position:relative;overflow:hidden;background:var(--navy);color:#e8eeee;padding:clamp(28px,5vw,64px);display:flex;flex-direction:column;justify-content:space-between}
-.brand::before,.brand::after{content:"";position:absolute;border-radius:50%;border:1.5px solid color-mix(in srgb,var(--pink-l) 45%,transparent)}
-.brand::before{width:520px;height:520px;right:-200px;top:-180px}
-.brand::after{width:340px;height:340px;left:-120px;bottom:-140px;border-color:rgba(232,238,238,.18)}
-.logo{display:flex;align-items:center;gap:12px;position:relative;z-index:1}
-.logo i{width:44px;height:44px;border-radius:12px;background:var(--pink-l);color:#1a1f2a;display:grid;place-items:center;font-family:var(--f-wide);font-style:italic;font-weight:900;font-stretch:125%;font-size:15px}
-.logo span{font-family:var(--f-wide);font-style:italic;font-weight:800;font-stretch:125%;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(232,238,238,.75)}
-.hero{position:relative;z-index:1}
-.hero h1{margin:0;font-family:var(--f-wide);font-style:italic;font-weight:900;font-stretch:125%;text-transform:uppercase;font-size:clamp(2.4rem,5.4vw,4.6rem);line-height:.92;letter-spacing:-.02em}
-.hero h1 em{display:block;font-family:var(--f-serif);font-weight:400;font-stretch:100%;text-transform:none;color:var(--pink-l);letter-spacing:-.01em;font-size:1.05em}
-.hero p{margin:18px 0 0;max-width:40ch;color:rgba(232,238,238,.78);line-height:1.55}
-.foot{position:relative;z-index:1;font-size:12px;color:rgba(232,238,238,.6)}
-main{display:grid;place-items:center;padding:clamp(24px,5vw,56px) clamp(18px,5vw,64px)}
-.card{width:100%;max-width:380px}
-.card h2{margin:0;font-family:var(--f-serif);font-style:italic;font-weight:400;font-size:2.6rem;line-height:1;color:var(--pink)}
-.card .sub{margin:8px 0 26px;color:var(--ink-2);line-height:1.5}
-label{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);margin:0 0 7px}
-.fld{position:relative;margin-bottom:16px}
-input{width:100%;font:inherit;color:var(--ink);background:var(--field);border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;outline:none;transition:border-color .2s,box-shadow .2s}
-input:focus{border-color:var(--pink);box-shadow:0 0 0 4px color-mix(in srgb,var(--pink) 18%,transparent)}
-.eye{position:absolute;right:8px;bottom:8px;border:0;background:transparent;color:var(--ink-2);font:700 11px var(--f-body);letter-spacing:.06em;text-transform:uppercase;padding:6px 8px;border-radius:8px;cursor:pointer}
-.eye:hover{background:var(--line)}
-button.go{width:100%;margin-top:6px;border:0;border-radius:96px;background:var(--ink);color:var(--bg);font:800 12px var(--f-body);letter-spacing:.1em;text-transform:uppercase;padding:15px;cursor:pointer;transition:background .2s,transform .2s}
-button.go:hover{background:var(--pink);color:#fff}
-button.go:disabled{opacity:.6;cursor:default;transform:none}
-.err{display:none;margin:0 0 16px;padding:11px 13px;border-radius:10px;background:var(--bad-soft);color:var(--bad);font-weight:600;font-size:13.5px;line-height:1.45}
+html,body{margin:0;min-height:100%}
+body{background:var(--navy);color:var(--cream);font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:13px;line-height:1.55}
+.wide{font-family:Archivo,"Arial Black",sans-serif;font-style:italic;font-weight:900;font-stretch:125%;text-transform:uppercase;line-height:.92;margin:0}
+.login{position:relative;min-height:100vh;display:flex;justify-content:flex-end;overflow:hidden}
+.photo{position:absolute;inset:0;background:var(--navy) url(isl/acceso.jpg) 30% center/cover no-repeat;animation:settle 1.6s cubic-bezier(.2,.7,.2,1) both}
+@keyframes settle{from{transform:scale(1.04);opacity:.6}to{transform:none;opacity:1}}
+.photo::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(1,25,60,0) 52%,rgba(1,25,60,.45) 70%,rgba(1,25,60,.72) 100%),linear-gradient(180deg,rgba(1,25,60,.25),transparent 18%)}
+.logo{position:fixed;z-index:2;left:clamp(20px,4vw,52px);top:38px;width:76px;color:var(--cream)}
+.logo svg{display:block;width:100%;height:auto}
+.side{position:relative;z-index:1;width:min(500px,100%);min-height:100vh;display:flex;flex-direction:column;padding:44px clamp(28px,5vw,64px);text-shadow:0 1px 14px rgba(1,25,60,.45)}
+form{margin:auto 0;width:100%;max-width:340px;display:flex;flex-direction:column;gap:24px}
+h1{font-size:clamp(1.7rem,2.6vw,2.3rem);margin-bottom:8px}
+h1 em{font-style:italic;color:var(--pink)}
+.sub{margin:-12px 0 0;color:var(--mute);font-size:12px}
+label{display:flex;flex-direction:column;gap:6px;color:var(--mute);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase}
+input{all:unset;box-sizing:border-box;width:100%;padding:10px 0 11px;border-bottom:1px solid rgba(243,241,234,.28);font-size:14px;color:var(--cream);letter-spacing:0;text-transform:none;transition:border-color .25s}
+input::placeholder{color:rgba(243,241,234,.38)}
+input:focus-visible{border-bottom-color:var(--pink)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:4px;flex-wrap:wrap}
+.hint{color:var(--mute);font-size:11px;max-width:20ch;text-align:right}
+.oval{all:unset;cursor:pointer;position:relative;display:inline-grid;place-items:center;padding:15px 30px;text-transform:uppercase;letter-spacing:.06em;font-size:12px;color:var(--cream);isolation:isolate}
+.oval svg{position:absolute;inset:-6px -10px;width:calc(100% + 20px);height:calc(100% + 12px);z-index:-1;overflow:visible}
+.oval path{fill:none;stroke:currentColor;stroke-width:1.3;stroke-linecap:round;stroke-dasharray:420}
+.oval:hover path{animation:draw .7s ease}
+@keyframes draw{from{stroke-dashoffset:420}to{stroke-dashoffset:0}}
+.oval:focus-visible{outline:2px solid currentColor;outline-offset:8px;border-radius:40px}
+.oval:disabled,.oval[aria-busy="true"]{opacity:.6;cursor:default}
+.err{display:none;margin:0;padding:10px 12px;border-left:2px solid var(--pink);background:rgba(1,25,60,.55);color:var(--bad);font-size:12px;text-shadow:none}
 .err.on{display:block}
-.note{margin-top:22px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-2);line-height:1.55}
-.check{display:flex;gap:10px;align-items:flex-start;margin-top:4px}
-.check b{flex:none;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:var(--line);font-size:11px}
-.rules{margin:-6px 0 16px;padding:0;list-style:none;font-size:12.5px;color:var(--ink-2)}
-.rules li{display:flex;gap:7px;align-items:center;margin:4px 0}
-.rules li::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--line)}
-.rules li.ok{color:var(--ink)}
-.rules li.ok::before{background:#2fcf9f}
+.rules{margin:-10px 0 0;padding:0;list-style:none;font-size:11px;color:var(--mute)}
+.rules li{display:flex;gap:7px;align-items:center;margin:3px 0}
+.rules li::before{content:"";width:6px;height:6px;border-radius:50%;background:rgba(243,241,234,.3)}
+.rules li.ok{color:var(--cream)}
+.rules li.ok::before{background:#7be3b6}
+.foot{color:#7f8aa1;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase}
 [hidden]{display:none!important}
-@media (max-width:820px){body{grid-template-columns:1fr}.brand{min-height:auto;padding:24px 20px 28px}.hero h1{font-size:2.3rem}.hero p,.foot{display:none}.brand::before{width:300px;height:300px;right:-120px;top:-140px}}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:820px){.photo{background-position:24% center}.photo::before{background:linear-gradient(180deg,rgba(1,25,60,.25),rgba(1,25,60,.55) 40%,rgba(1,25,60,.92) 75%)}.side{width:100%}form{margin-top:auto;margin-bottom:40px}}
+@media (prefers-reduced-motion:reduce){.photo,.oval:hover path{animation:none}}
 </style>
 </head>
 <body>
-<section class="brand" aria-hidden="true">
-  <div class="logo"><i>CE</i><span>Software operativo</span></div>
-  <div class="hero"><h1>Campus Experience<em>Madrid 2027</em></h1><p>Registros, horarios, equipos y contabilidad del campus en un solo sitio.</p></div>
-  <div class="foot">ISL Agency · Real Madrid Foundation Campus Experience</div>
-</section>
-<main>
-  <form class="card" id="fLogin" novalidate>
-    <h2>Hola de nuevo</h2>
-    <p class="sub">Entra con tu email de Zoho CRM y la contraseña que te ha dado el administrador.</p>
-    <div class="err" id="eLogin" role="alert"></div>
-    <div class="fld"><label for="email">Email</label><input id="email" type="email" autocomplete="username" required autofocus></div>
-    <div class="fld"><label for="pw">Contraseña</label><input id="pw" type="password" autocomplete="current-password" required><button class="eye" type="button" data-eye="pw">Ver</button></div>
-    <button class="go" type="submit" id="bLogin">Entrar</button>
-    <div class="note"><div class="check"><b>1</b><span>Comprobamos que tu usuario está activo en Zoho CRM.</span></div><div class="check" style="margin-top:8px"><b>2</b><span>Verás solo los apartados que te ha dado el administrador.</span></div></div>
-  </form>
-  <form class="card" id="fSetup" hidden novalidate>
-    <h2>Primera instalación</h2>
-    <p class="sub">Todavía no hay ningún usuario. Crea la cuenta del administrador con su email de Zoho CRM y la clave de instalación que ha configurado el equipo técnico.</p>
-    <div class="err" id="eSetup" role="alert"></div>
-    <div class="fld"><label for="sKey">Clave de instalación</label><input id="sKey" type="password" autocomplete="off"></div>
-    <div class="fld"><label for="sEmail">Email del administrador (Zoho CRM)</label><input id="sEmail" type="email" autocomplete="username"></div>
-    <div class="fld"><label for="sPw">Contraseña</label><input id="sPw" type="password" autocomplete="new-password"></div>
-    <ul class="rules"><li>Al menos 10 caracteres, con letras y números</li></ul>
-    <div class="fld"><label for="sPw2">Repite la contraseña</label><input id="sPw2" type="password" autocomplete="new-password"></div>
-    <button class="go" type="submit" id="bSetup">Crear administrador</button>
-  </form>
-  <form class="card" id="fChange" hidden novalidate>
-    <h2>Nueva contraseña</h2>
-    <p class="sub">Es tu primera vez o el administrador te ha puesto una contraseña nueva. Elige una contraseña solo tuya.</p>
-    <div class="err" id="eChange" role="alert"></div>
-    <div class="fld" id="curWrap"><label for="cur">Contraseña actual</label><input id="cur" type="password" autocomplete="current-password"></div>
-    <div class="fld"><label for="n1">Nueva contraseña</label><input id="n1" type="password" autocomplete="new-password"><button class="eye" type="button" data-eye="n1">Ver</button></div>
-    <ul class="rules" id="rules"><li data-r="len">Al menos 10 caracteres</li><li data-r="mix">Letras y números</li></ul>
-    <div class="fld"><label for="n2">Repite la nueva contraseña</label><input id="n2" type="password" autocomplete="new-password"></div>
-    <button class="go" type="submit" id="bChange">Guardar y entrar</button>
-  </form>
-</main>
+<div class="login">
+  <div class="photo" aria-hidden="true"></div>
+  <div class="logo" aria-label="ISL"><svg role="img" aria-label="ISL" xmlns="http://www.w3.org/2000/svg" viewBox="1817.73 24.20 61.11 36.60" fill="currentColor"><path d="M 1863.835938 51.988281 C 1863.835938 51.066406 1864.96875 50.964844 1865.917969 50.964844 C 1866.609375 50.964844 1867.152344 51.046875 1867.679688 51.132812 C 1868.65625 51.296875 1869.121094 50.78125 1869.210938 50.140625 L 1869.316406 49.210938 C 1868.210938 49.011719 1867.132812 48.785156 1865.46875 48.785156 C 1862.703125 48.785156 1860.152344 49.875 1860.152344 52.339844 C 1860.152344 56.691406 1866.289062 55.191406 1866.289062 57.3125 C 1866.289062 58.421875 1864.867188 58.601562 1863.972656 58.601562 C 1862.761719 58.601562 1861.589844 58.3125 1860.488281 57.84375 L 1860.488281 59.925781 C 1860.488281 60.144531 1860.5625 60.328125 1860.949219 60.402344 C 1862.0625 60.628906 1863.105469 60.757812 1864.285156 60.757812 C 1867.15625 60.757812 1869.976562 59.691406 1869.976562 57.027344 C 1869.976562 52.449219 1863.835938 53.652344 1863.835938 51.988281 "/><path d="M 1878.847656 60.496094 L 1878.847656 59.023438 C 1878.847656 58.339844 1878.289062 57.78125 1877.605469 57.78125 L 1875.675781 57.78125 L 1875.675781 50.03125 C 1875.675781 49.34375 1875.121094 48.785156 1874.433594 48.785156 L 1871.207031 48.785156 C 1871.605469 49.253906 1871.847656 49.863281 1871.847656 50.523438 L 1871.847656 60.046875 C 1871.847656 60.289062 1872.046875 60.488281 1872.285156 60.496094 Z M 1878.847656 60.496094 "/><path d="M 1857.019531 48.789062 L 1853.792969 48.789062 C 1854.191406 49.257812 1854.433594 49.863281 1854.433594 50.527344 L 1854.433594 60.050781 C 1854.433594 60.300781 1854.636719 60.503906 1854.882812 60.503906 L 1858.265625 60.503906 L 1858.265625 50.03125 C 1858.265625 49.347656 1857.707031 48.789062 1857.019531 48.789062 "/><path d="M 1842.644531 51.863281 C 1842.644531 51.863281 1842.671875 51.851562 1842.683594 51.851562 C 1842.726562 51.851562 1842.761719 51.886719 1842.761719 51.929688 L 1842.761719 60.527344 C 1842.761719 60.679688 1842.882812 60.800781 1843.035156 60.800781 C 1843.109375 60.800781 1843.179688 60.769531 1843.230469 60.71875 L 1847.898438 56.808594 C 1848.03125 56.707031 1848.113281 56.546875 1848.113281 56.367188 L 1848.113281 49.476562 C 1848.113281 49.257812 1848.21875 49.058594 1848.382812 48.933594 C 1848.414062 48.910156 1848.445312 48.890625 1848.480469 48.871094 L 1864.199219 40.867188 C 1864.492188 40.726562 1864.691406 40.429688 1864.691406 40.082031 L 1864.691406 33.777344 C 1864.425781 34.421875 1863.9375 34.976562 1863.269531 35.316406 L 1839.753906 47.34375 C 1836.578125 48.933594 1834.394531 51.625 1834.394531 55.417969 L 1834.390625 56.339844 C 1834.390625 56.53125 1834.480469 56.695312 1834.625 56.804688 L 1839.300781 60.746094 C 1839.347656 60.78125 1839.40625 60.804688 1839.46875 60.804688 C 1839.621094 60.804688 1839.722656 60.683594 1839.722656 60.53125 L 1839.722656 55.257812 C 1839.722656 54.074219 1840.382812 53.042969 1841.355469 52.515625 L 1842.640625 51.867188 Z M 1842.644531 51.863281 "/><path d="M 1837.035156 45.367188 C 1835.59375 46.042969 1833.988281 46.421875 1832.289062 46.421875 C 1830.394531 46.421875 1828.601562 45.945312 1827.03125 45.113281 L 1823.332031 43.238281 C 1820.011719 41.539062 1817.734375 38.085938 1817.734375 34.109375 L 1817.734375 33.539062 C 1818.003906 34.183594 1818.492188 34.738281 1819.164062 35.078125 L 1828.816406 40.015625 C 1831.464844 41.265625 1833.328125 41.511719 1835.40625 40.175781 C 1835.425781 40.160156 1835.449219 40.132812 1835.449219 40.109375 C 1835.449219 40.078125 1835.433594 40.050781 1835.40625 40.039062 L 1835.382812 40.027344 L 1818.230469 31.300781 C 1817.9375 31.15625 1817.734375 30.855469 1817.734375 30.507812 L 1817.734375 24.203125 C 1818.003906 24.847656 1818.492188 25.402344 1819.160156 25.742188 L 1840.214844 36.496094 C 1840.5625 36.683594 1840.960938 36.789062 1841.386719 36.789062 C 1841.808594 36.789062 1842.226562 36.675781 1842.582031 36.484375 L 1863.226562 25.9375 C 1863.894531 25.597656 1864.382812 25.042969 1864.652344 24.398438 L 1864.652344 30.703125 C 1864.652344 31.050781 1864.453125 31.347656 1864.160156 31.492188 L 1837.03125 45.367188 Z M 1837.035156 45.367188 "/></svg></div>
+  <div class="side">
+    <form id="fLogin" novalidate>
+      <h1 class="wide">Software<br><em>operativo</em></h1>
+      <p class="err" id="eLogin" role="alert"></p>
+      <label>Email<input id="email" type="email" placeholder="nombre@islagency.com" autocomplete="username" required autofocus></label>
+      <label>Contraseña<input id="pw" type="password" placeholder="Tu contraseña" autocomplete="current-password" required></label>
+      <div class="row">
+        <button class="oval" type="submit" id="bLogin">Entrar<svg viewBox="0 0 200 70" preserveAspectRatio="none" aria-hidden="true"><path d="M30 14C70 2 160 4 188 22c18 14-8 34-60 40C78 68 14 62 8 42 2 24 40 10 110 8c40-1 78 6 82 16"/></svg></button>
+        <span class="hint">¿Has olvidado la contraseña? Pídesela a tu administrador.</span>
+      </div>
+    </form>
+    <form id="fSetup" hidden novalidate>
+      <h1 class="wide">Primera<br><em>instalación</em></h1>
+      <p class="sub">Todavía no hay usuarios. Crea la cuenta del administrador con su email de Zoho CRM y la clave de instalación.</p>
+      <p class="err" id="eSetup" role="alert"></p>
+      <label>Clave de instalación<input id="sKey" type="password" autocomplete="off"></label>
+      <label>Email del administrador (Zoho CRM)<input id="sEmail" type="email" autocomplete="username"></label>
+      <label>Contraseña<input id="sPw" type="password" autocomplete="new-password"></label>
+      <ul class="rules"><li>Al menos 10 caracteres, con letras y números</li></ul>
+      <label>Repite la contraseña<input id="sPw2" type="password" autocomplete="new-password"></label>
+      <div class="row"><button class="oval" type="submit" id="bSetup">Crear administrador<svg viewBox="0 0 200 70" preserveAspectRatio="none" aria-hidden="true"><path d="M30 14C70 2 160 4 188 22c18 14-8 34-60 40C78 68 14 62 8 42 2 24 40 10 110 8c40-1 78 6 82 16"/></svg></button></div>
+    </form>
+    <form id="fChange" hidden novalidate>
+      <h1 class="wide">Nueva<br><em>contraseña</em></h1>
+      <p class="sub">Es tu primera vez o el administrador te ha puesto una contraseña nueva. Elige una solo tuya.</p>
+      <p class="err" id="eChange" role="alert"></p>
+      <label id="curWrap">Contraseña actual<input id="cur" type="password" autocomplete="current-password"></label>
+      <label>Nueva contraseña<input id="n1" type="password" autocomplete="new-password"></label>
+      <ul class="rules" id="rules"><li data-r="len">Al menos 10 caracteres</li><li data-r="mix">Letras y números</li></ul>
+      <label>Repite la nueva contraseña<input id="n2" type="password" autocomplete="new-password"></label>
+      <div class="row"><button class="oval" type="submit" id="bChange">Guardar y entrar<svg viewBox="0 0 200 70" preserveAspectRatio="none" aria-hidden="true"><path d="M30 14C70 2 160 4 188 22c18 14-8 34-60 40C78 68 14 62 8 42 2 24 40 10 110 8c40-1 78 6 82 16"/></svg></button></div>
+    </form>
+    <div class="foot">Solo cuentas @islagency.com</div>
+  </div>
+</div>
 <script>
 (function(){
   const $=id=>document.getElementById(id);
   const H={"Content-Type":"application/json","X-CE":"1"};
-  const BASE=window.CE_API_BASE||"",APP=window.CE_APP_URL||"/";
+  const BASE=window.CE_API_BASE||"",HOME=window.CE_HOME_URL||"/inicio";
   const post=async(u,b)=>{const r=await fetch(BASE+u,{method:"POST",headers:H,credentials:"same-origin",body:JSON.stringify(b)});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"No se ha podido completar. Inténtalo de nuevo.");return j};
   const err=(id,m)=>{const e=$(id);e.textContent=m||"";e.classList.toggle("on",!!m)};
+  const label=(b,t)=>{b.firstChild.nodeValue=t};
   let lastPw="";
-  document.querySelectorAll("[data-eye]").forEach(b=>b.addEventListener("click",()=>{const i=$(b.dataset.eye);const v=i.type==="password";i.type=v?"text":"password";b.textContent=v?"Ocultar":"Ver"}));
   const showChange=fromLogin=>{$("fLogin").hidden=true;$("fChange").hidden=false;$("curWrap").hidden=!!fromLogin;if(fromLogin)$("cur").value=lastPw;$("n1").focus()};
   if(new URLSearchParams(location.search).get("cambio")==="1")showChange(false);
   else fetch(BASE+"/api/setup",{credentials:"same-origin"}).then(r=>r.ok?r.json():null).then(j=>{if(j&&j.needed){$("fLogin").hidden=true;$("fSetup").hidden=false}}).catch(()=>{});
@@ -113,17 +111,17 @@ button.go:disabled{opacity:.6;cursor:default;transform:none}
     catch(x){err("eSetup",x.message)}finally{$("bSetup").disabled=false}});
   $("fLogin").addEventListener("submit",async e=>{e.preventDefault();err("eLogin","");
     const email=$("email").value.trim(),pw=$("pw").value;if(!email||!pw){err("eLogin","Escribe tu email y tu contraseña.");return}
-    $("bLogin").disabled=true;$("bLogin").textContent="Comprobando en Zoho…";
-    try{const j=await post("/api/login",{email,password:pw});lastPw=pw;if(j.mustChange)showChange(true);else location.href=APP}
+    const b=$("bLogin");b.disabled=true;label(b,"Entrando…");
+    try{const j=await post("/api/login",{email,password:pw});lastPw=pw;if(j.mustChange)showChange(true);else location.href=HOME}
     catch(x){err("eLogin",x.message);$("pw").select()}
-    finally{$("bLogin").disabled=false;$("bLogin").textContent="Entrar"}});
+    finally{b.disabled=false;label(b,"Entrar")}});
   const rules=()=>{const v=$("n1").value;const ok={len:v.length>=10,mix:/[A-Za-zÀ-ÿ]/.test(v)&&/[0-9]/.test(v)};document.querySelectorAll("#rules li").forEach(li=>li.classList.toggle("ok",ok[li.dataset.r]));return ok.len&&ok.mix};
   $("n1").addEventListener("input",rules);
   $("fChange").addEventListener("submit",async e=>{e.preventDefault();err("eChange","");
     if(!rules()){err("eChange","La contraseña nueva no cumple los requisitos.");return}
     if($("n1").value!==$("n2").value){err("eChange","Las dos contraseñas nuevas no coinciden.");return}
     $("bChange").disabled=true;
-    try{await post("/api/me/password",{current:$("cur").value,password:$("n1").value});location.href=APP}
+    try{await post("/api/me/password",{current:$("cur").value,password:$("n1").value});location.href=HOME}
     catch(x){err("eChange",x.message)}finally{$("bChange").disabled=false}});
 })();
 </script>

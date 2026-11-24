@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.CE_API_BASE="/server/campus_api";window.CE_LOGIN_URL="login.html";window.CE_POLL=true;</script>
+<script>window.CE_API_BASE="/server/campus_api";window.CE_LOGIN_URL="login.html";window.CE_HOME_URL="inicio.html";window.CE_POLL=true;</script>
 <script src="/server/campus_api/acl.js"></script>
 <script src="ce-shim.js"></script>
 <script src="dashboard-menu.js" defer></script>
@@ -1692,8 +1692,8 @@ html.ro-r #dBody input,html.ro-r #dBody textarea,html.ro-r #dBody select{pointer
 /* pie de la barra lateral con sesión */
 .sb-me .ad-av{display:grid;background:var(--sb-pink);color:#1a1f2a}
 .sb-acts{display:flex;gap:2px;flex:none}
-.sb-acts button{width:30px;height:30px;border-radius:8px;border:0;background:transparent;color:var(--sb-ink2);display:grid;place-items:center;cursor:pointer}
-.sb-acts button:hover{background:var(--sb-hov);color:var(--sb-ink)}
+.sb-acts button,.sb-acts a{width:30px;height:30px;border-radius:8px;border:0;background:transparent;color:var(--sb-ink2);display:grid;place-items:center;cursor:pointer}
+.sb-acts button:hover,.sb-acts a:hover{background:var(--sb-hov);color:var(--sb-ink)}
 .sb-acts svg{width:17px;height:17px}
 html.sb-min .sb-acts{display:none}
 /* aviso flotante */
@@ -6853,7 +6853,7 @@ window.addEventListener("popstate",()=>show(location.hash.slice(1)));
 function sbMe(){
   if(ACL){$("sbKey").remove();const ini=String(ACL.name||"?").split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0].toUpperCase()).join("");
     $("sbMe").innerHTML='<span class="ad-av" style="width:32px;height:32px;font-size:11px;flex:none">'+esc(ini)+'</span><span><b>'+esc(ACL.name||"")+"</b><small>"+(ACL.admin?"Administrador":esc(ACL.email||""))+"</small></span>";
-    $("sbMe").insertAdjacentHTML("afterend",'<div class="sb-acts"><button type="button" id="sbPw" title="Cambiar mi contraseña" aria-label="Cambiar mi contraseña">'+SVG('<rect x="5" y="10.5" width="14" height="10" rx="2.2"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/>')+'</button><button type="button" id="sbOut" title="Cerrar sesión" aria-label="Cerrar sesión">'+SVG('<path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/><path d="M10 16l-4-4 4-4M6 12h10"/>')+"</button></div>");
+    $("sbMe").insertAdjacentHTML("afterend",'<div class="sb-acts">'+(window.CE_HOME_URL?'<a href="'+esc(window.CE_HOME_URL)+'" id="sbIsl" title="Inicio ISL: todos los departamentos" aria-label="Inicio ISL">'+SVG('<rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/>')+'</a>':'')+'<button type="button" id="sbPw" title="Cambiar mi contraseña" aria-label="Cambiar mi contraseña">'+SVG('<rect x="5" y="10.5" width="14" height="10" rx="2.2"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/>')+'</button><button type="button" id="sbOut" title="Cerrar sesión" aria-label="Cerrar sesión">'+SVG('<path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/><path d="M10 16l-4-4 4-4M6 12h10"/>')+"</button></div>");
     $("sbOut").addEventListener("click",async()=>{try{await window.CE_API("POST","/api/logout",{})}catch(e){}if(window.CE_DEMO){location.hash="";location.reload()}else location.href=window.CE_LOGIN_URL||"/login"});
     $("sbPw").addEventListener("click",()=>{["mePw0","mePw1","mePw2"].forEach(i=>$(i).value="");$("mePwE").hidden=true;$("mePw").hidden=false;$("mePw0").focus()});
     return}

@@ -742,3 +742,11 @@ Se asignan automáticamente en este orden, un equipo por nombre y sin repetir de
   - El «Semana 1» del producto solo afecta a las fechas; se mostrarán las fechas del campus (28-30 dic).
   - El dashboard de registros (rama `institucionales`, hecha aparte) está revisado: lee `Ubicacion_Institucionales` = Yepes / Argés con el mismo filtro de fases y año, y cuenta la equipación Black.
 - 24/11: **Diseño propio para los institucionales** (Pau; suavizado a petición suya): fondo algo más oscuro que el resto, filo fino arriba y esquina rayada (guiño a la equipación Black), distintas de Madrid (gris con número rosa) y de los nacionales (contorno). Igual en Registros, Equipos, Horarios e Incidencias, en tema claro y oscuro.
+
+## Capa de empresa ISL (24/11)
+- El software pasa a ser de toda ISL. Campus Experience es un departamento (una «pata») dentro de esta capa; de momento hay también LaLiga Select y FF Madrid, sin usuarios.
+- **Acceso ISL:** email @islagency.com y la contraseña de siempre (se generan igual que hasta ahora). No depende de Zoho: hay personas de ISL sin Zoho. Diseño: foto del césped con el operario a pantalla completa, panel azul ISL con el formulario («Software operativo»), sin textos de lema.
+- **Inicio ISL:** saludo grande con el nombre a rotulador, sin texto debajo. Una tarjeta por departamento: foto de jugadores con el nombre o logo del departamento en blanco, abajo a la izquierda y todos del mismo tamaño; al lado, el panel con los colores de su marca (Campus: azul marino y rosa; LaLiga Select: blanco y rojo #FF4B44 sobre morado #29235c; FF: arena #e0d3c3, gris #29333e y verde #009950). FF Madrid aún sin foto.
+- **Quién ve qué:** cada persona ve solo sus departamentos. Superadministrador: Pau (variable `CE_SUPERADMINS`), ve y modifica todos. Cada departamento podrá tener su administrador; el de Campus, de momento, Pau.
+- **Campus Experience:** para entrar hay que tener el departamento y estar activo en Zoho CRM. Quien no tiene Zoho no entra en Campus. Dentro de Campus no cambia nada; el botón de cuadrícula de la barra lateral vuelve al Inicio ISL.
+- Usuarios: todos los que ya tenían acceso siguen con Campus Experience. Más adelante, la lista de empleados saldrá de Google Workspace y habrá una administración ISL (usuarios, departamentos y registro de actividad).
