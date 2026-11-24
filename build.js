@@ -27,9 +27,7 @@ for (const f of shared) {
   fs.writeFileSync(R("client", f), s);
 }
 
-/* capa ISL: fotos de la pantalla de acceso y de los departamentos */
-fs.mkdirSync(R("client", "isl"), { recursive: true });
-for (const f of fs.readdirSync(R("selfhost", "public", "isl"))) fs.copyFileSync(R("selfhost", "public", "isl", f), R("client", "isl", f));
+/* capa ISL: las fotos van incrustadas en login.html e inicio.html (sin archivos aparte) */
 
 /* servidor propio: el servidor añade los accesos al servir la página */
 fs.mkdirSync(R("selfhost", "app"), { recursive: true });

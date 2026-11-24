@@ -16,7 +16,6 @@ client/                       → Web Client Hosting
   index.html                  la aplicación (generada con build.js)
   login.html                  acceso ISL, primera instalación y cambio de contraseña (fuente: selfhost/public/login.html)
   inicio.html                 inicio ISL con los departamentos (fuente: selfhost/public/inicio.html)
-  isl/                        fotos del acceso (fuente: selfhost/public/isl/); las de los departamentos van incrustadas en inicio.html
   ce-shim.js                  puente entre la aplicación y la API
   favicon.svg
   dashboard.html              dashboard de registros (ver dashboard/README.md)
