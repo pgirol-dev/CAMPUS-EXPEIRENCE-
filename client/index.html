@@ -332,9 +332,11 @@ tbody tr:hover td{background:color-mix(in srgb,var(--ink) 10%,var(--bg))}
 .wkbox.wc-nac{background:var(--bg);box-shadow:inset 0 0 0 1.5px var(--line)}
 .wkbox.wc-nac::after{border-color:color-mix(in srgb,var(--ink) 18%,transparent)}
 .wkbox.wc-nac .wn{color:var(--ink)}
-.wkbox.wc-inst{background:transparent;box-shadow:inset 0 0 0 1.5px var(--ink-3);border-radius:14px}
-.wkbox.wc-inst::after{border-style:dashed;border-color:color-mix(in srgb,var(--ink) 25%,transparent)}
-.wkbox.wc-inst .wn{color:var(--ink-3)}
+/* institucionales: guiño a la equipación Black, suave: fondo algo más oscuro que el resto, filo fino arriba y esquina rayada */
+.wkbox.wc-inst{background:color-mix(in srgb,#15171c 9%,var(--surface-2));box-shadow:inset 0 2px 0 color-mix(in srgb,var(--ink) 55%,transparent)}
+.wkbox.wc-inst::after{border:0;right:-18px;top:-18px;width:76px;height:76px;background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--ink) 13%,transparent) 0 1.5px,transparent 1.5px 7px)}
+.wkbox.wc-inst .wn{color:var(--ink)}
+.wkbox.wc-inst:hover{box-shadow:inset 0 2px 0 color-mix(in srgb,var(--ink) 55%,transparent),var(--shadow)}
 .wkbox.wkall{min-height:180px}
 .wkbox.wkall .wt{font-size:2rem}
 .wkall .wsn.k1 small::before,.wkall .wsn.k2 small::before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px;background:var(--navy-ink)}
@@ -2450,7 +2452,9 @@ const CAMPS=[{id:"mad",n:"Madrid",kind:"madrid",ev:[EVENT]},
   {id:"alm",n:"Almería",kind:"nac",ev:["Campus Experience Almería 2027","Campus Experience Almeria 2027"]},
   {id:"ali",n:"Alicante",kind:"nac",ev:["Campus Experience Alicante 2027"]},
   {id:"tor",n:"Torrevieja",kind:"nac",ev:["Campus Experience Torrevieja 2027"]}
-  // institucionales: {id:"seg",n:"Segovia",kind:"inst",ev:["<nombre del evento en Zoho>"]}
+  ,{id:"yep",n:"Yepes",kind:"inst",ev:["Campus Experience Institucional Yepes 2027"]},
+  {id:"arg",n:"Argés",kind:"inst",ev:["Campus Experience Institucional Argés 2027","Campus Experience Institucional Arges 2027"]}
+  // institucionales: el nombre del evento en Zoho (Event_Name). Las inscripciones de prueba siguen las mismas reglas de estado que el resto
 ];
 const EVS="("+CAMPS.flatMap(c=>c.ev).map(e=>"'"+e.replace(/'/g,"\\'")+"'").join(",")+")";
 const campOf=evn=>{const c=CAMPS.find(c=>c.ev.includes(evn));return c?c.id:"mad"};
@@ -3032,7 +3036,8 @@ MAX:["Vini Jr.","Cucurella","Bellingham","Konaté","Bernardo Silva","Valverde","
 const eqCamp=()=>isCampKey(EQ.week);
 const wkey=(week,ap)=>isCampKey(week)?week.replace(":","-")+"-"+apKey(ap):"w"+week+"-"+apKey(ap);
 const CAP_CAMP=18;
-const capFor=(week,prog)=>isCampKey(week)?CAP_CAMP:(CAP[prog]||14);
+const CAP_INST=20; // institucionales: equipos de hasta 20 jugadores, sin grupos ni heads (el director lidera los equipos)
+const capFor=(week,prog)=>isCampKey(week)?((campById(week.slice(2))||{}).kind==="inst"?CAP_INST:CAP_CAMP):(CAP[prog]||14);
 function rowsFor(week,ap){if(isCampKey(week)){const id=week.slice(2);return (S.allRows||[]).filter(r=>r.camp===id&&r.weeks.some(w=>w.prog+"|"+w.mod===ap))}return S.rows.filter(r=>r.weeks.some(w=>w.n===week&&w.prog+"|"+w.mod===ap))}
 function campAps(week){return APARTADOS.map(([p,m])=>p+"|"+m).filter(ap=>rowsFor(week,ap).length)}
 function groupNames(n){if(eqCamp()){const key=eqKey(),pre=EQ.week.replace(":","-")+"-";const used=new Set();
@@ -4127,9 +4132,9 @@ function renderHorarios(){try{sbSync()}catch(e){}
   if(L0){let h="";for(let n=1;n<=9;n++){const days=weekDays(n);const done=days.filter(d=>dayComplete(n,d)).length;const ok=S.rows.length&&hWeekComplete(n);
       h+='<button class="wkbox hwk'+(ok?" done":"")+'" type="button" data-hweek="'+n+'">'+(ok?'<span class="okc" aria-label="Semana completa" title="Horarios completos y sin avisos">✓</span>':"")+'<span class="wd">'+(weekDates(n)||"&nbsp;")+'</span><span class="wt">Week '+n+'</span><span class="wteams">'+(S.rows.length?(days.length?done+" de "+days.length+" días listos":"Sin inscritos"):"&nbsp;")+"</span></button>"}
     if(!hCan("horarios.semanas"))h="";
-    if(hCan("horarios.campus")){const AR=S.allRows||[];const cs=CAMPS.filter(c=>c.kind==="nac");if(cs.length)h+='<span class="wsec">Nacionales</span>';
+    if(hCan("horarios.campus")){const AR=S.allRows||[];[["nac","Nacionales"],["inst","Institucionales"]].forEach(([kk,ll])=>{const cs=CAMPS.filter(c=>c.kind===kk);if(cs.length)h+='<span class="wsec">'+ll+"</span>";
       cs.forEach(c=>{const wk="c:"+c.id;const rs=AR.filter(r=>r.camp===c.id);const days=weekDays(wk);const done=days.filter(d=>dayComplete(wk,d)).length;const ok=rs.length&&hWeekComplete(wk);
-        h+='<button class="wkbox hwk wc-nac'+(ok?" done":"")+'" type="button" data-hweek="'+wk+'">'+(ok?'<span class="okc" aria-label="Campus completo" title="Horarios completos y sin avisos">✓</span>':"")+'<span class="wd">'+(campDates(c.id)||"&nbsp;")+'</span><span class="wt">'+esc(c.n)+'</span><span class="wteams">'+(AR.length?(rs.length?(days.length?done+" de "+days.length+" días listos":"Sin equipos"):"Sin inscritos"):"&nbsp;")+"</span></button>"})}
+        h+='<button class="wkbox hwk wc-'+kk+(ok?" done":"")+'" type="button" data-hweek="'+wk+'">'+(ok?'<span class="okc" aria-label="Campus completo" title="Horarios completos y sin avisos">✓</span>':"")+'<span class="wd">'+(campDates(c.id)||"&nbsp;")+'</span><span class="wt">'+esc(c.n)+'</span><span class="wteams">'+(AR.length?(rs.length?(days.length?done+" de "+days.length+" días listos":"Sin equipos"):"Sin inscritos"):"&nbsp;")+"</span></button>"})})}
     $("hWeekGrid").innerHTML=h;hEditClose();return}
   const cfg=wkCfg(CW());
   $("hSim").hidden=!H.sim;if(H.sim)renderSimPanel();
@@ -5896,7 +5901,7 @@ function ingWhen(i){const m=/^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})/.exec(String(i
   if(!d||isNaN(d))return null;
   const L=ingLocal(d);const late=L.h>=23;
   return {d,day:late?ingKey(L.y,L.m,L.d+1):ingKey(L.y,L.m,L.d),hm:String(L.h).padStart(2,"0")+":"+String(L.mi).padStart(2,"0"),late,exact}}
-const ING_SER={VAL:"val",MAL:"mal",AND:"and",ALM:"alm",ALI:"ali",TOR:"tor"};
+const ING_SER={VAL:"val",MAL:"mal",AND:"and",ALM:"alm",ALI:"ali",TOR:"tor",YEP:"yep",ARG:"arg"}; // institucionales: serie prevista YEP27.nn / ARG27.nn (como los nacionales); si cambia, se ajusta aquí
 function ingRows(){const byId={};(S.allRows||[]).forEach(r=>{byId[String(r.id)]=r});const perDeal={};
   const out=(INV.list||[]).filter(i=>i.status!=="void"&&i.status!=="draft").map(i=>{let w=ingWhen(i);
     /* cobro movido a otro día a mano: se respeta el día elegido y se guarda el historial */
@@ -5934,7 +5939,7 @@ function renderIngresos(){
   document.documentElement.classList.toggle("no-ing-edit",!ingEdit());
   $("ingSub").textContent=INV.busy?"Leyendo Zoho Books…":"Cobros de Zoho Books por día de la plataforma de pago (de 23:00 a 22:59)"+(INV.at?" · actualizado a las "+INV.at.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"}):"");
   $("ingRefresh").disabled=INV.busy;
-  const cs=CAMPS.filter(c=>c.kind!=="inst");$("ingCamp").innerHTML='<option value="">Todos los campus</option>'+cs.map(c=>'<option value="'+c.id+'"'+(ING.camp===c.id?" selected":"")+">"+esc(c.n)+"</option>").join("");
+  const cs=CAMPS.filter(c=>ING.bank==="sab"?c.kind==="inst":c.kind!=="inst");$("ingCamp").innerHTML='<option value="">Todos los campus</option>'+cs.map(c=>'<option value="'+c.id+'"'+(ING.camp===c.id?" selected":"")+">"+esc(c.n)+"</option>").join("");
   if(INV.err&&!INV.list){$("ingBank").innerHTML="";$("ingBoxes").innerHTML="";$("ingCount").textContent="";$("ingList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Sin datos de Zoho Books</h3><p>'+esc(INV.err)+"</p></div>";return}
   if(!INV.list){$("ingBoxes").innerHTML="";$("ingCount").textContent="";$("ingList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Cargando cobros…</h3></div>';return}
   if(!CN.list&&!CN.busy&&!CN.err&&S.mcp)try{loadCN(false)}catch(e){}
@@ -6215,7 +6220,8 @@ const LG_DEF=()=>({margin:5,objetivo:8000,unidad:"sem",
   med:{"128":"31-33","140":"34-36","152":"37-39","164":"37-39","S":"40-42","M":"40-42","L":"43-45","XL":"43-45"},
   mini:{talla:20,lanyard:100},staff:{}});
 const LG={doc:null,arts:{},movs:{},nec:{sc:"all",prev:false},inv:{q:"",cat:"",nc:false},cfgTab:"gen",cfgW:1,cfgM:"one-ext",panel:"",busy:false,saveT:0};
-function lgCfg(){const d=LG_DEF(),s=LG.doc||{};const o=Object.assign({},d,s);["kits","wp","med","mini"].forEach(k=>{o[k]=Object.assign({},d[k],s[k]||{})});if(!Array.isArray(o.sedes)||!o.sedes.length)o.sedes=d.sedes;return o}
+function lgCfg(){const d=LG_DEF(),s=LG.doc||{};const o=Object.assign({},d,s);["kits","wp","med","mini"].forEach(k=>{o[k]=Object.assign({},d[k],s[k]||{})});if(!Array.isArray(o.sedes)||!o.sedes.length)o.sedes=d.sedes;
+  const del=new Set(o.sedesDel||[]);CAMPS.filter(c=>c.kind!=="madrid").forEach(c=>{const id="c-"+c.id;if(!del.has(id)&&!o.sedes.some(x=>x.id===id))o.sedes=o.sedes.concat([{id,n:c.n}])});return o}
 const lgCan=(k)=>CAN("logistica."+k,2);
 const lgSedeN=id=>id==="alm"?"Almacén":id==="seri"?"En serigrafía":((lgCfg().sedes.find(s=>s.id===id)||{}).n||id);
 /* ---- stock ---- */
@@ -6233,7 +6239,7 @@ function lgUnits(){const cfg=lgCfg();const U=[];(S.allRows||[]).forEach(r=>{cons
 const lgInScope=(u,sc)=>sc==="all"?true:sc==="mad"?u.r.camp==="mad":sc.startsWith("w")?(u.r.camp==="mad"&&u.w===+sc.slice(1)):sc.startsWith("c:")?u.r.camp===sc.slice(2):sc==="nac"?u.mod==="nac":sc==="inst"?u.mod==="inst":true;
 function lgNeeds(sc){const cfg=lgCfg();const N={};const add=(f,t,q)=>{if(!q)return;const k=f+"|"+(t||"");N[k]=(N[k]||0)+q};let n=0,sin=0;
   lgUnits().filter(u=>lgInScope(u,sc)).forEach(u=>{n++;const t=u.t||"?";if(!u.t)sin++;
-    let kits=Object.assign({},cfg.kits[u.mod]||{});if(u.mod==="inst"){const tot=lgSum(kits);kits={};kits[cfg.inst[u.r.camp]||"minikit"]=tot}
+    let kits=Object.assign({},cfg.kits[u.mod]||{});if(u.mod==="inst"){const tot=lgSum(kits);kits={};kits[cfg.inst[u.r.camp]||"black"]=tot}
     Object.entries(kits).forEach(([K,q])=>{add(K+"-kit",t,+q);add(K+"-med",cfg.med[t]||"?",+q)});
     /* extras de equipación (Form 1 y Form 3): todos se entregan en la primera semana del participante */
     if(u.first){const r=u.r;if(r.kitExtra){add("minikit-kit",t,r.kitExtra);add("minikit-med",cfg.med[t]||"?",r.kitExtra)}if(r.gkExtra)add("portero-cam",t,r.gkExtra);
@@ -6366,7 +6372,7 @@ function renderLgCfg(){if($("view-lgcfg").hidden)return;const c=lgCfg();const ro
   if(T==="kits"){h='<div class="tablebox"><table class="lgcfgt"><thead><tr><th>Modalidad</th>'+LG_KITS.map(([,l])=>"<th>"+l+"</th>").join("")+LG_WPI.map(([,l])=>"<th>"+l+"</th>").join("")+"</tr></thead><tbody>";
     LG_MODS.forEach(([m,l])=>{h+='<tr><td class="nm"><b>'+l+"</b></td>"+LG_KITS.map(([K])=>'<td><input class="lgnum" type="number" min="0" max="5" data-lgkit="'+m+"|"+K+'" value="'+((c.kits[m]||{})[K]||0)+'"'+dis+"></td>").join("")+LG_WPI.map(([k])=>'<td><input type="checkbox" data-lgwp="'+m+"|"+k+'"'+((c.wp[m]||[]).includes(k)?" checked":"")+dis+"></td>").join("")+"</tr>"});
     h+='</tbody></table></div><p class="sub">Número de kits de cada tipo y lo que lleva el welcome pack de cada modalidad. Cada kit lleva sus medias. En institucional, el tipo de kit se elige por campus:</p>';
-    const inst=CAMPS.filter(x=>x.kind==="inst");h+=inst.length?'<div class="lgform lgcard">'+inst.map(x=>'<label>'+esc(x.n)+'<select data-lginst="'+x.id+'"'+dis+'><option value="minikit">Minikit</option><option value="black"'+(c.inst[x.id]==="black"?" selected":"")+">Black</option></select></label>").join("")+"</div>":'<p class="sub">Todavía no hay campus institucionales en el software.</p>'}
+    const inst=CAMPS.filter(x=>x.kind==="inst");h+=inst.length?'<div class="lgform lgcard">'+inst.map(x=>'<label>'+esc(x.n)+'<select data-lginst="'+x.id+'"'+dis+'><option value="black">Black</option><option value="minikit"'+(c.inst[x.id]==="minikit"?" selected":"")+">Minikit</option></select></label>").join("")+"</div>":'<p class="sub">Todavía no hay campus institucionales en el software.</p>'}
   if(T==="sem"){const key="w"+LG.cfgW+"|"+LG.cfgM;const off=c.wpOff[key]||[];
     h='<div class="lgform lgcard"><label>Semana<select data-lgcw>'+[1,2,3,4,5,6,7,8,9].map(n=>'<option value="'+n+'"'+(LG.cfgW===n?" selected":"")+">Week "+n+"</option>").join("")+'</select></label><label>Modalidad<select data-lgcm>'+LG_MODS.filter(([m])=>m!=="nac"&&m!=="inst").map(([m,l])=>'<option value="'+m+'"'+(LG.cfgM===m?" selected":"")+">"+l+"</option>").join("")+'</select></label></div><p class="sub">Marca lo que <b>no</b> se da esta semana en esta modalidad. El resto de semanas no cambia.</p><div class="lgchips">'+(c.wp[LG.cfgM]||[]).map(k=>'<label class="chk"><input type="checkbox" data-lgoff="'+k+'"'+(off.includes(k)?" checked":"")+dis+"> Quitar "+esc((LG_WPI.find(x=>x[0]===k)||[0,k])[1].toLowerCase())+"</label>").join("")+"</div>";
     const all=Object.entries(c.wpOff).filter(([,v])=>v&&v.length);if(all.length)h+='<h4 class="wide lgh">Cambios guardados</h4><ul class="lgul">'+all.map(([k,v])=>{const [w,m]=k.split("|");return "<li>Week "+w.slice(1)+" · "+esc((LG_MODS.find(x=>x[0]===m)||[0,m])[1])+": sin "+v.map(x=>esc((LG_WPI.find(y=>y[0]===x)||[0,x])[1].toLowerCase())).join(", ")+"</li>"}).join("")+"</ul>"}
@@ -6388,7 +6394,7 @@ document.addEventListener("click",e=>{let b;
   if(e.target.closest("[data-lgmv]")){lgSaveMove();return}
   if(e.target.closest("[data-lgas]")){const a=LG.arts[LG.panel];if(!a)return;const n=$("lgAn").value.trim();if(!n){$("lgAn").focus();return}lgPutArt(Object.assign({},a,{n,ub:$("lgAu").value.trim().toUpperCase(),t:$("lgAt").value.trim()})).then(ok=>{if(ok)toast("Artículo guardado")});return}
   if((b=e.target.closest("[data-lgct]"))){LG.cfgTab=b.dataset.lgct;renderLgCfg();return}
-  if((b=e.target.closest("[data-lgsdel]"))){const i=+b.dataset.lgsdel;lgSetCfg(c=>{c.sedes=c.sedes.filter((x,j)=>j!==i)});return}
+  if((b=e.target.closest("[data-lgsdel]"))){const i=+b.dataset.lgsdel;lgSetCfg(c=>{const gone=c.sedes[i];c.sedes=c.sedes.filter((x,j)=>j!==i);if(gone)c.sedesDel=(c.sedesDel||[]).concat([gone.id])});return}
   if(e.target.closest("[data-lgsadd]")){const n=$("lgSnew").value.trim();if(!n){$("lgSnew").focus();return}lgSetCfg(c=>{let id="s-"+lgSlug(n);while(c.sedes.some(s=>s.id===id))id+="-2";c.sedes=c.sedes.concat([{id,n}])});return}});
 document.addEventListener("change",e=>{const t=e.target;let d;
   if(t.matches("[data-lgc]")){const k=t.dataset.lgc,v=t.type==="number"?Math.max(0,+t.value||0):t.value;lgSetCfg(c=>{if(k.startsWith("mini.")){c.mini=Object.assign({},c.mini);c.mini[k.slice(5)]=v}else c[k]=v});return}
@@ -6722,7 +6728,7 @@ function sbSub(v){
   const cap=t=>subOk(v,"1")?'<div class="sscap">'+t+"</div>":"";
   if(v==="registros")return ss(0,"Resumen")+ss(WALL,"Todos los registros",has?AR.length:null)+cap("Madrid")+wk(n=>({sm:has?weekItems(n).length:null}))+camps();
   if(v==="equipos")return cap("Madrid")+wk(n=>{let ok=false;try{ok=!!(S.rows.length&&weekComplete(n))}catch(e){}return {cl:ok?"ok":""}})+camps();
-  if(v==="horarios")return ss("sim","Simulador")+cap("Madrid")+wk(n=>{let ok=false;try{ok=!!(S.rows.length&&hWeekComplete(n))}catch(e){}return {cl:ok?"ok":""}})+camps().replace(/<div class="sscap">Institucionales<\/div>[\s\S]*$/,"");
+  if(v==="horarios")return ss("sim","Simulador")+cap("Madrid")+wk(n=>{let ok=false;try{ok=!!(S.rows.length&&hWeekComplete(n))}catch(e){}return {cl:ok?"ok":""}})+camps();
   if(v==="pagos")return ss("pagos","Pagos")+ss("dev","Devoluciones")+ss("can","Cancelaciones")+ss("ag","Agentes");
   return "";}
 function renderSide(){
