@@ -22,6 +22,7 @@ const CFG = {
   origins: env("CE_ALLOWED_ORIGINS", "").split(",").map(s => s.trim()).filter(Boolean),
   loginUrl: env("CE_LOGIN_URL", "/app/login.html"),
   homeUrl: env("CE_HOME_URL", "/app/inicio.html"),
+  islDomain: env("CE_ISL_DOMAIN", "islagency.com").toLowerCase(),
   supers: env("CE_SUPERADMINS", "").split(",").map(s => s.trim().toLowerCase()).filter(Boolean),
   zoho: {
     clientId: env("ZOHO_CLIENT_ID", ""), clientSecret: env("ZOHO_CLIENT_SECRET", ""), refreshToken: env("ZOHO_REFRESH_TOKEN", ""),
@@ -318,6 +319,14 @@ async function handle(req, res) {
     const now = Date.now();
     if (now - (S.s.zoho_checked_at || 0) <= CFG.zohoRecheckMin * 60000) return { ok: true };
     if (!zohoConfigured()) return { ok: false, msg: "El servidor no tiene configurada la conexión con Zoho CRM." };
+    /* usuario dado de alta solo en ISL: se busca su cuenta de Zoho por email y, si existe y está activa, se enlaza */
+    if (String(u.zoho_id || "").startsWith("isl:")) {
+      const list = await zohoActiveUsers(false).catch(() => null);
+      const z = list && list.find(x => x.email === String(u.email).toLowerCase());
+      if (!z) return { ok: false, msg: list ? "No tienes cuenta de Zoho CRM. Para entrar en Campus Experience hace falta. Habla con el administrador." : "No se ha podido comprobar tu usuario en Zoho CRM. Inténtalo en unos minutos." };
+      if (await st.users.byZoho(z.id)) return { ok: false, msg: "Tu cuenta de Zoho CRM ya está enlazada a otro usuario. Habla con el administrador." };
+      await st.users.update(u.id, { zoho_id: z.id, zoho_role: z.role, zoho_profile: z.profile }); u.zoho_id = z.id; await audit(u, "zoho_enlazado", z.email);
+    }
     const g = await zohoGate(u);
     if (!g.ok) { await st.sessions.update(S.s.id, { zoho_checked_at: 0 }); S.s.zoho_checked_at = 0; await audit(u, "campus_denegado_zoho", g.msg); return g; }
     await st.sessions.update(S.s.id, { zoho_checked_at: now }); S.s.zoho_checked_at = now;
@@ -414,6 +423,50 @@ async function handle(req, res) {
     if (!g.ok) return fail(res, 403, g.msg);
     await audit(U, "entrada_campus", g.degraded ? "Zoho sin respuesta: se usa la última comprobación" : "");
     return send(res, 200, { ok: true });
+  }
+
+
+  /* --- administración ISL (solo superadministradores) --- */
+  if (p.startsWith("/api/isl/admin/")) {
+    if (!isSuper(U)) return fail(res, 403, "Solo los superadministradores pueden hacer esto.");
+    const islUser = u => ({ id: u.id, email: u.email, name: u.name, active: !!u.active, depts: deptsOf(u), superAdmin: isSuper(u), campusAdmin: !!u.is_admin, zoho: String(u.zoho_id || "").startsWith("isl:") ? "sin" : (u.zoho_status || ""), mustChange: !!u.must_change, lastLogin: u.last_login || null, createdAt: u.created_at || null });
+    const cleanDepts = d => Array.isArray(d) ? DEPTS.map(x => x.k).filter(k => d.includes(k)) : [];
+    if (p === "/api/isl/admin/users" && M === "GET") return send(res, 200, { depts: DEPTS, users: (await st.users.all()).map(u => islUser(hydrate(u))).sort((a, b) => (b.active - a.active) || String(a.name).localeCompare(String(b.name), "es")) });
+    if (p === "/api/isl/admin/audit" && M === "GET") return send(res, 200, { items: await st.audit.list(Math.min(+url.searchParams.get("limit") || 200, 500)) });
+    if (p === "/api/isl/admin/users" && M === "POST") {
+      const b = await readBody(req, 20000);
+      const email = String(b.email || "").trim().toLowerCase(); const name = String(b.name || "").trim().slice(0, 120);
+      if (!EMAIL.test(email) || !email.endsWith("@" + CFG.islDomain)) return fail(res, 400, "El email tiene que ser de @" + CFG.islDomain + ".");
+      if (!name) return fail(res, 400, "Escribe el nombre y apellidos.");
+      if (await st.users.byEmail(email)) return fail(res, 409, "Ya hay un usuario con ese email.");
+      const prob = pwProblem(b.password); if (prob) return fail(res, 400, prob);
+      const depts = cleanDepts(b.depts);
+      const nu = hydrate(await st.users.insert({ email, name, zoho_id: "isl:" + crypto.randomBytes(6).toString("hex"), zoho_role: "", zoho_profile: "", pass_hash: await hashPw(b.password), is_admin: false, active: true, perms: JSON.stringify({ _isl: { depts } }), must_change: b.mustChange !== false, zoho_ok_at: 0, zoho_status: "" }));
+      await audit(U, "isl_usuario_creado", email + " · " + (depts.join(", ") || "sin departamentos"));
+      return send(res, 200, { user: islUser(nu) });
+    }
+    const mi = /^\/api\/isl\/admin\/users\/(\d+)$/.exec(p);
+    if (mi && M === "PATCH") {
+      const t = hydrate(await st.users.byId(mi[1])); if (!t) return fail(res, 404, "Usuario no encontrado");
+      const b = await readBody(req, 20000); const f = {}; const notes = []; let kick = false;
+      if (b.depts !== undefined) { const isl = Object.assign({}, t.islObj || {}, { depts: cleanDepts(b.depts) }); t.islObj = isl; f.perms = permsJson(t.permsObj, t); notes.push("departamentos: " + (isl.depts.join(", ") || "ninguno")); }
+      if (b.campusAdmin !== undefined) {
+        const admins = (await st.users.all()).filter(u => u.is_admin && u.active).length;
+        if (!b.campusAdmin && t.is_admin && admins <= 1) return fail(res, 400, "Tiene que quedar al menos un administrador de Campus.");
+        f.is_admin = !!b.campusAdmin; notes.push("administrador de Campus: " + (f.is_admin ? "sí" : "no"));
+      }
+      if (b.active !== undefined) {
+        if (!b.active && t.id === U.id) return fail(res, 400, "No puedes desactivar tu propia cuenta.");
+        f.active = !!b.active; if (!f.active) kick = true; notes.push(f.active ? "activado" : "desactivado");
+      }
+      if (b.password !== undefined) { const prob = pwProblem(b.password); if (prob) return fail(res, 400, prob); f.pass_hash = await hashPw(b.password); f.must_change = b.mustChange !== false; if (t.id !== U.id) kick = true; notes.push("contraseña nueva"); }
+      if (!Object.keys(f).length) return fail(res, 400, "No hay nada que cambiar.");
+      f.ver = (+t.ver || 0) + 1;
+      await st.users.update(t.id, f); if (kick) await st.sessions.removeByUser(t.id);
+      await audit(U, "isl_usuario_cambiado", t.email + " · " + notes.join(" · "));
+      return send(res, 200, { user: islUser(hydrate(await st.users.byId(t.id))) });
+    }
+    return fail(res, 404, "No encontrado");
   }
 
   /* --- a partir de aquí, Campus Experience --- */

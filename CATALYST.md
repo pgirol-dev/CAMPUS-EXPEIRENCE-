@@ -207,6 +207,12 @@ Catalyst publica primero en el entorno de Development. Desde la consola desplega
 - **Departamentos:** se guardan en la columna `perms` de CEUsers, clave `_isl` (`{"depts":["campus"]}`), sin tocar las tablas. Sin `_isl`, la persona tiene Campus Experience (así siguen los usuarios que ya existían). Al cambiar los permisos de Campus, `_isl` se conserva.
 - **Rutas nuevas:** `GET /api/isl/me` (nombre, superadministrador y departamentos; para Campus, las inscripciones de la caché del dashboard) y `POST /api/isl/campus` (entrada a Campus: departamento + Zoho activo; queda en el registro como `entrada_campus`).
 - **Campus Experience:** `acl.js` y todas las rutas de Campus comprueban el departamento y Zoho (cada `ZOHO_RECHECK_MIN`). Si falla, `acl.js` manda a `inicio.html?aviso=…` y la API responde 403; la sesión ISL sigue abierta.
+- **Administración ISL** (solo superadministradores, en `inicio.html`: «Usuarios ISL» y «Registro de actividad»):
+  - `GET /api/isl/admin/users`: todas las personas con sus departamentos, administrador de Campus, estado de Zoho y último acceso.
+  - `POST /api/isl/admin/users`: alta con nombre, email de `@CE_ISL_DOMAIN` (por defecto islagency.com), contraseña provisional y departamentos. No necesita Zoho: se guarda `zoho_id = "isl:…"` y, al entrar en Campus, se busca su cuenta de Zoho por email y se enlaza si está activa.
+  - `PATCH /api/isl/admin/users/:id`: departamentos, administrador de Campus (`is_admin`), activo y contraseña nueva (cierra sus sesiones). No deja desactivarse a uno mismo ni quitar el último administrador de Campus.
+  - `GET /api/isl/admin/audit`: últimas acciones (máx. 300).
+  - Los permisos por apartado de Campus siguen en Campus (Sistema › Usuarios y accesos). En el servidor propio, la administración ISL aún no está.
 - **Dashboard (`dashboard_api`):** pide el departamento Campus y haber pasado por la entrada a Campus en las últimas 12 horas; si no, manda a `CE_CAMPUS_URL` (por defecto `/app/index.html`).
 
 ## Seguridad: resumen

@@ -473,6 +473,9 @@ async function handle(req, res) {
     return send(res, 200, { ok: true });
   }
 
+  /* administración ISL: de momento solo en la versión de Catalyst */
+  if (p.startsWith("/api/isl/admin/")) return fail(res, 501, "La administración ISL solo está en la versión de Zoho Catalyst. Aquí, usa Sistema › Usuarios y accesos.");
+
   /* --- a partir de aquí, Campus Experience --- */
   { const g = await campusGate(S); if (!g.ok) return fail(res, 403, g.msg); }
   if (p === "/api/me" && M === "GET") return send(res, 200, aclFor(U));
