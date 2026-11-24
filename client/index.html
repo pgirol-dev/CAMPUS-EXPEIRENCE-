@@ -5836,16 +5836,16 @@ function ingRows(){const byId={};(S.allRows||[]).forEach(r=>{byId[String(r.id)]=
     const o={i,w,mvh,r,deal:dm?dm[1]:null,camp,player:i.cf_jugador||i.cf_player_name||(r&&r.name)||"",fam:i.customer_name||"",amt:r2(i.total)};
     if(o.deal)(perDeal[o.deal]=perDeal[o.deal]||[]).push(o);return o});
   Object.values(perDeal).forEach(a=>{a.sort((x,y)=>(x.w?+x.w.d:0)-(y.w?+y.w.d:0));a.forEach((o,k)=>{o.n=k+1;o.of=a.length})});
-  /* devoluciones (Cuentas): cada reembolso de una nota de crédito de Books cuenta en negativo el día en que se hizo el reembolso,
-     en el mismo banco que su factura. Solo notas de crédito de la campaña 2027 con reembolso registrado. */
+  /* devoluciones (Cuentas): cada nota de crédito (rectificativa) de Books cuenta en negativo, por su importe, el día en que se creó,
+     en el mismo banco que su factura. Solo notas de crédito de la campaña 2027. */
   let cnDeal={};try{const X=accIndex();Object.entries(X.cnByDeal||{}).forEach(([id,cs])=>cs.forEach(c=>{cnDeal[c._org+":"+c.creditnote_id]=id}))}catch(e){}
-  (CN.list||[]).filter(c=>c.status!=="void"&&c.status!=="draft"&&(is2027Inv(c.invoice_number)||(c.applied||[]).some(a=>is2027Inv(a.invoice_number))||cnDeal[c._org+":"+c.creditnote_id])).forEach(c=>{
+  (CN.list||[]).filter(c=>c.status!=="void"&&c.status!=="draft"&&(c._org!==BOOKS_ORG_AND||/2027/.test(String(c.creditnote_number||""))||is2027Inv(c.invoice_number)||(c.applied||[]).some(a=>is2027Inv(a.invoice_number))||cnDeal[c._org+":"+c.creditnote_id])).forEach(c=>{
     const id=cnDeal[c._org+":"+c.creditnote_id]||null;const r=id?(byId[id]||accDeals().find(x=>String(x.id)===id)||null):null;
     const invN=c.invoice_number||((c.applied||[])[0]||{}).invoice_number||"";const ser=invSeries(invN);
     const camp=r?(r.camp||"mad"):c._org===BOOKS_ORG_AND?"and":ser===INV_PREFIX?"mad":(ING_SER[ser.replace(/27$/,"")]||"");
-    /* con reembolso registrado en Books: el día del reembolso; sin él: el día en que se creó la rectificativa (hora de España) */
+    /* cada devolución cuenta el día en que se creó la rectificativa (nota de crédito) en Books, hora de España (decisión de Pau, 24/11) */
     const cday=(()=>{const t=c.created_time?new Date(c.created_time):null;if(t&&!isNaN(t)){const L=ingLocal(t);return ingKey(L.y,L.m,L.d)}return c.date})();
-    const rf=Array.isArray(c.refunds)&&c.refunds.length?c.refunds.map(f=>({date:f.date,amount:+f.amount,ok:true})):[{date:cday,amount:+c.total,ok:false}];
+    const rf=[{date:cday,amount:+c.total,ok:true}];
     rf.forEach((f,k)=>{if(!/^\d{4}-\d{2}-\d{2}/.test(String(f.date||""))||!(f.amount>0))return;const day=String(f.date).slice(0,10);
       out.push({i:null,cn:c,nr:!f.ok,rk:c.creditnote_id+"#"+k,num:c.creditnote_number,inv:invN,w:{d:new Date(day+"T12:00:00Z"),day,orig:day,hm:"",late:false,exact:false,dev:true},mvh:[],r,deal:id,camp,player:c.cf_jugador||(r&&r.name)||"",fam:c.customer_name||"",amt:-r2(f.amount),cp:"Devolución"})})});
   out.forEach(o=>{if(o.cn)return;o.num=o.i.invoice_number;o.cp=!o.deal?(Math.abs(o.amt-50)<.01?"Reserva":"Pago"):(o.of===1&&o.r&&o.r.d&&Math.abs(r2(o.r.d.Total)-o.amt)<.01)?"Pago completo":(["1er","2º","3er"][o.n-1]||o.n+"º")+" pago"});
