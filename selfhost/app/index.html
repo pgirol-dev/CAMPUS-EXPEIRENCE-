@@ -5830,8 +5830,9 @@ function ingRows(){const byId={};(S.allRows||[]).forEach(r=>{byId[String(r.id)]=
     const id=cnDeal[c._org+":"+c.creditnote_id]||null;const r=id?(byId[id]||accDeals().find(x=>String(x.id)===id)||null):null;
     const invN=c.invoice_number||((c.applied||[])[0]||{}).invoice_number||"";const ser=invSeries(invN);
     const camp=r?(r.camp||"mad"):c._org===BOOKS_ORG_AND?"and":ser===INV_PREFIX?"mad":(ING_SER[ser.replace(/27$/,"")]||"");
-    /* con reembolso registrado en Books: el día del reembolso; sin él: la fecha de la nota de crédito, avisando */
-    const rf=Array.isArray(c.refunds)&&c.refunds.length?c.refunds.map(f=>({date:f.date,amount:+f.amount,ok:true})):[{date:c.date,amount:+c.total,ok:false}];
+    /* con reembolso registrado en Books: el día del reembolso; sin él: el día en que se creó la rectificativa (hora de España) */
+    const cday=(()=>{const t=c.created_time?new Date(c.created_time):null;if(t&&!isNaN(t)){const L=ingLocal(t);return ingKey(L.y,L.m,L.d)}return c.date})();
+    const rf=Array.isArray(c.refunds)&&c.refunds.length?c.refunds.map(f=>({date:f.date,amount:+f.amount,ok:true})):[{date:cday,amount:+c.total,ok:false}];
     rf.forEach((f,k)=>{if(!/^\d{4}-\d{2}-\d{2}/.test(String(f.date||""))||!(f.amount>0))return;const day=String(f.date).slice(0,10);
       out.push({i:null,cn:c,nr:!f.ok,rk:c.creditnote_id+"#"+k,num:c.creditnote_number,inv:invN,w:{d:new Date(day+"T12:00:00Z"),day,orig:day,hm:"",late:false,exact:false,dev:true},mvh:[],r,deal:id,camp,player:c.cf_jugador||(r&&r.name)||"",fam:c.customer_name||"",amt:-r2(f.amount),cp:"Devolución"})})});
   out.forEach(o=>{if(o.cn)return;o.num=o.i.invoice_number;o.cp=!o.deal?(Math.abs(o.amt-50)<.01?"Reserva":"Pago"):(o.of===1&&o.r&&o.r.d&&Math.abs(r2(o.r.d.Total)-o.amt)<.01)?"Pago completo":(["1er","2º","3er"][o.n-1]||o.n+"º")+" pago"});
@@ -5892,8 +5893,8 @@ function renderIngresos(){
     if(d.st==="rev"&&d.chg)h+='<div class="ingrev">Ha cambiado desde que se cuadró: antes '+eur(d.chg.was)+", ahora "+eur(d.total)+(d.chg.add.length?" · nuevas: "+esc(d.chg.add.join(", ")):"")+(d.chg.del.length?" · ya no están: "+esc(d.chg.del.join(", ")):"")+"</div>";
     h+='<div class="ingp">'+shown.map(o=>{const c=campById(o.camp);const fl=[];
         if(o.cn)return '<div class="ingr ingdev"><span class="hr" title="Día del reembolso (Books no guarda la hora)">—</span><span class="who"'+(o.r?' data-ingpid="'+esc(o.r.id)+'"':"")+'><b>'+esc(o.player||o.fam||"—")+"</b><small>"+esc(o.player&&o.fam&&o.fam!==o.player?o.fam:(o.cn.email||""))+"</small></span>"+
-          '<span class="cmp">'+(c?'<span class="ctag ct-'+c.kind+'">'+esc(c.n)+"</span>":"")+'</span><span class="cp">Devolución'+(o.inv?"<small>de "+esc(o.inv)+"</small>":"")+"</span>"+
-          '<a class="ichip cn" href="'+cnUrl(o.cn)+'" target="_blank" rel="noopener" title="Abrir la nota de crédito en Zoho Books">'+esc(o.num)+"</a>"+'<span class="am neg">'+eur(o.amt)+"</span><span></span>"+(o.nr?'<span class="fl soft">Books no tiene registrado el reembolso de esta nota de crédito: va en la fecha de la nota de crédito</span>':"")+"</div>";
+          '<span class="cmp">'+(c?'<span class="ctag ct-'+c.kind+'">'+esc(c.n)+"</span>":"")+'</span><span class="cp"'+(o.nr?' title="Books no tiene registrado el reembolso: cuenta el día en que se creó la rectificativa"':"")+'>Devolución'+(o.inv?"<small>de "+esc(o.inv)+(o.nr?" · fecha de creación":"")+"</small>":(o.nr?"<small>fecha de creación</small>":""))+"</span>"+
+          '<a class="ichip cn" href="'+cnUrl(o.cn)+'" target="_blank" rel="noopener" title="Abrir la nota de crédito en Zoho Books">'+esc(o.num)+"</a>"+'<span class="am neg">'+eur(o.amt)+"</span><span></span></div>";
         if(o.deal&&!o.r)fl.push("La inscripción no está activa en el software (baja, devolución o borrada)");
         if(+o.i.balance>0)fl.push("Books no tiene registrado el cobro de esta factura (pendiente "+eur(o.i.balance)+")");
         const soft=[];if(o.w.late&&!o.w.moved)soft.push("Pagado después de las 23:00: cuenta en este día");
