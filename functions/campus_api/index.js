@@ -415,8 +415,15 @@ async function handle(req, res) {
   /* --- capa ISL: inicio con los departamentos de la persona --- */
   if (p === "/api/isl/me" && M === "GET") {
     const mine = deptsOf(U); const sup = isSuper(U);
-    let insc = null; if (mine.includes("campus")) { try { const d = (await st.docs.list("dash")).data; const k = d && Array.isArray(d.kpis) ? d.kpis.find(x => x.metric === "n") : null; if (k) insc = k.value; } catch (e) {} }
-    return send(res, 200, { name: U.name, email: U.email, superAdmin: sup, depts: DEPTS.filter(d => mine.includes(d.k)).map(d => Object.assign({}, d, d.k === "campus" ? { stats: { inscripciones: insc } } : {})) });
+    /* rápido: sin leer nada más del Data Store (las cifras van aparte, en /api/isl/stats) */
+    return send(res, 200, { name: U.name, email: U.email, superAdmin: sup, depts: DEPTS.filter(d => mine.includes(d.k)) });
+  }
+  if (p === "/api/isl/stats" && M === "GET") {
+    if (!deptsOf(U).includes("campus")) return send(res, 200, {});
+    if (MEM.stats && Date.now() - MEM.stats.t < 10 * 60000) return send(res, 200, MEM.stats.v);
+    let insc = null; try { const d = (await st.docs.list("dash")).data; const k = d && Array.isArray(d.kpis) ? d.kpis.find(x => x.metric === "n") : null; if (k) insc = k.value; } catch (e) {}
+    MEM.stats = { t: Date.now(), v: { campus: { inscripciones: insc } } };
+    return send(res, 200, MEM.stats.v);
   }
   if (p === "/api/isl/campus" && M === "POST") {
     const g = await campusGate(S);

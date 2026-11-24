@@ -205,7 +205,7 @@ Catalyst publica primero en el entorno de Development. Desde la consola desplega
 ## Capa ISL (24/11)
 - **Acceso:** `POST /api/login` ya no consulta Zoho. La sesión empieza con `zoho_checked_at = 0`.
 - **Departamentos:** se guardan en la columna `perms` de CEUsers, clave `_isl` (`{"depts":["campus"]}`), sin tocar las tablas. Sin `_isl`, la persona tiene Campus Experience (así siguen los usuarios que ya existían). Al cambiar los permisos de Campus, `_isl` se conserva.
-- **Rutas nuevas:** `GET /api/isl/me` (nombre, superadministrador y departamentos; para Campus, las inscripciones de la caché del dashboard) y `POST /api/isl/campus` (entrada a Campus: departamento + Zoho activo; queda en el registro como `entrada_campus`).
+- **Rutas nuevas:** `GET /api/isl/me` (nombre, superadministrador y departamentos; rápida, no lee nada más), `GET /api/isl/stats` (inscripciones de Campus desde la caché del dashboard; se guarda 10 min en memoria) y `POST /api/isl/campus` (entrada a Campus: departamento + Zoho activo; queda en el registro como `entrada_campus`).
 - **Campus Experience:** `acl.js` y todas las rutas de Campus comprueban el departamento y Zoho (cada `ZOHO_RECHECK_MIN`). Si falla, `acl.js` manda a `inicio.html?aviso=…` y la API responde 403; la sesión ISL sigue abierta.
 - **Administración ISL** (solo superadministradores, en `inicio.html`: «Usuarios ISL» y «Registro de actividad»):
   - `GET /api/isl/admin/users`: todas las personas con sus departamentos, administrador de Campus, estado de Zoho y último acceso.

@@ -465,8 +465,9 @@ async function handle(req, res) {
   /* --- capa ISL: inicio con los departamentos de la persona --- */
   if (p === "/api/isl/me" && M === "GET") {
     const mine = deptsOf(U);
-    return send(res, 200, { name: U.name, email: U.email, superAdmin: isSuper(U), depts: DEPTS.filter(d => mine.includes(d.k)).map(d => Object.assign({}, d, d.k === "campus" ? { stats: { inscripciones: null } } : {})) });
+    return send(res, 200, { name: U.name, email: U.email, superAdmin: isSuper(U), depts: DEPTS.filter(d => mine.includes(d.k)) });
   }
+  if (p === "/api/isl/stats" && M === "GET") return send(res, 200, {});
   if (p === "/api/isl/campus" && M === "POST") {
     const g = await campusGate(S); if (!g.ok) return fail(res, 403, g.msg);
     audit(U, "entrada_campus", g.degraded ? "Zoho sin respuesta: se usa la última comprobación" : "", ip);

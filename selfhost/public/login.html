@@ -99,6 +99,7 @@ input:autofill{background:transparent}
 </div>
 <script>
 (function(){
+  try{localStorage.removeItem("isl_inicio_v1")}catch(e){}
   const $=id=>document.getElementById(id);
   const H={"Content-Type":"application/json","X-CE":"1"};
   const BASE=window.CE_API_BASE||"",HOME=window.CE_HOME_URL||"/inicio";

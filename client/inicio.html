@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="image" href="isl/campus.jpg" fetchpriority="high">
 <link rel="preload" as="image" href="isl/campus-texto.png">
+<link rel="preload" as="image" href="isl/laliga-select.jpg">
 <link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,700..900;1,62..125,700..900&family=IBM+Plex+Mono:wght@400;500&family=Permanent+Marker&family=Instrument+Serif:ital@1&display=swap">
 <style>
 /* Inicio ISL: departamentos de la persona. Diseño de referencia: design/isl/propuesta_capa_isl.html */
@@ -209,17 +210,25 @@ body.sup .top nav .adm-l{display:inline}
     return '<section class="dep c-'+d.k+'" aria-label="'+esc(d.n)+'"><div class="img'+(I.img?" ph":"")+'"'+(I.img?' style="background-image:url('+I.img+')'+(I.lq?',url(data:image/jpeg;base64,'+I.lq+')':"")+';background-position:'+I.pos+'"':"")+'>'+(I.bg||"")+I.mark+'</div>'
       +'<div class="txt"><span class="mono state"><i></i>'+(d.live?"En uso":"Próximamente")+"</span>"+I.title+"<p>"+esc(I.desc)+"</p>"+stats
       +'<div class="end"><span class="mono">'+esc(I.note)+'</span><button type="button" class="oval" data-k="'+d.k+'"'+(d.live?"":" disabled")+">Entrar"+OVAL+"</button></div></div></section>"};
+  /* el inicio se pinta al momento con lo último que se vio en este navegador y luego se confirma con el servidor */
+  const CK="isl_inicio_v1";let lastDeps="";
+  const paint=j=>{const first=String(j.name||"").trim().split(/\s+/)[0]||"";
+    $("nombre").textContent=first;$("whoName").textContent=j.name||j.email||"";
+    $("av").textContent=String(j.name||"?").split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0].toUpperCase()).join("");
+    $("role").textContent=j.superAdmin?"Superadministrador":"";document.body.classList.toggle("sup",!!j.superAdmin);
+    const ds=j.depts||[];const key=JSON.stringify(ds.map(d=>d.k+(d.live?1:0))+"|"+(j.stats?JSON.stringify(j.stats):""));
+    if(key!==lastDeps){lastDeps=key;$("deps").innerHTML=ds.map(d=>card(Object.assign({},d,d.k==="campus"&&j.stats?{stats:j.stats.campus}:{}))).join("");$("empty").hidden=ds.length>0}};
+  let cached=null;try{cached=JSON.parse(localStorage.getItem(CK)||"null")}catch(e){}
+  if(cached&&cached.depts)paint(cached);
   fetch(BASE+"/api/isl/me",{credentials:"same-origin"}).then(async r=>{
-    if(r.status===401){location.replace(LOGIN);return}
+    if(r.status===401){try{localStorage.removeItem(CK)}catch(e){}location.replace(LOGIN);return}
     const j=await r.json().catch(()=>({}));
     if(r.status===403&&/contraseña/.test(j.error||"")){location.replace(LOGIN+"?cambio=1");return}
     if(!r.ok)throw new Error(j.error||"No se ha podido cargar el inicio.");
-    const first=String(j.name||"").trim().split(/\s+/)[0]||"";
-    $("nombre").textContent=first;$("whoName").textContent=j.name||j.email||"";
-    $("av").textContent=String(j.name||"?").split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0].toUpperCase()).join("");
-    $("role").textContent=j.superAdmin?"Superadministrador":"";
-    if(j.superAdmin){document.body.classList.add("sup");const hv=location.hash.slice(1);if(hv==="users"||hv==="audit")show(hv)}
-    const ds=j.depts||[];$("deps").innerHTML=ds.map(card).join("");$("empty").hidden=ds.length>0;
+    if(cached&&cached.email===j.email&&cached.stats)j.stats=cached.stats;
+    paint(j);try{localStorage.setItem(CK,JSON.stringify(j))}catch(e){}
+    if(j.superAdmin){const hv=location.hash.slice(1);if(hv==="users"||hv==="audit")show(hv)}
+    if((j.depts||[]).some(d=>d.k==="campus"))fetch(BASE+"/api/isl/stats",{credentials:"same-origin"}).then(x=>x.ok?x.json():null).then(st=>{if(st&&st.campus){j.stats=st;paint(j);try{localStorage.setItem(CK,JSON.stringify(j))}catch(e){}}}).catch(()=>{});
   }).catch(e=>{$("avisoTx").textContent=e.message;$("aviso").hidden=false});
   $("deps").addEventListener("click",async e=>{const b=e.target.closest("button.oval");if(!b||b.disabled)return;
     if(b.dataset.k!=="campus")return;
@@ -276,7 +285,7 @@ body.sup .top nav .adm-l{display:inline}
   const ACT={login:"Ha entrado",login_fallido:"Acceso fallido",entrada_campus:"Ha entrado en Campus",campus_denegado_zoho:"Campus denegado (Zoho)",zoho_enlazado:"Cuenta de Zoho enlazada",isl_usuario_creado:"Usuario ISL creado",isl_usuario_cambiado:"Usuario ISL cambiado",usuario_creado:"Usuario creado (Campus)",usuario_borrado:"Usuario borrado",cambio_contraseña:"Ha cambiado su contraseña"};
   async function loadAudit(){$("auList").innerHTML='<p class="mono" style="color:var(--ink2)">Cargando…</p>';try{const j=await api("GET","/api/isl/admin/audit?limit=300");
     $("auList").innerHTML=(j.items||[]).map(a=>'<div class="au"><span>'+fmt(a.ts)+"</span><span>"+esc(a.email||"—")+"</span><span><b>"+esc(ACT[a.action]||String(a.action||"").replace(/_/g," "))+"</b>"+(a.detail?" · "+esc(a.detail):"")+"</span></div>").join("")||'<p class="note">Todavía no hay actividad.</p>'}catch(e){if(e.message)$("auList").innerHTML='<p class="msg">'+esc(e.message)+"</p>"}}
-  $("bOut").addEventListener("click",async()=>{try{await fetch(BASE+"/api/logout",{method:"POST",headers:H,credentials:"same-origin",body:"{}"})}catch(e){}location.replace(LOGIN)});
+  $("bOut").addEventListener("click",async()=>{try{localStorage.removeItem(CK)}catch(e){}try{await fetch(BASE+"/api/logout",{method:"POST",headers:H,credentials:"same-origin",body:"{}"})}catch(e){}location.replace(LOGIN)});
 })();
 </script>
 </body>
