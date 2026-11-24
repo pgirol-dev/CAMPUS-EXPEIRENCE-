@@ -741,4 +741,4 @@ Se asignan automáticamente en este orden, un equipo por nombre y sin repetir de
   - **Facturas:** aún no hay. Se espera la serie como los nacionales (YEP27.nn / ARG27.nn); ya se reconoce. Si es otra, se ajusta cuando se creen.
   - El «Semana 1» del producto solo afecta a las fechas; se mostrarán las fechas del campus (28-30 dic).
   - El dashboard de registros (rama `institucionales`, hecha aparte) está revisado: lee `Ubicacion_Institucionales` = Yepes / Argés con el mismo filtro de fases y año, y cuenta la equipación Black.
-- 24/11: **Diseño propio para los institucionales** (Pau): tarjetas negras con el filo rosa arriba y la esquina rayada (identidad de la equipación Black), distintas de Madrid (gris) y de los nacionales (contorno). Igual en Registros, Equipos, Horarios e Incidencias, en tema claro y oscuro.
+- 24/11: **Diseño propio para los institucionales** (Pau; suavizado a petición suya): fondo algo más oscuro que el resto, filo fino arriba y esquina rayada (guiño a la equipación Black), distintas de Madrid (gris con número rosa) y de los nacionales (contorno). Igual en Registros, Equipos, Horarios e Incidencias, en tema claro y oscuro.
