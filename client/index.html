@@ -5921,7 +5921,8 @@ function renderIngresos(){
           '<span class="am">'+eur(o.amt)+"</span>"+'<span>'+(ed?'<button type="button" class="ingmvb" data-ingmv="'+esc(o.i.invoice_id)+'" aria-expanded="'+mvOpen+'" title="Mover este cobro a otro día">Mover</button>':"")+"</span>"+
           (mvOpen?'<span class="ingmvf">Mover al día <input type="date" data-ingmvd="'+esc(o.i.invoice_id)+'" value="'+o.w.day+'" aria-label="Nuevo día del cobro">'+(o.w.moved?'<button type="button" class="ingmvb" data-ingmvback="'+esc(o.i.invoice_id)+'">Volver al '+esc(fmtS(o.w.orig))+"</button>":"")+'<button type="button" class="ingmvb" data-ingmv="'+esc(o.i.invoice_id)+'">Cerrar</button></span>':"")+
           (hist.length?'<span class="fl soft">'+esc(hist.join(" · "))+"</span>":"")+(fl.length?'<span class="fl">'+esc(fl.join(" · "))+"</span>":"")+(soft.length?'<span class="fl soft">'+esc(soft.join(" · "))+"</span>":"")+"</div>"}).join("")+"</div></div>"});
-  h+='<p class="ingnote">El día de la plataforma va de las 23:00 del día anterior a las 22:59 (hora de España). La hora sale de la referencia de cada factura; «≈» indica hora aproximada.</p>';
+  const nDev=R.filter(o=>o.cn).length,nDevB=R.filter(o=>o.cn&&ingBankOf(o)===ING.bank).length;
+  h+='<p class="ingnote">El día de la plataforma va de las 23:00 del día anterior a las 22:59 (hora de España). La hora sale de la referencia de cada factura; «≈» indica hora aproximada. '+(CN.list?"Devoluciones leídas de Books: "+nDev+(nDev!==nDevB?" ("+nDevB+" en este banco)":"")+".":"Devoluciones: leyendo Zoho Books…")+'</p>';
   $("ingList").innerHTML=h;
 }
 async function ingSave(day,patch,msg){if(!S.db){toast("No se puede guardar en esta vista");return}
