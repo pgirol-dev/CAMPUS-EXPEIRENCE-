@@ -12,6 +12,13 @@ Versión del dashboard que antes vivía en claude.ai, ahora dentro del software 
 - **Botón «Actualizar»:** `POST /server/dashboard_api/api/dashboard/refresh` (como mucho una lectura de Zoho por minuto). Queda en el registro de actividad.
 - Atención al público ya no forma parte del dashboard (está en el software operativo).
 
+## Institucionales (desde el 24 nov)
+- **Municipios abiertos:** Yepes y Argés (`INS` en `functions/dashboard_api/dashboard.js` y en `ce_engine.js`; `OPENI` en `template_natv.html`). Para abrir otro municipio, añadirlo en los tres sitios.
+- **De dónde salen:** inscripciones con pago con `Ubicacion_Institucionales` = «Yepes» / «Argés» (no tienen `Ubicacion`). Productos «Campus Experience ONE Media Jornada <municipio>». Solo media jornada.
+- **Equipación:** la incluida es la **Black** (1 por semana contratada), y el uniforme comprado aparte también cuenta como Black. La Black aparece en Equipaciones y en Storage solo donde hay alguna.
+- **Dónde salen:** vista «Institucionales» (resumen y tarjeta por municipio, que abre su panel completo como una sede nacional), tarjeta de la Portada, totales de la Portada, ritmo general (origen «Institucionales», con marca de apertura el 24 nov), mapamundi y Storage (grupo «Institucionales» con sus municipios).
+- Datos: `ins_sedes` (objeto por municipio) y `storage.ins`.
+
 ## Mapamundi (Portada, desde el 20 nov)
 - Apartado «02 · De dónde son los jugadores», debajo del ritmo de inscripción. Suma Madrid, sedes nacionales e institucionales.
 - **País de residencia:** `Contact_Name.Mailing_Country` normalizado a un nombre en español (`paisOf` y `PAIS_AL` en `ce_engine.js`: «Estados Unidos de América» → «Estados Unidos», etc.). Sin país → «España» si la provincia es española; si no, `ND`. Sale en `dims` como `pais`; `check()` comprueba que suma el total.
@@ -71,7 +78,7 @@ Después de cualquier cambio: subir a GitHub (`main`). Se despliega solo en Cata
 - Solo inscripciones con pago: se excluyen Unpaid, Cancelled, Refund, Trash y Reservation Payment Completed. Layout ISL - Real Madrid y Ano_Campus = 2027.
 - Modalidad y semanas: de las líneas del subformulario «Campus y servicios extra», no de los campos Weeks/Tipo_Modalidad.
 - Sedes nacionales: cada inscripción es una semana; los productos llevan la ciudad al final («… Jornada Completa Andorra»).
-- Sedes: abiertas Andorra, Valencia, Málaga, Alicante (desde el 11 nov), Torrevieja y Almería (desde el 13 nov). Ya no queda ninguna «Próximamente» (la lista `OPEN` está en `template_natv.html`). Para abrir una sede, añadirla a `OPEN` y regenerar.
+- Sedes: abiertas Andorra, Valencia, Málaga, Alicante (desde el 11 nov), Torrevieja y Almería (desde el 13 nov). Institucionales abiertos: Yepes y Argés (desde el 24 nov). Ya no queda ninguna «Próximamente» (la lista `OPEN` está en `template_natv.html`). Para abrir una sede, añadirla a `OPEN` y regenerar.
 
 ## Por qué está separado del resto del software
 El software operativo se edita a menudo partiendo de copias propias (el artefacto «Operativa Campus Experience»). Dos veces (11 y 12 nov) una publicación borró el dashboard porque vivía dentro de `index.html` y de `campus_api`. Desde el 12 nov:

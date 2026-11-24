@@ -20,9 +20,9 @@
 *{box-sizing:border-box}html{scroll-behavior:smooth}
 body{margin:0;background:var(--color-bg);color:var(--color-fg);font:14px/1.45 var(--font)}
 
-:root{--kw:#dfe5f3;--kl:#7cc4ec;--kp:#3faa6c}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--kw:#eef2fd;--kl:#7cc4ec;--kp:#3faa6c}}
-:root[data-theme="dark"]{--kw:#eef2fd;--kl:#7cc4ec;--kp:#3faa6c}
+:root{--kw:#dfe5f3;--kl:#7cc4ec;--kp:#3faa6c;--kk:#1d2030}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--kw:#eef2fd;--kl:#7cc4ec;--kp:#3faa6c;--kk:#5b6178}}
+:root[data-theme="dark"]{--kw:#eef2fd;--kl:#7cc4ec;--kp:#3faa6c;--kk:#5b6178}
 .ce .donutbox{flex-direction:column;align-items:stretch;gap:.6rem}.ce .donutbox svg{align-self:center}
 .ce .leg{flex:none;width:100%}
 .ce .kwhite{box-shadow:inset 0 0 0 1.5px var(--navy)}
@@ -500,6 +500,7 @@ body{margin:0;background:var(--color-bg);color:var(--color-fg);font:14px/1.45 va
 .ce .xt-bar{margin-top:auto;height:6px;border-radius:3px;background:color-mix(in srgb,var(--tileink) 12%,transparent);overflow:hidden}
 .ce .xt-bar i{display:block;height:100%;border-radius:3px;background:var(--pc)}
 .ce .xt-grid.kz-sum{margin-bottom:14px;grid-template-columns:repeat(3,1fr)}@media(max-width:700px){.ce .xt-grid.kz-sum{grid-template-columns:1fr}}
+.ce .kblk{color:#fff!important}
 .ce .kz-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
 .ce .kz-band .kz-split{grid-column:1/-1;display:flex;height:34px;border-radius:8px;overflow:hidden;gap:3px;margin-top:12px}
 .ce .kz-band .kz-split div{display:flex;align-items:center;justify-content:center;font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-size:1.2rem;color:#0f2145;min-width:0}
@@ -972,7 +973,7 @@ body{margin:0;background:var(--color-bg);color:var(--color-fg);font:14px/1.45 va
 </svg><svg class="grain" aria-hidden="true"><filter id="gr"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 .9 0"/></filter><rect width="100%" height="100%" filter="url(#gr)"/></svg><span class="pill ok tag live-tag" title="Datos en directo: se actualiza cada hora">Live</span>
           <div class="semnum"><b>0</b><span>Registros</span></div></div>
         <div class="sbody"><h3>Nacionales</h3><span class="go" aria-hidden="true">→</span></div></button>
-      <button type="button" class="card sede soon" data-go="ins">
+      <button type="button" class="card sede" data-go="ins">
         <div class="art"><svg viewBox="0 0 600 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
 <defs>
 <linearGradient id="i-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0e172b"/><stop offset=".35" stop-color="#18294f"/><stop offset=".62" stop-color="#e8446b"/><stop offset=".8" stop-color="#f6b8c8"/><stop offset="1" stop-color="#f2f2f2"/></linearGradient>
@@ -997,7 +998,7 @@ body{margin:0;background:var(--color-bg);color:var(--color-fg);font:14px/1.45 va
 <g fill="#f2f2f2" opacity=".05"><path d="M-20 300 L110 208 H190 L120 300Z"/><path d="M200 300 L220 208 H300 L290 300Z"/><path d="M380 300 L370 208 H450 L480 300Z"/></g>
 <g fill="none" stroke="#f2f2f2" stroke-width="2.2" opacity=".6"><path d="M110 208 H490 L620 300 M110 208 L-20 300"/><path d="M300 208 V300"/><ellipse cx="300" cy="258" rx="62" ry="22"/><path d="M226 208 L214 232 H386 L374 208"/></g>
 <g filter="url(#i-b1)" fill="#f2f2f2"><rect x="396" y="200" width="60" height="2.2" opacity=".5"/></g>
-</svg><svg class="grain" aria-hidden="true"><filter id="gr"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 .9 0"/></filter><rect width="100%" height="100%" filter="url(#gr)"/></svg><span class="pill gray tag">Coming soon</span>
+</svg><svg class="grain" aria-hidden="true"><filter id="gr"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 .9 0"/></filter><rect width="100%" height="100%" filter="url(#gr)"/></svg><span class="pill ok tag live-tag" title="Datos en directo">Live</span>
           <div class="semnum"><b>0</b><span>Registros</span></div></div>
         <div class="sbody"><h3>Institucionales</h3><span class="go" aria-hidden="true">→</span></div></button>
     </div>
@@ -1164,7 +1165,7 @@ body{margin:0;background:var(--color-bg);color:var(--color-fg);font:14px/1.45 va
   <section class="blk" style="margin-top:0">
     <div class="bh"><span class="num">01</span><h2>Equipaciones necesarias</h2><p>Elige qué quieres ver: el total, una sección o una sede concreta</p></div>
     <div class="stp" id="st-pick" role="group" aria-label="Qué equipaciones ver"></div>
-    <div class="stp-leg"><span><i class="kwhite" style="background:var(--kw)"></i>Minikits</span><span><i style="background:var(--kl)"></i>Light blue</span><span><i style="background:var(--kp)"></i>Portero</span></div>
+    <div class="stp-leg"><span><i class="kwhite" style="background:var(--kw)"></i>Minikits</span><span><i style="background:var(--kl)"></i>Light blue</span><span><i style="background:var(--kp)"></i>Portero</span><span><i style="background:var(--kk)"></i>Black (institucionales)</span></div>
     <div class="stp-crumb" id="st-crumb"></div>
     <div id="st-host"></div>
   </section>
@@ -1182,10 +1183,14 @@ body{margin:0;background:var(--color-bg);color:var(--color-fg);font:14px/1.45 va
   </div>
 
   <div class="view" id="v-ins">
-    <section class="blk"><div class="card soonbox">
-      <span class="pill gray tag">Coming soon</span>
-      <div class="bignum">Coming soon</div>
-    </div></section>
+  <section class="blk" style="margin-top:0">
+    <div class="bh"><span class="num">01</span><h2>Resumen institucional</h2><p>Suma de todos los municipios</p></div>
+    <div class="hero" id="ins-tot"></div>
+  </section>
+  <section class="blk">
+    <div class="bh"><span class="num">02</span><h2>Municipios</h2><p>Pulsa un municipio para ver su panel completo</p></div>
+    <div class="nac-grid" id="ins-grid"></div>
+  </section>
   </div>
 
   <div class="view" id="v-madrid">
@@ -1268,7 +1273,7 @@ body{margin:0;background:var(--color-bg);color:var(--color-fg);font:14px/1.45 va
     <div class="xt-grid kz-sum" id="kz-sum" data-source="kits_matrix"></div>
     <div class="card kz-card"><h3>Semana a semana</h3><p class="n">Cuántas equipaciones hay que tener cada semana. Pulsa una semana para ver su pedido por talla.</p><div class="kz-weeks" id="kz-weeks" data-source="kits_week"></div><div class="kz-det" id="kz-det"></div></div>
     <div class="card"><div class="head"><div><h3>Pedido por semana y talla</h3><p class="n" style="margin-top:4px">Cuántas equipaciones hay que tener cada semana, talla a talla. Pasa el ratón para ver la fila y la columna.</p></div>
-      <div class="pillrow"><div class="seg" id="seg-kit" role="group" aria-label="Tipo de equipación"><button type="button" data-k="all" aria-pressed="true">Todas</button><button type="button" data-k="blanca" aria-pressed="false">Minikits</button><button type="button" data-k="light_blue" aria-pressed="false">Light blue</button><button type="button" data-k="portero" aria-pressed="false">Portero</button></div><button type="button" class="btn sm" id="mx-copy">Copiar tabla</button></div></div>
+      <div class="pillrow"><div class="seg" id="seg-kit" role="group" aria-label="Tipo de equipación"><button type="button" data-k="all" aria-pressed="true">Todas</button><button type="button" data-k="blanca" aria-pressed="false">Minikits</button><button type="button" data-k="light_blue" aria-pressed="false">Light blue</button><button type="button" data-k="portero" aria-pressed="false">Portero</button><button type="button" data-k="black" aria-pressed="false" hidden>Black</button></div><button type="button" class="btn sm" id="mx-copy">Copiar tabla</button></div></div>
       <div id="k-mx" data-source="kits_matrix"></div></div>
   </section>
   <section class="blk only-mad" id="resid">
@@ -1535,7 +1540,7 @@ const wCol=v=>{const t=W_T.find(t=>v>=t[0]&&v<=t[1]);return t?t[2]:MAP_ZERO;};
 function drawWorld(){
   const svg=$('#m-w'),R=$('#mw-r');if(!svg||!R||!DATA)return;
   const cnt={},add=dm=>(dm||[]).filter(r=>r.dim==='pais').forEach(r=>{cnt[r.label]=(cnt[r.label]||0)+(+r.count);});
-  add(DATA.dims);Object.values(DATA.sedes||{}).forEach(o=>add(o.dims));(DATA.ins_sedes||[]).forEach(o=>add(o.dims));
+  add(DATA.dims);Object.values(DATA.sedes||{}).forEach(o=>add(o.dims));Object.values(INSS).forEach(o=>add(o.dims));
   const nd=cnt.ND||0;delete cnt.ND;
   const all=Object.entries(cnt).map(([l,v])=>({l,v})).sort((a,b)=>b.v-a.v||a.l.localeCompare(b.l,'es')),tot=d3.sum(all,r=>r.v);
   const by3={};all.forEach(r=>{const i=(PAIS_ISO[r.l]||[])[1];if(i)by3[i]=r.l;});
@@ -1568,13 +1573,13 @@ const MF=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Sep
 const p2=n=>String(n).padStart(2,'0');
 const ORG={madrid:{n:'Madrid',c:'var(--pink)'},nac:{n:'Nacionales',c:'var(--navy)'},ins:{n:'Institucionales',c:'#9aa3b5'}};
 /* aperturas que se marcan en el gráfico general (fecha en que se abrió la venta) */
-const TL_MARKS=[{d:'2026-10-08',t:'Madrid abre la venta (antes, pre-registros)'},{d:'2026-11-10',t:'Andorra, Valencia y Málaga abren'},{d:'2026-11-11',t:'Alicante abre'},{d:'2026-11-13',t:'Torrevieja y Almería abren'}];
+const TL_MARKS=[{d:'2026-10-08',t:'Madrid abre la venta (antes, pre-registros)'},{d:'2026-11-10',t:'Andorra, Valencia y Málaga abren'},{d:'2026-11-11',t:'Alicante abre'},{d:'2026-11-13',t:'Torrevieja y Almería abren'},{d:'2026-11-24',t:'Institucionales: Yepes y Argés abren'}];
 function tlRows(srcs,met,tab){
   const v0=tab==='month'?'day':tab,m=new Map();
   srcs.forEach(s=>{let rows=met==='reg'?s.tl.filter(r=>r.view==='r'+v0):[];if(!rows.length)rows=s.tl.filter(r=>r.view===v0);
     rows.forEach(r=>{const k=tab==='month'&&r.key!=='pre'?String(r.key).slice(0,7):String(r.key);let x=m.get(k);
       if(!x){x={key:k,start:r.start,end:r.end,p:{},sub:{}};m.set(k,x);}
-      x.p[s.o]=(x.p[s.o]||0)+(+r.count);if(s.o==='nac'&&s.name)x.sub[s.name]=(x.sub[s.name]||0)+(+r.count);});});
+      x.p[s.o]=(x.p[s.o]||0)+(+r.count);if(s.o!=='madrid'&&s.name){const sk=s.o+'|'+s.name;x.sub[sk]=(x.sub[sk]||0)+(+r.count);}});});
   const rk=x=>x.key==='pre'?-1e15:(tab==='hour'||tab==='week')?+x.key:Date.parse(x.key.length===7?x.key+'-01':x.key);
   return [...m.values()].sort((a,b)=>rk(a)-rk(b));}
 function tlLab(x,tab){
@@ -1593,7 +1598,7 @@ function ritmo(o){
   const items=rows.map(x=>{const L=tlLab(x,o.tab);
     let parts=orgs?orgs.map(k=>({k,v:x.p[k]||0,color:ORG[k].c})):[{k:'one',v:Object.values(x.p).reduce((a,b)=>a+b,0),color:x.key==='pre'?col(2):col(0)}];
     let v=parts.reduce((a,q)=>a+q.v,0),tip=L.t+': '+fu(v);
-    if(orgs&&v)tip+=' · '+parts.filter(q=>q.v).map(q=>ORG[q.k].n+' '+f(q.v)+(q.k==='nac'?' ('+Object.entries(x.sub).filter(e=>e[1]).map(e=>e[0]+' '+f(e[1])).join(', ')+')':'')).join(' · ');
+    if(orgs&&v)tip+=' · '+parts.filter(q=>q.v).map(q=>ORG[q.k].n+' '+f(q.v)+(q.k!=='madrid'?' ('+Object.entries(x.sub).filter(e=>e[1]&&e[0].startsWith(q.k+'|')).map(e=>e[0].split('|')[1]+' '+f(e[1])).join(', ')+')':'')).join(' · ');
     if(o.mode==='acc'&&o.tab!=='hour'){parts=parts.map(q=>{acc[q.k]=(acc[q.k]||0)+q.v;return{...q,v:acc[q.k],color:orgs?q.color:col(3)};});accT+=v;v=accT;tip+=' · acumulado '+fu(accT);}
     const mk=o.marks?tlMarks(x,o.tab):[];if(mk.length)tip+=' · '+mk.map(i=>TL_MARKS[i-1].t).join(' · ');
     return{v,parts,l1:L.l1,l2:L.l2,tip,mark:mk.join('·')};});
@@ -1614,7 +1619,7 @@ seg('#seg-met',b=>{met=b.dataset.k;drawTL();});
 /* General de la portada: Madrid + sedes nacionales + institucionales */
 const RG={tab:'day',mode:'per',met:'reg',hidden:new Set()};
 function rgSrcs(){const s=[{o:'madrid',tl:DATA.timeline||[]}];Object.values(DATA.sedes||{}).forEach(x=>s.push({o:'nac',name:x.name,tl:x.timeline||[]}));
-  (DATA.ins_sedes||[]).forEach(x=>s.push({o:'ins',name:x.name,tl:x.timeline||[]}));if(!(DATA.ins_sedes||[]).length)s.push({o:'ins',tl:[]});return s;}
+  Object.values(INSS).forEach(x=>s.push({o:'ins',name:x.name,tl:x.timeline||[]}));if(!INSK.length)s.push({o:'ins',tl:[]});return s;}
 function drawRG(){const el=$('#rg-tl');if(!el||!DATA)return;const srcs=rgSrcs(),U=RG.met==='reg'?['registro','registros']:['jugador','jugadores'];
   $('#rg-h').textContent=RG.met==='reg'?'Registros en el tiempo':'Jugadores inscritos en el tiempo';
   ritmo({el,noteEl:$('#rg-n'),srcs,met:RG.met,tab:RG.tab,mode:RG.mode,stack:true,marks:true,hidden:RG.hidden});
@@ -1640,54 +1645,62 @@ const VIEW={
  home:{h1:'Campus Experience',s:'Panel de inscripciones 2027',eye:'Fundación Real Madrid',take:()=>'Madrid, sedes nacionales e institucionales en un solo panel.'},
  madrid:{h1:'Madrid 2027',s:'Panel de inscripciones',eye:'Campus Experience · Sede Madrid',take:()=>$('#take').dataset.madrid||''},
  nac:{h1:'Sedes nacionales',s:'Andorra · Valencia · Málaga · Alicante · Almería · Torrevieja',eye:'Campus Experience · Nacionales',take:()=>'Coming soon.'},
- ins:{h1:'Institucionales',s:'Municipios',eye:'Campus Experience · Institucionales',take:()=>'Coming soon.'},
+ ins:{h1:'Institucionales',s:'Yepes · Argés',eye:'Campus Experience · Institucionales',take:()=>''},
  aten:{h1:'Atención al público',s:'Call center',eye:'Campus Experience · Atención al público',take:()=>$('#take').dataset.aten||''},
  stor:{h1:'Storage',s:'Almacén',eye:'Campus Experience · Storage',take:()=>'Equipaciones necesarias de todas las sedes.'}};
 function setView(v,keepScroll){if(v==='aten')v='home';root.dataset.view=v;const c=VIEW[v];const CT={home:'Campus Experience',madrid:VIEW.madrid.ct||'Madrid',nac:'Nacionales',ins:'Institucionales',aten:'Atención al público',stor:'Storage'};$('#ct1').textContent=CT[v];$('#ct2').style.display=v==='home'?'block':'none';$('#csub').textContent=v==='home'?'':c.take();$('#h1').firstChild.nodeValue=c.h1;$('#h1s').textContent=c.s;$('#eyebrow').textContent=c.eye;$('#take').textContent=c.take();
-  const pv=v==='madrid'&&root.dataset.sede&&!['madrid','stor'].includes(root.dataset.sede)?'nac':v;root.querySelectorAll('.nav .tab').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===pv)));
+  const pv=v==='madrid'&&root.dataset.sede&&!['madrid','stor'].includes(root.dataset.sede)?(INSK.includes(root.dataset.sede)?'ins':'nac'):v;root.querySelectorAll('.nav .tab').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===pv)));
   if(!keepScroll)window.scrollTo({top:0,behavior:'auto'});spy();}
 root.querySelectorAll('.nav .tab').forEach(b=>b.addEventListener('click',()=>go(b.dataset.view)));
 root.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
 
 // ===== Sedes nacionales y Storage: el panel de Madrid se reutiliza con los datos de cada sede =====
 const SEDES=DATA.sedes||{},NAC=Object.keys(SEDES),ST=DATA.storage||{};
-const SN={madrid:'Madrid',general:'Total general',nac:'Nacionales',ins:'Institucionales'};NAC.forEach(k=>SN[k]=SEDES[k].name||k);
+const INSS=DATA.ins_sedes&&!Array.isArray(DATA.ins_sedes)?DATA.ins_sedes:{},INSK=Object.keys(INSS),ALLS=Object.assign({},SEDES,INSS);
+const SN={madrid:'Madrid',general:'Total general',nac:'Nacionales',ins:'Institucionales'};NAC.forEach(k=>SN[k]=SEDES[k].name||k);INSK.forEach(k=>SN[k]=INSS[k].name||k);
 const FOOT0=($('.foot')||{}).textContent||'';
 function useData(cur,name){window.__CUR=cur;window.__SCOPE=cur?$('#v-madrid'):null;window.__SEDENAME=name;try{if(window.__RENDER)window.__RENDER();}catch(e){console.error(e);}}
 function kitsTo(host,num){const k=$('#kits');if(!k||!host)return;const n=$('.bh .num',k);if(n)n.textContent=num;host.appendChild(k);}
 function useSede(k){const isM=!k||k==='madrid';const nm=isM?'Madrid':SN[k];root.dataset.sede=isM?'madrid':k;root.dataset.nat=isM?'':'1';{const tn=$('#tkt-n');if(tn)tn.textContent='Gasto medio por jugador en '+nm+' y según la modalidad que ha contratado';const ep=$('#ex-p');if(ep)ep.textContent=isM?'Equipación (uniformes, mochila y jersey), Campus Protection Plan, noches extra y transporte':'Equipación (uniformes, mochila y jersey) y Campus Protection Plan';}
   VIEW.madrid.h1=nm+' 2027';VIEW.madrid.ct=nm;VIEW.madrid.eye='Campus Experience · Sede '+nm;
-  kitsTo($('#v-madrid'),'06');useData(isM?null:SEDES[k],nm);
+  kitsTo($('#v-madrid'),'06');useData(isM?null:ALLS[k],nm);
+  {const bk=$('#back-nac'),isI=INSK.includes(k);if(bk){bk.textContent=isI?'← Todos los municipios institucionales':'← Todas las sedes nacionales';bk.onclick=()=>go(isI?'ins':'nac');}}
   const ft=$('.foot');if(ft)ft.textContent=FOOT0.replace('CE Madrid (Pau)','CE '+(isM?'Madrid':SN[k])+' (Pau)');}
 function openSede(k){useSede(k);setView('madrid');}
 let stSel='general';
-function stKits(k){const o=k==='madrid'?DATA:(ST[k]||SEDES[k]||{});const w=o.kits_week||[];const s=c=>d3.sum(w,r=>+r[c]||0);const b=s('blanca'),l=s('light_blue'),p=s('portero');const n=+(((o.kpis||[]).find(r=>r.metric==='n')||{}).value||0);return{b,l,p,t:b+l+p,n};}
+function stKits(k){const o=k==='madrid'?DATA:(ST[k]||ALLS[k]||{});const w=o.kits_week||[];const s=c=>d3.sum(w,r=>+r[c]||0);const b=s('blanca'),l=s('light_blue'),p=s('portero'),kk=s('black');const n=+(((o.kpis||[]).find(r=>r.metric==='n')||{}).value||0);return{b,l,p,k:kk,t:b+l+p+kk,n};}
 function stPick(){const host=$('#st-pick');if(!host)return;
-  const G=stKits('general');const isSede=NAC.includes(stSel);
-  const split=x=>{const bar=document.createElement('div');bar.className='stp-bar';[['b','var(--kw)'],['l','var(--kl)'],['p','var(--kp)']].forEach(([k,c],i)=>{if(!x[k])return;const e=document.createElement('i');e.style.flex=String(x[k]);e.style.background=c;bar.appendChild(e);});return bar;};
+  const G=stKits('general');const isSede=NAC.includes(stSel),isMun=INSK.includes(stSel);
+  const split=x=>{const bar=document.createElement('div');bar.className='stp-bar';[['b','var(--kw)'],['l','var(--kl)'],['p','var(--kp)'],['k','var(--kk)']].forEach(([k,c],i)=>{if(!x[k])return;const e=document.createElement('i');e.style.flex=String(x[k]);e.style.background=c;bar.appendChild(e);});return bar;};
   const card=(k,cls,title,sub)=>{const x=stKits(k);const b=document.createElement('button');b.type='button';b.className='stp-c'+(cls?' '+cls:'');b.setAttribute('aria-pressed',String(k===stSel));
     b.innerHTML='<span class="stp-ck" aria-hidden="true">✓</span><span class="stp-t"></span><b class="stp-v"></b><em class="stp-m"></em>';$('.stp-t',b).textContent=title;$('.stp-v',b).textContent=f(x.t);
     $('.stp-m',b).textContent=k==='general'?'equipaciones para '+f(x.n)+' jugadores':(x.t?pct(x.t,G.t)+' del total · '+f(x.n)+' jugadores':'sin equipaciones todavía');
     b.appendChild(split(x));if(sub){const s=document.createElement('span');s.className='stp-s';s.textContent=sub;b.appendChild(s);}
-    hover(b,title+': '+f(x.t)+' equipaciones ('+f(x.b)+' minikits · '+f(x.l)+' light blue · '+f(x.p)+' portero)');b.onclick=()=>stShow(k);return b;};
+    hover(b,title+': '+f(x.t)+' equipaciones ('+f(x.b)+' minikits · '+f(x.l)+' light blue · '+f(x.p)+' portero'+(x.k?' · '+f(x.k)+' black':'')+')');b.onclick=()=>stShow(k);return b;};
   const grp=document.createElement('div');grp.className='stp-grp'+(stSel==='nac'||isSede?' on':'');
   grp.appendChild(card('nac','','Nacionales','Suma de las '+NAC.length+' sedes'));
   const rt=document.createElement('div');rt.className='stp-right';grp.appendChild(rt);const sl=document.createElement('span');sl.className='stp-sl';sl.textContent='O elige una sede nacional';rt.appendChild(sl);
   const sd=document.createElement('div');sd.className='stp-sedes';
   NAC.forEach(k=>{const x=stKits(k);const b=document.createElement('button');b.type='button';b.className='stp-sd';b.setAttribute('aria-pressed',String(k===stSel));b.innerHTML='<span></span><b></b>';$('span',b).textContent=SN[k];$('b',b).textContent=f(x.t);hover(b,SN[k]+': '+f(x.t)+' equipaciones');b.onclick=()=>stShow(k);sd.appendChild(b);});
   rt.appendChild(sd);
-  host.replaceChildren(card('general','stp-all','Total general','Madrid + Nacionales + Institucionales'),card('madrid','','Madrid','Sede Madrid'),card('ins','','Institucionales','Municipios · pendiente'),grp);
-  const cr=$('#st-crumb');if(cr){const x=stKits(stSel);const path=stSel==='general'?['Total general']:isSede?['Nacionales',SN[stSel]]:[SN[stSel]];const el=(tag,txt)=>{const e=document.createElement(tag);e.textContent=txt;return e;};
-    cr.replaceChildren(el('span','Estás viendo'),...path.map((p,i)=>el('b',(i?'› ':'')+p)),el('em',f(x.t)+' equipaciones · '+f(x.b)+' minikits · '+f(x.l)+' light blue · '+f(x.p)+' portero'));}}
+  const grpI=document.createElement('div');grpI.className='stp-grp'+(stSel==='ins'||isMun?' on':'');
+  grpI.appendChild(card('ins','','Institucionales','Suma de los '+INSK.length+' municipios'));
+  const rtI=document.createElement('div');rtI.className='stp-right';grpI.appendChild(rtI);const slI=document.createElement('span');slI.className='stp-sl';slI.textContent='O elige un municipio';rtI.appendChild(slI);
+  const sdI=document.createElement('div');sdI.className='stp-sedes';
+  INSK.forEach(k=>{const x=stKits(k);const b=document.createElement('button');b.type='button';b.className='stp-sd';b.setAttribute('aria-pressed',String(k===stSel));b.innerHTML='<span></span><b></b>';$('span',b).textContent=SN[k];$('b',b).textContent=f(x.t);hover(b,SN[k]+': '+f(x.t)+' equipaciones');b.onclick=()=>stShow(k);sdI.appendChild(b);});
+  rtI.appendChild(sdI);
+  host.replaceChildren(card('general','stp-all','Total general','Madrid + Nacionales + Institucionales'),card('madrid','','Madrid','Sede Madrid'),grp,grpI);
+  const cr=$('#st-crumb');if(cr){const x=stKits(stSel);const path=stSel==='general'?['Total general']:isSede?['Nacionales',SN[stSel]]:isMun?['Institucionales',SN[stSel]]:[SN[stSel]];const el=(tag,txt)=>{const e=document.createElement(tag);e.textContent=txt;return e;};
+    cr.replaceChildren(el('span','Estás viendo'),...path.map((p,i)=>el('b',(i?'› ':'')+p)),el('em',f(x.t)+' equipaciones · '+f(x.b)+' minikits · '+f(x.l)+' light blue · '+f(x.p)+' portero'+(x.k?' · '+f(x.k)+' black':'')));}}
 function stShow(k){stSel=k;root.dataset.sede='stor';kitsTo($('#st-host'),'01');
-  useData(k==='madrid'?null:(ST[k]||SEDES[k]||{}),SN[k]||k);stPick();
-  const sub=$('#st-sub');if(sub)sub.textContent=k==='general'?'Suma de Madrid, sedes nacionales e institucionales':k==='nac'?'Suma de todas las sedes nacionales':k==='ins'?'Institucionales · a cero hasta que haya datos':k==='madrid'?'Sede Madrid':'Sede '+(SN[k]||k);}
+  useData(k==='madrid'?null:(ST[k]||ALLS[k]||{}),SN[k]||k);stPick();
+  const sub=$('#st-sub');if(sub)sub.textContent=k==='general'?'Suma de Madrid, sedes nacionales e institucionales':k==='nac'?'Suma de todas las sedes nacionales':k==='ins'?'Suma de todos los municipios institucionales':k==='madrid'?'Sede Madrid':'Sede '+(SN[k]||k);}
 function go(v){if(v==='madrid')useSede('madrid');else if(v==='stor')stShow(stSel);setView(v);}
 {const bk=$('#back-nac');if(bk)bk.onclick=()=>go('nac');}
 const OPEN=['andorra','valencia','malaga','alicante','torrevieja','almeria'];
-function renderNac(){const g=$('#nac-grid'),t=$('#nac-tot');if(!g||!t)return;
-  const st=k=>{const D=SEDES[k];const K=Object.fromEntries((D.kpis||[]).map(r=>[r.metric,+r.value]));return{k,n:K.n||0,hoy:K.hoy||0,fact:K.fact||0,cobr:K.cobr||0,sem:d3.sum((D.dims||[]).filter(r=>r.dim==='campwk'),r=>+r.count)};};
-  const S=NAC.map(st),T={};['n','hoy','fact','cobr','sem'].forEach(x=>T[x]=d3.sum(S,s=>s[x]));
+function renderNac(G0){G0=G0||{grid:'#nac-grid',tot:'#nac-tot',keys:NAC,src:SEDES,open:OPEN,go:'nac',kind:'sedes nacionales'};const g=$(G0.grid),t=$(G0.tot);if(!g||!t)return;
+  const st=k=>{const D=G0.src[k];const K=Object.fromEntries((D.kpis||[]).map(r=>[r.metric,+r.value]));return{k,n:K.n||0,hoy:K.hoy||0,fact:K.fact||0,cobr:K.cobr||0,sem:d3.sum((D.dims||[]).filter(r=>r.dim==='campwk'),r=>+r.count)};};
+  const S=G0.keys.map(st),T={};['n','hoy','fact','cobr','sem'].forEach(x=>T[x]=d3.sum(S,s=>s[x]));
   const d1=v=>v.toLocaleString('es-ES',{minimumFractionDigits:1,maximumFractionDigits:1});
   const kp=(ac,lab,big,sub)=>{const d=mk('<span class="lab"></span><span class="big"></span><span class="sub"></span>','card kpi');d.style.setProperty('--ac',ac);$('.lab',d).textContent=lab;$('.big',d).textContent=big;$('.sub',d).textContent=sub;return d;};
   t.replaceChildren(
@@ -1696,14 +1709,15 @@ function renderNac(){const g=$('#nac-grid'),t=$('#nac-tot');if(!g||!t)return;
     kp('var(--green)','Cobrado',eur(T.cobr),pct(T.cobr,T.fact)+' de la facturación'),
     kp('var(--c5)','Pendiente de cobrar',eur(T.fact-T.cobr),pct(T.fact-T.cobr,T.fact)+' de la facturación'));
   const mx=Math.max(...S.map(s=>s.n),1);
-  g.replaceChildren(...S.slice().sort((a,b)=>OPEN.includes(b.k)-OPEN.includes(a.k)).map(s=>{const b=document.createElement('button');b.type='button';b.className='nac-c';
-    const op=OPEN.includes(s.k);if(!op)b.classList.add('closed');b.innerHTML='<div class="nc-h"><h3></h3><span class="pill '+(op?'ok live-tag':'gray')+'">'+(op?'Abierta':'Próximamente')+'</span></div><div class="nc-s"><div><b></b><span>Jugadores</span></div><div><b></b><span>Facturación</span></div></div><div class="nc-b"><i></i></div><span class="nc-go">Ver panel →</span>';
+  g.replaceChildren(...S.slice().sort((a,b)=>G0.open.includes(b.k)-G0.open.includes(a.k)).map(s=>{const b=document.createElement('button');b.type='button';b.className='nac-c';
+    const op=G0.open.includes(s.k);if(!op)b.classList.add('closed');b.innerHTML='<div class="nc-h"><h3></h3><span class="pill '+(op?'ok live-tag':'gray')+'">'+(op?'Abierta':'Próximamente')+'</span></div><div class="nc-s"><div><b></b><span>Jugadores</span></div><div><b></b><span>Facturación</span></div></div><div class="nc-b"><i></i></div><span class="nc-go">Ver panel →</span>';
     $('h3',b).textContent=SN[s.k];const bs=b.querySelectorAll('.nc-s b');bs[0].textContent=f(s.n);bs[1].textContent=eur(s.fact);$('.nc-b i',b).style.width=(s.n/mx*100)+'%';
     hover(b,SN[s.k]+': '+f(s.n)+' jugadores · '+eur(s.fact));b.onclick=()=>openSede(s.k);return b;}));
-  const hc=root.querySelector('[data-go="nac"]');if(hc){const hb=$('.semnum b',hc);if(hb)hb.textContent=f(T.sem);}
-  VIEW.nac.take=()=>f(T.n)+' jugadores y '+eur(T.fact)+' de facturación en '+NAC.length+' sedes nacionales.';
+  const hc=root.querySelector('[data-go="'+G0.go+'"]');if(hc){const hb=$('.semnum b',hc);if(hb)hb.textContent=f(T.sem);}
+  VIEW[G0.go].take=()=>f(T.n)+' jugadores y '+eur(T.fact)+' de facturación en '+G0.keys.length+' '+G0.kind+'.';
 }
-try{renderNac();stPick();}catch(e){console.error(e);}
+const OPENI=['yepes','arges'];
+try{renderNac();renderNac({grid:'#ins-grid',tot:'#ins-tot',keys:INSK,src:INSS,open:OPENI,go:'ins',kind:'municipios institucionales'});stPick();}catch(e){console.error(e);}
 
 // navegación y tema
 const links=[...root.querySelectorAll('.nav a')];
@@ -1875,7 +1889,7 @@ dash.onData(()=>{
   const wsum=d3.sum(dimRows(D.dims.data,'campwk'),r=>r.v);
   countTo($('#k-sem'),wsum,x=>f(Math.round(x)));if(!window.__SCOPE){countTo($('#k-sem4'),wsum,x=>f(Math.round(x)));
     // portada: suma de Madrid + sedes nacionales + institucionales
-    const SD=Object.values(DATA.sedes||{}).concat(DATA.ins_sedes||[]);const T={n:+K.n||0,fact:+K.fact||0,cobr:+K.cobr||0,pend:+K.pend||0,sem:wsum};
+    const SD=Object.values(DATA.sedes||{}).concat(Object.values(INSS));const T={n:+K.n||0,fact:+K.fact||0,cobr:+K.cobr||0,pend:+K.pend||0,sem:wsum};
     SD.forEach(o=>{const k=Object.fromEntries((o.kpis||[]).map(r=>[r.metric,+r.value]));T.n+=k.n||0;T.fact+=k.fact||0;T.cobr+=k.cobr||0;T.pend+=k.pend||0;T.sem+=d3.sum((o.dims||[]).filter(r=>r.dim==='campwk'),r=>+r.count);});
     const tl=[...root.querySelectorAll('#cover .tiles .tile')];
     if(tl.length>=5){const set=(i,v)=>{const b=tl[i].querySelector('.tn');if(b)b.textContent=v;};
@@ -1949,36 +1963,36 @@ dash.onData(()=>{
      const kids=[head,tiles];if(g.foot){const fo=document.createElement('p');fo.className='xd-f';fo.textContent=g.foot;kids.push(fo);}
      box.replaceChildren(...kids);});}
   // equipaciones
-  const KMX=D.kits_matrix.data.map(r=>({w:+r.week,t:r.talla,v:[+r.blanca,+r.light_blue,+r.portero]}));
-  const KCOL=['var(--kw)','var(--kl)','var(--kp)'],KNAME=['Minikits','Light blue','Portero'];
+  const KMX=D.kits_matrix.data.map(r=>({w:+r.week,t:r.talla,v:[+r.blanca,+r.light_blue,+r.portero,+(r.black||0)]}));
+  const KCOL=['var(--kw)','var(--kl)','var(--kp)','var(--kk)'],KNAME=['Minikits','Light blue','Portero','Black'];
   const ksum=(rows,i)=>d3.sum(rows,r=>r.v[i]);const ktot=rows=>d3.sum(rows,r=>d3.sum(r.v));
   const kdot=(i)=>'<i class="kz-dot'+(i===0?' kwhite':'')+'" style="background:'+KCOL[i]+'"></i>';
-  const GT=ktot(KMX),KB=ksum(KMX,0),KL=ksum(KMX,1),KP=ksum(KMX,2),KN=(D.kpis.data.find(r=>r.metric==='n')||{}).value||0;
+  const GT=ktot(KMX),KB=ksum(KMX,0),KL=ksum(KMX,1),KP=ksum(KMX,2),KK=ksum(KMX,3),KI=KK?[0,1,2,3]:[0,1,2],KN=(D.kpis.data.find(r=>r.metric==='n')||{}).value||0;
   {const g=$('#kz-sum');
     const band=mk('<b class="xt-v"></b><span class="xt-n">Total equipaciones</span><em class="xt-a"></em><em class="xt-b"></em><div class="kz-split"></div><div class="kz-leg"></div>','xt xt-all kz-band');band.style.setProperty('--pc','#ea456c');
     $('.xt-v',band).textContent=f(GT);$('.xt-a',band).textContent='para '+f(+KN)+' jugadores con pago';$('.xt-b',band).textContent=(+KN?(GT/+KN).toLocaleString('es-ES',{minimumFractionDigits:1,maximumFractionDigits:1}):'0')+' equipaciones por jugador de media';
-    const sp=$('.kz-split',band),lg=$('.kz-leg',band);[KB,KL,KP].forEach((v,i)=>{if(!v)return;const e=document.createElement('div');e.style.flex=String(v);e.style.background=KCOL[i];if(i===0)e.classList.add('kwhite');e.textContent=v/(GT||1)>.08?f(v):'';hover(e,KNAME[i]+': '+f(v)+' ('+pct(v,GT||1)+')');sp.appendChild(e);const l=document.createElement('span');l.innerHTML=kdot(i)+KNAME[i]+' <b></b>';$('b',l).textContent=f(v);lg.appendChild(l);});
+    const sp=$('.kz-split',band),lg=$('.kz-leg',band);[KB,KL,KP,KK].forEach((v,i)=>{if(!v)return;const e=document.createElement('div');e.style.flex=String(v);e.style.background=KCOL[i];if(i===0)e.classList.add('kwhite');if(i===3)e.classList.add('kblk');e.textContent=v/(GT||1)>.08?f(v):'';hover(e,KNAME[i]+': '+f(v)+' ('+pct(v,GT||1)+')');sp.appendChild(e);const l=document.createElement('span');l.innerHTML=kdot(i)+KNAME[i]+' <b></b>';$('b',l).textContent=f(v);lg.appendChild(l);});
     hover(band,'Total de equipaciones del campus');
-    const RC=['#5e6a83','#7cc4ec','#3faa6c'];
+    const RC=['#5e6a83','#7cc4ec','#3faa6c','#1d2030'];
     const tile=(i,v,name,tag)=>{const p=GT?v/GT*100:0;const d=mk('<div class="kt-ring"><b></b></div><div class="kt-t"><b class="kt-v"></b><span class="kt-n"></span><em class="kt-g"></em></div>','kt');d.style.setProperty('--pc',RC[i]);d.style.setProperty('--p',p.toFixed(1));
       $('.kt-ring b',d).textContent=Math.round(p)+'%';$('.kt-v',d).textContent=f(v);$('.kt-n',d).textContent=name;const g2=$('.kt-g',d);if(tag)g2.textContent=tag;else g2.remove();hover(d,name+': '+f(v)+' ('+pct(v,GT||1)+' del pedido)');return d;};
-    g.replaceChildren(band,tile(0,KB,'Minikits','incluye extras'),tile(1,KL,'Light blue',''),tile(2,KP,'Portero',''));}
+    const tl=[band,tile(0,KB,'Minikits','incluye extras'),tile(1,KL,'Light blue',''),tile(2,KP,'Portero','')];if(KK)tl.push(tile(3,KK,'Black','institucionales'));g.style.gridTemplateColumns=KK?'repeat(4,1fr)':'';g.replaceChildren(...tl);}
   const kweeks=[...new Set(KMX.map(r=>r.w))].sort((a,b)=>a-b);
   const kwk=kweeks.map(w=>({w,rows:KMX.filter(r=>r.w===w)}));const kmaxw=Math.max(...kwk.map(x=>ktot(x.rows)),1);
   let kselW=null;
   const kszo=['Niño 128','Niño 140','Niño 152','Niño 164','Adulto S','Adulto M','Adulto L','Adulto XL','Sin talla'];
   const kdet=()=>{
     const rows=kselW==null?KMX:KMX.filter(r=>r.w===kselW);const tt=ktot(rows);
-    const by=kszo.map(t=>({t,v:[0,1,2].map(i=>d3.sum(rows.filter(r=>r.t===t),r=>r.v[i]))})).filter(x=>d3.sum(x.v)>0||x.t!=='Sin talla');
+    const by=kszo.map(t=>({t,v:[0,1,2,3].map(i=>d3.sum(rows.filter(r=>r.t===t),r=>r.v[i]))})).filter(x=>d3.sum(x.v)>0||x.t!=='Sin talla');
     const mx=Math.max(...by.map(x=>d3.sum(x.v)),1);const H=180;
     const head=mk('<div><b class="kz-dt"></b><em class="kz-ds"></em></div><div class="kz-leg"></div>','kz-dh');
     $('.kz-dt',head).textContent=kselW==null?'Todo el campus · por talla':'Semana '+kselW+' · por talla';$('.kz-ds',head).textContent=f(tt)+' equipaciones en total';
-    [0,1,2].forEach(i=>{const l=document.createElement('span');l.innerHTML=kdot(i)+KNAME[i]+' <b></b>';$('b',l).textContent=f(ksum(rows,i));$('.kz-leg',head).appendChild(l);});
+    KI.forEach(i=>{const l=document.createElement('span');l.innerHTML=kdot(i)+KNAME[i]+' <b></b>';$('b',l).textContent=f(ksum(rows,i));$('.kz-leg',head).appendChild(l);});
     const ch=mk('','kl');
     by.forEach(x=>{const tot=d3.sum(x.v);const r=mk('<span class="kl-badge"></span><div class="kl-m"><div class="kl-bar"></div><div class="kl-d"></div></div><b class="kl-n"></b><em class="kl-p"></em>','kl-row');
       const lab=x.t.replace('Niño ','').replace('Adulto ','');const bd=$('.kl-badge',r);bd.textContent=x.t==='Sin talla'?'?':lab;bd.title=x.t;if(x.t.startsWith('Adulto'))bd.classList.add('ad');
       $('.kl-n',r).textContent=f(tot);$('.kl-p',r).textContent=pct(tot,tt||1);
-      const bar=$('.kl-bar',r);x.v.forEach((v,i)=>{if(!v)return;const e=document.createElement('i');e.style.background=KCOL[i];if(i===0)e.classList.add('kwhite');e.dataset.w=String(v/mx*100);e.style.width='0%';e.textContent=v/mx>.06?f(v):'';bar.appendChild(e);});
+      const bar=$('.kl-bar',r);x.v.forEach((v,i)=>{if(!v)return;const e=document.createElement('i');e.style.background=KCOL[i];if(i===0)e.classList.add('kwhite');if(i===3)e.classList.add('kblk');e.dataset.w=String(v/mx*100);e.style.width='0%';e.textContent=v/mx>.06?f(v):'';bar.appendChild(e);});
       if(x.t==='Sin talla'){r.classList.add('warn');}
       $('.kl-d',r).innerHTML=x.v.map((v,i)=>v?'<span>'+kdot(i)+KNAME[i]+' <b>'+f(v)+'</b><em>'+pct(v,tot||1)+'</em></span>':'').join('');
       ch.appendChild(r);});
@@ -1988,9 +2002,9 @@ dash.onData(()=>{
   const kdraw=()=>{
     $('#kz-weeks').replaceChildren(...kwk.map(x=>{const t=ktot(x.rows);const d=mk('<span class="kw-l"></span><b class="kw-v"></b><div class="kw-bar"></div><div class="kw-k"></div><div class="kw-d"></div>','kw');if(kselW===x.w)d.classList.add('sel');if(t===kmaxw&&t>0)d.classList.add('peak');
       $('.kw-l',d).textContent='Semana '+x.w;$('.kw-v',d).textContent=f(t);
-      const bar=$('.kw-bar',d);bar.style.width='100%';[0,1,2].forEach(i=>{const v=ksum(x.rows,i);if(!v)return;const e=document.createElement('i');e.style.flex=String(v);e.style.background=KCOL[i];if(i===0)e.classList.add('kwhite');e.textContent=f(v);bar.appendChild(e);});
-      $('.kw-d',d).innerHTML=[0,1,2].map(i=>{const v=ksum(x.rows,i);return '<span>'+kdot(i)+KNAME[i]+'<b>'+f(v)+'</b><em>'+pct(v,t||1)+'</em></span>';}).join('');
-      $('.kw-k',d).innerHTML=[0,1,2].map(i=>'<span>'+kdot(i)+'<b>'+f(ksum(x.rows,i))+'</b></span>').join('');
+      const bar=$('.kw-bar',d);bar.style.width='100%';KI.forEach(i=>{const v=ksum(x.rows,i);if(!v)return;const e=document.createElement('i');e.style.flex=String(v);e.style.background=KCOL[i];if(i===0)e.classList.add('kwhite');if(i===3)e.classList.add('kblk');e.textContent=f(v);bar.appendChild(e);});
+      $('.kw-d',d).innerHTML=KI.map(i=>{const v=ksum(x.rows,i);return '<span>'+kdot(i)+KNAME[i]+'<b>'+f(v)+'</b><em>'+pct(v,t||1)+'</em></span>';}).join('');
+      $('.kw-k',d).innerHTML=KI.map(i=>'<span>'+kdot(i)+'<b>'+f(ksum(x.rows,i))+'</b></span>').join('');
       d.onclick=()=>{kselW=kselW===x.w?null:x.w;kdraw();kdet();};return d;}));
   };
   kdraw();kdet();
@@ -1999,8 +2013,9 @@ dash.onData(()=>{
   const SZO=['Niño 128','Niño 140','Niño 152','Niño 164','Adulto S','Adulto M','Adulto L','Adulto XL','Sin talla'];
   if(KM.length){
     const sizes=SZO.filter(s=>KM.some(r=>r.talla===s));const weeks=[...new Set(KM.map(r=>+r.week))].sort((a,b)=>a-b);
-    let kind='all';const val=(r)=>kind==='all'?(+r.blanca+ +r.light_blue+ +r.portero):+r[kind];
-    const KC={all:'var(--c0)',blanca:'var(--c6)',light_blue:'var(--kl)',portero:'var(--kp)'};
+    let kind='all';const val=(r)=>kind==='all'?(+r.blanca+ +r.light_blue+ +r.portero+ +(r.black||0)):+(r[kind]||0);
+    const KC={all:'var(--c0)',blanca:'var(--c6)',light_blue:'var(--kl)',portero:'var(--kp)',black:'var(--kk)'};
+    {const kb=root.querySelector('#seg-kit [data-k="black"]');if(kb)kb.hidden=!KK;}
     const drawMx=()=>{const g={};KM.forEach(r=>{g[r.week+'|'+r.talla]=val(r);});const get=(w,s)=>g[w+'|'+s]||0;
       const mxv=Math.max(...weeks.flatMap(w=>sizes.map(s=>get(w,s))),1);
       const tb=document.createElement('table');tb.className='mx';

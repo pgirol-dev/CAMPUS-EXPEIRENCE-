@@ -9,6 +9,8 @@ const STG = "('Unpaid','Cancelled','Refund','Trash','Reservation Payment Complet
 const LAYOUT = "695370000036704653"; // ISL - Real Madrid
 const FIELDS = "id, Created_Time, Stage, Tipo_Modalidad, Gender, Nationality, Weeks, utm_source, utm_medium, utm_campaign, utm_content, Total, Paid, Balance_Due1, Posicion_participante, Forma_de_pago, A_o_de_nacimiento, Codigo_descuento, Deal_Name, Talla_equipacion, referrername, GCLID, ga_gclid, FBClid, Ad_Campaign_Name, Colectivos, Numero_socio, Numero_empleado_RM_FRM, Numero_carnet_madridista, Contact_Name.Mailing_Country, Contact_Name.Mailing_Zip, Contact_Name.Mailing_State";
 /* clave del dashboard → valor de Ubicacion en Zoho */
+/* institucionales: clave del dashboard → valor de Ubicacion_Institucionales en Zoho */
+const INS = [["yepes", "Yepes"], ["arges", "Argés"]];
 const SEDES = [["madrid", "Madrid"], ["andorra", "Andorra"], ["valencia", "Valencia"], ["malaga", "Malaga"], ["alicante", "Alicante"], ["almeria", "Almeria"], ["torrevieja", "Torrevieja"]];
 
 module.exports = function makeDashboard(zohoCoql) {
@@ -23,12 +25,13 @@ module.exports = function makeDashboard(zohoCoql) {
     }
     return out;
   }
-  async function sede(ub) {
-    const rows = await coql("select " + FIELDS + " from Deals where (((Layout = '" + LAYOUT + "' and Ubicacion = '" + ub + "') and Ano_Campus = 2027) and Stage not in " + STG + ") order by Created_Time asc", 2000);
+  async function sede(ub, campo) {
+    campo = campo || "Ubicacion";
+    const rows = await coql("select " + FIELDS + " from Deals where (((Layout = '" + LAYOUT + "' and " + campo + " = '" + ub + "') and Ano_Campus = 2027) and Stage not in " + STG + ") order by Created_Time asc", 2000);
     const seen = {}, rs = [];
     rows.forEach(r => { if (!seen[r.id]) { seen[r.id] = 1; rs.push(r); } });
     if (!rs.length) return { rs: [], ex: [] };
-    const L = await coql("select Producto, Importe, Parent_Id, Noches_extra, Semana1 from Campus_y_servicios_extra where (((Parent_Id.Ano_Campus = 2027 and Parent_Id.Ubicacion = '" + ub + "') and Parent_Id.Stage not in " + STG + ") and Importe is not null) order by Created_Time asc", 2000);
+    const L = await coql("select Producto, Importe, Parent_Id, Noches_extra, Semana1 from Campus_y_servicios_extra where (((Parent_Id.Ano_Campus = 2027 and Parent_Id." + campo + " = '" + ub + "') and Parent_Id.Stage not in " + STG + ") and Importe is not null) order by Created_Time asc", 2000);
     const sl = {}, ex = [];
     L.forEach(r => { const pid = r.Parent_Id && r.Parent_Id.id; if (sl[r.id] || !seen[pid]) return; sl[r.id] = 1; ex.push([r.Producto && r.Producto.name, r.Importe, pid, r.Noches_extra, r.Semana1]); });
     return { rs, ex };
@@ -37,6 +40,8 @@ module.exports = function makeDashboard(zohoCoql) {
   return async function build(prevN) {
     const res = await Promise.all(SEDES.map(s => sede(s[1])));
     const inp = {}; SEDES.forEach((s, i) => { inp[s[0]] = res[i]; });
+    const ri = await Promise.all(INS.map(s => sede(s[1], "Ubicacion_Institucionales")));
+    INS.forEach((s, i) => { inp["ins_" + s[0]] = ri[i]; });
     const D = CE.makeData(inp, null); // Atención al público ya no forma parte del dashboard
     const errs = CE.check(D, prevN ? Math.floor(prevN * 0.9) : 0);
     if (errs.length) throw Object.assign(new Error("Los datos no cuadran: " + errs.join(" · ")), { status: 502 });

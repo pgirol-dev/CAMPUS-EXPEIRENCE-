@@ -61,7 +61,8 @@ var PAIS_AL={"espana":"España","spain":"España","espanya":"España","reinodees
 function paisOf(r){var raw=String(r['Contact_Name.Mailing_Country']||'').trim(),c=nrm(raw);
   if(!c)return PROV_TXT[nrm(r['Contact_Name.Mailing_State'])]?'España':'ND';
   return PAIS_AL[c]||raw.charAt(0).toUpperCase()+raw.slice(1);}
-function build(rs,ex){
+/* opt.black: sede institucional → la equipación incluida (y la que se compra aparte) es la Black */
+function build(rs,ex,opt){opt=opt||{};
   var PRE='2026-10-08';
   var LN={};ex.forEach(function(e){var p=e[0],pid=e[2],sem=e[4];var c=mcode(p);if(c&&sem){(LN[pid]=LN[pid]||[]).push([c,lastWord(sem)]);}});
   function mod(r){var s=new Set((LN[r.id]||[]).map(function(x){return MN[x[0]];}));
@@ -129,10 +130,10 @@ function build(rs,ex){
   var RB={};rs.forEach(function(r){RB[r.id]=r;});
   var cells={};function cell(w){return cells[w]=cells[w]||new Counter();}
   function tl(pid){var t=RB[pid].Talla_equipacion;return SZ.indexOf(t)>=0?t:'Sin talla';}
-  Object.keys(LN).forEach(function(pid){if(!RB[pid])return;LN[pid].forEach(function(x){var b=INC[x[0]];cell(x[1]).add('Blanca|'+tl(pid),b[0]);cell(x[1]).add('Light blue|'+tl(pid),b[1]);});});
+  Object.keys(LN).forEach(function(pid){if(!RB[pid])return;LN[pid].forEach(function(x){if(opt.black){cell(x[1]).add('Black|'+tl(pid),1);return;}var b=INC[x[0]];cell(x[1]).add('Blanca|'+tl(pid),b[0]);cell(x[1]).add('Light blue|'+tl(pid),b[1]);});});
   ex.forEach(function(e){var p=e[0],pid=e[2];if((p!=='Uniforme Oficial Adidas'&&p!=='Uniforme Portero Oficial Adidas')||!RB[pid]||!(LN[pid]&&LN[pid].length))return;
-    var first=Math.min.apply(null,LN[pid].map(function(x){return x[1];}));cell(first).add((p==='Uniforme Oficial Adidas'?'Blanca':'Portero')+'|'+tl(pid));});
-  var KT=['Blanca','Light blue','Portero'];
+    var first=Math.min.apply(null,LN[pid].map(function(x){return x[1];}));cell(first).add((p==='Uniforme Oficial Adidas'?(opt.black?'Black':'Blanca'):'Portero')+'|'+tl(pid));});
+  var KT=['Blanca','Light blue','Portero','Black'];
   var anySin=Object.keys(cells).some(function(w){return Array.from(cells[w].m.keys()).some(function(k){return k.split('|')[1]==='Sin talla';});});
   var SZX=SZ.concat(anySin?['Sin talla']:[]);var WK=[1,2,3,4,5,6,7,8,9];
   function cg(w,k,t){return cells[w]?cells[w].get(k+'|'+t):0;}
@@ -171,24 +172,25 @@ function conv(d){
     resid:d.resid||[],
     extras_cat:x.cats.map(function(c){return {category:c[0],units:c[1],amount:c[2],inscriptions:c[3],pct_insc:pyRound(c[3]/Math.max(k.n,1)*100)};}),
     extras:pr,
-    kits_week:d.kits.week.map(function(e){return {week:e[0],blanca:e[1],light_blue:e[2],portero:e[3]};}),
-    kits_size:d.kits.size.map(function(e){return {talla:e[0],blanca:e[1],light_blue:e[2],portero:e[3]};}),
-    kits_matrix:d.kits.matrix.map(function(e){return {week:e[0],talla:e[1],blanca:e[2],light_blue:e[3],portero:e[4]};})};
+    kits_week:d.kits.week.map(function(e){return {week:e[0],blanca:e[1],light_blue:e[2],portero:e[3],black:e[4]};}),
+    kits_size:d.kits.size.map(function(e){return {talla:e[0],blanca:e[1],light_blue:e[2],portero:e[3],black:e[4]};}),
+    kits_matrix:d.kits.matrix.map(function(e){return {week:e[0],talla:e[1],blanca:e[2],light_blue:e[3],portero:e[4],black:e[5]};})};
 }
 function kitsSum(sets){
   var W=new Map(),S=new Map(),M=new Map(),n=0,sz=[];
-  function add(map,key,r){var a=map.get(key);if(!a){a=[0,0,0];map.set(key,a);}a[0]+=r.blanca;a[1]+=r.light_blue;a[2]+=r.portero;}
+  function add(map,key,r){var a=map.get(key);if(!a){a=[0,0,0,0];map.set(key,a);}a[0]+=r.blanca;a[1]+=r.light_blue;a[2]+=r.portero;a[3]+=(r.black||0);}
   sets.forEach(function(o){var nk=(o.kpis||[]).filter(function(r){return r.metric==='n';})[0];n+=nk?nk.value:0;
     o.kits_week.forEach(function(r){add(W,r.week,r);});
     o.kits_size.forEach(function(r){if(sz.indexOf(r.talla)<0)sz.push(r.talla);add(S,r.talla,r);});
     o.kits_matrix.forEach(function(r){add(M,r.week+'|'+r.talla,r);});});
   var ws=Array.from(W.keys()).sort(function(a,b){return a-b;});
-  var g=function(m,k){return m.get(k)||[0,0,0];};
+  var g=function(m,k){return m.get(k)||[0,0,0,0];};
   return {kpis:[{metric:'n',value:n}],
-    kits_week:ws.map(function(w){var a=g(W,w);return {week:w,blanca:a[0],light_blue:a[1],portero:a[2]};}),
-    kits_size:sz.map(function(t){var a=g(S,t);return {talla:t,blanca:a[0],light_blue:a[1],portero:a[2]};}),
-    kits_matrix:[].concat.apply([],ws.map(function(w){return sz.map(function(t){var a=g(M,w+'|'+t);return {week:w,talla:t,blanca:a[0],light_blue:a[1],portero:a[2]};});}))};
+    kits_week:ws.map(function(w){var a=g(W,w);return {week:w,blanca:a[0],light_blue:a[1],portero:a[2],black:a[3]};}),
+    kits_size:sz.map(function(t){var a=g(S,t);return {talla:t,blanca:a[0],light_blue:a[1],portero:a[2],black:a[3]};}),
+    kits_matrix:[].concat.apply([],ws.map(function(w){return sz.map(function(t){var a=g(M,w+'|'+t);return {week:w,talla:t,blanca:a[0],light_blue:a[1],portero:a[2],black:a[3]};});}))};
 }
+var INS=[['yepes','Yepes'],['arges','Argés']];
 var SEDES=[['andorra','Andorra'],['valencia','Valencia'],['malaga','Málaga'],['alicante','Alicante'],['almeria','Almería'],['torrevieja','Torrevieja']];
 /* inputs: {madrid:{rs,ex}, andorra:{rs,ex}, ...}; prevAtt: att anterior */
 function makeData(inputs,att){
@@ -196,8 +198,10 @@ function makeData(inputs,att){
   var out=conv(d);out.gen=d.gen;
   var sedes={};SEDES.forEach(function(s){var i=inputs[s[0]]||{rs:[],ex:[]};var o=conv(build(i.rs,i.ex));o.name=s[1];sedes[s[0]]=o;});
   out.sedes=sedes;
-  var ins=conv(build([],[]));
-  var nac=kitsSum(SEDES.map(function(s){return sedes[s[0]];})),insk=kitsSum([ins]);
+  /* institucionales (municipios): mismo cálculo que una sede, con la equipación Black */
+  var ins_sedes={};INS.forEach(function(s){var i=inputs['ins_'+s[0]]||{rs:[],ex:[]};var o=conv(build(i.rs,i.ex,{black:true}));o.name=s[1];ins_sedes[s[0]]=o;});
+  out.ins_sedes=ins_sedes;
+  var nac=kitsSum(SEDES.map(function(s){return sedes[s[0]];})),insk=kitsSum(INS.map(function(s){return ins_sedes[s[0]];}));
   out.storage={nac:nac,ins:insk,general:kitsSum([out,nac,insk])};
   if(att)out.att=att;
   out.ts=new Date().toISOString();
@@ -241,6 +245,6 @@ function check(D,minN){
   if(D.att&&JSON.stringify(D.att).indexOf('@')>=0)e.push('el call center contiene emails');
   return e;
 }
-return {build:build,conv:conv,kitsSum:kitsSum,makeData:makeData,parseAtt:parseAtt,check:check,SEDES:SEDES};
+return {build:build,conv:conv,kitsSum:kitsSum,makeData:makeData,parseAtt:parseAtt,check:check,SEDES:SEDES,INS:INS};
 })();
 if(typeof module!=='undefined')module.exports=CE;
