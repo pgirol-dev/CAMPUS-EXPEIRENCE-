@@ -6,7 +6,7 @@ Herramienta del equipo operativo de Campus Experience (Real Madrid, ISL Agency) 
 - **Inicio:** se elige la temporada (Campus Experience 2027).
 - **Registros**
 - **Operativa:** Horarios (con simulador que guarda y «Pasar al horario real», historial, papelera y aceptar avisos), Equipos e Incidencias.
-- **Administración:** Contabilidad (pagos, devoluciones, cancelaciones y agentes), Facturas e Ingresos.
+- **Administración:** Contabilidad (pagos, devoluciones, cancelaciones y agentes), Facturas y Cuentas (antes Ingresos: cobros y devoluciones de Zoho Books por día y banco, cuadre diario y extracto en PDF de los días cuadrados).
 - **Operativa › Buses:** servicio de bus y transfer contratados por semana (Madrid), con la comprobación del pago del bus.
 - **Atención al público:** Base de datos (listas para las llamadas comerciales: BBDD 2026, Unpaids, Prerreservas y Form abandonado; con hermanos, duplicados y sedes en Unpaids), Limpieza (inscripciones completadas y pendientes, cuatro estados de documentación con lo que falta, aviso médico, filtros y orden) y Estadísticas. Enlaces al CRM y a Zoho Desk desde cada historial.
 - **Logística:** Panel, Necesidades (kits por tipo y talla, medias, welcome pack y staff según los inscritos, con un welcome pack por semana inscrita, margen y previsión con el objetivo de registros), Inventario (stock por movimientos: almacén, serigrafía y sedes; inventario inicial de los Excel) y Configuración. Próximamente: Peticiones, Entradas, Preparación y Envíos a sedes. Manual: `Manual_Almacen_Campus_Experience.md` (carpeta CLAUDE).

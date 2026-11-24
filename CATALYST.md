@@ -236,3 +236,7 @@ Zoho indica que `zcatalyst-sdk-node` está en proceso de sustitución por el nue
 - Permisos nuevos: `logistica.necesidades`, `logistica.inventario`, `logistica.configuracion` (bloque «Logística»). Con cualquiera de ellos se puede leer Zoho CRM (Necesidades usa las inscripciones).
 - Colecciones nuevas (protegidas con historial y papelera): `lgcfg` (documento `main`: configuración), `lgart` (un documento por artículo, con su inventario inicial en `ini`) y `lgmov` (movimientos de stock). Leer: cualquier permiso de Logística. Escribir: `lgcfg` con Configuración (editar); `lgart` y `lgmov` con Inventario (editar).
 - El inventario inicial (Excel CONTROL DE ROPA 12/11 y CONTROL DE MATERIALES) va dentro del software y se carga una vez con el botón «Cargar inventario inicial» de Inventario.
+
+## Cuentas (antes Ingresos) (24/11)
+- El permiso `contabilidad.ingresos` se llama ahora «Cuentas» (misma clave: quien lo tenía lo conserva). La vista sigue en `#ingresos` (también `#cuentas`).
+- `POST /api/books/creditnotes` admite también el permiso `contabilidad.ingresos` (Cuentas lee las notas de crédito para restar las devoluciones). Cada nota de crédito trae `refunds` (fecha e importe de cada reembolso) del detalle de Books.

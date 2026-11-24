@@ -1895,8 +1895,14 @@ html.sb-min .sb-cap{visibility:hidden;height:8px;padding:0}
 .si .ic{flex:none;width:22px;height:22px;display:grid;place-items:center}
 .si .ic svg{width:20px;height:20px}
 .si .sl{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.si .sbdg{flex:none;font-size:11px;font-weight:800;font-variant-numeric:tabular-nums;padding:2px 8px;border-radius:96px;background:var(--sb-hov);color:var(--sb-ink)}
-.si .sbdg.hot{background:var(--sb-pink);color:#1a1f2a}
+.sbdg{flex:none;font-size:11px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.45;min-width:20px;text-align:center;box-sizing:border-box;padding:1px 7px;border-radius:96px;background:var(--sb-hov);color:var(--sb-ink)}
+.sbdg.hot{background:var(--sb-pink);color:#1a1f2a}
+/* filas de la barra lateral: nombre a la izquierda (una línea), bolita y flecha siempre en la misma columna */
+.ss.ssm .sl{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ss.ssm .sbdg{margin-left:auto;font-size:10.5px;padding:1px 6px}
+.ss.ssm .chsp{flex:none;width:22px;margin-right:-4px}
+.ss.ssm .sbdg+.chev,.ss.ssm .sbdg+.chsp{margin-left:6px}
+.ssbox .ss.ssm{margin-top:2px!important;min-height:34px}
 .si .soon{flex:none;font-size:8.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:96px;border:1px solid var(--sb-line);color:var(--sb-ink2)}
 .si .chev{flex:none;width:24px;height:24px;margin:-4px -4px -4px 0;border-radius:7px;display:grid;place-items:center;color:var(--sb-ink2);transition:transform .25s,background .18s}
 .si .chev:hover{background:var(--sb-on);color:var(--sb-ink)}
@@ -2020,6 +2026,19 @@ table.lginv tr.gh td{background:var(--surface-2)!important;font-family:var(--f-w
 .lgsedes{display:flex;flex-wrap:wrap;gap:8px}
 .lgsede{display:flex;align-items:center;gap:4px;background:var(--surface-2);border-radius:8px;padding:4px 6px}
 .lgsede input{font:700 13px var(--f-body);border:0;background:transparent;color:var(--ink);width:130px;padding:4px}
+
+/* Cuentas: devoluciones, selección y PDF */
+.ingr.ingdev{background:color-mix(in srgb,var(--bad) 7%,transparent)}
+.ingr .am.neg{color:var(--bad);font-weight:800}
+.ingr>span:nth-child(7){min-width:64px}
+.ingr .cp small{display:block;font-size:10.5px;color:var(--ink-3)}
+.ingd.has-sel{position:relative}
+.ingd.has-sel .ingh{padding-left:44px}
+.ingsel{position:absolute;left:14px;top:14px;z-index:2;display:flex}
+.ingsel input{width:17px;height:17px;accent-color:var(--navy);cursor:pointer}
+.ingpdf{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:10px;font-size:13px}
+.ingpdf span{margin-right:auto}
+.ingpdf small{flex-basis:100%;color:var(--ink-3);font-size:11.5px}
 </style>
 
 <aside class="side" id="side" aria-label="Apartados"><div class="sb-top"><a class="sb-brand" href="#inicio" data-sv="inicio" title="Inicio"><span class="sb-logo">CE</span><span class="sb-bt"><b>Campus Experience</b><small>Software operativo</small></span></a><button class="sb-tog" id="sbTog" type="button" aria-label="Plegar menú" title="Plegar menú (Ctrl/Cmd + B)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 17l-5-5 5-5M18 17l-5-5 5-5"/></svg></button></div><nav class="sb-nav" id="sbNav"></nav><div class="sb-foot"><div class="sb-me" id="sbMe"></div><span class="sb-key" id="sbKey">⌘B</span></div></aside>
@@ -2276,7 +2295,7 @@ table.lginv tr.gh td{background:var(--surface-2)!important;font-family:var(--f-w
     <aside class="incpanel" id="incPanel" role="dialog" aria-modal="true" aria-label="Incidencia" hidden></aside>
   </section>
   <section id="view-ingresos" class="stack" hidden>
-    <div class="eqhead"><div class="eqtitlebox"><h2 class="eqtitle">Ingresos</h2><span class="sub" id="ingSub"></span></div><button class="btn" type="button" id="ingRefresh">Actualizar</button></div>
+    <div class="eqhead"><div class="eqtitlebox"><h2 class="eqtitle">Cuentas</h2><span class="sub" id="ingSub"></span></div><button class="btn" type="button" id="ingRefresh">Actualizar</button></div>
     <div class="seg ingbanks" id="ingBank" role="tablist" aria-label="Banco"></div>
     <div id="ingAlarm" hidden></div>
     <div class="paygrid inggrid" id="ingBoxes" role="group" aria-label="Estado de los días"></div>
@@ -2868,7 +2887,7 @@ function exportCsv(){
 /* events */
 const VIEWS=["inicio","temporada","registros","operativa","horarios","equipos","buses","administracion","pagos","facturas","ingresos","incidencias","atencion","bbdd","limpieza","attstats","logistica","lgnec","lginv","lgcfg","marketing","rrhh"];
 function show(v){
-  if(v==="contabilidad")v="pagos";if(v==="recursos-humanos")v="rrhh";if(v==="atencion-al-publico")v="atencion";
+  if(v==="contabilidad")v="pagos";if(v==="cuentas")v="ingresos";if(v==="recursos-humanos")v="rrhh";if(v==="atencion-al-publico")v="atencion";
   if(!VIEWS.includes(v))v="inicio";
   document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-selected",x.dataset.view===v?"true":"false"));
   VIEWS.forEach(n=>{$("view-"+n).hidden=n!==v});
@@ -4916,7 +4935,7 @@ const accCan=k=>!window.CE_ACL||!!window.CE_ACL.admin||!!(window.CE_ACL.perms||{
 const is2027Inv=n=>{n=String(n||"");return n.startsWith(INV_PREFIX)||n.startsWith(INV_AND_PREFIX)||/^[A-Z]+\d*27\./.test(n)};
 function cnFrom(){const ds=(INV.list||[]).map(i=>i.date).filter(Boolean).sort();return ds[0]||"2026-06-01"}
 async function loadCN(force){
-  if(!S.mcp||CN.busy)return;if(!accCan("devoluciones")&&!accCan("cancelaciones"))return;
+  if(!S.mcp||CN.busy)return;if(!accCan("devoluciones")&&!accCan("cancelaciones")&&!accCan("ingresos"))return;
   CN.busy=true;try{renderDev();renderCan()}catch(e){}
   try{const all=[];
     for(const org of [BOOKS_ORG,BOOKS_ORG_AND])for(let page=1;page<=10;page++){
@@ -4927,7 +4946,7 @@ async function loadCN(force){
       d.creditnotes.forEach(c=>{c._org=org;all.push(c)});if(!d.page_context||!d.page_context.has_more_page)break}
     CN.list=all;CN.err="";CN.at=new Date()}
   catch(e){const c=e&&e.code;CN.err=(c==="not_in_manifest"||c==="server_not_connected"||c==="approval_required"||c==="tool_error"||c==="unknown_tool")?"Las rectificativas (notas de crédito de Zoho Books) solo se leen desde el software operativo: aquí se ven las devoluciones pendientes, pero no si ya están hechas.":"No se han podido leer las rectificativas de Zoho Books"+(e&&e.message?" ("+e.message+")":"")+"."}
-  CN.busy=false;try{renderDev();renderCan()}catch(e){}}
+  CN.busy=false;try{renderDev();renderCan()}catch(e){}try{renderIngresos()}catch(e){}}
 function accDeals(){const m=new Map();(S.allRows||[]).concat(S.xRows||[]).forEach(r=>{if(!m.has(String(r.id)))m.set(String(r.id),r)});return [...m.values()]}
 /* facturas y rectificativas de cada inscripción */
 function accIndex(){
@@ -5775,10 +5794,10 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-incfrom]")
    (un cobro a las 23:01 del lunes cuenta en el martes). La hora del cobro sale de la referencia de la factura
    (aaaammddhhmm, en UTC); si no la trae, se usa la hora en que Books registró la factura y se marca como aproximada.
    Cuadrar un día guarda quién y cuándo, el total y las facturas de ese momento: si después cambia, el día pasa a «Revisar». */
-var ING={f:"pend",q:"",camp:"",open:new Set(),docs:{},me:null,bank:"san",mv:{},mvOpen:null};
+var ING={f:"pend",q:"",camp:"",open:new Set(),docs:{},me:null,bank:"san",mv:{},mvOpen:null,sel:new Set()};
 /* bancos: Santander (Madrid y nacionales), Sabadell (institucionales), LaCaixa (Andorra, que factura en ISL Agency) */
 const ING_BANKS=[["san","Santander","Madrid y nacionales"],["sab","Sabadell","Institucionales"],["cai","LaCaixa","Andorra"]];
-const ingBankOf=o=>o.i._org===BOOKS_ORG_AND?"cai":sedeOfCamp(o.camp)==="inst"?"sab":"san";
+const ingBankOf=o=>(o.i||o.cn)._org===BOOKS_ORG_AND?"cai":sedeOfCamp(o.camp)==="inst"?"sab":"san";
 const ingDocKey=(bank,day)=>bank==="san"?"d"+day:"d"+day+"-"+bank;
 const ING_TZ=new Intl.DateTimeFormat("en-GB",{timeZone:"Europe/Madrid",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"});
 function ingLocal(d){const p={};ING_TZ.formatToParts(d).forEach(x=>{p[x.type]=x.value});return {y:+p.year,m:+p.month,d:+p.day,h:+p.hour%24,mi:+p.minute}}
@@ -5799,10 +5818,19 @@ function ingRows(){const byId={};(S.allRows||[]).forEach(r=>{byId[String(r.id)]=
     const o={i,w,mvh,r,deal:dm?dm[1]:null,camp,player:i.cf_jugador||i.cf_player_name||(r&&r.name)||"",fam:i.customer_name||"",amt:r2(i.total)};
     if(o.deal)(perDeal[o.deal]=perDeal[o.deal]||[]).push(o);return o});
   Object.values(perDeal).forEach(a=>{a.sort((x,y)=>(x.w?+x.w.d:0)-(y.w?+y.w.d:0));a.forEach((o,k)=>{o.n=k+1;o.of=a.length})});
-  out.forEach(o=>{o.cp=!o.deal?(Math.abs(o.amt-50)<.01?"Reserva":"Pago"):(o.of===1&&o.r&&o.r.d&&Math.abs(r2(o.r.d.Total)-o.amt)<.01)?"Pago completo":(["1er","2º","3er"][o.n-1]||o.n+"º")+" pago"});
+  /* devoluciones (Cuentas): cada reembolso de una nota de crédito de Books cuenta en negativo el día en que se hizo el reembolso,
+     en el mismo banco que su factura. Solo notas de crédito de la campaña 2027 con reembolso registrado. */
+  let cnDeal={};try{const X=accIndex();Object.entries(X.cnByDeal||{}).forEach(([id,cs])=>cs.forEach(c=>{cnDeal[c._org+":"+c.creditnote_id]=id}))}catch(e){}
+  (CN.list||[]).filter(c=>c.status!=="void"&&c.status!=="draft"&&Array.isArray(c.refunds)&&c.refunds.length&&(is2027Inv(c.invoice_number)||(c.applied||[]).some(a=>is2027Inv(a.invoice_number))||cnDeal[c._org+":"+c.creditnote_id])).forEach(c=>{
+    const id=cnDeal[c._org+":"+c.creditnote_id]||null;const r=id?(byId[id]||accDeals().find(x=>String(x.id)===id)||null):null;
+    const invN=c.invoice_number||((c.applied||[])[0]||{}).invoice_number||"";const ser=invSeries(invN);
+    const camp=r?(r.camp||"mad"):c._org===BOOKS_ORG_AND?"and":ser===INV_PREFIX?"mad":(ING_SER[ser.replace(/27$/,"")]||"");
+    c.refunds.forEach((f,k)=>{if(!/^\d{4}-\d{2}-\d{2}/.test(String(f.date||""))||!(+f.amount>0))return;const day=String(f.date).slice(0,10);
+      out.push({i:null,cn:c,rk:c.creditnote_id+"#"+k,num:c.creditnote_number,inv:invN,w:{d:new Date(day+"T12:00:00Z"),day,orig:day,hm:"",late:false,exact:false,dev:true},mvh:[],r,deal:id,camp,player:c.cf_jugador||(r&&r.name)||"",fam:c.customer_name||"",amt:-r2(+f.amount),cp:"Devolución"})})});
+  out.forEach(o=>{if(o.cn)return;o.num=o.i.invoice_number;o.cp=!o.deal?(Math.abs(o.amt-50)<.01?"Reserva":"Pago"):(o.of===1&&o.r&&o.r.d&&Math.abs(r2(o.r.d.Total)-o.amt)<.01)?"Pago completo":(["1er","2º","3er"][o.n-1]||o.n+"º")+" pago"});
   return out}
 function ingDays(rows,bank){bank=bank||ING.bank;const by={};rows.forEach(o=>{if(o.w&&ingBankOf(o)===bank)(by[o.w.day]=by[o.w.day]||[]).push(o)});
-  return Object.entries(by).map(([day,ps])=>{ps.sort((a,b)=>a.w.d-b.w.d);const total=r2(ps.reduce((a,o)=>a+o.amt,0));const doc=ING.docs[ingDocKey(bank,day)]||null;const sig=ps.map(o=>o.i.invoice_number).sort().join(",");
+  return Object.entries(by).map(([day,ps])=>{ps.sort((a,b)=>a.w.d-b.w.d);const total=r2(ps.reduce((a,o)=>a+o.amt,0));const doc=ING.docs[ingDocKey(bank,day)]||null;const sig=ps.map(o=>o.cn?o.num+" devolución "+eur(o.amt):o.i.invoice_number).sort().join(",");
     let st="pend",chg=null;if(doc&&doc.ok){if(Math.abs(r2(doc.total)-total)<.01&&doc.sig===sig)st="ok";else{st="rev";const A=new Set(String(doc.sig||"").split(",").filter(Boolean)),B=new Set(sig.split(","));chg={add:[...B].filter(x=>!A.has(x)),del:[...A].filter(x=>!B.has(x)),was:r2(doc.total)}}}
     return {day,ps,total,doc,sig,st,chg}}).sort((a,b)=>b.day.localeCompare(a.day))}
 const ingEdit=()=>!window.CE_ACL||!!window.CE_ACL.admin||(((window.CE_ACL.perms||{})["contabilidad.ingresos"]||0)>=2);
@@ -5817,6 +5845,7 @@ function renderIngresos(){
   const cs=CAMPS.filter(c=>c.kind!=="inst");$("ingCamp").innerHTML='<option value="">Todos los campus</option>'+cs.map(c=>'<option value="'+c.id+'"'+(ING.camp===c.id?" selected":"")+">"+esc(c.n)+"</option>").join("");
   if(INV.err&&!INV.list){$("ingBank").innerHTML="";$("ingBoxes").innerHTML="";$("ingCount").textContent="";$("ingList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Sin datos de Zoho Books</h3><p>'+esc(INV.err)+"</p></div>";return}
   if(!INV.list){$("ingBoxes").innerHTML="";$("ingCount").textContent="";$("ingList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Cargando cobros…</h3></div>';return}
+  if(!CN.list&&!CN.busy&&!CN.err&&S.mcp)try{loadCN(false)}catch(e){}
   const R=ingRows();
   $("ingBank").innerHTML=ING_BANKS.map(([b,l,sub])=>{const n=ingDays(R,b).filter(d=>d.st!=="ok").length;return '<button type="button" role="tab" data-ingbk="'+b+'" aria-pressed="'+(ING.bank===b)+'" aria-selected="'+(ING.bank===b)+'">'+l+" <small>"+sub+'</small><span class="n'+(n?"":" z")+'" title="Días por cuadrar o revisar">'+n+"</span></button>"}).join("");
   /* dos cajas: Por cuadrar y Cuadrados. Un día cuadrado que cambia después («rev») sigue en Cuadrados, en rojo, y salta la alarma */
@@ -5828,12 +5857,15 @@ function renderIngresos(){
     '<div class="mny" aria-label="Total cuadrado"><div class="mv keep"><i>Total cuadrado</i><b>'+eur(tot)+"</b><small>"+np+(np===1?" cobro en ":" cobros en ")+okDays.length+(okDays.length===1?" día cuadrado":" días cuadrados")+(nRev?" · no suma los días que han cambiado":"")+"</small></div></div>";
   const al=$("ingAlarm");if(nRev){al.hidden=false;al.innerHTML='<div class="ingalarm" role="alert"><p>'+(nRev>1?nRev+" días cuadrados han cambiado después de cuadrarse":"Un día cuadrado ha cambiado después de cuadrarse")+"<small>Hay cobros nuevos o con otro importe. Revísalo y vuelve a cuadrarlo.</small></p>"+'<button type="button" class="btn" data-ingalarm="1">Ver '+(nRev>1?"los días":"el día")+"</button></div>"}else{al.hidden=true;al.innerHTML=""}
   const nrm=t=>String(t).normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();const q=nrm(ING.q.trim());
-  const match=o=>(!ING.camp||o.camp===ING.camp)&&(!q||nrm(o.fam+" "+o.player+" "+o.i.invoice_number+" "+(o.r?o.r.code:"")).includes(q));
+  const match=o=>(!ING.camp||o.camp===ING.camp)&&(!q||nrm(o.fam+" "+o.player+" "+o.num+" "+(o.inv||"")+" "+(o.r?o.r.code:"")).includes(q));
   const filt=!!(q||ING.camp);
   let list=days.filter(d=>box(d)===ING.f);if(filt)list=list.filter(d=>d.ps.some(match));
   $("ingCount").textContent=list.length+" días";
   if(!list.length){$("ingList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">'+(ING.f==="pend"&&!filt?"Todo cuadrado":ING.f==="ok"&&!filt?"Ningún día cuadrado todavía":"Ningún día")+"</h3>"+(ING.bank==="cai"&&INV.andErr?"<p>"+esc(INV.andErr)+"</p>":ING.bank==="cai"?"<p>Cobros de Andorra (Zoho Books · ISL Agency, serie "+INV_AND_PREFIX+").</p>":"")+"</div>";return}
   const ed=ingEdit();let h="",curM="";
+  /* descarga en PDF: solo días cuadrados (y que no hayan cambiado), un PDF por banco */
+  if(ING.f==="ok"){const okL=list.filter(d=>d.st==="ok");const n=okL.filter(d=>ING.sel.has(ING.bank+"|"+d.day)).length;
+    h+='<div class="ingpdf"><span><b>'+n+"</b> "+(n===1?"día seleccionado":"días seleccionados")+" para el PDF de "+esc(ING_BANKS.find(b=>b[0]===ING.bank)[1])+'</span><button type="button" class="btn" data-ingselall="1">Seleccionar todos</button>'+(n?'<button type="button" class="btn" data-ingselall="0">Quitar selección</button>':"")+'<button type="button" class="btn primary" data-ingpdf'+(n?"":" disabled")+'>Descargar PDF</button><small>Solo se pueden descargar los días cuadrados. Los que han cambiado hay que volver a cuadrarlos.</small></div>'}
   const mt={};list.forEach(d=>{const m=d.day.slice(0,7);mt[m]=mt[m]||{n:0,t:0};mt[m].n++;mt[m].t=r2(mt[m].t+d.total)});
   list.forEach(d=>{const m=d.day.slice(0,7);
     if(m!==curM){curM=m;h+='<div class="ingm">'+esc(ingDate(m+"-15",{month:"long",year:"numeric"}))+"<span>"+mt[m].n+" días</span><b>"+eur(mt[m].t)+"</b></div>"}
@@ -5843,13 +5875,17 @@ function renderIngresos(){
     const who=d.doc&&d.doc.ok?'<span class="ingwho">'+(d.st==="rev"?"Cuadrado antes por ":"Cuadrado por ")+"<b>"+esc(d.doc.byName||"—")+"</b><br>"+esc(d.doc.at?new Date(d.doc.at).toLocaleString("es-ES",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}):"")+"</span>":"";
     const btn=d.st==="ok"?'<button type="button" class="ingok done" data-ingok="'+d.day+'"'+(ed?' title="Quitar la marca"':" disabled")+'>✓ Cuadrado</button>':d.st==="rev"?'<button type="button" class="ingok rev" data-ingok="'+d.day+'"'+(ed?"":" disabled")+">Volver a cuadrar</button>":(ed?'<button type="button" class="ingok" data-ingok="'+d.day+'">Marcar cuadrado</button>':'<span class="ingwho">Por cuadrar</span>');
     const open=ING.open.has(d.day)||(filt&&shown.length<=6);
-    h+='<div class="ingd st-'+d.st+(open?" open":"")+'" data-ingday="'+d.day+'"><div class="ingh" data-ingtog="'+d.day+'"><button type="button" class="chev" aria-label="Ver los cobros" aria-expanded="'+open+'"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>'+
+    const sk=ING.bank+"|"+d.day;const pick=d.st==="ok"?'<label class="ingsel" title="Incluir en el PDF"><input type="checkbox" data-ingsel="'+d.day+'"'+(ING.sel.has(sk)?" checked":"")+' aria-label="Incluir el '+esc(d.day)+' en el PDF"></label>':"";
+    h+='<div class="ingd st-'+d.st+(open?" open":"")+(pick?" has-sel":"")+'" data-ingday="'+d.day+'">'+pick+'<div class="ingh" data-ingtog="'+d.day+'"><button type="button" class="chev" aria-label="Ver los cobros" aria-expanded="'+open+'"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>'+
       '<span class="dd2"><b>'+esc(ingDate(d.day,{weekday:"long",day:"numeric",month:"short"}))+"</b><small>23:00 del "+esc(ingDate(prev,{day:"numeric"}))+" → 22:59 del "+esc(ingDate(d.day,{day:"numeric"}))+"</small></span>"+
       '<span class="np">'+d.ps.length+" cobro"+(d.ps.length>1?"s":"")+(filt?"<br><small>filtrado: "+eur(sub)+"</small>":"")+'</span><span class="tot">'+eur(d.total)+"</span>"+
       '<span class="ingbank"><label>Banco <input type="text" inputmode="decimal" data-ingbank="'+d.day+'" value="'+(bank==null?"":String(bank).replace(".",","))+'" placeholder="Importe" aria-label="Importe del banco el '+esc(d.day)+'"></label>'+(diff==null?"":Math.abs(diff)<.01?'<span class="ingdiff ok">Cuadra</span>':'<span class="ingdiff ko">'+(diff>0?"+":"")+eur(diff)+"</span>")+"</span>"+
       '<span class="ingact">'+who+btn+"</span></div>";
     if(d.st==="rev"&&d.chg)h+='<div class="ingrev">Ha cambiado desde que se cuadró: antes '+eur(d.chg.was)+", ahora "+eur(d.total)+(d.chg.add.length?" · nuevas: "+esc(d.chg.add.join(", ")):"")+(d.chg.del.length?" · ya no están: "+esc(d.chg.del.join(", ")):"")+"</div>";
     h+='<div class="ingp">'+shown.map(o=>{const c=campById(o.camp);const fl=[];
+        if(o.cn)return '<div class="ingr ingdev"><span class="hr" title="Día del reembolso (Books no guarda la hora)">—</span><span class="who"'+(o.r?' data-ingpid="'+esc(o.r.id)+'"':"")+'><b>'+esc(o.player||o.fam||"—")+"</b><small>"+esc(o.player&&o.fam&&o.fam!==o.player?o.fam:(o.cn.email||""))+"</small></span>"+
+          '<span class="cmp">'+(c?'<span class="ctag ct-'+c.kind+'">'+esc(c.n)+"</span>":"")+'</span><span class="cp">Devolución'+(o.inv?"<small>de "+esc(o.inv)+"</small>":"")+"</span>"+
+          '<a class="ichip cn" href="'+cnUrl(o.cn)+'" target="_blank" rel="noopener" title="Abrir la nota de crédito en Zoho Books">'+esc(o.num)+"</a>"+'<span class="am neg">'+eur(o.amt)+"</span><span></span></div>";
         if(o.deal&&!o.r)fl.push("La inscripción no está activa en el software (baja, devolución o borrada)");
         if(+o.i.balance>0)fl.push("Books no tiene registrado el cobro de esta factura (pendiente "+eur(o.i.balance)+")");
         const soft=[];if(o.w.late&&!o.w.moved)soft.push("Pagado después de las 23:00: cuenta en este día");
@@ -5869,7 +5905,7 @@ function renderIngresos(){
 async function ingSave(day,patch,msg){if(!S.db){toast("No se puede guardar en esta vista");return}
   const k=ingDocKey(ING.bank,day);const doc=Object.assign({},ING.docs[k]||{},patch,{updatedAt:new Date().toISOString()});if(S.me)doc.updatedBy=S.me;
   ING.docs[k]=doc;renderIngresos();
-  try{await S.db.collection("ing").doc(k).set(doc);if(msg)toast(msg)}catch(e){toast(e&&e.code==="permission_denied"?"No tienes permiso para cuadrar ingresos":"No se pudo guardar. Vuelve a intentarlo.")}}
+  try{await S.db.collection("ing").doc(k).set(doc);if(msg)toast(msg)}catch(e){toast(e&&e.code==="permission_denied"?"No tienes permiso para cuadrar cuentas":"No se pudo guardar. Vuelve a intentarlo.")}}
 async function ingMe(){if(ING.me)return ING.me;try{ING.me=S.user?await S.user.me():null}catch(e){}return ING.me||{}}
 $("ingBoxes").addEventListener("click",e=>{const b=e.target.closest("[data-gf]");if(!b)return;ING.f=b.dataset.gf;renderIngresos()});
 $("ingAlarm").addEventListener("click",e=>{if(!e.target.closest("[data-ingalarm]"))return;ING.f="ok";ING.q="";ING.camp="";$("ingQ").value="";
@@ -5879,6 +5915,8 @@ $("ingQ").addEventListener("input",e=>{ING.q=e.target.value;renderIngresos()});
 $("ingCamp").addEventListener("change",e=>{ING.camp=e.target.value;renderIngresos()});
 $("ingRefresh").addEventListener("click",()=>loadBooks(true));
 $("ingList").addEventListener("click",async e=>{let b;
+  if((b=e.target.closest("[data-ingselall]"))){const R0=ingDays(ingRows()).filter(d=>d.st==="ok");R0.forEach(d=>{const k=ING.bank+"|"+d.day;if(b.dataset.ingselall==="1")ING.sel.add(k);else ING.sel.delete(k)});renderIngresos();return}
+  if(e.target.closest("[data-ingpdf]")){ingPdfDownload();return}
   if(e.target.closest("a")||e.target.closest("input")||e.target.closest("label"))return;
   if((b=e.target.closest("[data-ingmvback]"))){ingMove(b.dataset.ingmvback,null);return}
   if((b=e.target.closest("[data-ingmv]"))){const id=b.dataset.ingmv;ING.mvOpen=ING.mvOpen===id?null:id;renderIngresos();return}
@@ -5888,15 +5926,67 @@ $("ingList").addEventListener("click",async e=>{let b;
   if((b=e.target.closest("[data-ingpid]"))){if(typeof openDrawer==="function")openDrawer(b.dataset.ingpid);return}
   if((b=e.target.closest("[data-ingtog]"))){const day=b.dataset.ingtog;if(ING.open.has(day))ING.open.delete(day);else ING.open.add(day);renderIngresos()}});
 $("ingBank").addEventListener("click",e=>{const b=e.target.closest("[data-ingbk]");if(!b)return;ING.bank=b.dataset.ingbk;ING.mvOpen=null;renderIngresos()});
+/* ---- extracto diario en PDF (Cuentas) ----
+   Un PDF por banco con los días cuadrados elegidos: encabezado del día, todos sus movimientos (cobros y devoluciones)
+   con hora, jugador/familia, campus, concepto, número de factura o de nota de crédito e importe, y el total marcado como cuadrado.
+   No lleva quién ni cuándo se cuadró (eso es interno). */
+function ingPdf(bank,days){const BK=ING_BANKS.find(b=>b[0]===bank);const W=595,Hh=842,M=36;
+  const WIN={"–":150,"—":151,"…":133,"€":128,"’":146,"‘":145,"“":147,"”":148,"•":149,"≈":126};
+  const enc=s=>{let o="";for(const ch of String(s)){let c=ch.codePointAt(0);if(WIN[ch])c=WIN[ch];else if(c>255)c=63;const x=String.fromCharCode(c);o+=x==="("||x===")"||x==="\\"?"\\"+x:x}return o};
+  const rgb=h=>[0,2,4].map(i=>(parseInt(h.slice(i,i+2),16)/255).toFixed(3)).join(" ");
+  const tw=(t,sz,b)=>String(t).length*sz*(b?.56:.5);
+  const fit=(t,sz,b,max)=>{t=String(t);if(tw(t,sz,b)<=max)return t;while(t.length>1&&tw(t+"…",sz,b)>max)t=t.slice(0,-1);return t+"…"};
+  const eurP=v=>eur(v).replace(/\u00a0/g," ");
+  const pages=[];let s="",y=0;
+  const Y=v=>(Hh-v).toFixed(2);
+  const text=(x,yy,t,sz,b,col,right)=>{const xx=right?x-tw(t,sz,b):x;s+="BT /"+(b?"F2":"F1")+" "+sz+" Tf "+rgb(col)+" rg "+xx.toFixed(2)+" "+Y(yy)+" Td ("+enc(t)+") Tj ET\n"};
+  const rect=(x,yy,w0,h0,fill)=>{s+=rgb(fill)+" rg "+x.toFixed(2)+" "+Y(yy+h0)+" "+w0.toFixed(2)+" "+h0.toFixed(2)+" re f\n"};
+  const line=(x1,y1,x2,y2,col,lw)=>{s+=rgb(col)+" RG "+(lw||.4)+" w "+x1.toFixed(2)+" "+Y(y1)+" m "+x2.toFixed(2)+" "+Y(y2)+" l S\n"};
+  const newPage=()=>{if(s)pages.push(s);s="";y=M;text(M,y+8,"CAMPUS EXPERIENCE · CUENTAS · "+BK[1].toUpperCase()+" ("+BK[2]+")",8,true,"EA456C");y+=24};
+  const C=[[M,"Hora",40],[M+40,"Jugador / familia",170],[M+210,"Campus",70],[M+280,"Concepto",95],[M+375,"Factura / NC",75]];const RX=W-M;
+  const head=()=>{rect(M,y,W-2*M,16,"0F2145");C.forEach(([x,l])=>text(x+4,y+11,l,7.5,true,"FFFFFF"));text(RX-4,y+11,"Importe",7.5,true,"FFFFFF",true);y+=18};
+  newPage();
+  days.forEach((d,di)=>{if(y>Hh-M-120)newPage();else if(di)y+=14;
+    const prev=ingKey(+d.day.slice(0,4),+d.day.slice(5,7),+d.day.slice(8)-1);const t=ingDate(d.day,{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+    text(M,y+14,(t.charAt(0).toUpperCase()+t.slice(1)).replace(",",""),15,true,"0F2145");y+=20;
+    text(M,y+9,"Día de la plataforma de pago: de las 23:00 del "+ingDate(prev,{day:"numeric",month:"long"})+" a las 22:59 del "+ingDate(d.day,{day:"numeric",month:"long"})+" · "+d.ps.length+(d.ps.length===1?" movimiento":" movimientos"),8,false,"2F3E40");y+=16;
+    head();
+    d.ps.forEach((o,k)=>{if(y>Hh-M-40){newPage();head()}
+      if(k%2)rect(M,y-1,W-2*M,15,"F2F2F2");const c=campById(o.camp);const neg=o.amt<0;const col=neg?"C0392B":"1E1E1E";
+      const who=(o.player||o.fam||"—")+(o.player&&o.fam&&o.fam!==o.player?" · "+o.fam:"");
+      text(C[0][0]+4,y+10,o.cn?"—":((o.w.exact?"":"≈")+o.w.hm),7.5,false,col);
+      text(C[1][0]+4,y+10,fit(who,7.5,false,C[1][2]-8),7.5,false,col);
+      text(C[2][0]+4,y+10,fit(c?c.n:"",7.5,false,C[2][2]-8),7.5,false,col);
+      text(C[3][0]+4,y+10,fit(o.cn?("Devolución"+(o.inv?" de "+o.inv:"")):(o.cp+(o.w.moved?" (movido)":"")),7.5,false,C[3][2]-8),7.5,false,col);
+      text(C[4][0]+4,y+10,fit(o.num,7.5,true,C[4][2]-8),7.5,true,col);
+      text(RX-4,y+10,eurP(o.amt),7.5,true,col,true);y+=15});
+    line(M,y+1,RX,y+1,"0F2145",.8);y+=4;
+    rect(M,y,W-2*M,22,"E8F5EE");text(M+6,y+15,"Total del día",10,true,"0F2145");text(M+110,y+15,"Cuadrado",9,true,"1F9D6B");
+    text(RX-6,y+15,eurP(d.total),11,true,"0F2145",true);y+=26});
+  const tot=r2(days.reduce((a,d)=>a+d.total,0));if(y>Hh-M-40)newPage();y+=8;line(M,y,RX,y,"D2D2D2",.5);y+=4;
+  text(M,y+12,days.length+(days.length===1?" día":" días")+" · total",9,true,"2F3E40");text(RX-6,y+12,eurP(tot),10,true,"0F2145",true);
+  pages.push(s);
+  const objs=[];const add=x=>{objs.push(x);return objs.length};const cat=add(""),pagesId=add("");
+  const f1=add("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>"),f2=add("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>");
+  const kids=pages.map((st,pi)=>{st+="BT /F1 7 Tf "+rgb("808080")+" rg "+(W-M-50).toFixed(2)+" "+(M/2).toFixed(2)+" Td ("+enc("Pág. "+(pi+1)+" / "+pages.length)+") Tj ET\n";const c=add("<< /Length "+st.length+" >>\nstream\n"+st+"endstream");return add("<< /Type /Page /Parent "+pagesId+" 0 R /MediaBox [0 0 "+W+" "+Hh+"] /Resources << /Font << /F1 "+f1+" 0 R /F2 "+f2+" 0 R >> >> /Contents "+c+" 0 R >>")});
+  objs[cat-1]="<< /Type /Catalog /Pages "+pagesId+" 0 R >>";objs[pagesId-1]="<< /Type /Pages /Kids ["+kids.map(k=>k+" 0 R").join(" ")+"] /Count "+kids.length+" >>";
+  let out="%PDF-1.4\n%âãÏÓ\n";const offs=[];objs.forEach((o,i)=>{offs.push(out.length);out+=(i+1)+" 0 obj\n"+o+"\nendobj\n"});
+  const xr=out.length;out+="xref\n0 "+(objs.length+1)+"\n0000000000 65535 f \n"+offs.map(o=>String(o).padStart(10,"0")+" 00000 n \n").join("")+"trailer\n<< /Size "+(objs.length+1)+" /Root "+cat+" 0 R /Info << /Title ("+enc("Cuentas "+BK[1])+") /Producer (Campus Experience) >> >>\nstartxref\n"+xr+"\n%%EOF";
+  const u=new Uint8Array(out.length);for(let i=0;i<out.length;i++)u[i]=out.charCodeAt(i)&255;return u}
+async function ingPdfDownload(){const days=ingDays(ingRows()).filter(d=>d.st==="ok"&&ING.sel.has(ING.bank+"|"+d.day)).sort((a,b)=>a.day.localeCompare(b.day));
+  if(!days.length){toast("Elige al menos un día cuadrado");return}
+  const data=ingPdf(ING.bank,days);const BK=ING_BANKS.find(b=>b[0]===ING.bank)[1];const name="Cuentas_"+BK+"_"+days[0].day+(days.length>1?"_a_"+days[days.length-1].day:"")+".pdf";
+  try{if(S.dl)await S.dl.save({filename:name,data});else{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([data],{type:"application/pdf"}));a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000)}toast("PDF descargado")}
+  catch(e){toast(e&&e.code==="not_granted"?"Descarga cancelada":"No se pudo descargar el PDF")}}
 /* mover un cobro de día: guarda el día elegido y todo el historial (quién, cuándo, de qué día a qué día) */
 async function ingMove(invId,toDay){if(!ingEdit()||!S.db){toast("No se puede guardar en esta vista");return}
-  const o=ingRows().find(x=>String(x.i.invoice_id)===String(invId));if(!o||!o.w)return;
+  const o=ingRows().find(x=>x.i&&String(x.i.invoice_id)===String(invId));if(!o||!o.w)return;
   const orig=o.w.orig,cur=o.w.day;toDay=toDay||orig;if(!/^\d{4}-\d{2}-\d{2}$/.test(toDay)||toDay===cur){ING.mvOpen=null;renderIngresos();return}
   const me=await ingMe();const k="i"+invId;const prev=ING.mv[k]||{};
   const doc={inv:String(invId),num:o.i.invoice_number,orig,day:toDay,hist:(prev.hist||[]).concat([{from:cur,to:toDay,by:S.me||null,byName:me.name||"",at:new Date().toISOString()}]),updatedAt:new Date().toISOString()};
   ING.mv[k]=doc;ING.mvOpen=null;renderIngresos();
   try{await S.db.collection("ingmv").doc(k).set(doc);toast(toDay===orig?"Cobro devuelto a su día":"Cobro movido al "+ingDate(toDay,{day:"numeric",month:"short"}))}catch(e){toast(e&&e.code==="permission_denied"?"No tienes permiso para mover cobros":"No se pudo guardar. Vuelve a intentarlo.")}}
-$("ingList").addEventListener("change",e=>{const mv=e.target.closest("[data-ingmvd]");if(mv){ingMove(mv.dataset.ingmvd,mv.value);return}const el=e.target.closest("[data-ingbank]");if(!el)return;if(!ingEdit()){renderIngresos();return}const v=ingNum(el.value);if(Number.isNaN(v)){toast("Importe no válido");renderIngresos();return}
+$("ingList").addEventListener("change",e=>{const sl=e.target.closest("[data-ingsel]");if(sl){const k=ING.bank+"|"+sl.dataset.ingsel;if(sl.checked)ING.sel.add(k);else ING.sel.delete(k);renderIngresos();return}const mv=e.target.closest("[data-ingmvd]");if(mv){ingMove(mv.dataset.ingmvd,mv.value);return}const el=e.target.closest("[data-ingbank]");if(!el)return;if(!ingEdit()){renderIngresos();return}const v=ingNum(el.value);if(Number.isNaN(v)){toast("Importe no válido");renderIngresos();return}
   ingSave(el.dataset.ingbank,{bank:v},v==null?"Importe del banco borrado":"Importe del banco guardado")});
 $("ingList").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.matches("[data-ingbank]"))e.target.blur()});
 $("payBoxes").addEventListener("click",e=>{const b=e.target.closest("[data-ptab]");if(!b)return;PAY.tab=b.dataset.ptab;renderPagos()});
@@ -6205,7 +6295,7 @@ $("lgInvQ").addEventListener("input",e=>{LG.inv.q=e.target.value;renderLgInv()})
 $("lgInvNc").addEventListener("change",e=>{LG.inv.nc=e.target.checked;renderLgInv()});
 
 const CHEV=SVG('<path d="m9 6 6 6-6 6"/>');
-const SB_LBL={inicio:"Inicio",temporada:"Campus Experience 2027",registros:"Registros",operativa:"Operativa",horarios:"Horarios",equipos:"Equipos",buses:"Buses",administracion:"Administración",pagos:"Contabilidad",facturas:"Facturas",ingresos:"Ingresos",incidencias:"Incidencias",atencion:"Atención al público",bbdd:"Base de datos",limpieza:"Limpieza",attstats:"Estadísticas",logistica:"Logística",lgnec:"Necesidades",lginv:"Inventario",lgcfg:"Configuración",marketing:"Marketing",rrhh:"Recursos Humanos",admin:"Usuarios y accesos"};
+const SB_LBL={inicio:"Inicio",temporada:"Campus Experience 2027",registros:"Registros",operativa:"Operativa",horarios:"Horarios",equipos:"Equipos",buses:"Buses",administracion:"Administración",pagos:"Contabilidad",facturas:"Facturas",ingresos:"Cuentas",incidencias:"Incidencias",atencion:"Atención al público",bbdd:"Base de datos",limpieza:"Limpieza",attstats:"Estadísticas",logistica:"Logística",lgnec:"Necesidades",lginv:"Inventario",lgcfg:"Configuración",marketing:"Marketing",rrhh:"Recursos Humanos",admin:"Usuarios y accesos"};
 /* bloques de la temporada y a qué bloque pertenece cada pantalla */
 const SEASON=2027;
 const GRP_OF={inicio:"inicio",temporada:"temporada",registros:"registros",operativa:"operativa",horarios:"operativa",equipos:"operativa",buses:"operativa",incidencias:"operativa",administracion:"administracion",pagos:"administracion",facturas:"administracion",ingresos:"administracion",atencion:"atencion",bbdd:"atencion",limpieza:"atencion",attstats:"atencion",logistica:"logistica",lgnec:"logistica",lginv:"logistica",lgcfg:"logistica",marketing:"marketing",rrhh:"rrhh",admin:"admin"};
@@ -6261,14 +6351,17 @@ function renderSide(){
   const AR=S.allRows||[];let late=0;try{late=AR.filter(r=>payState(r).k==="late").length}catch(e){}
   const regN=ACL&&!CAN("registros.campus")&&!CAN("registros.todos")?(S.rows||[]).length:AR.length;if(ACL&&!CAN("contabilidad.pagos"))late=0;
   const bd={registros:regN?'<span class="sbdg">'+regN+"</span>":"",pagos:late?'<span class="sbdg hot" title="'+late+' impagos">'+late+"</span>":""};
-  const modH=(m,ss)=>viewOk(m)?'<button type="button" class="ss ssm" data-sv="'+m+'" data-ss="'+ss+'"><span class="ic">'+SB_IC[m]+"</span><span>"+SB_LBL[m]+"</span>"+(m==="pagos"&&late?'<span class="n" style="color:var(--sb-pink)">'+late+" impagos</span>":"")+(m==="facturas"&&invErr?'<span class="n" style="color:var(--sb-pink)">'+invErr+" errores</span>":"")+(m==="incidencias"&&myInc?'<span class="n" style="color:var(--sb-pink)">'+myInc+" te tocan</span>":"")+"</button>":"";
+  /* avisos de los apartados: la misma bolita que los bloques (solo el número; el detalle va en el título al pasar el ratón) */
+  const dot=m=>{const x={pagos:[late,"impagos"],facturas:[invErr,"errores de facturas"],incidencias:[myInc,"incidencias en las que te toca actuar"],ingresos:[ingRev,"días cuadrados que han cambiado"]}[m];return x&&x[0]?'<span class="sbdg hot" title="'+x[0]+" "+x[1]+'" aria-label="'+x[0]+" "+x[1]+'">'+x[0]+"</span>":""};
+  const modH=(m,ss)=>viewOk(m)?'<button type="button" class="ss ssm" data-sv="'+m+'" data-ss="'+ss+'"><span class="ic">'+SB_IC[m]+'</span><span class="sl">'+SB_LBL[m]+"</span>"+dot(m)+'<span class="chsp"></span></button>':"";
   /* apartado con sus semanas plegables (Horarios, Equipos, Contabilidad): se abre con la flecha o al entrar en él */
   const modF=(m,ss)=>{if(!viewOk(m))return "";const sub=sbSub(m);if(!sub)return modH(m,ss);const k="m:"+m,open=SB_OPEN.has(k);
-    return '<div class="sm'+(open?" open":"")+'" data-m="'+k+'">'+modH(m,ss).replace(/<\/button>$/,'<span class="chev" data-sx="'+k+'" role="button" aria-label="Desplegar '+SB_LBL[m]+'" aria-expanded="'+open+'">'+CHEV+"</span></button>")+'<div class="smsub"><div class="ssin">'+sub+"</div></div></div>"};
+    return '<div class="sm'+(open?" open":"")+'" data-m="'+k+'">'+modH(m,ss).replace(/<span class="chsp"><\/span><\/button>$/,'<span class="chev" data-sx="'+k+'" role="button" aria-label="Desplegar '+SB_LBL[m]+'" aria-expanded="'+open+'">'+CHEV+"</span></button>")+'<div class="smsub"><div class="ssin">'+sub+"</div></div></div>"};
   const subOfG=g=>g==="operativa"?modF("horarios","0")+modF("equipos","0")+(viewOk("buses")?modH("buses",""):"")+(viewOk("incidencias")?modH("incidencias",""):""):g==="administracion"?modF("pagos","")+(viewOk("facturas")?modH("facturas",""):"")+(viewOk("ingresos")?modH("ingresos",""):""):g==="atencion"?(viewOk("bbdd")?modH("bbdd",""):"")+(viewOk("limpieza")?modH("limpieza",""):"")+(viewOk("attstats")?modH("attstats",""):""):g==="logistica"?["lgnec","lginv","lgcfg"].map(m=>viewOk(m)?modH(m,""):"").join(""):g==="registros"?sbSub("registros"):"";
   const invErr=viewOk("facturas")?invErrCount():null;
+  let ingRev=0;try{if(viewOk("ingresos")&&INV.list){const R0=ingRows();ingRev=ING_BANKS.reduce((a,[b])=>a+ingDays(R0,b).filter(d=>d.st==="rev").length,0)}}catch(e){}
   const myInc=viewOk("incidencias")?incMyCount():0;
-  const bdg={operativa:myInc?'<span class="sbdg hot" title="Incidencias en las que estás y te toca actuar">'+myInc+"</span>":"",registros:bd.registros,administracion:(late||invErr)?'<span class="sbdg hot" title="'+(late||0)+" impagos · "+(invErr||0)+' errores de facturas">'+((late||0)+(invErr||0))+"</span>":""};
+  const bdg={operativa:myInc?'<span class="sbdg hot" title="Incidencias en las que estás y te toca actuar">'+myInc+"</span>":"",registros:bd.registros,administracion:(late||invErr||ingRev)?'<span class="sbdg hot" title="'+(late||0)+" impagos · "+(invErr||0)+" errores de facturas"+(ingRev?" · "+ingRev+" días de Cuentas que han cambiado":"")+'">'+((late||0)+(invErr||0)+(ingRev||0))+"</span>":""};
   const grp=(v)=>{if(!viewOk(v))return "";const sub=subOfG(v);const open=SB_OPEN.has(v);
     return '<div class="sg'+(sub&&open?" open":"")+'" data-g="'+v+'"><button type="button" class="si" data-sv="'+v+'" title="'+SB_LBL[v]+'"><span class="ic">'+SB_IC[v]+'</span><span class="sl">'+SB_LBL[v]+"</span>"+(bdg[v]||"")+(SOON.has(v)?'<span class="soon">Pronto</span>':"")+(sub?'<span class="chev" data-sx="'+v+'" role="button" aria-label="Desplegar '+SB_LBL[v]+'">'+CHEV+"</span>":"")+"</button>"
       +(sub?'<div class="ssub"><div class="ssin"><div class="ssbox"><div class="sfh">'+SB_LBL[v]+"</div>"+sub+"</div></div></div>":"")+"</div>"};
@@ -6326,7 +6419,7 @@ function sbMark(){
   const blk=GRP_OF[v]&&GRP_OF[v]!==v&&SB_LBL[GRP_OF[v]]?"<small>"+SB_LBL[GRP_OF[v]]+" ›</small>":"";
   $("tbBack").hidden=v==="inicio"&&!ceOverlay();
   $("tbWhere").innerHTML=blk+"<b>"+SB_LBL[v]+"</b>"+(sub?"<span>"+esc(sub)+"</span>":"")+(ro?'<em class="tb-ro" title="Puedes ver pero no modificar">Solo lectura</em>':"");}
-function sbSync(){if(!SBR||SB_RAF)return;SB_RAF=requestAnimationFrame(()=>{SB_RAF=0;const AR=S.allRows||[];const sig=AR.length+"|"+(S.weeks?1:0)+"|"+Object.keys(EQ.docs||{}).length+"|"+Object.keys(H.docs||{}).length+"|"+Object.keys(H.wk||{}).length+"|"+(INV.list?INV.list.length:0)+"|"+(INV.at?+INV.at:0);if(sig!==SB_SIG){SB_SIG=sig;renderSide();try{hubRender(curView())}catch(e){}}else sbMark()})}
+function sbSync(){if(!SBR||SB_RAF)return;SB_RAF=requestAnimationFrame(()=>{SB_RAF=0;const AR=S.allRows||[];const sig=AR.length+"|"+(S.weeks?1:0)+"|"+Object.keys(EQ.docs||{}).length+"|"+Object.keys(H.docs||{}).length+"|"+Object.keys(H.wk||{}).length+"|"+(INV.list?INV.list.length:0)+"|"+(INV.at?+INV.at:0)+"|"+Object.keys(ING.docs||{}).length+"|"+(CN.list?CN.list.length:0);if(sig!==SB_SIG){SB_SIG=sig;renderSide();try{hubRender(curView())}catch(e){}}else sbMark()})}
 /* páginas de inicio, temporada y bloques */
 function hubCard(v,o){o=o||{};const soon=SOON.has(v);
   return '<a class="bk'+(soon?" soon":" live")+'" href="#'+v+'" data-sv="'+v+'"><span class="bk-top"><span class="bk-ic" aria-hidden="true">'+(SB_IC[v]||"")+'</span><span class="bk-st">'+(soon?"Próximamente":"En uso")+'</span></span><span class="bk-tx"><span class="bk-t">'+esc(o.l||SB_LBL[v])+"</span></span>"

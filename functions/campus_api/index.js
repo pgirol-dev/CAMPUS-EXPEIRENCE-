@@ -35,7 +35,7 @@ const CATALOG = [
   { k: "equipos", b: "Operativa", l: "Equipos", subs: [["madrid", "Madrid (semanas)"], ["campus", "Nacionales e institucionales"]] },
   { k: "buses", b: "Operativa", l: "Buses", subs: [["madrid", "Madrid (semanas)"]] },
   { k: "incidencias", b: "Operativa", l: "Incidencias", subs: [["general", "Incidencias"]] },
-  { k: "contabilidad", b: "Administración", l: "Contabilidad", subs: [["pagos", "Pagos"], ["devoluciones", "Devoluciones"], ["cancelaciones", "Cancelaciones"], ["agentes", "Agentes"], ["facturas", "Control de facturas"], ["ingresos", "Ingresos"]] },
+  { k: "contabilidad", b: "Administración", l: "Contabilidad", subs: [["pagos", "Pagos"], ["devoluciones", "Devoluciones"], ["cancelaciones", "Cancelaciones"], ["agentes", "Agentes"], ["facturas", "Control de facturas"], ["ingresos", "Cuentas"]] },
   { k: "atencion", b: "Atención al público", l: "Atención al público", subs: [["bbdd", "Base de datos"], ["limpieza", "Limpieza"], ["estadisticas", "Estadísticas"]] },
   { k: "logistica", b: "Logística", l: "Logística", subs: [["necesidades", "Necesidades"], ["inventario", "Inventario"], ["configuracion", "Configuración"]] },
   { k: "marketing", b: "Marketing", l: "Marketing", subs: [["general", "Marketing"]] },
@@ -461,7 +461,7 @@ async function handle(req, res) {
     catch (e) { return fail(res, e.status || 502, e.message || "Error al consultar Zoho Desk"); }
   }
   if (p === "/api/books/creditnotes" && M === "POST") {
-    if (lvl(U, "contabilidad.devoluciones") < 1 && lvl(U, "contabilidad.cancelaciones") < 1) return fail(res, 403, "Sin acceso a las rectificativas.");
+    if (lvl(U, "contabilidad.devoluciones") < 1 && lvl(U, "contabilidad.cancelaciones") < 1 && lvl(U, "contabilidad.ingresos") < 1) return fail(res, 403, "Sin acceso a las rectificativas.");
     const b = await readBody(req, 5000); const qp = b.query_params || {};
     const org = booksOrg(qp.organization_id); if (!org) return fail(res, 400, "Organización de Books no permitida.");
     const page = Math.max(1, Math.min(20, +qp.page || 1));
