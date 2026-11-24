@@ -240,3 +240,4 @@ Zoho indica que `zcatalyst-sdk-node` está en proceso de sustitución por el nue
 ## Cuentas (antes Ingresos) (24/11)
 - El permiso `contabilidad.ingresos` se llama ahora «Cuentas» (misma clave: quien lo tenía lo conserva). La vista sigue en `#ingresos` (también `#cuentas`).
 - `POST /api/books/creditnotes` admite también el permiso `contabilidad.ingresos` (Cuentas lee las notas de crédito para restar las devoluciones). Cada nota de crédito trae `refunds` (fecha e importe de cada reembolso) del detalle de Books.
+- 24/11: permiso nuevo `logistica.entradas` y colección `lgped` (pedidos a proveedor; protegida). Con Entradas (editar) también se puede escribir en `lgart` (artículos nuevos) y `lgmov` (movimientos de recepción).

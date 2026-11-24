@@ -2062,6 +2062,35 @@ table.lginv tr.gh td{background:var(--surface-2)!important;font-family:var(--f-w
 .ingpdfb i{font-style:normal;background:var(--pink);color:#fff;border-radius:96px;padding:0 6px;font-size:10px;letter-spacing:0}
 .ingpdfb:disabled{cursor:default;background:var(--surface-2);color:var(--ink-3)}
 .ingpdfb:focus-visible,.inglink:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+
+/* Logística › Entradas */
+.lgpeds{display:flex;flex-direction:column;gap:6px}
+.lgped{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:minmax(180px,1.4fr) minmax(130px,1fr) 120px 110px minmax(170px,auto);gap:14px;align-items:center;background:var(--surface-2);border-radius:8px;padding:12px 16px;box-shadow:inset 4px 0 0 var(--pink)}
+.lgped:hover{background:color-mix(in srgb,var(--navy) 8%,var(--surface-2))}
+.lgped:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+.lgped.st-camino{box-shadow:inset 4px 0 0 #e6b84a}.lgped.st-parcial{box-shadow:inset 4px 0 0 var(--navy)}.lgped.st-recibido{box-shadow:inset 4px 0 0 var(--green)}
+.lgped b{font-weight:800}.lgped small{display:block;font-size:11.5px;color:var(--ink-3)}
+.lgped>span{min-width:0}
+.lgped .lgpl{font-size:12.5px;font-weight:700}
+.lgped .lgpbar{height:6px;border-radius:96px;background:color-mix(in srgb,var(--ink-3) 22%,transparent);overflow:hidden}
+.lgped .lgpbar i{display:block;height:100%;background:var(--green)}
+.lgped .lgpc{font-family:var(--f-serif);font-style:italic;font-size:1.25rem;text-align:right}
+.lgped .lgps{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap}
+.lgst,.lgpag{font-style:normal;font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:96px;background:var(--surface);color:var(--ink-2);white-space:nowrap}
+.lgst.st-pedido{background:color-mix(in srgb,var(--pink) 16%,var(--surface));color:var(--pink)}
+.lgst.st-camino{background:#f6e7bd;color:#6b4e06}.lgst.st-parcial{background:var(--navy);color:var(--navy-ink)}.lgst.st-recibido{background:var(--green);color:#fff}
+.lgpag.ok{background:color-mix(in srgb,var(--green) 18%,var(--surface));color:var(--green)}
+.lgpedpanel{width:min(820px,100%)}
+table.lgpt{min-width:640px}
+table.lgpt tbody tr{cursor:default}
+table.lgpt td small{display:block;font-size:10.5px;color:var(--ink-3)}
+table.lgpt td small.ok{color:var(--green)}
+.lgpact{white-space:nowrap}
+.lgrec{display:inline-flex;gap:4px;align-items:center;margin-right:6px}
+.lgchk{flex-direction:row!important;align-items:center;gap:8px!important;font-size:13px!important;color:var(--ink)!important;align-self:end;padding-bottom:9px}
+table.lgmat td.lgp{color:#b07d0c}
+table.lgmat td.lgp small{color:#b07d0c}
+@media (max-width:900px){.lgped{grid-template-columns:1fr auto}.lgped .lgpbar,.lgped .lgpl{grid-column:1/-1}}
 </style>
 
 <aside class="side" id="side" aria-label="Apartados"><div class="sb-top"><a class="sb-brand" href="#inicio" data-sv="inicio" title="Inicio"><span class="sb-logo">CE</span><span class="sb-bt"><b>Campus Experience</b><small>Software operativo</small></span></a><button class="sb-tog" id="sbTog" type="button" aria-label="Plegar menú" title="Plegar menú (Ctrl/Cmd + B)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 17l-5-5 5-5M18 17l-5-5 5-5"/></svg></button></div><nav class="sb-nav" id="sbNav"></nav><div class="sb-foot"><div class="sb-me" id="sbMe"></div><span class="sb-key" id="sbKey">⌘B</span></div></aside>
@@ -2282,6 +2311,13 @@ table.lginv tr.gh td{background:var(--surface-2)!important;font-family:var(--f-w
     <div id="lgInvList"></div>
     <div class="incscrim" id="lgScrim" hidden></div>
     <aside class="incpanel lgpanel" id="lgPanel" role="dialog" aria-modal="true" aria-label="Artículo" hidden></aside>
+  </section>
+  <section id="view-lgent" class="stack" hidden>
+    <div class="eqhead"><div class="eqtitlebox"><h2 class="eqtitle">Entradas</h2><span class="sub">Pedidos a proveedor y recepción en el almacén</span></div><button class="btn primary" type="button" id="lgEntNew">+ Nuevo pedido</button></div>
+    <div class="filters"><div class="seg" id="lgEntF" role="group" aria-label="Estado"></div><input type="search" id="lgEntQ" placeholder="Buscar proveedor, artículo o nota" aria-label="Buscar"><select id="lgEntProv" aria-label="Proveedor"></select><span class="count" id="lgEntCount"></span></div>
+    <div id="lgEntList" class="stack"></div>
+    <div class="incscrim" id="lgPedScrim" hidden></div>
+    <aside class="incpanel lgpanel lgpedpanel" id="lgPedPanel" role="dialog" aria-modal="true" aria-label="Pedido" hidden></aside>
   </section>
   <section id="view-lgcfg" class="stack" hidden>
     <div class="eqhead"><div class="eqtitlebox"><h2 class="eqtitle">Configuración</h2><span class="sub">Kits, welcome packs, sedes y staff de Logística</span></div></div>
@@ -2908,7 +2944,7 @@ function exportCsv(){
 }
 
 /* events */
-const VIEWS=["inicio","temporada","registros","operativa","horarios","equipos","buses","administracion","pagos","facturas","ingresos","incidencias","atencion","bbdd","limpieza","attstats","logistica","lgnec","lginv","lgcfg","marketing","rrhh"];
+const VIEWS=["inicio","temporada","registros","operativa","horarios","equipos","buses","administracion","pagos","facturas","ingresos","incidencias","atencion","bbdd","limpieza","attstats","logistica","lgnec","lginv","lgent","lgcfg","marketing","rrhh"];
 function show(v){
   if(v==="contabilidad")v="pagos";if(v==="cuentas")v="ingresos";if(v==="recursos-humanos")v="rrhh";if(v==="atencion-al-publico")v="atencion";
   if(!VIEWS.includes(v))v="inicio";
@@ -2924,7 +2960,7 @@ function show(v){
   if(v==="bbdd")try{renderBbdd()}catch(e){}
   if(v==="limpieza")try{renderLimpieza()}catch(e){}
   if(v==="attstats")try{renderAttStats()}catch(e){}
-  if(["logistica","lgnec","lginv","lgcfg"].includes(v))try{lgRenderAll()}catch(e){}
+  if(["logistica","lgnec","lginv","lgent","lgcfg"].includes(v))try{lgRenderAll()}catch(e){}
   try{if(window.__hub)window.__hub(v)}catch(e){}
   window.scrollTo(0,0);try{sbSync()}catch(e){}
 }
@@ -6056,6 +6092,7 @@ renderRegistros();
     db.collection("hsim").onSnapshot(snap=>{snap.docs.forEach(d=>{const v=d.data();if(!v)return;if(v.teams&&!(H.simDirty&&Date.now()-H.simDirty<5000))H.simTeams[d.id]=Object.assign({},H.simTeams[d.id]||{},v.teams);if(v.cfg)H.simCfg[d.id]=v.cfg;if(v.appr)H.simAppr[d.id]=v.appr;if(v.bus)Object.assign(H.simBus,v.bus)});renderHorarios()},()=>{});
     db.collection("lgcfg").onSnapshot(snap=>{const d=snap.docs.find(x=>x.id==="main");LG.doc=d?d.data():null;lgRenderAll()},()=>{});
     db.collection("lgart").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=Object.assign({id:d.id},v)});if(!LG.busy)LG.arts=m;lgRenderAll()},()=>{});
+    db.collection("lgped").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=Object.assign({id:d.id},v)});LG.ped=m;lgRenderAll()},()=>{});
     db.collection("lgmov").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=Object.assign({id:d.id},v)});LG.movs=m;lgRenderAll()},()=>{});
     db.collection("hbus").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});H.busOv=m;renderHorarios()},()=>{});
     db.collection("happr").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});H.appr=m;renderHorarios()},()=>{});
@@ -6103,6 +6140,7 @@ const SB_IC={
 Object.assign(SB_IC,{logistica:SVG('<path d="M3.5 8.5 12 4l8.5 4.5v9L12 22l-8.5-4.5z"/><path d="M3.5 8.5 12 13l8.5-4.5M12 13v9"/>'),
   lgnec:SVG('<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'),
   lginv:SVG('<rect x="3.5" y="4" width="17" height="16" rx="2"/><path d="M3.5 9.5h17M3.5 15h17M9 4v16"/>'),
+  lgent:SVG('<path d="M12 3v11M7.5 9.5 12 14l4.5-4.5"/><path d="M4 14.5V19a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 20 19v-4.5"/>'),
   lgcfg:SVG('<circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/>')});
 Object.assign(SB_IC,{
   registros:SVG('<rect x="5" y="4" width="14" height="17" rx="2.2"/><path d="M9.5 4V3h5v1"/><circle cx="12" cy="10" r="2.3"/><path d="M8.3 17c.6-2 2-3 3.7-3s3.1 1 3.7 3"/>'),
@@ -6181,12 +6219,15 @@ function lgFamStock(st){const F={};const add=(f,t,loc,q)=>{const k=f+"|"+(t||"")
     add(a.fam,t,"sed",Object.entries(s).filter(([k])=>k!=="alm"&&k!=="seri").reduce((x,[,v])=>x+(+v||0),0))});
   /* un kit = conjunto, o camiseta + pantalón */
   LG_KITS.forEach(([K])=>{[...LG_T,"?"].forEach(t=>{const g=f=>F[f+"|"+t]||{alm:0,seri:0,sed:0};const s=g(K+"-set"),c=g(K+"-cam"),p=g(K+"-pan");
-    F[K+"-kit|"+t]={alm:s.alm+Math.min(c.alm,p.alm),seri:s.seri+Math.min(c.seri,p.seri),sed:s.sed+Math.min(c.sed,p.sed)}})});return F}
+    F[K+"-kit|"+t]={alm:s.alm+Math.min(c.alm,p.alm),seri:s.seri+Math.min(c.seri,p.seri),sed:s.sed+Math.min(c.sed,p.sed)}})});
+  /* pedidas y no recibidas (Entradas) */
+  try{Object.entries(lgPending()).forEach(([k,v])=>{const o=F[k]=F[k]||{alm:0,seri:0,sed:0};o.ped=v})}catch(e){}
+  return F}
 /* ---- guardar ---- */
 function lgSaveCfg(){if(!lgCan("configuracion")){CE_SOLO_LECTURA();return}clearTimeout(LG.saveT);LG.saveT=setTimeout(async()=>{if(!S.db){toast("No se puede guardar en esta vista");return}
   try{await saved("lgcfg",()=>S.db.collection("lgcfg").doc("main").set(Object.assign({},LG.doc,{updatedAt:new Date().toISOString()})),"logística");setStatus("Guardado")}catch(e){toast("No se pudo guardar la configuración")}},400)}
 function lgSetCfg(fn){const c=lgCfg();fn(c);LG.doc=c;lgRenderAll();lgSaveCfg()}
-async function lgMove(m){if(!lgCan("inventario")){CE_SOLO_LECTURA();return false}if(!S.db){toast("No se puede guardar en esta vista");return false}
+async function lgMove(m,perm){if(!lgCan(perm||"inventario")){CE_SOLO_LECTURA();return false}if(!S.db){toast("No se puede guardar en esta vista");return false}
   const me=await ingMe().catch(()=>({}));m.at=new Date().toISOString();m.by=(me&&(me.name||me.email))||"";const id="m"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
   LG.movs[id]=Object.assign({id},m);lgRenderAll();
   try{await saved("lgmov:"+id,()=>S.db.collection("lgmov").doc(id).set(m),"movimiento");return true}catch(e){delete LG.movs[id];lgRenderAll();toast("No se pudo guardar el movimiento");return false}}
@@ -6200,12 +6241,12 @@ async function lgLoadSeed(){if(!lgCan("inventario")){CE_SOLO_LECTURA();return}if
   let ok=0;for(let i=0;i<docs.length;i+=20){await Promise.all(docs.slice(i,i+20).map(([id,d])=>S.db.collection("lgart").doc(id).set(d).then(()=>{ok++;LG.arts[id]=Object.assign({id},d)}).catch(()=>{})));setStatus("Cargando inventario… "+ok+"/"+docs.length)}
   LG.busy=false;setStatus(ok===docs.length?"Inventario inicial cargado":"Cargados "+ok+" de "+docs.length+": vuelve a pulsar para el resto");lgRenderAll()}
 /* ---- pintar ---- */
-function lgRenderAll(){try{renderLgHub()}catch(e){}try{renderLgNec()}catch(e){}try{renderLgInv()}catch(e){}try{renderLgCfg()}catch(e){}try{if(LG.panel)lgPanelRender()}catch(e){}}
+function lgRenderAll(){try{renderLgEnt()}catch(e){}try{renderLgHub()}catch(e){}try{renderLgNec()}catch(e){}try{renderLgInv()}catch(e){}try{renderLgCfg()}catch(e){}try{if(LG.panel)lgPanelRender()}catch(e){}}
 const lgN=n=>nfmt(Math.round(n));
 function renderLgHub(){if($("view-logistica").hidden)return;const st=lgStockAll();const nc=Object.values(LG.arts).filter(a=>a.nc).length;
   let falta=0;try{const {N}=lgNeeds("all");const F=lgFamStock(st);const m=1+lgCfg().margin/100;Object.entries(N).forEach(([k,q])=>{const s=F[k]||{alm:0,seri:0};if(Math.ceil(q*m)>s.alm+s.seri)falta++})}catch(e){}
-  const live=[["lgnec",[falta?falta+" líneas con falta":"Sin faltas"]],["lginv",[nfmt(Object.keys(LG.arts).length)+" artículos"].concat(nc?[nc+" sin contar"]:[])],["lgcfg",["Kits, welcome packs, sedes y staff"]]].filter(([v])=>viewOk(v));
-  const soon=[["Peticiones","Las sedes piden material y almacén responde"],["Entradas","Pedidos a proveedor y recepción"],["Preparación","Montaje de welcome packs y listas por sede"],["Envíos a sedes","Envíos, stock en sede y devoluciones"]];
+  const live=[["lgnec",[falta?falta+" líneas con falta":"Sin faltas"]],["lginv",[nfmt(Object.keys(LG.arts).length)+" artículos"].concat(nc?[nc+" sin contar"]:[])],["lgent",(()=>{const o=Object.values(LG.ped).filter(p=>p.st!=="recibido").length,np=Object.values(LG.ped).filter(p=>!p.pag).length;return [o?o+(o>1?" pedidos abiertos":" pedido abierto"):"Sin pedidos abiertos"].concat(np?[np+" sin pagar"]:[])})()],["lgcfg",["Kits, welcome packs, sedes y staff"]]].filter(([v])=>viewOk(v));
+  const soon=[["Peticiones","Las sedes piden material y almacén responde"],["Preparación","Montaje de welcome packs y listas por sede"],["Envíos a sedes","Envíos, stock en sede y devoluciones"]];
   $("lgAlerts").innerHTML=(nc?'<div class="lgal">'+nc+" artículos sin contar: cárgalos con un recuento en Inventario.</div>":"")+(falta?'<div class="lgal hot">'+falta+" líneas de la temporada con más necesidad que stock (ver Necesidades).</div>":"");
   $("hubLogistica").innerHTML=live.map(([v,mods])=>hubCard(v,{mods})).join("")+soon.map(([l,s])=>'<div class="bk soon" aria-disabled="true"><span class="bk-top"><span class="bk-ic" aria-hidden="true">'+SB_IC.logistica+'</span><span class="bk-st">Próximamente</span></span><span class="bk-tx"><span class="bk-t">'+esc(l)+'</span></span><span class="bk-ft"><span class="bk-mods"><i>'+esc(s)+'</i></span><span></span></span></div>').join("")}
 function lgScopes(){const sc=[["all","Temporada"],["mad","Madrid"]];for(let n=1;n<=9;n++)sc.push(["w"+n,"W"+n]);CAMPS.filter(c=>c.kind!=="madrid").forEach(c=>sc.push(["c:"+c.id,c.n]));return sc}
@@ -6219,11 +6260,11 @@ function renderLgNec(){if($("view-lgnec").hidden)return;const cfg=lgCfg();const 
   const kitsN=LG_KITS.reduce((a,[K])=>a+LG_T.concat("?").reduce((b,t)=>b+need(K+"-kit",t),0),0);const wpN=need("botella","");
   let h='<div class="sthero in">'+stTile(nfmt(n),cfg.unidad==="sem"?"Registros (semanas)":"Inscripciones","var(--navy)",sc==="all"?nfmt(reg)+" registros de "+nfmt(cfg.objetivo)+" de objetivo":"")+stTile(lgN(kitsN),"Kits de jugador","var(--pink)",prev?"Previsión con el objetivo":"Con margen del "+cfg.margin+" %")+stTile(lgN(wpN),"Welcome packs","#2f3e40",sin?sin+" inscritos sin talla":"Todos con talla")+"</div>";
   if(prev)h+='<p class="hnote">Previsión: la necesidad actual por artículo se multiplica por '+fac.toFixed(2).replace(".",",")+" ("+nfmt(cfg.objetivo)+" ÷ "+nfmt(reg)+" registros) y las tallas se reparten con la curva de "+esc(cur.src)+". Margen del "+cfg.margin+" %.</p>";
-  const cell=(q,s)=>{const f=Math.max(0,q-(s?s.alm+s.seri:0));return '<td class="'+(f?"lgf":"lgok")+'">'+(q?lgN(q):"—")+(q?"<small>"+(f?"faltan "+lgN(f):"cubierto")+"</small>":"")+"</td>"};
+  const cell=(q,s)=>{const f=Math.max(0,q-(s?s.alm+s.seri:0));const pd=s&&s.ped||0;return '<td class="'+(f?(pd>=f?"lgp":"lgf"):"lgok")+'">'+(q?lgN(q):"—")+(q?"<small>"+(f?"faltan "+lgN(f)+(pd?" · "+lgN(pd)+" pedidas":""):"cubierto")+"</small>":"")+"</td>"};
   const mat=(title,fams,cols,sub)=>{let any=false;let b='<div class="lgblk"><h3 class="wide lgh">'+esc(title)+"</h3>"+(sub?'<p class="sub">'+sub+"</p>":"")+'<div class="tablebox"><table class="lgmat"><thead><tr><th>Artículo</th>'+cols.map(c=>"<th>"+esc(c||"Unidades")+"</th>").join("")+"<th>Total</th></tr></thead><tbody>";
     fams.forEach(([f,l])=>{const qs=cols.map(c=>need(f,c));const tot=qs.reduce((a,b)=>a+b,0);if(!tot)return;any=true;
       const ss=cols.map(c=>F[f+"|"+c]);const stt=ss.reduce((a,s)=>a+(s?s.alm+s.seri:0),0);
-      b+='<tr><td class="nm"><b>'+esc(l)+"</b><small>Necesidad · stock en almacén "+lgN(ss.reduce((a,s)=>a+(s?s.alm:0),0))+(ss.some(s=>s&&s.seri)?" + "+lgN(ss.reduce((a,s)=>a+(s?s.seri:0),0))+" en serigrafía":"")+"</small></td>"+qs.map((q,i)=>cell(q,ss[i])).join("")+cell(tot,{alm:stt,seri:0})+"</tr>"});
+      b+='<tr><td class="nm"><b>'+esc(l)+"</b><small>Necesidad · stock en almacén "+lgN(ss.reduce((a,s)=>a+(s?s.alm:0),0))+(ss.some(s=>s&&s.seri)?" + "+lgN(ss.reduce((a,s)=>a+(s?s.seri:0),0))+" en serigrafía":"")+"</small></td>"+qs.map((q,i)=>cell(q,ss[i])).join("")+cell(tot,{alm:stt,seri:0,ped:ss.reduce((a,s)=>a+(s&&s.ped||0),0)})+"</tr>"});
     return any?b+"</tbody></table></div></div>":""};
   const tl=LG_T.concat(LG_KITS.some(([K])=>N[K+"-kit|?"])?["?"]:[]);
   h+=mat("Equipaciones de jugador por talla",LG_KITS.map(([K,l])=>[K+"-kit","Kit "+l]).concat([["portero-cam","Camiseta de portero (extra)"],["jersey","Sudadera (extra)"]]),tl,"Un kit es camiseta + pantalón: el stock cuenta los conjuntos y las parejas de camiseta y pantalón de la misma talla."+(tl.includes("?")?" «?» = inscritos sin talla.":""));
@@ -6268,6 +6309,7 @@ function lgPanelRender(){const a=LG.arts[LG.panel];const p=$("lgPanel");if(!a){p
     +'<div class="lgstk">'+(locs.length?locs.map(([k,v])=>'<span><b>'+lgN(v)+"</b>"+esc(lgSedeN(k))+"</span>").join(""):'<span><b>0</b>Sin stock</span>')+"</div>"
     +(ro?'<p class="sub">Solo lectura.</p>':'<h4 class="wide lgh">Nuevo movimiento</h4><div class="lgform"><label>Tipo<select id="lgMk">'+LG_LOC_K.map(([k,l])=>'<option value="'+k+'">'+l+"</option>").join("")+'</select></label><label>Cantidad<input id="lgMq" type="number" min="0" step="1" inputmode="numeric"></label><label id="lgMsL">Sede<select id="lgMs">'+sedeOpt+'</select></label><label id="lgMlL" hidden>Dónde se cuenta<select id="lgMl"><option value="alm">Almacén</option><option value="seri">En serigrafía</option>'+sedeOpt+'</select></label><label id="lgMaL" hidden>Vuelve como<select id="lgMa"><option value="">El mismo artículo</option>'+twins.map(x=>'<option value="'+esc(x.id)+'">'+esc(x.n)+"</option>").join("")+'</select></label><label class="w">Nota<input id="lgMn" maxlength="140" placeholder="Opcional: proveedor, motivo, quién lo recoge…"></label></div><div class="hea"><button class="btn primary" type="button" data-lgmv>Guardar movimiento</button></div>'
       +'<h4 class="wide lgh">Artículo</h4><div class="lgform"><label class="w">Nombre<input id="lgAn" maxlength="90" value="'+esc(a.n)+'"></label><label>Ubicación<input id="lgAu" maxlength="20" placeholder="A-02-3" value="'+esc(a.ub||"")+'"></label><label>Talla<input id="lgAt" maxlength="12" value="'+esc(a.t||"")+'"></label></div><div class="hea"><button class="btn" type="button" data-lgas>Guardar artículo</button></div>')
+    +(()=>{const ls=Object.values(LG.ped).flatMap(p=>(p.lines||[]).filter(l=>l.a===a.id&&l.pr!=null).map(l=>({p,l}))).sort((x,y)=>String(y.p.fecha).localeCompare(String(x.p.fecha)));return ls.length?'<p class="sub">Coste: <b>'+eur(ls[0].l.pr)+'</b> por unidad (último pedido: '+esc(ls[0].p.prov)+", "+esc(new Date(ls[0].p.fecha+"T12:00:00Z").toLocaleDateString("es-ES",{day:"numeric",month:"short",year:"numeric",timeZone:"UTC"}))+")</p>":""})()
     +'<h4 class="wide lgh">Historial</h4>'+(a.ini&&lgSum(a.ini)?'<div class="lgmv"><span>'+esc((a.src||"Inventario inicial"))+"</span><b>"+Object.entries(a.ini).map(([k,v])=>lgN(v)+" "+lgSedeN(k).toLowerCase()).join(" · ")+"</b></div>":"")
     +(mv.length?mv.map(m=>'<div class="lgmv"><span>'+esc(new Date(m.at).toLocaleString("es-ES",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}))+" · "+esc((LG_LOC_K.find(x=>x[0]===m.k)||[0,m.k])[1])+(m.by?" · "+esc(m.by):"")+(m.note?"<i>"+esc(m.note)+"</i>":"")+"</span><b>"+(m.k==="rec"?"Contado "+lgN(m.count)+" ("+(m.q>=0?"+":"")+lgN(m.q)+")":lgN(m.q))+(m.from?" · de "+esc(lgSedeN(m.from)):"")+(m.to&&m.k!=="rec"?" · a "+esc(lgSedeN(m.to)):"")+(m.a2&&m.a2!==a.id?" · como "+esc((LG.arts[m.a2]||{}).n||""):"")+"</b></div>").join(""):'<p class="sub">Sin movimientos.</p>')+"</div>";
   const sync=()=>{const k=$("lgMk");if(!k)return;const v=k.value;$("lgMsL").hidden=!(v==="sal"||v==="dev");$("lgMlL").hidden=!(v==="rec"||v==="baja");$("lgMaL").hidden=v!=="sei";$("lgMq").previousSibling.textContent=v==="rec"?"Cantidad contada":"Cantidad"};
@@ -6331,19 +6373,142 @@ document.addEventListener("change",e=>{const t=e.target;let d;
 $("lgInvQ").addEventListener("input",e=>{LG.inv.q=e.target.value;renderLgInv()});
 $("lgInvNc").addEventListener("change",e=>{LG.inv.nc=e.target.checked;renderLgInv()});
 
+/* ===== LOGÍSTICA › ENTRADAS: pedidos a proveedor y recepción =====
+   Colección lgped (un documento por pedido). Cada pedido: proveedor, gestor, fecha, tipo (compra o serigrafía),
+   estado (Pedido, En camino, Recibido en parte, Recibido) con su fecha, pagado (aparte: se puede pagar antes o después
+   de recibir) con su fecha, ubicación de la mercancía, nota y líneas (artículo, cantidad, precio por unidad, recibido).
+   Recibir una línea crea un movimiento de entrada en el almacén. En serigrafía: «Enviar» pasa el material de almacén
+   a «En serigrafía» y «Recibir» lo devuelve como el artículo serigrafiado. */
+const LG_PROV=["Adidas","FutbolEmotion","Guerrero (serigrafía)","Curry (China)"];
+const LG_PST=[["pedido","Pedido"],["camino","En camino"],["parcial","Recibido en parte"],["recibido","Recibido"]];
+/* pedidos de los Excel (referencia inicial; desde que arranca Logística se trabaja solo en el software).
+   Línea: [nombre del artículo, talla, cantidad, precio, categoría, familia (si el artículo es nuevo), enviados (serigrafía), artículo serigrafiado] */
+const LG_PED_SEED=(()=>{const T=["128","140","152","164","S","M","L","XL"],ST=["S","M","L","XL"];const P=[];
+  const zip=(n,ts,qs,cat,fam,pr)=>ts.map((t,i)=>[n,t,qs[i],pr==null?null:pr,cat,fam]).filter(x=>x[2]);
+  P.push({prov:"Adidas",by:"",fecha:"2026-10-09",tipo:"compra",st:"pedido",nota:"Pedido Adidas 2027 (Excel CONTROL DE ROPA)",lines:[].concat(
+    zip("Minikit Real Madrid 2027 · camiseta",T,[950,1200,1900,500,1300,150,150,60],"Ropa jugadores","minikit-cam"),
+    zip("Minikit Real Madrid 2027 · pantalón",T,[950,1200,1900,500,1300,150,150,60],"Ropa jugadores","minikit-pan"),
+    zip("Portero Squadra 25 verde · camiseta",T,[150,450,400,250,200,60,0,0],"Ropa jugadores","portero-cam"),
+    zip("Portero Squadra 25 verde · pantalón",T,[220,450,400,300,250,160,120,120],"Ropa jugadores",""),
+    zip("Medias Milano blancas",["31-33","34-36","37-39"],[2000,3000,7000],"Ropa jugadores","minikit-med"),
+    [["Mochila Adidas Classic Bars ONE","Única",4200,null,"Welcome pack","mochila-one"],["Mochila Adidas Tiro MAX","Única",1000,null,"Welcome pack","mochila-max"],["Portabotas Adidas Tiro MAX","Única",500,null,"Welcome pack","portabotas"],
+     ["Balón Adidas Tiro League J350 talla 4","",200,null,"Material deportivo",""],["Balón Adidas Tiro League J350 talla 5","",400,null,"Material deportivo",""],["Saco Adidas Tiro","",60,null,"Material deportivo",""],
+     ["Peto Adidas Training rojo talla M","",170,null,"Material deportivo",""],["Peto Adidas Training amarillo talla 140","",100,null,"Material deportivo",""],["Peto Adidas Training amarillo talla M","",200,null,"Material deportivo",""]],
+    zip("Kit oficial Real Madrid head coach · camiseta",["M","L","XL"],[12,12,6],"Staff","staff-oficial"),
+    zip("Kit oficial Real Madrid head coach · pantalón",["M","L","XL"],[12,12,6],"Staff",""))});
+  P.push({prov:"FutbolEmotion",by:"",fecha:"2026-10-19",tipo:"compra",st:"pedido",nota:"Pedido FutbolEmotion 2027 (Excel CONTROL DE ROPA)",lines:[].concat(
+    zip("Camiseta staff azul navy",ST,[70,230,230,70],"Staff","staff-navy"),zip("Camiseta staff azul royal",ST,[90,90,80,40],"Staff","staff-royal"),
+    zip("Camiseta staff burdeos",ST,[20,55,55,20],"Staff","staff-burdeos"),zip("Short staff negro",ST,[180,375,365,130],"Staff","staff-short"),
+    zip("Light blue · camiseta",T,[50,400,750,550,450,450,150,50],"Ropa jugadores","lightblue-cam"),zip("Light blue · pantalón",T,[50,400,750,550,450,450,150,50],"Ropa jugadores","lightblue-pan"),
+    zip("Medias light blue",["31-33","34-36","37-39","40-42","43-45"],[50,400,1750,600,50],"Ropa jugadores","lightblue-med"))});
+  P.push({prov:"FutbolEmotion",by:"",fecha:"2026-11-23",tipo:"compra",st:"pedido",nota:"Sudaderas Entrada26 black, serigrafiadas con escudo FRM delante y CE detrás. En el Excel: «Pendiente».",lines:[].concat(
+    zip("Sudadera Entrada26 black",["128","140","152","164"],[200,400,350,350],"Ropa jugadores","jersey",21.75),zip("Sudadera Entrada26 black",ST,[200,100,50,20],"Ropa jugadores","jersey",24.75))});
+  P.push({prov:"Curry (China)",by:"Jordi",fecha:"2026-10-14",tipo:"compra",st:"pedido",nota:"Pedidos China (Excel CONTROL DE MATERIALES)",lines:[["Coolers","",40,null,"Material de campo",""],["Repuestos de coolers (surtidor)","",120,null,"Material de campo",""]]});
+  P.push({prov:"Guerrero (serigrafía)",by:"Irene",fecha:"2026-10-15",tipo:"seri",st:"pedido",ubic:"Guerrero (Toledo)",nota:"Serigrafías (Excel CONTROL DE ROPA). Llevado a Guerrero el 16/10 (portabotas y mochilas MAX) y el 26/10 (mochilas ONE).",
+    lines:[["Portabotas sin serigrafía","Única",1960,null,"Welcome pack","portabotas",1960,"Portabotas serigrafiado"],["Mochila Adidas MAX sin serigrafía","Única",1200,null,"Welcome pack","mochila-max",1200,"Mochila Adidas MAX serigrafiada"],["Mochila Adidas ONE sin serigrafía","Única",3724,null,"Welcome pack","mochila-one",3724,"Mochila Adidas ONE serigrafiada"]]});
+  return P})();
+LG.ped={};LG.ent={f:"open",prov:"",q:""};LG.pedPanel="";
+const lgArtId=(n,t)=>"a-"+lgSlug(n+(t&&t!=="Única"?"-"+t:t==="Única"?"-Única":""));
+function lgFindArt(n,t){const tt=t||"";return Object.values(LG.arts).find(a=>a.n===n&&(a.t||"")===tt)||Object.values(LG.arts).find(a=>a.n===n&&!tt&&(!a.t||a.t==="Única"))||null}
+const lgPedTot=p=>r2((p.lines||[]).reduce((a,l)=>a+(+l.q||0)*(+l.pr||0),0));
+const lgPedSum=p=>{const L=p.lines||[];const q=L.reduce((a,l)=>a+(+l.q||0),0),r=L.reduce((a,l)=>a+(+l.rec||0),0);return {q,r}};
+const lgPedStAuto=p=>{const {q,r}=lgPedSum(p);return r<=0?(p.st==="parcial"||p.st==="recibido"?"camino":p.st):r>=q?"recibido":"parcial"};
+/* unidades pedidas y no recibidas por familia y talla (para Necesidades) */
+function lgPending(){const P={};Object.values(LG.ped).forEach(p=>{if(p.tipo==="seri")return;(p.lines||[]).forEach(l=>{const a=LG.arts[l.a];if(!a||!a.fam)return;const left=(+l.q||0)-(+l.rec||0);if(left<=0)return;const k=a.fam+"|"+(a.t==="Única"?"":a.t||"");P[k]=(P[k]||0)+left})});
+  LG_KITS.forEach(([K])=>[...LG_T,"?"].forEach(t=>{const g=f=>P[f+"|"+t]||0;const v=g(K+"-set")+Math.min(g(K+"-cam"),g(K+"-pan"));if(v)P[K+"-kit|"+t]=v}));return P}
+async function lgPutPed(id,p,msg){if(!lgCan("entradas")){CE_SOLO_LECTURA();return false}if(!S.db){toast("No se puede guardar en esta vista");return false}
+  p.updatedAt=new Date().toISOString();LG.ped[id]=Object.assign({id},p);lgRenderAll();const d=Object.assign({},p);delete d.id;
+  try{await saved("lgped:"+id,()=>S.db.collection("lgped").doc(id).set(d),"pedido");if(msg)toast(msg);return true}catch(e){toast("No se pudo guardar el pedido");return false}}
+/* artículo de una línea: el que ya existe con ese nombre y talla, o uno nuevo (artículo nuevo de este año) */
+async function lgEnsureArt(n,t,cat,fam){let a=lgFindArt(n,t);if(a)return a.id;let id=lgArtId(n,t);while(LG.arts[id])id+="-2";
+  a={id,cat:cat||"Otros",fam:fam||"",n,t:t||"",ini:{},nc:false,ub:"",src:"Artículo nuevo (Entradas)",at:new Date().toISOString()};
+  if(!S.db)return null;LG.arts[id]=a;const d=Object.assign({},a);delete d.id;try{await S.db.collection("lgart").doc(id).set(d)}catch(e){delete LG.arts[id];return null}return id}
+async function lgLoadPedSeed(){if(!lgCan("entradas")){CE_SOLO_LECTURA();return}if(!S.db){toast("No se puede guardar en esta vista");return}
+  if(!Object.keys(LG.arts).length){toast("Primero carga el inventario inicial en Inventario");return}if(LG.busy)return;LG.busy=true;lgRenderAll();
+  try{let k=0;for(const P of LG_PED_SEED){const lines=[];for(const [n,t,q,pr,cat,fam,env,n2] of P.lines){const a=await lgEnsureArt(n,t,cat,fam);let a2=null;if(n2)a2=await lgEnsureArt(n2,t,cat,fam);
+        lines.push({a,q,pr:pr==null?null:pr,rec:0,env:env||0,a2})}
+      const id="p"+P.fecha.replace(/-/g,"")+"-"+lgSlug(P.prov).slice(0,12)+"-"+(++k);
+      await lgPutPed(id,{prov:P.prov,by:P.by,fecha:P.fecha,tipo:P.tipo,st:P.st,stAt:P.fecha,pag:false,pagAt:"",ubic:P.ubic||"",nota:P.nota||"",lines,src:"Excel",createdAt:new Date().toISOString()})}
+    toast("Pedidos del Excel cargados")}finally{LG.busy=false;lgRenderAll()}}
+function renderLgEnt(){if($("view-lgent").hidden)return;const P=Object.values(LG.ped);const ed=lgCan("entradas");
+  const seedB=!P.length?'<div class="eqempty"><h3 class="wide" style="margin:0">Todavía no hay pedidos</h3><p>Carga los pedidos de los Excel (Adidas 9/10, FutbolEmotion 19/10 y 23/11, coolers de China y serigrafías de Guerrero) o crea uno nuevo.</p>'+(ed?'<button class="btn primary" type="button" data-lgpseed'+(LG.busy?" disabled":"")+">"+(LG.busy?"Cargando…":"Cargar pedidos del Excel")+"</button>":"")+"</div>":"";
+  $("lgEntNew").hidden=!ed;
+  const provs=[...new Set(LG_PROV.concat(P.map(p=>p.prov)))];
+  $("lgEntProv").innerHTML='<option value="">Todos los proveedores</option>'+provs.map(p=>'<option'+(LG.ent.prov===p?" selected":"")+">"+esc(p)+"</option>").join("");
+  const F=[["open","Abiertos"],["recibido","Recibidos"],["all","Todos"]];
+  $("lgEntF").innerHTML=F.map(([k,l])=>'<button type="button" data-lgef="'+k+'" aria-pressed="'+(LG.ent.f===k)+'">'+l+"</button>").join("");
+  const q=LG.ent.q.trim().toLowerCase();
+  const L=P.filter(p=>(LG.ent.f==="all"||(LG.ent.f==="recibido"?p.st==="recibido":p.st!=="recibido"))&&(!LG.ent.prov||p.prov===LG.ent.prov)&&(!q||(p.prov+" "+(p.by||"")+" "+(p.nota||"")+" "+(p.lines||[]).map(l=>(LG.arts[l.a]||{}).n||"").join(" ")).toLowerCase().includes(q))).sort((a,b)=>String(b.fecha).localeCompare(String(a.fecha)));
+  const tot=r2(L.reduce((a,p)=>a+lgPedTot(p),0));
+  $("lgEntCount").textContent=L.length+(L.length===1?" pedido":" pedidos")+(tot?" · "+eur(tot):"");
+  const dt=d=>d?new Date(d+"T12:00:00Z").toLocaleDateString("es-ES",{day:"numeric",month:"short",timeZone:"UTC"}):"";
+  $("lgEntList").innerHTML=seedB+(L.length?'<div class="lgpeds">'+L.map(p=>{const s=lgPedSum(p);const pc=s.q?Math.round(s.r/s.q*100):0;const stl=(LG_PST.find(x=>x[0]===p.st)||[0,p.st])[1];const t=lgPedTot(p);
+      return '<button type="button" class="lgped st-'+esc(p.st)+'" data-lgped="'+esc(p.id)+'"><span class="lgpv"><b>'+esc(p.prov)+"</b><small>"+(p.tipo==="seri"?"Serigrafía · ":"")+esc(dt(p.fecha))+(p.by?" · "+esc(p.by):"")+"</small></span>"+
+        '<span class="lgpl">'+(p.lines||[]).length+(p.lines.length===1?" línea":" líneas")+"<small>"+lgN(s.r)+" de "+lgN(s.q)+" recibidas</small></span>"+
+        '<span class="lgpbar" aria-hidden="true"><i style="width:'+pc+'%"></i></span>'+
+        '<span class="lgpc">'+(t?eur(t):"<small>Sin precios</small>")+"</span>"+
+        '<span class="lgps"><em class="lgst st-'+esc(p.st)+'">'+esc(stl)+"</em>"+(p.pag?'<em class="lgpag ok">Pagado'+(p.pagAt?" "+esc(dt(p.pagAt)):"")+"</em>":'<em class="lgpag">Sin pagar</em>')+"</span></button>"}).join("")+"</div>":(P.length?'<div class="eqempty"><h3 class="wide" style="margin:0">Ningún pedido</h3></div>':""));
+  lgPedPanelRender()}
+function lgPedPanelRender(){const p=LG.ped[LG.pedPanel];const pn=$("lgPedPanel"),sc=$("lgPedScrim");if(!p){pn.hidden=true;sc.hidden=true;return}pn.hidden=false;sc.hidden=false;
+  const ed=lgCan("entradas");const dis=ed?"":" disabled";const seri=p.tipo==="seri";const provs=[...new Set(LG_PROV.concat([p.prov]))];
+  const st=lgStockAll();const t=lgPedTot(p);
+  const arts=Object.values(LG.arts).sort((a,b)=>a.n.localeCompare(b.n,"es"));
+  let h='<div class="lgph"><div><b class="wide">'+esc(p.prov)+'</b><span class="sub">'+(seri?"Serigrafía":"Pedido")+" del "+esc(new Date(p.fecha+"T12:00:00Z").toLocaleDateString("es-ES",{day:"numeric",month:"long",year:"numeric",timeZone:"UTC"}))+(t?" · "+eur(t):"")+'</span></div><button class="btn" type="button" data-lgpx>Cerrar</button></div><div class="lgpb">';
+  h+='<div class="lgform"><label>Proveedor<select data-lgpf="prov"'+dis+">"+provs.map(x=>"<option"+(x===p.prov?" selected":"")+">"+esc(x)+"</option>").join("")+'</select></label><label>Gestiona<input data-lgpf="by" maxlength="40" value="'+esc(p.by||"")+'"'+dis+'></label><label>Fecha del pedido<input type="date" data-lgpf="fecha" value="'+esc(p.fecha||"")+'"'+dis+'></label>'+
+    '<label>Estado<select data-lgpf="st"'+dis+">"+LG_PST.map(([k,l])=>'<option value="'+k+'"'+(p.st===k?" selected":"")+">"+l+"</option>").join("")+'</select></label><label>Fecha del estado<input type="date" data-lgpf="stAt" value="'+esc(p.stAt||"")+'"'+dis+'></label><label>Ubicación de la mercancía<input data-lgpf="ubic" maxlength="60" value="'+esc(p.ubic||"")+'"'+dis+'></label>'+
+    '<label class="lgchk"><input type="checkbox" data-lgpf="pag"'+(p.pag?" checked":"")+dis+'> Pagado</label><label>Fecha de pago<input type="date" data-lgpf="pagAt" value="'+esc(p.pagAt||"")+'"'+dis+'></label><label class="w">Nota<input data-lgpf="nota" maxlength="200" value="'+esc(p.nota||"")+'"'+dis+"></label></div>";
+  h+='<h4 class="wide lgh">Líneas</h4><div class="tablebox"><table class="lgpt"><thead><tr><th>Artículo</th><th>Pedido</th><th>Precio</th><th>Importe</th>'+(seri?"<th>Enviado</th>":"")+"<th>Recibido</th>"+(ed?"<th></th>":"")+"</tr></thead><tbody>";
+  (p.lines||[]).forEach((l,i)=>{const a=LG.arts[l.a]||{n:"(artículo borrado)",t:""};const left=(+l.q||0)-(+l.rec||0);const a2=l.a2?LG.arts[l.a2]:null;
+    h+='<tr><td class="nm"><b>'+esc(a.n)+"</b>"+(a.t?"<small>Talla "+esc(a.t)+"</small>":"")+(a2?"<small>Vuelve como: "+esc(a2.n)+"</small>":"")+"</td><td>"+lgN(l.q)+'</td><td><input class="lgnum" inputmode="decimal" data-lgpl="'+i+'|pr" value="'+(l.pr==null?"":String(l.pr).replace(".",","))+'" placeholder="€"'+dis+'></td><td>'+(l.pr!=null?eur(r2((+l.q||0)*(+l.pr||0))):"—")+"</td>"+
+      (seri?"<td>"+lgN(l.env||0)+"</td>":"")+"<td>"+lgN(l.rec||0)+(left>0?"<small>faltan "+lgN(left)+"</small>":"<small class=\"ok\">completo</small>")+"</td>"+
+      (ed?'<td class="lgpact">'+(seri&&(l.env||0)<l.q?'<span class="lgrec"><input class="lgnum" type="number" min="1" data-lgpenv="'+i+'" placeholder="'+((+l.q||0)-(+l.env||0))+'"><button class="bmini" type="button" data-lgpdoenv="'+i+'">Enviar</button></span>':"")+(left>0?'<span class="lgrec"><input class="lgnum" type="number" min="1" data-lgprec="'+i+'" placeholder="'+(seri?Math.max(0,(+l.env||0)-(+l.rec||0)):left)+'"><button class="bmini" type="button" data-lgpdorec="'+i+'">Recibir</button></span>':"")+((+l.rec||0)||(+l.env||0)?"":'<button class="bmini x" type="button" data-lgpdel="'+i+'" title="Quitar la línea">×</button>')+"</td>":"")+"</tr>"});
+  h+="</tbody></table></div>";
+  if(ed){h+='<h4 class="wide lgh">Añadir línea</h4><datalist id="lgArtDl">'+arts.map(a=>'<option value="'+esc(a.n+(a.t?" · "+a.t:""))+'">').join("")+'</datalist><div class="lgform"><label class="w">Artículo (búscalo o escribe uno nuevo)<input id="lgNlA" list="lgArtDl" maxlength="90" placeholder="Ej.: Camiseta staff azul navy · M"></label><label>Talla (si es nuevo)<input id="lgNlT" maxlength="12"></label><label>Categoría (si es nuevo)<select id="lgNlC">'+[...new Set(Object.values(LG.arts).map(a=>a.cat).concat(["Otros"]))].map(c=>"<option>"+esc(c)+"</option>").join("")+'</select></label><label>Cantidad<input id="lgNlQ" type="number" min="1"></label><label>Precio por unidad<input id="lgNlP" inputmode="decimal" placeholder="€"></label></div><div class="hea"><button class="btn" type="button" data-lgpadd>Añadir línea</button></div>'}
+  h+="</div>";pn.innerHTML=h}
+const lgNumIn=v=>{v=String(v||"").replace(/[\s€]/g,"");if(!v)return null;if(v.includes(","))v=v.replace(/\./g,"").replace(",",".");const n=+v;return isNaN(n)?NaN:r2(n)};
+async function lgPedEdit(fn,msg){const p=LG.ped[LG.pedPanel];if(!p)return;const c=JSON.parse(JSON.stringify(p));delete c.id;fn(c);await lgPutPed(LG.pedPanel,c,msg)}
+async function lgPedReceive(i,env){const p=LG.ped[LG.pedPanel];if(!p)return;const l=p.lines[i];if(!l)return;
+  const el=document.querySelector(env?'[data-lgpenv="'+i+'"]':'[data-lgprec="'+i+'"]');let q=Math.round(+(el&&el.value?el.value:(el?el.placeholder:0)));if(!(q>0)){if(el)el.focus();return}
+  const seri=p.tipo==="seri";
+  if(env){q=Math.min(q,(+l.q||0)-(+l.env||0));if(!(q>0))return;const ok=await lgMove({k:"seo",a:l.a,q,from:"alm",to:"seri",note:"Pedido "+p.prov+" ("+p.fecha+")",ped:LG.pedPanel},"entradas");if(!ok)return;
+    await lgPedEdit(c=>{c.lines[i].env=(+c.lines[i].env||0)+q;if(c.st==="pedido"){c.st="camino";c.stAt=new Date().toISOString().slice(0,10)}},"Enviado a serigrafía");return}
+  const left=(+l.q||0)-(+l.rec||0);q=Math.min(q,seri?Math.max(0,(+l.env||0)-(+l.rec||0)):left);if(!(q>0)){toast(seri?"Primero envía el material a serigrafía":"Esa línea ya está completa");return}
+  const m=seri?{k:"sei",a:l.a,a2:l.a2||null,q,from:"seri",to:"alm",note:"Pedido "+p.prov+" ("+p.fecha+")",ped:LG.pedPanel}:{k:"ent",a:l.a,q,from:null,to:"alm",note:"Pedido "+p.prov+" ("+p.fecha+")",ped:LG.pedPanel};if(!m.a2)delete m.a2;
+  const ok=await lgMove(m,"entradas");if(!ok)return;
+  await lgPedEdit(c=>{c.lines[i].rec=(+c.lines[i].rec||0)+q;const ns=lgPedStAuto(c);if(ns!==c.st){c.st=ns;c.stAt=new Date().toISOString().slice(0,10)}},"Recibido: "+lgN(q)+" al almacén")}
+document.addEventListener("click",async e=>{let b;
+  if(e.target.closest("[data-lgpseed]")){lgLoadPedSeed();return}
+  if((b=e.target.closest("[data-lgef]"))){LG.ent.f=b.dataset.lgef;renderLgEnt();return}
+  if((b=e.target.closest("[data-lgped]"))){LG.pedPanel=b.dataset.lgped;lgPedPanelRender();return}
+  if(e.target.closest("[data-lgpx]")||e.target.id==="lgPedScrim"){LG.pedPanel="";lgPedPanelRender();return}
+  if(e.target.closest("#lgEntNew")){if(!lgCan("entradas")){CE_SOLO_LECTURA();return}const id="p"+Date.now().toString(36);const today=new Date().toISOString().slice(0,10);
+    await lgPutPed(id,{prov:LG.ent.prov||LG_PROV[0],by:((await ingMe().catch(()=>({})))||{}).name||"",fecha:today,tipo:/serigraf/i.test(LG.ent.prov)?"seri":"compra",st:"pedido",stAt:today,pag:false,pagAt:"",ubic:"",nota:"",lines:[],createdAt:new Date().toISOString()},"Pedido creado");LG.pedPanel=id;lgPedPanelRender();return}
+  if((b=e.target.closest("[data-lgpdorec]"))){lgPedReceive(+b.dataset.lgpdorec,false);return}
+  if((b=e.target.closest("[data-lgpdoenv]"))){lgPedReceive(+b.dataset.lgpdoenv,true);return}
+  if((b=e.target.closest("[data-lgpdel]"))){const i=+b.dataset.lgpdel;lgPedEdit(c=>{c.lines.splice(i,1)},"Línea quitada");return}
+  if(e.target.closest("[data-lgpadd]")){const raw=$("lgNlA").value.trim();const q=Math.round(+$("lgNlQ").value);const pr=lgNumIn($("lgNlP").value);if(!raw){$("lgNlA").focus();return}if(!(q>0)){$("lgNlQ").focus();return}if(Number.isNaN(pr)){$("lgNlP").focus();return}
+    let a=Object.values(LG.arts).find(x=>x.n+(x.t?" · "+x.t:"")===raw);let id=a?a.id:null;
+    if(!id){id=await lgEnsureArt(raw,$("lgNlT").value.trim(),$("lgNlC").value,"");if(!id){toast("No se pudo crear el artículo");return}}
+    lgPedEdit(c=>{c.lines.push({a:id,q,pr,rec:0,env:0,a2:null})},"Línea añadida");return}});
+document.addEventListener("change",e=>{const t=e.target;let d;
+  if((d=t.dataset.lgpf)){const v=t.type==="checkbox"?t.checked:t.value.trim();lgPedEdit(c=>{c[d]=v;if(d==="pag"&&v&&!c.pagAt)c.pagAt=new Date().toISOString().slice(0,10);if(d==="st")c.stAt=new Date().toISOString().slice(0,10);if(d==="prov")c.tipo=/serigraf/i.test(v)?"seri":c.tipo})}
+  if((d=t.dataset.lgpl)){const [i,k]=d.split("|");const v=lgNumIn(t.value);if(Number.isNaN(v)){toast("Precio no válido");return}lgPedEdit(c=>{c.lines[+i][k]=v})}});
+$("lgEntQ").addEventListener("input",e=>{LG.ent.q=e.target.value;renderLgEnt()});
+$("lgEntProv").addEventListener("change",e=>{LG.ent.prov=e.target.value;renderLgEnt()});
+
 const CHEV=SVG('<path d="m9 6 6 6-6 6"/>');
-const SB_LBL={inicio:"Inicio",temporada:"Campus Experience 2027",registros:"Registros",operativa:"Operativa",horarios:"Horarios",equipos:"Equipos",buses:"Buses",administracion:"Administración",pagos:"Contabilidad",facturas:"Facturas",ingresos:"Cuentas",incidencias:"Incidencias",atencion:"Atención al público",bbdd:"Base de datos",limpieza:"Limpieza",attstats:"Estadísticas",logistica:"Logística",lgnec:"Necesidades",lginv:"Inventario",lgcfg:"Configuración",marketing:"Marketing",rrhh:"Recursos Humanos",admin:"Usuarios y accesos"};
+const SB_LBL={inicio:"Inicio",temporada:"Campus Experience 2027",registros:"Registros",operativa:"Operativa",horarios:"Horarios",equipos:"Equipos",buses:"Buses",administracion:"Administración",pagos:"Contabilidad",facturas:"Facturas",ingresos:"Cuentas",incidencias:"Incidencias",atencion:"Atención al público",bbdd:"Base de datos",limpieza:"Limpieza",attstats:"Estadísticas",logistica:"Logística",lgnec:"Necesidades",lginv:"Inventario",lgent:"Entradas",lgcfg:"Configuración",marketing:"Marketing",rrhh:"Recursos Humanos",admin:"Usuarios y accesos"};
 /* bloques de la temporada y a qué bloque pertenece cada pantalla */
 const SEASON=2027;
-const GRP_OF={inicio:"inicio",temporada:"temporada",registros:"registros",operativa:"operativa",horarios:"operativa",equipos:"operativa",buses:"operativa",incidencias:"operativa",administracion:"administracion",pagos:"administracion",facturas:"administracion",ingresos:"administracion",atencion:"atencion",bbdd:"atencion",limpieza:"atencion",attstats:"atencion",logistica:"logistica",lgnec:"logistica",lginv:"logistica",lgcfg:"logistica",marketing:"marketing",rrhh:"rrhh",admin:"admin"};
-const BLOCKS=[["registros",[]],["operativa",["horarios","equipos","buses","incidencias"]],["administracion",["pagos","facturas","ingresos"]],["atencion",["bbdd","limpieza","attstats"]],["logistica",["lgnec","lginv","lgcfg"]],["marketing",[]],["rrhh",[]]];
+const GRP_OF={inicio:"inicio",temporada:"temporada",registros:"registros",operativa:"operativa",horarios:"operativa",equipos:"operativa",buses:"operativa",incidencias:"operativa",administracion:"administracion",pagos:"administracion",facturas:"administracion",ingresos:"administracion",atencion:"atencion",bbdd:"atencion",limpieza:"atencion",attstats:"atencion",logistica:"logistica",lgnec:"logistica",lginv:"logistica",lgent:"logistica",lgcfg:"logistica",marketing:"marketing",rrhh:"rrhh",admin:"admin"};
+const BLOCKS=[["registros",[]],["operativa",["horarios","equipos","buses","incidencias"]],["administracion",["pagos","facturas","ingresos"]],["atencion",["bbdd","limpieza","attstats"]],["logistica",["lgnec","lginv","lgent","lgcfg"]],["marketing",[]],["rrhh",[]]];
 const SOON=new Set(["marketing","rrhh"]);
 /* ===== ACCESOS: solo cuando el software corre en el servidor propio (window.CE_ACL) ===== */
 const ACL=window.CE_ACL||null;
 const CAN=(k,min)=>!ACL||!!ACL.admin||(((ACL.perms||{})[k]||0)>=(min||1));
 const ANY=(a,min)=>!ACL||!!ACL.admin||Object.keys(ACL.perms||{}).some(k=>k.startsWith(a+".")&&ACL.perms[k]>=(min||1));
 const VIEW_AP={registros:"registros",horarios:"horarios",equipos:"equipos",buses:"buses",pagos:"contabilidad",atencion:"atencion",marketing:"marketing",rrhh:"rrhh"};
-const viewOk=v=>v==="logistica"?(viewOk("lgnec")||viewOk("lginv")||viewOk("lgcfg")):v==="lgnec"?CAN("logistica.necesidades"):v==="lginv"?CAN("logistica.inventario"):v==="lgcfg"?CAN("logistica.configuracion"):["atencion","bbdd","limpieza","attstats"].includes(v)?(v==="atencion"?(viewOk("bbdd")||viewOk("limpieza")||viewOk("attstats")):CAN({bbdd:"atencion.bbdd",limpieza:"atencion.limpieza",attstats:"atencion.estadisticas"}[v])):v==="inicio"||v==="temporada"||(v==="admin"?!!(ACL&&ACL.admin):v==="operativa"?(viewOk("horarios")||viewOk("equipos")||viewOk("buses")||viewOk("incidencias")):v==="incidencias"?CAN("incidencias.general"):v==="administracion"?(viewOk("pagos")||viewOk("facturas")||viewOk("ingresos")):v==="facturas"?CAN("contabilidad.facturas"):v==="ingresos"?CAN("contabilidad.ingresos"):v==="pagos"?(CAN("contabilidad.pagos")||CAN("contabilidad.devoluciones")||CAN("contabilidad.cancelaciones")||CAN("contabilidad.agentes")):!VIEW_AP[v]||ANY(VIEW_AP[v]));
+const viewOk=v=>v==="logistica"?(viewOk("lgnec")||viewOk("lginv")||viewOk("lgent")||viewOk("lgcfg")):v==="lgnec"?CAN("logistica.necesidades"):v==="lginv"?CAN("logistica.inventario"):v==="lgent"?CAN("logistica.entradas"):v==="lgcfg"?CAN("logistica.configuracion"):["atencion","bbdd","limpieza","attstats"].includes(v)?(v==="atencion"?(viewOk("bbdd")||viewOk("limpieza")||viewOk("attstats")):CAN({bbdd:"atencion.bbdd",limpieza:"atencion.limpieza",attstats:"atencion.estadisticas"}[v])):v==="inicio"||v==="temporada"||(v==="admin"?!!(ACL&&ACL.admin):v==="operativa"?(viewOk("horarios")||viewOk("equipos")||viewOk("buses")||viewOk("incidencias")):v==="incidencias"?CAN("incidencias.general"):v==="administracion"?(viewOk("pagos")||viewOk("facturas")||viewOk("ingresos")):v==="facturas"?CAN("contabilidad.facturas"):v==="ingresos"?CAN("contabilidad.ingresos"):v==="pagos"?(CAN("contabilidad.pagos")||CAN("contabilidad.devoluciones")||CAN("contabilidad.cancelaciones")||CAN("contabilidad.agentes")):!VIEW_AP[v]||ANY(VIEW_AP[v]));
 const regKey=w=>w===WALL||w==="99"?"registros.todos":isCampKey(w)?"registros.campus":(w&&w!=="0")?"registros.madrid":null;
 const eqKeyOf=w=>isCampKey(w)?"equipos.campus":"equipos.madrid";
 const ACC_K={pagos:"contabilidad.pagos",dev:"contabilidad.devoluciones",can:"contabilidad.cancelaciones",ag:"contabilidad.agentes"};
@@ -6394,7 +6559,7 @@ function renderSide(){
   /* apartado con sus semanas plegables (Horarios, Equipos, Contabilidad): se abre con la flecha o al entrar en él */
   const modF=(m,ss)=>{if(!viewOk(m))return "";const sub=sbSub(m);if(!sub)return modH(m,ss);const k="m:"+m,open=SB_OPEN.has(k);
     return '<div class="sm'+(open?" open":"")+'" data-m="'+k+'">'+modH(m,ss).replace(/<span class="chsp"><\/span><\/button>$/,'<span class="chev" data-sx="'+k+'" role="button" aria-label="Desplegar '+SB_LBL[m]+'" aria-expanded="'+open+'">'+CHEV+"</span></button>")+'<div class="smsub"><div class="ssin">'+sub+"</div></div></div>"};
-  const subOfG=g=>g==="operativa"?modF("horarios","0")+modF("equipos","0")+(viewOk("buses")?modH("buses",""):"")+(viewOk("incidencias")?modH("incidencias",""):""):g==="administracion"?modF("pagos","")+(viewOk("facturas")?modH("facturas",""):"")+(viewOk("ingresos")?modH("ingresos",""):""):g==="atencion"?(viewOk("bbdd")?modH("bbdd",""):"")+(viewOk("limpieza")?modH("limpieza",""):"")+(viewOk("attstats")?modH("attstats",""):""):g==="logistica"?["lgnec","lginv","lgcfg"].map(m=>viewOk(m)?modH(m,""):"").join(""):g==="registros"?sbSub("registros"):"";
+  const subOfG=g=>g==="operativa"?modF("horarios","0")+modF("equipos","0")+(viewOk("buses")?modH("buses",""):"")+(viewOk("incidencias")?modH("incidencias",""):""):g==="administracion"?modF("pagos","")+(viewOk("facturas")?modH("facturas",""):"")+(viewOk("ingresos")?modH("ingresos",""):""):g==="atencion"?(viewOk("bbdd")?modH("bbdd",""):"")+(viewOk("limpieza")?modH("limpieza",""):"")+(viewOk("attstats")?modH("attstats",""):""):g==="logistica"?["lgnec","lginv","lgent","lgcfg"].map(m=>viewOk(m)?modH(m,""):"").join(""):g==="registros"?sbSub("registros"):"";
   const invErr=viewOk("facturas")?invErrCount():null;
   let ingRev=0;try{if(viewOk("ingresos")&&INV.list){const R0=ingRows();ingRev=ING_BANKS.reduce((a,[b])=>a+ingDays(R0,b).filter(d=>d.st==="rev").length,0)}}catch(e){}
   const myInc=viewOk("incidencias")?incMyCount():0;
