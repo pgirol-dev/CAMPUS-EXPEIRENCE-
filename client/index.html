@@ -2045,10 +2045,15 @@ table.lginv tr.gh td{background:var(--surface-2)!important;font-family:var(--f-w
 .ingr .am.neg{color:var(--bad);font-weight:800}
 .ingr>span:nth-child(7){min-width:64px}
 .ingr .cp small{display:block;font-size:10.5px;color:var(--ink-3)}
-.ingd.has-sel{position:relative}
-.ingd.has-sel .ingh{padding-left:44px}
-.ingsel{position:absolute;left:14px;top:14px;z-index:2;display:flex}
-.ingsel input{width:17px;height:17px;accent-color:var(--navy);cursor:pointer}
+/* casilla del PDF dentro de la cabecera del día, en su propia columna y centrada */
+.ingd.has-sel .ingh{grid-template-columns:22px 28px minmax(150px,1.2fr) 90px minmax(110px,.8fr) minmax(220px,1.6fr) auto}
+.ingsel{display:grid;place-items:center;cursor:pointer}
+.ingsel input{appearance:none;-webkit-appearance:none;margin:0;width:18px;height:18px;border-radius:5px;border:2px solid color-mix(in srgb,var(--ink-3) 70%,transparent);background:transparent;cursor:pointer;display:grid;place-items:center;transition:background .15s,border-color .15s}
+.ingsel input:hover{border-color:var(--green)}
+.ingsel input:checked{background:var(--green);border-color:var(--green)}
+.ingsel input:checked::after{content:"";width:9px;height:5px;border:2px solid #fff;border-top:0;border-right:0;transform:translateY(-1px) rotate(-45deg)}
+.ingsel input:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+@media (max-width:900px){.ingd.has-sel .ingh{grid-template-columns:24px 1fr auto;position:relative;padding-left:46px}.ingd.has-sel .ingsel{position:absolute;left:16px;top:12px}}
 .ingpdf{display:inline-flex;align-items:center;gap:6px}
 .ingpdf[hidden]{display:none}
 .inglink{all:unset;cursor:pointer;font-size:12px;font-weight:700;color:var(--ink-3);padding:4px 6px;border-radius:6px}
@@ -5900,7 +5905,7 @@ function renderIngresos(){
     const btn=d.st==="ok"?'<button type="button" class="ingok done" data-ingok="'+d.day+'"'+(ed?' title="Quitar la marca"':" disabled")+'>✓ Cuadrado</button>':d.st==="rev"?'<button type="button" class="ingok rev" data-ingok="'+d.day+'"'+(ed?"":" disabled")+">Volver a cuadrar</button>":(ed?'<button type="button" class="ingok" data-ingok="'+d.day+'">Marcar cuadrado</button>':'<span class="ingwho">Por cuadrar</span>');
     const open=ING.open.has(d.day)||(filt&&shown.length<=6);
     const sk=ING.bank+"|"+d.day;const pick=d.st==="ok"?'<label class="ingsel" title="Incluir en el PDF"><input type="checkbox" data-ingsel="'+d.day+'"'+(ING.sel.has(sk)?" checked":"")+' aria-label="Incluir el '+esc(d.day)+' en el PDF"></label>':"";
-    h+='<div class="ingd st-'+d.st+(open?" open":"")+(pick?" has-sel":"")+'" data-ingday="'+d.day+'">'+pick+'<div class="ingh" data-ingtog="'+d.day+'"><button type="button" class="chev" aria-label="Ver los cobros" aria-expanded="'+open+'"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>'+
+    h+='<div class="ingd st-'+d.st+(open?" open":"")+(pick?" has-sel":"")+'" data-ingday="'+d.day+'"><div class="ingh" data-ingtog="'+d.day+'">'+pick+'<button type="button" class="chev" aria-label="Ver los cobros" aria-expanded="'+open+'"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>'+
       '<span class="dd2"><b>'+esc(ingDate(d.day,{weekday:"long",day:"numeric",month:"short"}))+"</b><small>23:00 del "+esc(ingDate(prev,{day:"numeric"}))+" → 22:59 del "+esc(ingDate(d.day,{day:"numeric"}))+"</small></span>"+
       '<span class="np">'+d.ps.length+" cobro"+(d.ps.length>1?"s":"")+(filt?"<br><small>filtrado: "+eur(sub)+"</small>":"")+'</span><span class="tot">'+eur(d.total)+"</span>"+
       '<span class="ingbank"><label>Banco <input type="text" inputmode="decimal" data-ingbank="'+d.day+'" value="'+(bank==null?"":String(bank).replace(".",","))+'" placeholder="Importe" aria-label="Importe del banco el '+esc(d.day)+'"></label>'+(diff==null?"":Math.abs(diff)<.01?'<span class="ingdiff ok">Cuadra</span>':'<span class="ingdiff ko">'+(diff>0?"+":"")+eur(diff)+"</span>")+"</span>"+
