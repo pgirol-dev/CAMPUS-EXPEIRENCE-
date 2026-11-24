@@ -5854,7 +5854,8 @@ function ingRows(){const byId={};(S.allRows||[]).forEach(r=>{byId[String(r.id)]=
     const cday=(()=>{const t=c.created_time?new Date(c.created_time):null;if(t&&!isNaN(t)){const L=ingLocal(t);return ingKey(L.y,L.m,L.d)}return c.date})();
     const rf=[{date:cday,amount:+c.total,ok:true}];
     rf.forEach((f,k)=>{if(!/^\d{4}-\d{2}-\d{2}/.test(String(f.date||""))||!(f.amount>0))return;const day=String(f.date).slice(0,10);
-      out.push({i:null,cn:c,nr:!f.ok,rk:c.creditnote_id+"#"+k,num:c.creditnote_number,inv:invN,w:{d:new Date(day+"T12:00:00Z"),day,orig:day,hm:"",late:false,exact:false,dev:true},mvh:[],r,deal:id,camp,player:c.cf_jugador||(r&&r.name)||"",fam:c.customer_name||"",amt:-r2(f.amount),cp:"Devolución"})})});
+      const mv=ING.mv["c"+c.creditnote_id];const mvh=(mv&&Array.isArray(mv.hist))?mv.hist:[];const dd=mv&&mv.day&&mv.day!==day?mv.day:day;
+      out.push({i:null,cn:c,nr:!f.ok,rk:c.creditnote_id+"#"+k,num:c.creditnote_number,inv:invN,w:{d:new Date(dd+"T12:00:00Z"),day:dd,orig:day,moved:dd!==day,hm:"",late:false,exact:false,dev:true},mvh,r,deal:id,camp,player:c.cf_jugador||(r&&r.name)||"",fam:c.customer_name||"",amt:-r2(f.amount),cp:"Devolución"})})});
   out.forEach(o=>{if(o.cn)return;o.num=o.i.invoice_number;o.cp=!o.deal?(Math.abs(o.amt-50)<.01?"Reserva":"Pago"):(o.of===1&&o.r&&o.r.d&&Math.abs(r2(o.r.d.Total)-o.amt)<.01)?"Pago completo":(["1er","2º","3er"][o.n-1]||o.n+"º")+" pago"});
   return out}
 function ingDays(rows,bank){bank=bank||ING.bank;const by={};rows.forEach(o=>{if(o.w&&ingBankOf(o)===bank)(by[o.w.day]=by[o.w.day]||[]).push(o)});
@@ -5907,14 +5908,14 @@ function renderIngresos(){
     const sk=ING.bank+"|"+d.day;const pick=d.st==="ok"?'<label class="ingsel" title="Incluir en el PDF"><input type="checkbox" data-ingsel="'+d.day+'"'+(ING.sel.has(sk)?" checked":"")+' aria-label="Incluir el '+esc(d.day)+' en el PDF"></label>':"";
     h+='<div class="ingd st-'+d.st+(open?" open":"")+(pick?" has-sel":"")+'" data-ingday="'+d.day+'"><div class="ingh" data-ingtog="'+d.day+'">'+pick+'<button type="button" class="chev" aria-label="Ver los cobros" aria-expanded="'+open+'"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>'+
       '<span class="dd2"><b>'+esc(ingDate(d.day,{weekday:"long",day:"numeric",month:"short"}))+"</b><small>23:00 del "+esc(ingDate(prev,{day:"numeric"}))+" → 22:59 del "+esc(ingDate(d.day,{day:"numeric"}))+"</small></span>"+
-      '<span class="np">'+d.ps.length+" cobro"+(d.ps.length>1?"s":"")+(filt?"<br><small>filtrado: "+eur(sub)+"</small>":"")+'</span><span class="tot">'+eur(d.total)+"</span>"+
+      '<span class="np">'+(()=>{const nc=d.ps.filter(o=>!o.cn).length,nd=d.ps.length-nc;return (nc?nc+" cobro"+(nc>1?"s":""):"")+(nc&&nd?"<br>":"")+(nd?nd+(nd>1?" devoluciones":" devolución"):"")})()+(filt?"<br><small>filtrado: "+eur(sub)+"</small>":"")+'</span><span class="tot">'+eur(d.total)+"</span>"+
       '<span class="ingbank"><label>Banco <input type="text" inputmode="decimal" data-ingbank="'+d.day+'" value="'+(bank==null?"":String(bank).replace(".",","))+'" placeholder="Importe" aria-label="Importe del banco el '+esc(d.day)+'"></label>'+(diff==null?"":Math.abs(diff)<.01?'<span class="ingdiff ok">Cuadra</span>':'<span class="ingdiff ko">'+(diff>0?"+":"")+eur(diff)+"</span>")+"</span>"+
       '<span class="ingact">'+who+btn+"</span></div>";
     if(d.st==="rev"&&d.chg)h+='<div class="ingrev">Ha cambiado desde que se cuadró: antes '+eur(d.chg.was)+", ahora "+eur(d.total)+(d.chg.add.length?" · nuevas: "+esc(d.chg.add.join(", ")):"")+(d.chg.del.length?" · ya no están: "+esc(d.chg.del.join(", ")):"")+"</div>";
     h+='<div class="ingp">'+shown.map(o=>{const c=campById(o.camp);const fl=[];
         if(o.cn)return '<div class="ingr ingdev"><span class="hr" title="Día del reembolso (Books no guarda la hora)">—</span><span class="who"'+(o.r?' data-ingpid="'+esc(o.r.id)+'"':"")+'><b>'+esc(o.player||o.fam||"—")+"</b><small>"+esc(o.player&&o.fam&&o.fam!==o.player?o.fam:(o.cn.email||""))+"</small></span>"+
           '<span class="cmp">'+(c?'<span class="ctag ct-'+c.kind+'">'+esc(c.n)+"</span>":"")+'</span><span class="cp"'+(o.nr?' title="Books no tiene registrado el reembolso: cuenta el día en que se creó la rectificativa"':"")+'>Devolución'+(o.inv?"<small>de "+esc(o.inv)+(o.nr?" · fecha de creación":"")+"</small>":(o.nr?"<small>fecha de creación</small>":""))+"</span>"+
-          '<a class="ichip cn" href="'+cnUrl(o.cn)+'" target="_blank" rel="noopener" title="Abrir la nota de crédito en Zoho Books">'+esc(o.num)+"</a>"+'<span class="am neg">'+eur(o.amt)+"</span><span></span></div>";
+          '<a class="ichip cn" href="'+cnUrl(o.cn)+'" target="_blank" rel="noopener" title="Abrir la nota de crédito en Zoho Books">'+esc(o.num)+"</a>"+'<span class="am neg">'+eur(o.amt)+"</span>"+ingMvCtl(o,ed)+"</div>";
         if(o.deal&&!o.r)fl.push("La inscripción no está activa en el software (baja, devolución o borrada)");
         if(+o.i.balance>0)fl.push("Books no tiene registrado el cobro de esta factura (pendiente "+eur(o.i.balance)+")");
         const soft=[];if(o.w.late&&!o.w.moved)soft.push("Pagado después de las 23:00: cuenta en este día");
@@ -5925,8 +5926,7 @@ function renderIngresos(){
           '<span class="who"'+(o.r?' data-ingpid="'+esc(o.r.id)+'"':"")+'><b>'+esc(o.player||o.fam||"—")+"</b><small>"+esc(o.player&&o.fam&&o.fam!==o.player?o.fam:(o.i.email||""))+"</small></span>"+
           '<span class="cmp">'+(c?'<span class="ctag ct-'+c.kind+'">'+esc(c.n)+"</span>":"")+'</span><span class="cp">'+esc(o.cp)+(o.w.moved?'<span class="ingmvt" title="'+esc("Su día real es el "+fmtS(o.w.orig))+'">Movido</span>':"")+"</span>"+
           '<a class="ichip'+(+o.i.balance>0?" ko":"")+'" href="'+booksUrl(o.i)+'" target="_blank" rel="noopener" title="Abrir la factura en Zoho Books">'+esc(o.i.invoice_number)+"</a>"+
-          '<span class="am">'+eur(o.amt)+"</span>"+'<span>'+(ed?'<button type="button" class="ingmvb" data-ingmv="'+esc(o.i.invoice_id)+'" aria-expanded="'+mvOpen+'" title="Mover este cobro a otro día">Mover</button>':"")+"</span>"+
-          (mvOpen?'<span class="ingmvf">Mover al día <input type="date" data-ingmvd="'+esc(o.i.invoice_id)+'" value="'+o.w.day+'" aria-label="Nuevo día del cobro">'+(o.w.moved?'<button type="button" class="ingmvb" data-ingmvback="'+esc(o.i.invoice_id)+'">Volver al '+esc(fmtS(o.w.orig))+"</button>":"")+'<button type="button" class="ingmvb" data-ingmv="'+esc(o.i.invoice_id)+'">Cerrar</button></span>':"")+
+          '<span class="am">'+eur(o.amt)+"</span>"+ingMvCtl(o,ed)+
           (hist.length?'<span class="fl soft">'+esc(hist.join(" · "))+"</span>":"")+(fl.length?'<span class="fl">'+esc(fl.join(" · "))+"</span>":"")+(soft.length?'<span class="fl soft">'+esc(soft.join(" · "))+"</span>":"")+"</div>"}).join("")+"</div></div>"});
   const nDev=R.filter(o=>o.cn).length,nDevB=R.filter(o=>o.cn&&ingBankOf(o)===ING.bank).length;
   h+='<p class="ingnote">El día de la plataforma va de las 23:00 del día anterior a las 22:59 (hora de España). La hora sale de la referencia de cada factura; «≈» indica hora aproximada. '+(CN.list?"Devoluciones leídas de Books: "+nDev+(nDev!==nDevB?" ("+nDevB+" en este banco)":"")+".":"Devoluciones: leyendo Zoho Books…")+'</p>';
@@ -6008,14 +6008,21 @@ async function ingPdfDownload(){const days=ingDays(ingRows()).filter(d=>d.st==="
   const data=ingPdf(ING.bank,days);const BK=ING_BANKS.find(b=>b[0]===ING.bank)[1];const name="Cuentas_"+BK+"_"+days[0].day+(days.length>1?"_a_"+days[days.length-1].day:"")+".pdf";
   try{if(S.dl)await S.dl.save({filename:name,data});else{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([data],{type:"application/pdf"}));a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000)}toast("PDF descargado")}
   catch(e){toast(e&&e.code==="not_granted"?"Descarga cancelada":"No se pudo descargar el PDF")}}
+/* botón «Mover» y formulario (cobros y devoluciones); en las devoluciones el historial va debajo */
+const ingMvId=o=>o.cn?"c:"+o.cn.creditnote_id:String(o.i.invoice_id);
+function ingMvCtl(o,ed){const id=ingMvId(o);const open=ING.mvOpen===id;const fmtS=k=>ingDate(k,{day:"numeric",month:"short"});const what=o.cn?"esta devolución":"este cobro";
+  let h='<span>'+(ed?'<button type="button" class="ingmvb" data-ingmv="'+esc(id)+'" aria-expanded="'+open+'" title="Mover '+what+' a otro día">Mover</button>':"")+"</span>";
+  if(open)h+='<span class="ingmvf">Mover al día <input type="date" data-ingmvd="'+esc(id)+'" value="'+o.w.day+'" aria-label="Nuevo día">'+(o.w.moved?'<button type="button" class="ingmvb" data-ingmvback="'+esc(id)+'">Volver al '+esc(fmtS(o.w.orig))+"</button>":"")+'<button type="button" class="ingmvb" data-ingmv="'+esc(id)+'">Cerrar</button></span>';
+  if(o.cn&&o.mvh.length)h+='<span class="fl soft">'+esc(o.mvh.map(x=>"Movida del "+fmtS(x.from)+" al "+fmtS(x.to)+" por "+(x.byName||"—")+" · "+new Date(x.at).toLocaleString("es-ES",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})).join(" · "))+"</span>";
+  return h}
 /* mover un cobro de día: guarda el día elegido y todo el historial (quién, cuándo, de qué día a qué día) */
 async function ingMove(invId,toDay){if(!ingEdit()||!S.db){toast("No se puede guardar en esta vista");return}
-  const o=ingRows().find(x=>x.i&&String(x.i.invoice_id)===String(invId));if(!o||!o.w)return;
+  const o=ingRows().find(x=>ingMvId(x)===String(invId));if(!o||!o.w)return;
   const orig=o.w.orig,cur=o.w.day;toDay=toDay||orig;if(!/^\d{4}-\d{2}-\d{2}$/.test(toDay)||toDay===cur){ING.mvOpen=null;renderIngresos();return}
-  const me=await ingMe();const k="i"+invId;const prev=ING.mv[k]||{};
-  const doc={inv:String(invId),num:o.i.invoice_number,orig,day:toDay,hist:(prev.hist||[]).concat([{from:cur,to:toDay,by:S.me||null,byName:me.name||"",at:new Date().toISOString()}]),updatedAt:new Date().toISOString()};
+  const me=await ingMe();const k=o.cn?"c"+o.cn.creditnote_id:"i"+invId;const prev=ING.mv[k]||{};
+  const doc={inv:String(invId),num:o.num,orig,day:toDay,hist:(prev.hist||[]).concat([{from:cur,to:toDay,by:S.me||null,byName:me.name||"",at:new Date().toISOString()}]),updatedAt:new Date().toISOString()};
   ING.mv[k]=doc;ING.mvOpen=null;renderIngresos();
-  try{await S.db.collection("ingmv").doc(k).set(doc);toast(toDay===orig?"Cobro devuelto a su día":"Cobro movido al "+ingDate(toDay,{day:"numeric",month:"short"}))}catch(e){toast(e&&e.code==="permission_denied"?"No tienes permiso para mover cobros":"No se pudo guardar. Vuelve a intentarlo.")}}
+  try{await S.db.collection("ingmv").doc(k).set(doc);toast((o.cn?(toDay===orig?"Devolución devuelta a su día":"Devolución movida al "):(toDay===orig?"Cobro devuelto a su día":"Cobro movido al "))+(toDay===orig?"":ingDate(toDay,{day:"numeric",month:"short"})))}catch(e){toast(e&&e.code==="permission_denied"?"No tienes permiso para mover cobros":"No se pudo guardar. Vuelve a intentarlo.")}}
 $("ingList").addEventListener("change",e=>{const sl=e.target.closest("[data-ingsel]");if(sl){const k=ING.bank+"|"+sl.dataset.ingsel;if(sl.checked)ING.sel.add(k);else ING.sel.delete(k);renderIngresos();return}const mv=e.target.closest("[data-ingmvd]");if(mv){ingMove(mv.dataset.ingmvd,mv.value);return}const el=e.target.closest("[data-ingbank]");if(!el)return;if(!ingEdit()){renderIngresos();return}const v=ingNum(el.value);if(Number.isNaN(v)){toast("Importe no válido");renderIngresos();return}
   ingSave(el.dataset.ingbank,{bank:v},v==null?"Importe del banco borrado":"Importe del banco guardado")});
 $("ingList").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.matches("[data-ingbank]"))e.target.blur()});
