@@ -173,7 +173,6 @@ button{font:inherit;color:inherit}
   <div class="hero">
     <div class="mono" id="hroLbl">Superadministrador</div>
     <h1 class="wide">Buenas tardes,<span class="brush" id="hroName">Pau</span></h1>
-    <p id="hroTxt">Elige el departamento en el que vas a trabajar. Cada uno tiene su propio acceso y sus propios permisos.</p>
   </div>
   <div class="deps">
     <a class="dep c-ce" href="#" onclick="return false">
@@ -181,6 +180,7 @@ button{font:inherit;color:inherit}
       <div class="txt">
         <span class="mono state"><i></i>En uso</span>
         <h2 class="wide">Campus Experience</h2>
+        <p>Campus de la Fundación Real Madrid en Madrid, nacionales e institucionales.</p>
         <div class="meta mono"><span><b>311</b>participantes</span><span><b>9</b>semanas en Madrid</span><span><b>8</b>campus</span></div>
         <div class="end"><span class="mono">Requiere cuenta de Zoho CRM</span><span class="oval">Entrar<svg viewBox="0 0 200 70" preserveAspectRatio="none" aria-hidden="true"><path d="M30 14C70 2 160 4 188 22c18 14-8 34-60 40C78 68 14 62 8 42 2 24 40 10 110 8c40-1 78 6 82 16"/></svg></span></div>
       </div>
@@ -190,6 +190,7 @@ button{font:inherit;color:inherit}
       <div class="txt">
         <span class="mono state"><i></i>Próximamente</span>
         <h2>LaLiga Select</h2>
+        <p>Solo lo ves tú mientras no tenga usuarios.</p>
         <div class="end"><span class="mono">Sin usuarios todavía</span><span class="oval">Entrar<svg viewBox="0 0 200 70" preserveAspectRatio="none" aria-hidden="true"><path d="M30 14C70 2 160 4 188 22c18 14-8 34-60 40C78 68 14 62 8 42 2 24 40 10 110 8c40-1 78 6 82 16"/></svg></span></div>
       </div>
     </a>
@@ -198,6 +199,7 @@ button{font:inherit;color:inherit}
       <div class="txt">
         <span class="mono state"><i></i>Próximamente</span>
         <h2>FF Madrid</h2>
+        <p>Futbol First. Solo lo ves tú mientras no tenga usuarios.</p>
         <div class="end"><span class="mono">Sin usuarios todavía</span><span class="oval">Entrar<svg viewBox="0 0 200 70" preserveAspectRatio="none" aria-hidden="true"><path d="M30 14C70 2 160 4 188 22c18 14-8 34-60 40C78 68 14 62 8 42 2 24 40 10 110 8c40-1 78 6 82 16"/></svg></span></div>
       </div>
     </a>
@@ -222,8 +224,7 @@ function show(v){
   document.getElementById("hroName").textContent=user?"Irene":"Pau";
   document.getElementById("whoName").textContent=user?"Irene":"Pau Girol";
   document.getElementById("av").textContent=user?"IR":"PG";
-  document.getElementById("hroTxt").textContent=user?"Estos son los departamentos a los que tienes acceso.":"Elige el departamento en el que vas a trabajar. Cada uno tiene su propio acceso y sus propios permisos.";
-  document.querySelectorAll(".demo button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===v));
+    document.querySelectorAll(".demo button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===v));
   window.scrollTo(0,0);
 }
 document.querySelectorAll(".demo button").forEach(b=>b.onclick=()=>show(b.dataset.v));
