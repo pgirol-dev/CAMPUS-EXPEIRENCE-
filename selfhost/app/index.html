@@ -2036,9 +2036,14 @@ table.lginv tr.gh td{background:var(--surface-2)!important;font-family:var(--f-w
 .ingd.has-sel .ingh{padding-left:44px}
 .ingsel{position:absolute;left:14px;top:14px;z-index:2;display:flex}
 .ingsel input{width:17px;height:17px;accent-color:var(--navy);cursor:pointer}
-.ingpdf{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:10px;font-size:13px}
-.ingpdf span{margin-right:auto}
-.ingpdf small{flex-basis:100%;color:var(--ink-3);font-size:11.5px}
+.ingpdf{display:inline-flex;align-items:center;gap:6px}
+.ingpdf[hidden]{display:none}
+.inglink{all:unset;cursor:pointer;font-size:12px;font-weight:700;color:var(--ink-3);padding:4px 6px;border-radius:6px}
+.inglink:hover{color:var(--ink);background:var(--surface-2)}
+.ingpdfb{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font:800 10.5px var(--f-body);letter-spacing:.07em;text-transform:uppercase;color:var(--navy-ink);background:var(--navy);border-radius:96px;padding:7px 12px}
+.ingpdfb i{font-style:normal;background:var(--pink);color:#fff;border-radius:96px;padding:0 6px;font-size:10px;letter-spacing:0}
+.ingpdfb:disabled{cursor:default;background:var(--surface-2);color:var(--ink-3)}
+.ingpdfb:focus-visible,.inglink:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
 </style>
 
 <aside class="side" id="side" aria-label="Apartados"><div class="sb-top"><a class="sb-brand" href="#inicio" data-sv="inicio" title="Inicio"><span class="sb-logo">CE</span><span class="sb-bt"><b>Campus Experience</b><small>Software operativo</small></span></a><button class="sb-tog" id="sbTog" type="button" aria-label="Plegar menú" title="Plegar menú (Ctrl/Cmd + B)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 17l-5-5 5-5M18 17l-5-5 5-5"/></svg></button></div><nav class="sb-nav" id="sbNav"></nav><div class="sb-foot"><div class="sb-me" id="sbMe"></div><span class="sb-key" id="sbKey">⌘B</span></div></aside>
@@ -2297,9 +2302,9 @@ table.lginv tr.gh td{background:var(--surface-2)!important;font-family:var(--f-w
   <section id="view-ingresos" class="stack" hidden>
     <div class="eqhead"><div class="eqtitlebox"><h2 class="eqtitle">Cuentas</h2><span class="sub" id="ingSub"></span></div><button class="btn" type="button" id="ingRefresh">Actualizar</button></div>
     <div class="seg ingbanks" id="ingBank" role="tablist" aria-label="Banco"></div>
-    <div id="ingAlarm" hidden></div>
+    <div id="ingAlarm" hidden></div><p class="ingnote" id="ingCnMsg" hidden></p>
     <div class="paygrid inggrid" id="ingBoxes" role="group" aria-label="Estado de los días"></div>
-    <div class="filters"><input type="search" id="ingQ" placeholder="Buscar familia, jugador o factura" aria-label="Buscar"><select id="ingCamp" aria-label="Campus"></select><span class="count" id="ingCount"></span></div>
+    <div class="filters"><input type="search" id="ingQ" placeholder="Buscar familia, jugador o factura" aria-label="Buscar"><select id="ingCamp" aria-label="Campus"></select><span class="count" id="ingCount"></span><span class="ingpdf" id="ingPdfBar" hidden></span></div>
     <div id="ingList" class="inglist"></div>
   </section>
   <section id="view-pagos" class="stack" hidden>
@@ -5821,12 +5826,14 @@ function ingRows(){const byId={};(S.allRows||[]).forEach(r=>{byId[String(r.id)]=
   /* devoluciones (Cuentas): cada reembolso de una nota de crédito de Books cuenta en negativo el día en que se hizo el reembolso,
      en el mismo banco que su factura. Solo notas de crédito de la campaña 2027 con reembolso registrado. */
   let cnDeal={};try{const X=accIndex();Object.entries(X.cnByDeal||{}).forEach(([id,cs])=>cs.forEach(c=>{cnDeal[c._org+":"+c.creditnote_id]=id}))}catch(e){}
-  (CN.list||[]).filter(c=>c.status!=="void"&&c.status!=="draft"&&Array.isArray(c.refunds)&&c.refunds.length&&(is2027Inv(c.invoice_number)||(c.applied||[]).some(a=>is2027Inv(a.invoice_number))||cnDeal[c._org+":"+c.creditnote_id])).forEach(c=>{
+  (CN.list||[]).filter(c=>c.status!=="void"&&c.status!=="draft"&&(is2027Inv(c.invoice_number)||(c.applied||[]).some(a=>is2027Inv(a.invoice_number))||cnDeal[c._org+":"+c.creditnote_id])).forEach(c=>{
     const id=cnDeal[c._org+":"+c.creditnote_id]||null;const r=id?(byId[id]||accDeals().find(x=>String(x.id)===id)||null):null;
     const invN=c.invoice_number||((c.applied||[])[0]||{}).invoice_number||"";const ser=invSeries(invN);
     const camp=r?(r.camp||"mad"):c._org===BOOKS_ORG_AND?"and":ser===INV_PREFIX?"mad":(ING_SER[ser.replace(/27$/,"")]||"");
-    c.refunds.forEach((f,k)=>{if(!/^\d{4}-\d{2}-\d{2}/.test(String(f.date||""))||!(+f.amount>0))return;const day=String(f.date).slice(0,10);
-      out.push({i:null,cn:c,rk:c.creditnote_id+"#"+k,num:c.creditnote_number,inv:invN,w:{d:new Date(day+"T12:00:00Z"),day,orig:day,hm:"",late:false,exact:false,dev:true},mvh:[],r,deal:id,camp,player:c.cf_jugador||(r&&r.name)||"",fam:c.customer_name||"",amt:-r2(+f.amount),cp:"Devolución"})})});
+    /* con reembolso registrado en Books: el día del reembolso; sin él: la fecha de la nota de crédito, avisando */
+    const rf=Array.isArray(c.refunds)&&c.refunds.length?c.refunds.map(f=>({date:f.date,amount:+f.amount,ok:true})):[{date:c.date,amount:+c.total,ok:false}];
+    rf.forEach((f,k)=>{if(!/^\d{4}-\d{2}-\d{2}/.test(String(f.date||""))||!(f.amount>0))return;const day=String(f.date).slice(0,10);
+      out.push({i:null,cn:c,nr:!f.ok,rk:c.creditnote_id+"#"+k,num:c.creditnote_number,inv:invN,w:{d:new Date(day+"T12:00:00Z"),day,orig:day,hm:"",late:false,exact:false,dev:true},mvh:[],r,deal:id,camp,player:c.cf_jugador||(r&&r.name)||"",fam:c.customer_name||"",amt:-r2(f.amount),cp:"Devolución"})})});
   out.forEach(o=>{if(o.cn)return;o.num=o.i.invoice_number;o.cp=!o.deal?(Math.abs(o.amt-50)<.01?"Reserva":"Pago"):(o.of===1&&o.r&&o.r.d&&Math.abs(r2(o.r.d.Total)-o.amt)<.01)?"Pago completo":(["1er","2º","3er"][o.n-1]||o.n+"º")+" pago"});
   return out}
 function ingDays(rows,bank){bank=bank||ING.bank;const by={};rows.forEach(o=>{if(o.w&&ingBankOf(o)===bank)(by[o.w.day]=by[o.w.day]||[]).push(o)});
@@ -5846,6 +5853,7 @@ function renderIngresos(){
   if(INV.err&&!INV.list){$("ingBank").innerHTML="";$("ingBoxes").innerHTML="";$("ingCount").textContent="";$("ingList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Sin datos de Zoho Books</h3><p>'+esc(INV.err)+"</p></div>";return}
   if(!INV.list){$("ingBoxes").innerHTML="";$("ingCount").textContent="";$("ingList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">Cargando cobros…</h3></div>';return}
   if(!CN.list&&!CN.busy&&!CN.err&&S.mcp)try{loadCN(false)}catch(e){}
+  {const m=$("ingCnMsg");if(m){m.hidden=!CN.err&&!(CN.busy&&!CN.list);m.textContent=CN.err?"No se han podido leer las devoluciones (notas de crédito de Books): "+CN.err:"Leyendo las devoluciones de Zoho Books…"}}
   const R=ingRows();
   $("ingBank").innerHTML=ING_BANKS.map(([b,l,sub])=>{const n=ingDays(R,b).filter(d=>d.st!=="ok").length;return '<button type="button" role="tab" data-ingbk="'+b+'" aria-pressed="'+(ING.bank===b)+'" aria-selected="'+(ING.bank===b)+'">'+l+" <small>"+sub+'</small><span class="n'+(n?"":" z")+'" title="Días por cuadrar o revisar">'+n+"</span></button>"}).join("");
   /* dos cajas: Por cuadrar y Cuadrados. Un día cuadrado que cambia después («rev») sigue en Cuadrados, en rojo, y salta la alarma */
@@ -5863,9 +5871,9 @@ function renderIngresos(){
   $("ingCount").textContent=list.length+" días";
   if(!list.length){$("ingList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">'+(ING.f==="pend"&&!filt?"Todo cuadrado":ING.f==="ok"&&!filt?"Ningún día cuadrado todavía":"Ningún día")+"</h3>"+(ING.bank==="cai"&&INV.andErr?"<p>"+esc(INV.andErr)+"</p>":ING.bank==="cai"?"<p>Cobros de Andorra (Zoho Books · ISL Agency, serie "+INV_AND_PREFIX+").</p>":"")+"</div>";return}
   const ed=ingEdit();let h="",curM="";
-  /* descarga en PDF: solo días cuadrados (y que no hayan cambiado), un PDF por banco */
-  if(ING.f==="ok"){const okL=list.filter(d=>d.st==="ok");const n=okL.filter(d=>ING.sel.has(ING.bank+"|"+d.day)).length;
-    h+='<div class="ingpdf"><span><b>'+n+"</b> "+(n===1?"día seleccionado":"días seleccionados")+" para el PDF de "+esc(ING_BANKS.find(b=>b[0]===ING.bank)[1])+'</span><button type="button" class="btn" data-ingselall="1">Seleccionar todos</button>'+(n?'<button type="button" class="btn" data-ingselall="0">Quitar selección</button>':"")+'<button type="button" class="btn primary" data-ingpdf'+(n?"":" disabled")+'>Descargar PDF</button><small>Solo se pueden descargar los días cuadrados. Los que han cambiado hay que volver a cuadrarlos.</small></div>'}
+  /* descarga en PDF: solo días cuadrados (y que no hayan cambiado), un PDF por banco; integrada en la fila de filtros */
+  {const pb=$("ingPdfBar");pb.hidden=ING.f!=="ok";if(ING.f==="ok"){const okL=list.filter(d=>d.st==="ok");const n=okL.filter(d=>ING.sel.has(ING.bank+"|"+d.day)).length;const all=okL.length&&n===okL.length;
+    pb.innerHTML=(okL.length?'<button type="button" class="inglink" data-ingselall="'+(all?"0":"1")+'">'+(all?"Quitar selección":"Seleccionar todos")+"</button>":"")+'<button type="button" class="ingpdfb" data-ingpdf'+(n?"":" disabled")+' title="Descargar en PDF los días marcados">PDF'+(n?"<i>"+n+"</i>":"")+"</button>"}}
   const mt={};list.forEach(d=>{const m=d.day.slice(0,7);mt[m]=mt[m]||{n:0,t:0};mt[m].n++;mt[m].t=r2(mt[m].t+d.total)});
   list.forEach(d=>{const m=d.day.slice(0,7);
     if(m!==curM){curM=m;h+='<div class="ingm">'+esc(ingDate(m+"-15",{month:"long",year:"numeric"}))+"<span>"+mt[m].n+" días</span><b>"+eur(mt[m].t)+"</b></div>"}
@@ -5885,7 +5893,7 @@ function renderIngresos(){
     h+='<div class="ingp">'+shown.map(o=>{const c=campById(o.camp);const fl=[];
         if(o.cn)return '<div class="ingr ingdev"><span class="hr" title="Día del reembolso (Books no guarda la hora)">—</span><span class="who"'+(o.r?' data-ingpid="'+esc(o.r.id)+'"':"")+'><b>'+esc(o.player||o.fam||"—")+"</b><small>"+esc(o.player&&o.fam&&o.fam!==o.player?o.fam:(o.cn.email||""))+"</small></span>"+
           '<span class="cmp">'+(c?'<span class="ctag ct-'+c.kind+'">'+esc(c.n)+"</span>":"")+'</span><span class="cp">Devolución'+(o.inv?"<small>de "+esc(o.inv)+"</small>":"")+"</span>"+
-          '<a class="ichip cn" href="'+cnUrl(o.cn)+'" target="_blank" rel="noopener" title="Abrir la nota de crédito en Zoho Books">'+esc(o.num)+"</a>"+'<span class="am neg">'+eur(o.amt)+"</span><span></span></div>";
+          '<a class="ichip cn" href="'+cnUrl(o.cn)+'" target="_blank" rel="noopener" title="Abrir la nota de crédito en Zoho Books">'+esc(o.num)+"</a>"+'<span class="am neg">'+eur(o.amt)+"</span><span></span>"+(o.nr?'<span class="fl soft">Books no tiene registrado el reembolso de esta nota de crédito: va en la fecha de la nota de crédito</span>':"")+"</div>";
         if(o.deal&&!o.r)fl.push("La inscripción no está activa en el software (baja, devolución o borrada)");
         if(+o.i.balance>0)fl.push("Books no tiene registrado el cobro de esta factura (pendiente "+eur(o.i.balance)+")");
         const soft=[];if(o.w.late&&!o.w.moved)soft.push("Pagado después de las 23:00: cuenta en este día");
@@ -5912,11 +5920,11 @@ $("ingAlarm").addEventListener("click",e=>{if(!e.target.closest("[data-ingalarm]
   const rev=ingDays(ingRows()).filter(d=>d.st==="rev");rev.forEach(d=>ING.open.add(d.day));renderIngresos();
   const el=rev.length&&document.querySelector('.ingd[data-ingday="'+rev[0].day+'"]');if(el)el.scrollIntoView({behavior:"smooth",block:"center"})});
 $("ingQ").addEventListener("input",e=>{ING.q=e.target.value;renderIngresos()});
+$("ingPdfBar").addEventListener("click",e=>{let b;if((b=e.target.closest("[data-ingselall]"))){const R0=ingDays(ingRows()).filter(d=>d.st==="ok");R0.forEach(d=>{const k=ING.bank+"|"+d.day;if(b.dataset.ingselall==="1")ING.sel.add(k);else ING.sel.delete(k)});renderIngresos();return}
+  if(e.target.closest("[data-ingpdf]"))ingPdfDownload()});
 $("ingCamp").addEventListener("change",e=>{ING.camp=e.target.value;renderIngresos()});
 $("ingRefresh").addEventListener("click",()=>loadBooks(true));
 $("ingList").addEventListener("click",async e=>{let b;
-  if((b=e.target.closest("[data-ingselall]"))){const R0=ingDays(ingRows()).filter(d=>d.st==="ok");R0.forEach(d=>{const k=ING.bank+"|"+d.day;if(b.dataset.ingselall==="1")ING.sel.add(k);else ING.sel.delete(k)});renderIngresos();return}
-  if(e.target.closest("[data-ingpdf]")){ingPdfDownload();return}
   if(e.target.closest("a")||e.target.closest("input")||e.target.closest("label"))return;
   if((b=e.target.closest("[data-ingmvback]"))){ingMove(b.dataset.ingmvback,null);return}
   if((b=e.target.closest("[data-ingmv]"))){const id=b.dataset.ingmv;ING.mvOpen=ING.mvOpen===id?null:id;renderIngresos();return}
