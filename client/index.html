@@ -1515,6 +1515,12 @@ html.ro-h .isnin{pointer-events:none;border-bottom-color:transparent}
 .occ.cer.over,.occ.cermix.over{background:var(--bad);color:var(--on-hot)}
 .hb.c-gold{background:var(--gold);color:var(--gold-ink);box-shadow:inset 3px 0 0 #d9a441}
 .dot.c-gold{background:var(--gold)}
+/* Tour del Bernabéu: morado suave, a juego con la paleta (lila de ISL) */
+:root{--tour:#e2d9f7;--tour-ink:#35266b;--tour-line:#7b5cd6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--tour:color-mix(in srgb,#9b7fe0 38%,#1f2430);--tour-ink:#efe9ff;--tour-line:#b9a2f2}}
+:root[data-theme="dark"]{--tour:color-mix(in srgb,#9b7fe0 38%,#1f2430);--tour-ink:#efe9ff;--tour-line:#b9a2f2}
+.hb.c-tour{background:var(--tour);color:var(--tour-ink);box-shadow:inset 3px 0 0 var(--tour-line)}
+.dot.c-tour{background:var(--tour-line)}
 .occ.full{background:#f4dc7a!important;color:#2f3e40!important}
 .occ.over{background:var(--bad)!important;color:var(--on-hot)!important}
 .hbody.na{background:repeating-linear-gradient(45deg,transparent 0 6px,color-mix(in srgb,var(--ink) 6%,transparent) 6px 12px)}
@@ -4188,7 +4194,7 @@ function renderHorarios(){try{sbSync()}catch(e){}
     if(!c.bl.length)h+='<span class="hnone">Por hacer</span>';
     c.bl.forEach((b,bi)=>{const s=tm(b.s),e=tm(b.e);const why0=iss.flags.get(c.ap+"|"+c.n+"|"+bi);const why=why0&&why0.some(w=>HARD_RE.test(w))?why0.filter(w=>HARD_RE.test(w)):null;const rev=why0&&!why;const cc=b.c||ACT_CAT[b.a]||"log";const tall=(e-s)>=45;const rl=resLabel(iss.cfg,b);const need=b.t;
       const ak=apprKey(H.dow,c.ap,c.n,b),ast=apprOf(CW(),ak);const isAp=iss.list.some(x=>x.k==="appr"&&x.ap===c.ap&&x.g===c.n&&x.s===s&&x.a===b.a);
-      h+='<button type="button" class="hb c-'+cc+(b.a==="FUN"?" c-fun":"")+(b.a==="Golden Hour"?" c-gold":"")+(/^bus\b/i.test(b.a)?" c-bus":"")+(why?" bad":"")+(isAp&&ast==="ok"?" appr":"")+(tall?"":" thin")+(H.edit&&H.edit.ci===ci&&H.edit.bi===bi?" on":"")+'" data-hb="'+ci+"."+bi+'" style="top:'+((s-mn)/15*RH+1)+"px;height:"+((e-s)/15*RH-2)+'px" title="'+esc(c.n+" · "+b.a+(rl?" · "+rl:"")+" · "+b.s+"–"+b.e+(why0?" · "+why0.join(" · "):"")+(isAp&&ast==="ok"?" · Aprobado":""))+'"><span class="ba">'+esc(isBusBlk(b)?busLabel(b,BN[c.ap+"|"+c.n+"|"+bi]):b.a)+"</span>"+(isBusBlk(b)?"":rl?'<span class="br">'+esc(rl)+"</span>":(need&&need!=="cer"?'<span class="br nr">'+(b.nf?"No cabe":"Sin instalación")+"</span>":""))+(tall?'<span class="bt">'+b.s+"–"+b.e+"</span>":"")+(why?'<span class="bx">!</span>':isAp&&ast==="ok"?'<span class="bx ok">✓</span>':rev?'<span class="bx rv" title="Revisión de reglas">·</span>':"")+(H.manual&&!H.tool?'<span class="rz"></span><span class="bdel" data-bdel="'+ci+"."+bi+'" title="Borrar caja" role="button" aria-label="Borrar caja">×</span>':"")+"</button>"});
+      h+='<button type="button" class="hb c-'+cc+(b.a==="FUN"?" c-fun":"")+(b.a==="Golden Hour"?" c-gold":"")+(b.a==="Tour BNB"?" c-tour":"")+(/^bus\b/i.test(b.a)?" c-bus":"")+(why?" bad":"")+(isAp&&ast==="ok"?" appr":"")+(tall?"":" thin")+(H.edit&&H.edit.ci===ci&&H.edit.bi===bi?" on":"")+'" data-hb="'+ci+"."+bi+'" style="top:'+((s-mn)/15*RH+1)+"px;height:"+((e-s)/15*RH-2)+'px" title="'+esc(c.n+" · "+b.a+(rl?" · "+rl:"")+" · "+b.s+"–"+b.e+(why0?" · "+why0.join(" · "):"")+(isAp&&ast==="ok"?" · Aprobado":""))+'"><span class="ba">'+esc(isBusBlk(b)?busLabel(b,BN[c.ap+"|"+c.n+"|"+bi]):b.a)+"</span>"+(isBusBlk(b)?"":rl?'<span class="br">'+esc(rl)+"</span>":(need&&need!=="cer"?'<span class="br nr">'+(b.nf?"No cabe":"Sin instalación")+"</span>":""))+(tall?'<span class="bt">'+b.s+"–"+b.e+"</span>":"")+(why?'<span class="bx">!</span>':isAp&&ast==="ok"?'<span class="bx ok">✓</span>':rev?'<span class="bx rv" title="Revisión de reglas">·</span>':"")+(H.manual&&!H.tool?'<span class="rz"></span><span class="bdel" data-bdel="'+ci+"."+bi+'" title="Borrar caja" role="button" aria-label="Borrar caja">×</span>':"")+"</button>"});
     h+="</div></div>"});
   h+="</div>";
   hKeepScroll(board,()=>{board.innerHTML=pre+'<div class="hscroll">'+h+"</div>"});
@@ -4624,7 +4630,7 @@ function renderHPal(cfg,aps){
   const box=$("hPal");if(!H.manual||!aps.length){box.hidden=true;H.tool="";return}box.hidden=false;
   const tool=H.tool||"";const days=weekDays(CW()).filter(d=>d!==H.dow);
   let h='<div class="mrow"><span class="pl1">Editar horario</span><button type="button" class="pc pc-ed" data-tool="" aria-pressed="'+(!tool)+'">Mover y editar</button><span class="msep"></span>'+
-    PAL.map(p=>{const c=ACT_CAT[p.a]||"log";return '<button type="button" class="pc pk" data-tool="'+p.k+'" aria-pressed="'+(tool===p.k)+'"><i class="dot c-'+c+(p.a==="FUN"?" c-fun":"")+(p.a==="Golden Hour"?" c-gold":"")+(/^bus\b/i.test(p.a)?" c-bus":"")+'"></i>'+esc(p.l)+'<small>'+durL(p.pool?90:p.d)+"</small></button>"}).join("")+"</div>";
+    PAL.map(p=>{const c=ACT_CAT[p.a]||"log";return '<button type="button" class="pc pk" data-tool="'+p.k+'" aria-pressed="'+(tool===p.k)+'"><i class="dot c-'+c+(p.a==="FUN"?" c-fun":"")+(p.a==="Golden Hour"?" c-gold":"")+(p.a==="Tour BNB"?" c-tour":"")+(/^bus\b/i.test(p.a)?" c-bus":"")+'"></i>'+esc(p.l)+'<small>'+durL(p.pool?90:p.d)+"</small></button>"}).join("")+"</div>";
   h+='<div class="mrow m2"><label class="mchk"><input type="checkbox" id="hPalAll"'+(H.palAll?" checked":"")+'> En todos los grupos de la modalidad</label><button type="button" class="btn mini" data-hundo'+((H.undo||[]).length?"":" disabled")+'>Deshacer</button>'+
     (days.length?'<span class="mlab">Copiar este día a</span>'+days.map(d=>'<button type="button" class="btn mini" data-cday="'+d+'">'+DOWS[d].slice(0,3)+"</button>").join("")+(days.length>1?'<button type="button" class="btn mini" data-cday="all">Todos</button>':""):"")+"</div>";
   if(H.clip){const cl=H.clip;h+='<div class="mrow m3"><span class="mlab">Copiado: <b>'+esc(cl.n)+"</b> · "+DOWS[cl.dow].toLowerCase()+'</span><span class="mlab">Pulsa «Pegar» en otro grupo, o</span><button type="button" class="btn mini" data-pasteall>Pegar en todos los de '+esc(MODSHORT(cl.ap))+"</button>"+
