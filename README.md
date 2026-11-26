@@ -1,10 +1,10 @@
 # Software Operativo Experience (ISL · Campus Experience)
 
-Herramienta del equipo operativo de Campus Experience (Real Madrid, ISL Agency) para dejar de trabajar con Excel. Desde el 24/11 es la **capa de empresa ISL**: cada departamento (Campus Experience, LaLiga Select, FF Madrid…) es una pata de esta interfaz.
+Herramienta del equipo operativo de Campus Experience (Real Madrid, ISL Agency) para dejar de trabajar con Excel. Desde el 24/11 es la **capa de empresa ISL**: cada departamento (Campus Experience y Travel Experience) es una pata de esta interfaz.
 
 ## Capa ISL
 - **Acceso ISL** (`login.html`): email @islagency.com y contraseña (las mismas de siempre). Ya **no** consulta Zoho. Foto del césped a pantalla completa.
-- **Inicio ISL** (`inicio.html`): saludo y una tarjeta por departamento con su foto y su marca. Cada persona ve solo sus departamentos. Los superadministradores ven todos (LaLiga Select y FF Madrid, «Próximamente»).
+- **Inicio ISL** (`inicio.html`): saludo y una tarjeta por departamento con su foto y su marca. Cada persona ve solo sus departamentos. Los superadministradores ven todos. **Travel Experience** abre su página de programas por zona: Madrid (LaLiga Select, FF Madrid), Barcelona (BSE, Tournaments) e Internacional (UK Experience, FC Bayern), todos «Próximamente» de momento.
 - **Entrar en Campus Experience:** se comprueba que la persona tiene el departamento y que está activa en Zoho CRM (y de nuevo cada 30 min). Si no, vuelve al inicio con el aviso. Dentro de Campus nada cambia; en la barra lateral hay un botón para volver al Inicio ISL.
 - **Administración ISL** (superadministradores, menú de arriba del inicio): **Usuarios ISL** (alta con email de ISL y contraseña provisional, departamentos, administrador de Campus, activar/desactivar, contraseña nueva) y **Registro de actividad**. Los permisos por apartado de Campus se dan en Campus, en Sistema › Usuarios y accesos.
 - Diseño de referencia: `design/isl/propuesta_capa_isl.html`.

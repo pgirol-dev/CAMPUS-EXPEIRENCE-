@@ -164,10 +164,14 @@ setInterval(() => { P.backupIfDue(false).catch(e => console.log("Copia de seguri
 const audit = (u, action, detail, ip) => { try { Q.audit.run(nowISO(), u ? u.id : null, u ? u.email : null, action, detail ? String(detail).slice(0, 500) : null, ip || null); } catch (e) {} };
 const hydrate = u => { if (!u) return null; let p = {}; try { p = JSON.parse(u.perms || "{}"); } catch (e) {} u.permsObj = cleanPerms(p); u.islObj = p && typeof p._isl === "object" ? p._isl : null; u.is_admin = !!u.is_admin; u.active = !!u.active; return u; };
 /* capa ISL: departamentos (igual que en Catalyst; se guardan en perms, clave «_isl»; sin ella, acceso a Campus Experience) */
-const DEPTS = [{ k: "campus", n: "Campus Experience", live: true }, { k: "lls", n: "LaLiga Select", live: false }, { k: "ff", n: "FF Madrid", live: false }];
+/* departamentos ISL: Campus Experience y Travel Experience. Travel agrupa sus programas por zona (Madrid: LaLiga Select y FF Madrid; Barcelona: BSE y Tournaments;
+   Internacional: UK Experience y FC Bayern); de momento el acceso es al departamento entero. Los accesos antiguos a LaLiga Select («lls») o FF Madrid («ff») cuentan como Travel. */
+const DEPTS = [{ k: "campus", n: "Campus Experience", live: true }, { k: "travel", n: "Travel Experience", live: true }];
+const DEPT_OLD = { lls: "travel", ff: "travel" };
+const deptKeys = d => [...new Set((Array.isArray(d) ? d : []).map(k => DEPT_OLD[k] || k))].filter(k => DEPTS.some(x => x.k === k));
 /* superadministradores: emails de CE_SUPERADMINS; si no se configura, los administradores del software */
 const isSuper = u => CFG.supers.length ? CFG.supers.includes(String(u.email || "").toLowerCase()) : !!u.is_admin;
-const deptsOf = u => isSuper(u) ? DEPTS.map(d => d.k) : (u.islObj && Array.isArray(u.islObj.depts) ? u.islObj.depts.filter(k => DEPTS.some(d => d.k === k)) : ["campus"]);
+const deptsOf = u => isSuper(u) ? DEPTS.map(d => d.k) : (u.islObj && Array.isArray(u.islObj.depts) ? deptKeys(u.islObj.depts) : ["campus"]);
 const permsJson = (perms, u) => JSON.stringify(Object.assign(cleanPerms(perms), u && u.islObj ? { _isl: u.islObj } : {}));
 
 /* ---------- contraseñas (scrypt, con sal) ---------- */

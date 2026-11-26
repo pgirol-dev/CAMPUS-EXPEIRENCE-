@@ -2,7 +2,7 @@
    URL: /server/campus_api/...
 
    Capa ISL (empresa): el acceso con email y contraseña ya no depende de Zoho. Después del acceso,
-   el inicio ISL muestra los departamentos de cada persona (Campus Experience, LaLiga Select, FF Madrid).
+   el inicio ISL muestra los departamentos de cada persona (Campus Experience y Travel Experience, con sus programas).
    Doble control para entrar en Campus Experience:
      1) Usuario ACTIVO del Zoho CRM de ISL (al entrar en Campus y cada 30 min de uso).
      2) Accesos por apartado y subapartado que da el administrador (sin acceso / ver / editar).
@@ -54,10 +54,14 @@ const hydrate = u => { if (!u) return null; let p = {}; try { p = JSON.parse(u.p
 /* ---------- capa ISL: departamentos de la empresa ----------
    Se guardan dentro de la columna perms (clave «_isl») para no cambiar las tablas.
    Sin «_isl», la persona tiene acceso a Campus Experience (así entran los usuarios que ya existían). */
-const DEPTS = [{ k: "campus", n: "Campus Experience", live: true }, { k: "lls", n: "LaLiga Select", live: false }, { k: "ff", n: "FF Madrid", live: false }];
+/* departamentos ISL: Campus Experience y Travel Experience. Travel agrupa sus programas por zona (Madrid: LaLiga Select y FF Madrid; Barcelona: BSE y Tournaments;
+   Internacional: UK Experience y FC Bayern); de momento el acceso es al departamento entero. Los accesos antiguos a LaLiga Select («lls») o FF Madrid («ff») cuentan como Travel. */
+const DEPTS = [{ k: "campus", n: "Campus Experience", live: true }, { k: "travel", n: "Travel Experience", live: true }];
+const DEPT_OLD = { lls: "travel", ff: "travel" };
+const deptKeys = d => [...new Set((Array.isArray(d) ? d : []).map(k => DEPT_OLD[k] || k))].filter(k => DEPTS.some(x => x.k === k));
 /* superadministradores: emails de CE_SUPERADMINS; si no se configura, los administradores del software */
 const isSuper = u => CFG.supers.length ? CFG.supers.includes(String(u.email || "").toLowerCase()) : !!u.is_admin;
-const deptsOf = u => isSuper(u) ? DEPTS.map(d => d.k) : (u.islObj && Array.isArray(u.islObj.depts) ? u.islObj.depts.filter(k => DEPTS.some(d => d.k === k)) : ["campus"]);
+const deptsOf = u => isSuper(u) ? DEPTS.map(d => d.k) : (u.islObj && Array.isArray(u.islObj.depts) ? deptKeys(u.islObj.depts) : ["campus"]);
 const permsJson = (perms, u) => JSON.stringify(Object.assign(cleanPerms(perms), u && u.islObj ? { _isl: u.islObj } : {}));
 const lvl = (u, key) => (u.is_admin ? 2 : (u.permsObj[key] || 0));
 const anyOf = (u, a, min = 1) => u.is_admin || PERM_KEYS.some(k => k.startsWith(a + ".") && (u.permsObj[k] || 0) >= min);
@@ -442,7 +446,7 @@ async function handle(req, res) {
   if (p.startsWith("/api/isl/admin/")) {
     if (!isSuper(U)) return fail(res, 403, "Solo los superadministradores pueden hacer esto.");
     const islUser = u => ({ id: u.id, email: u.email, name: u.name, active: !!u.active, depts: deptsOf(u), superAdmin: isSuper(u), campusAdmin: !!u.is_admin, zoho: String(u.zoho_id || "").startsWith("isl:") ? "sin" : (u.zoho_status || ""), mustChange: !!u.must_change, lastLogin: u.last_login || null, createdAt: u.created_at || null });
-    const cleanDepts = d => Array.isArray(d) ? DEPTS.map(x => x.k).filter(k => d.includes(k)) : [];
+    const cleanDepts = d => deptKeys(d);
     if (p === "/api/isl/admin/users" && M === "GET") return send(res, 200, { depts: DEPTS, users: (await st.users.all()).map(u => islUser(hydrate(u))).sort((a, b) => (b.active - a.active) || String(a.name).localeCompare(String(b.name), "es")) });
     if (p === "/api/isl/admin/audit" && M === "GET") return send(res, 200, { items: await st.audit.list(Math.min(+url.searchParams.get("limit") || 200, 500)) });
     if (p === "/api/isl/admin/users" && M === "POST") {
