@@ -753,3 +753,14 @@ Se asignan automáticamente en este orden, un equipo por nombre y sin repetir de
 
 - 24/11: el software se llama **Software Operativo Experience** (pestaña del navegador, acceso, inicio ISL y subtítulo de la barra lateral de Campus). El departamento sigue siendo «Campus Experience». La dirección web solo cambiará con un dominio propio (Catalyst › Domain Mappings, en Production).
 - 25/11: en Horarios, el **Tour BNB** tiene color propio: morado suave (lila de ISL) con filo morado, distinto de las actividades (amarillo), Golden Hour (dorado) y piscina (azul).
+- 26/11: **Peticiones de Carla** (decisiones de Pau).
+  - **Inscritos por agentes:** en todas las listas de niños (Registros, buscador, ficha, Equipos, Pagos, Facturas, Cuentas, Cancelaciones, Limpieza y Base de datos; no en Horarios ni Logística) se ve un maletín con el nombre de la agencia al pasar el ratón. Premium pasa a ser una estrella dorada (con las semanas al pasar el ratón); la ciudad sigue como etiqueta. Hay una leyenda encima de las listas.
+  - **Buscador general** en la portada de Atención al público: busca por nombre, tutor, email, teléfono o código en todas las listas de Base de datos y en Limpieza, dice dónde está cada resultado y, al pulsarlo, abre la ficha dentro de su apartado.
+  - **Ficha:** siempre muestra Género y Fecha de nacimiento (en blanco si el CRM no lo tiene) y la agencia si la hay.
+  - **Quién está conectado:** arriba de Base de datos y Limpieza salen las personas conectadas, en qué apartado, lista y contacto. Si otra persona tiene abierto el mismo contacto, la ficha lo avisa. Solo es un aviso: no bloquea.
+  - **Limpieza:** caja «Todas» en Madrid con todas las inscripciones de Madrid sin separar por semana (Nacionales e Institucionales siguen igual). Al añadir un contacto en Limpieza ya no se pide el estado.
+  - **Base de datos 2026:** fuera los inscritos por agencia y los que tienen «No contactar» en el CRM.
+  - **Cajas** de Unpaids, Prerreservas y Form abandonado: ya no muestran «inscritos».
+  - **Form abandonado, misma familia:** basta con el mismo email; si no, tienen que coincidir al menos dos datos (email, teléfono o tutor). Se muestra qué coincide y se ordena por número de coincidencias.
+  - **Estadísticas, motivo de Trash:** las inscripciones 2027 en Trash se agrupan por el estado del último contacto apuntado, con la lista y el último «Qué nos dijeron». Las que no tienen contacto salen como «Sin motivo apuntado».
+  - **Zoho Desk:** sigue sin datos hasta que el token de Zoho tenga los permisos de lectura de Desk (lo regenera Pau en la consola de Zoho y lo cambia en Catalyst).

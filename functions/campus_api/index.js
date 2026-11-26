@@ -75,6 +75,8 @@ const COLS = {
   dev:   { read: u => lvl(u, "contabilidad.devoluciones") >= 1, write: u => lvl(u, "contabilidad.devoluciones") >= 2 },
   /* atención al público: historial de contactos (uno por persona) */
   attc:  { read: u => anyOf(u, "atencion"), write: u => lvl(u, "atencion.bbdd") >= 2 || lvl(u, "atencion.limpieza") >= 2 },
+  /* atención al público: quién está conectado en Base de datos y Limpieza (un documento por persona, «u<id>»; cada uno solo escribe el suyo) */
+  presence: { read: u => anyOf(u, "atencion"), write: (u, id) => anyOf(u, "atencion") && String(id) === "u" + u.id },
   /* contabilidad › agentes: comisión aplicada (marca) y liquidaciones de cada agencia */
   agent: { read: u => lvl(u, "contabilidad.agentes") >= 1, write: u => lvl(u, "contabilidad.agentes") >= 2 },
   agliq: { read: u => lvl(u, "contabilidad.agentes") >= 1, write: u => lvl(u, "contabilidad.agentes") >= 2 },
@@ -337,7 +339,7 @@ async function handle(req, res) {
   const addFail = async k => { const a = await failsOf(k); a.push(Date.now()); await st.meta.set("fail:" + k, JSON.stringify(a.slice(-25))); };
   /* cambios por colección, para avisar a quien tiene la app abierta */
   const P = makeProtect({ get: (c, i) => st.docs.get(c, i), put: (c, i, d, b) => st.docs.put(c, i, d, b), remove: (c, i) => st.docs.remove(c, i), list: c => st.docs.list(c),
-    metaGet: async k => { const r = await st.meta.get(k); return r ? r.v : null; }, metaSet: (k, v) => st.meta.set(k, v) }, () => Object.keys(COLS));
+    metaGet: async k => { const r = await st.meta.get(k); return r ? r.v : null; }, metaSet: (k, v) => st.meta.set(k, v) }, () => Object.keys(COLS).filter(c => c !== "presence"));
   const touch = async col => { const r = await st.meta.get("changes"); let m = {}; try { m = JSON.parse(r ? r.v : "{}"); } catch (e) {} m[col] = Date.now(); await st.meta.set("changes", JSON.stringify(m)); };
 
   /* protección CSRF: cabecera propia y, si se configura, origen permitido */

@@ -87,6 +87,8 @@ const COLS = {
   dev:   { read: u => lvl(u, "contabilidad.devoluciones") >= 1, write: u => lvl(u, "contabilidad.devoluciones") >= 2 },
   /* atención al público: historial de contactos (uno por persona) */
   attc:  { read: u => anyOf(u, "atencion"), write: u => lvl(u, "atencion.bbdd") >= 2 || lvl(u, "atencion.limpieza") >= 2 },
+  /* atención al público: quién está conectado en Base de datos y Limpieza (un documento por persona, «u<id>»; cada uno solo escribe el suyo) */
+  presence: { read: u => anyOf(u, "atencion"), write: (u, id) => anyOf(u, "atencion") && String(id) === "u" + u.id },
   /* contabilidad › agentes: comisión aplicada (marca) y liquidaciones de cada agencia */
   agent: { read: u => lvl(u, "contabilidad.agentes") >= 1, write: u => lvl(u, "contabilidad.agentes") >= 2 },
   agliq: { read: u => lvl(u, "contabilidad.agentes") >= 1, write: u => lvl(u, "contabilidad.agentes") >= 2 },
@@ -154,7 +156,7 @@ const P = require("./protect.js")({
   list: async c => { const o = {}; for (const r of Q.docsOf.all(c)) { try { o[r.id] = JSON.parse(r.data); } catch (e) {} } return o; },
   metaGet: async k => { const r = Q.docGet.get("_meta", k); return r ? JSON.parse(r.data) : null; },
   metaSet: async (k, v) => { Q.docPut.run("_meta", k, JSON.stringify(v), nowISO(), null); },
-}, () => Object.keys(COLS));
+}, () => Object.keys(COLS).filter(c => c !== "presence"));
 setInterval(() => { P.backupIfDue(false).catch(e => console.log("Copia de seguridad: " + e.message)); }, 30 * 60000).unref();
 const audit = (u, action, detail, ip) => { try { Q.audit.run(nowISO(), u ? u.id : null, u ? u.email : null, action, detail ? String(detail).slice(0, 500) : null, ip || null); } catch (e) {} };
 const hydrate = u => { if (!u) return null; let p = {}; try { p = JSON.parse(u.perms || "{}"); } catch (e) {} u.permsObj = cleanPerms(p); u.islObj = p && typeof p._isl === "object" ? p._isl : null; u.is_admin = !!u.is_admin; u.active = !!u.active; return u; };
