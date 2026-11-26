@@ -89,6 +89,9 @@ const COLS = {
   attc:  { read: u => anyOf(u, "atencion"), write: u => lvl(u, "atencion.bbdd") >= 2 || lvl(u, "atencion.limpieza") >= 2 },
   /* atención al público: quién está conectado en Base de datos y Limpieza (un documento por persona, «u<id>»; cada uno solo escribe el suyo) */
   presence: { read: u => anyOf(u, "atencion"), write: (u, id) => anyOf(u, "atencion") && String(id) === "u" + u.id },
+  /* contabilidad › facturas: errores de facturación marcados a mano (uno por inscripción, con quién y por qué) y estado de facturación de cada inscripción para Limpieza (sin facturas) */
+  inverr: { read: u => lvl(u, "contabilidad.facturas") >= 1 || lvl(u, "atencion.limpieza") >= 1, write: u => lvl(u, "contabilidad.facturas") >= 2 },
+  invst:  { read: u => anyOf(u, "contabilidad") || lvl(u, "atencion.limpieza") >= 1, write: u => anyOf(u, "contabilidad") },
   /* contabilidad › agentes: comisión aplicada (marca) y liquidaciones de cada agencia */
   agent: { read: u => lvl(u, "contabilidad.agentes") >= 1, write: u => lvl(u, "contabilidad.agentes") >= 2 },
   agliq: { read: u => lvl(u, "contabilidad.agentes") >= 1, write: u => lvl(u, "contabilidad.agentes") >= 2 },

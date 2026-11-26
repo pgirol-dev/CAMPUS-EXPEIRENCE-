@@ -1325,7 +1325,26 @@ table.bustab{min-width:760px} table.bustab tbody tr{cursor:pointer}
 /* ingresos */
 .inggrid{grid-template-columns:repeat(2,minmax(0,1fr)) minmax(0,1.3fr)}
 @media (max-width:700px){.inggrid{grid-template-columns:repeat(2,minmax(0,1fr))}.inggrid .mny{grid-column:1/-1}}
-.invgrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.invgrid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.invgrid .pbx .pt2{white-space:normal;line-height:1.1;text-wrap:balance}
+@media (max-width:860px){.invgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.pbx.ib-err::before{background:var(--bad)}
+.prow.frow.is-err{background:var(--bad-soft);box-shadow:inset 4px 0 0 var(--bad)}
+.ist-err{background:var(--bad)!important;color:var(--on-hot)!important}
+.frow .ifx{grid-column:1/-1;display:flex;flex-direction:column;gap:8px;cursor:default}
+.frow .ifx .ifbtns{display:flex;gap:8px;flex-wrap:wrap}
+.frow .ifx .ifwhy{font-size:13px}.frow .ifx .ifwhy small{color:var(--ink-3)}
+.frow .ifform{display:flex;flex-direction:column;gap:8px;max-width:620px}.frow .ifform label{display:flex;flex-direction:column;gap:4px}
+.frow .iflog{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:12.5px}
+.frow .iflog li{display:flex;gap:10px;align-items:flex-start}.frow .iflog .pst{flex:none}
+.frow .fchips .ifbtns{margin-left:auto;display:inline-flex;gap:10px;align-items:center}
+.frow .ifact{border:1px solid color-mix(in srgb,var(--bad) 55%,transparent);background:transparent;color:var(--bad);font:inherit;font-size:11.5px;font-weight:800;padding:5px 11px;border-radius:96px;cursor:pointer;white-space:nowrap}
+.frow .ifact:hover{background:var(--bad);color:var(--on-hot)}
+.frow .ifact.back{border-color:color-mix(in srgb,var(--green) 70%,transparent);color:var(--ink)}.frow .ifact.back:hover{background:var(--green);color:#fff}
+.frow .iflink{border:0;background:none;padding:0;font:inherit;font-size:12px;font-weight:700;color:var(--ink-2);text-decoration:underline;cursor:pointer}
+.frow .ifact:focus-visible,.frow .iflink:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+.frow .btn.sm{padding:6px 12px;font-size:11.5px}
+.lpchks{display:flex;flex-direction:column;gap:4px;align-items:flex-start}
 .pbx.ib-all::before{background:var(--ink-3)} .pbx.ib-pend::before{background:var(--pink)}
 /* alarma de Ingresos: un día cuadrado ha cambiado */
 .ingalarm{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 14px;border-radius:6px;background:var(--bad);color:var(--on-hot)}
@@ -1407,11 +1426,11 @@ html.no-ing-edit .ingbank input{pointer-events:none;border-color:transparent;bac
 .pnx{font-size:12.5px;color:var(--ink-2)}
 .pnx b{font-weight:700;color:var(--ink)}
 .pnx.ko,.pnx.ko b{color:var(--bad);font-weight:700}
-.prow.frow{grid-template-columns:minmax(190px,1.3fr) 110px minmax(0,1.7fr) minmax(0,1.6fr)}
+.prow.frow{grid-template-columns:minmax(190px,1.3fr) 172px minmax(0,1.6fr) minmax(0,1.7fr)}
 .prow.frow.is-sin,.prow.frow.is-dif,.prow.frow.is-cobro,.prow.frow.is-orph{background:var(--bad-soft);box-shadow:inset 4px 0 0 var(--bad)}
 .prow.frow.is-orph{cursor:default}
 .ist-ok{background:color-mix(in srgb,var(--green) 22%,transparent);color:var(--ink)} .ist-sin,.ist-dif,.ist-cobro,.ist-none{background:var(--bad)!important;color:var(--on-hot)!important} .ist-none{background:color-mix(in srgb,var(--ink) 10%,transparent);color:var(--ink-2)}
-.fchips{display:flex;gap:5px;flex-wrap:wrap;min-width:0}
+.fchips{display:flex;gap:5px;flex-wrap:wrap;min-width:0;align-items:center}
 .iorph{margin-top:14px}
 .iorph summary{cursor:pointer;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;padding:12px 14px;border-radius:6px;background:var(--surface-2);list-style:none}
 .iorph summary::-webkit-details-marker{display:none}
@@ -2204,7 +2223,7 @@ table.lgpt tr.lgdone td{opacity:.55}
     <div id="lpWeeks" class="wkgrid" aria-label="Semanas y sedes"></div>
     <div id="lpBody" class="stack" hidden>
       <div class="paygrid lpgrid" id="lpBoxes" role="group" aria-label="Estado"></div>
-      <div class="filters"><input type="search" id="lpQ" placeholder="Buscar jugador, código o tutor" aria-label="Buscar"><select id="lpPay" aria-label="Pago"><option value="">Todos los pagos</option><option value="ok">Pago al día</option><option value="late">Pago atrasado</option></select><select id="lpDoc" aria-label="Documentación"><option value="">Toda la documentación</option><option value="none">No enviada</option><option value="rev">Pendiente de revisión</option><option value="inc">Incompleta</option><option value="comp">Completa</option><option value="med">Revisar condiciones médicas</option></select><select id="lpSort" aria-label="Ordenar"><option value="name">Ordenar por nombre</option><option value="ape">Ordenar por apellido</option><option value="form">Ordenar por fecha de inscripción</option></select><span class="count" id="lpCount"></span></div>
+      <div class="filters"><input type="search" id="lpQ" placeholder="Buscar jugador, código o tutor" aria-label="Buscar"><select id="lpPay" aria-label="Pago"><option value="">Todos los pagos</option><option value="ok">Pago al día</option><option value="late">Pago atrasado</option></select><select id="lpFac" aria-label="Facturación"><option value="">Toda la facturación</option><option value="ok">Facturación correcta</option><option value="pend">Facturación pendiente</option></select><select id="lpDoc" aria-label="Documentación"><option value="">Toda la documentación</option><option value="none">No enviada</option><option value="rev">Pendiente de revisión</option><option value="inc">Incompleta</option><option value="comp">Completa</option><option value="med">Revisar condiciones médicas</option></select><select id="lpSort" aria-label="Ordenar"><option value="name">Ordenar por nombre</option><option value="ape">Ordenar por apellido</option><option value="form">Ordenar por fecha de inscripción</option></select><span class="count" id="lpCount"></span></div>
       <div class="tagleg-slot"></div>
       <div id="lpList" class="paylist"></div>
     </div>
@@ -4992,7 +5011,7 @@ async function loadBooks(force){
       const d=p&&(p.data&&Array.isArray(p.data.invoices)?p.data:p);if(!d||!Array.isArray(d.invoices))break;
       d.invoices.forEach(i=>{const k="and:"+(i.invoice_id||i.invoice_number);if(!seen.has(k)){seen.add(k);i._org=BOOKS_ORG_AND;all.push(i)}});if(!d.page_context||!d.page_context.has_more_page)break}}
     catch(e){INV.andErr="No se han podido leer las facturas de Andorra (ISL Agency)"+(e&&e.message?": "+e.message:"")}
-    INV.list=all;INV.at=new Date()}
+    INV.list=all;INV.at=new Date();setTimeout(invStSave,0)}
   catch(e){const c=e&&e.code;
     INV.err=c==="server_not_connected"?"Zoho Books no está conectado. Añádelo en claude.ai → Configuración → Conectores.":c==="needs_reauth"?"Vuelve a conectar Zoho Books en claude.ai → Configuración → Conectores.":c==="not_in_manifest"||c==="approval_required"?"Falta dar permiso a esta página para leer Zoho Books.":c==="blocked_by_policy"?"Tu organización no permite leer Zoho Books desde aquí.":"No se han podido leer las facturas de Zoho Books"+(e&&e.message?" ("+e.message+")":"")+"."}
   INV.busy=false;renderFacturas();try{renderIngresos()}catch(e){}try{renderDev();renderCan();renderPagos()}catch(e){}try{sbSync()}catch(e){}}
@@ -5019,9 +5038,33 @@ function invCheck(){
   Object.values(byEmail).flat().forEach(i=>{if(!used.has(i))orph.push({i,why:Math.abs(+i.total-50)<.01?"Reserva de 50 € sin inscripción activa con ese email":"Factura sin el código de la inscripción en la referencia"})});
   return {rows,orph}}
 /* vista: Todos · Pendientes de cuadrar (sin factura, no cuadra, sin cobrar, sin pagos y facturas sin inscripción) · Correctas */
-const INV_BOX=[["all","Todos","Jugadores y facturas"],["pend","Pendientes de cuadrar","Con estado o error"],["ok","Correctas","Facturado igual a lo pagado"]];
-const INV_LBL={ok:"Correcta",sin:"Sin factura",dif:"No cuadra",cobro:"Sin cobrar",none:"Sin pagos"};
-const INV_ERR=k=>k==="sin"||k==="dif"||k==="cobro"||k==="none";
+const INV_BOX=[["all","Todos","Jugadores y facturas"],["err","Errores de facturación","Marcadas a mano por Contabilidad"],["pend","Pendientes de cuadrar","Con estado o error"],["ok","Correctas","Facturado igual a lo pagado"]];
+const INV_LBL={ok:"Correcta",err:"Error de facturación",sin:"Sin factura",dif:"No cuadra",cobro:"Sin cobrar",none:"Sin pagos"};
+const INV_ERR=k=>k==="err"||k==="sin"||k==="dif"||k==="cobro"||k==="none";
+/* ---------- ERRORES DE FACTURACIÓN (marcados a mano) y estado de facturación para Limpieza ----------
+   «inverr»: un documento por inscripción {err, why, at, by, byName, log:[{to:"err"|"ok", why, at, by, byName}]}. Solo Contabilidad › Facturas (editar).
+   «invst»: documento «main» con el estado automático de cada inscripción {s:{dealId:k}, at, byName}. Lo guarda quien tiene Contabilidad al leer Books;
+   Limpieza lo lee para la verificación «Facturación» sin ver ninguna factura. Zoho Books no se toca. */
+var IE={docs:{},open:"",mark:"",why:"",busy:false};var INVST={doc:null,sig:""};
+const facEdit=()=>!window.CE_ACL||!!window.CE_ACL.admin||(((window.CE_ACL.perms||{})["contabilidad.facturas"]||0)>=2);
+const ieErr=id=>{const d=IE.docs["d"+id];return !!(d&&d.err)};
+function invStSave(){if(!S.db||!INV.list||!(S.allRows||[]).length)return;let ck;try{ck=invCheck()}catch(e){return}
+  const m={};ck.rows.forEach(x=>{m[x.r.id]=x.k});const sig=JSON.stringify(m);if(sig===INVST.sig)return;INVST.sig=sig;
+  const old=INVST.doc&&INVST.doc.s?JSON.stringify(INVST.doc.s):"";const age=INVST.doc?Date.now()-Date.parse(INVST.doc.at||0):1e12;if(old===sig&&age<36e5)return;
+  const doc={s:m,at:new Date().toISOString(),byName:(window.CE_ACL&&window.CE_ACL.name)||""};INVST.doc=doc;S.db.collection("invst").doc("main").set(doc).catch(()=>{})}
+/* verificación de Limpieza: correcta solo si el estado automático es «Correcta» y no está marcada como error */
+function lpFac(r){const d=IE.docs["d"+r.id];if(d&&d.err)return {ok:false,t:"Error de facturación",why:"Contabilidad la ha marcado como error"+(d.why?": "+d.why:"")+". Contacta con Contabilidad."};
+  const k=INVST.doc&&INVST.doc.s?INVST.doc.s[r.id]:null;if(k==="ok")return {ok:true,t:"Facturación",why:"Factura correcta"};
+  if(!k)return {ok:false,t:"Facturación pendiente",why:"Contabilidad todavía no ha comprobado la factura de esta inscripción."};
+  return {ok:false,t:"Facturación pendiente",why:(INV_LBL[k]||"Pendiente")+". Contacta con Contabilidad."}}
+/* por si las facturas llegan antes que las inscripciones: se vuelve a comprobar cada minuto (solo escribe si algo ha cambiado) */
+setInterval(()=>{try{invStSave()}catch(e){}},60000);
+async function ieSet(id,err,why){if(!S.db){toast("No se puede guardar en esta vista");return false}
+  let me={};try{me=await attMe()}catch(e){}const byName=(window.CE_ACL&&window.CE_ACL.name)||me.name||"";const by=S.me||"";const at=new Date().toISOString();
+  const cur=IE.docs["d"+id]||{};const doc={err,why,at,by,byName,log:(Array.isArray(cur.log)?cur.log:[]).concat([{to:err?"err":"ok",why,at,by,byName}])};
+  IE.docs["d"+id]=doc;renderFacturas();try{renderLimpieza()}catch(e){}
+  try{await S.db.collection("inverr").doc("d"+id).set(doc);toast(err?"Pasada a error de facturación":"Vuelve a estar correcta");return true}
+  catch(e){toast(e&&e.code==="permission_denied"?"No tienes permiso para cambiar el estado de las facturas":"No se pudo guardar. Vuelve a intentarlo.");return false}}
 function invErrCount(){if(!INV.list||!(S.allRows||[]).length)return null;try{const c=invCheck();return c.rows.filter(x=>INV_ERR(x.k)).length+c.orph.length}catch(e){return null}}
 const booksUrl=i=>"https://books.zoho.eu/app/"+(i._org||BOOKS_ORG)+"#/invoices/"+encodeURIComponent(i.invoice_id);
 const cnUrl=c=>"https://books.zoho.eu/app/"+(c._org||BOOKS_ORG)+"#/creditnotes/"+encodeURIComponent(c.creditnote_id);
@@ -5034,37 +5077,57 @@ function renderFacturas(){
   if(!INV.list||!AR.length){$("invBoxes").innerHTML="";$("invList").innerHTML='<div class="eqempty"><h3 class="wide" style="margin:0">'+(INV.busy||!AR.length?"Cargando facturas…":"Sin datos")+"</h3></div>";$("invOrph").innerHTML="";return}
   const ck=invCheck();const invCamp=i=>{if(i._org===BOOKS_ORG_AND)return "and";const se=invSeries(i.invoice_number);return se===INV_PREFIX?"mad":(ING_SER[se.replace(/27$/,"")]||"mad")};
   $("invSede").innerHTML=sedeBar("inv",ck.rows.map(x=>x.r.camp||"mad"));
-  const rows=ck.rows.filter(x=>sedeOk("inv",x.r.camp||"mad")),orph=ck.orph.filter(o=>sedeOk("inv",invCamp(o.i)));if(!["all","pend","ok"].includes(INV.f))INV.f="ok";
-  const cnt={ok:0,pend:orph.length};rows.forEach(x=>{if(x.k==="ok")cnt.ok++;else cnt.pend++});cnt.all=rows.length+orph.length;
+  setTimeout(invStSave,0);ck.rows.forEach(x=>{if(x.k==="ok"&&ieErr(x.r.id))x.k="err"});
+  const rows=ck.rows.filter(x=>sedeOk("inv",x.r.camp||"mad")),orph=ck.orph.filter(o=>sedeOk("inv",invCamp(o.i)));if(!["all","err","pend","ok"].includes(INV.f))INV.f="ok";
+  const cnt={ok:0,err:0,pend:orph.length};rows.forEach(x=>{if(x.k==="ok")cnt.ok++;else if(x.k==="err")cnt.err++;else cnt.pend++});cnt.all=rows.length+orph.length;
   $("invBoxes").innerHTML=INV_BOX.map(([k,t,sub])=>'<button type="button" class="pbx ib-'+k+'" data-if="'+k+'" aria-pressed="'+(INV.f===k)+'"><span class="pt2">'+t+'</span><span class="pc2">'+cnt[k]+'</span><span class="ps2">'+sub+"</span></button>").join("");
   const nrm=t=>String(t).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();const q=nrm(INV.q.trim());
-  let it=rows.filter(x=>INV.f==="all"||(INV.f==="pend"?x.k!=="ok":x.k==="ok"));
-  let oi=INV.f==="ok"?[]:orph.slice();
+  let it=rows.filter(x=>INV.f==="all"||(INV.f==="pend"?x.k!=="ok"&&x.k!=="err":x.k===INV.f));
+  let oi=INV.f==="ok"||INV.f==="err"?[]:orph.slice();
   if(q)it=it.filter(x=>nrm(x.r.hay+" "+x.r.name+" "+x.r.code+" "+((campById(x.r.camp||"mad")||{}).n||"")+" "+x.inv.map(i=>i.invoice_number).join(" ")).includes(q));
   if(q)oi=oi.filter(o=>nrm((o.i.customer_name||"")+" "+(o.i.email||"")+" "+o.i.invoice_number).includes(q));
-  const ord={sin:0,dif:1,cobro:2,none:3,ok:4};it.sort((a,b)=>ord[a.k]-ord[b.k]||a.r.name.localeCompare(b.r.name));
+  const ord={err:-1,sin:0,dif:1,cobro:2,none:3,ok:4};it.sort((a,b)=>ord[a.k]-ord[b.k]||a.r.name.localeCompare(b.r.name));
   $("invCount").textContent=it.length+" jugadores"+(oi.length?" · "+oi.length+" facturas sin inscripción":"");
   const chip=(i,extra)=>'<a class="ichip'+(+i.balance>0?" ko":"")+'" href="'+booksUrl(i)+'" target="_blank" rel="noopener" title="Abrir en Zoho Books · '+esc(i.date||"")+(+i.balance>0?" · pendiente "+eur(i.balance):"")+'">'+esc(i.invoice_number)+" <b>"+eur(i.total)+"</b>"+(extra||"")+"</a>";
   const orphRow=o=>'<div class="prow frow is-orph"><span class="pnm"><b>'+esc(o.i.customer_name||"—")+'</b><span class="code">'+esc(o.i.email||"")+'</span></span><span class="pst ist-sin">Sin inscripción</span><span class="pnx ko">'+esc(o.why)+'</span><span class="fchips">'+chip(o.i)+"</span></div>";
   oi.sort((a,b)=>String(b.i.date).localeCompare(String(a.i.date)));
-  const pendIt=it.filter(x=>x.k!=="ok"),okIt=it.filter(x=>x.k==="ok");
-  const rowOf=x=>{
+  const errIt=it.filter(x=>x.k==="err"),pendIt=it.filter(x=>x.k!=="ok"&&x.k!=="err"),okIt=it.filter(x=>x.k==="ok");const fe=facEdit();
+  /* acciones e historial de cada inscripción: pasar a error (solo las correctas), volver a correcta, quién y por qué */
+  const fx=x=>{const id=String(x.r.id),doc=IE.docs["d"+id]||{},log=Array.isArray(doc.log)?doc.log:[];const can=fe&&(x.k==="ok"||x.k==="err");
+    if(!can&&!log.length)return {b:"",x:""};const open=IE.open===id,mark=IE.mark===id;
+    let h="";
+    if(x.k==="err"&&doc.why)h+='<span class="ifwhy"><b>Motivo:</b> '+esc(doc.why)+(doc.byName?' <small>· '+esc(doc.byName)+" · "+esc(fmtDL(String(doc.at||"").slice(0,10)))+"</small>":"")+"</span>";
+    const btns='<span class="ifbtns">'+(log.length?'<button type="button" class="iflink" data-ielog="'+esc(id)+'" aria-expanded="'+open+'">'+(open?"Ocultar cambios":"Cambios ("+log.length+")")+"</button>":"")+
+      (can&&!mark?'<button type="button" class="ifact'+(x.k==="err"?" back":"")+'" data-iemark="'+esc(id)+'">'+(x.k==="err"?"Volver a correcta":"Pasar a error")+"</button>":"")+"</span>";
+    if(mark)h+='<form class="ifform" data-ieform="'+esc(id)+'"><label><small>'+(x.k==="err"?"¿Por qué vuelve a estar correcta?":"¿Por qué es un error de facturación?")+'</small><textarea class="inctxt" data-iewhy required placeholder="Motivo (obligatorio)">'+esc(IE.why)+'</textarea></label><span class="ifbtns"><button type="submit" class="btn primary sm"'+(IE.busy?" disabled":"")+">"+(x.k==="err"?"Volver a correcta":"Pasar a error")+'</button><button type="button" class="btn sm" data-iecancel>Cancelar</button></span></form>';
+    if(open&&log.length)h+='<ol class="iflog">'+log.slice().reverse().map(e=>'<li><span class="pst '+(e.to==="err"?"ist-err":"ist-ok")+'">'+(e.to==="err"?"A error":"A correcta")+"</span><span><b>"+esc(e.byName||"—")+"</b> · "+esc(new Date(e.at).toLocaleString("es-ES",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}))+"<br>"+esc(e.why||"")+"</span></li>").join("")+"</ol>";
+    return {b:btns,x:h?'<div class="ifx">'+h+"</div>":""}};
+  const rowOf=x=>{const F=fx(x);
     const amt=x.k==="none"?'<span class="pnx ko">Sin pagos: el CRM la da como activa pero no hay nada pagado ni facturado'+(x.total?" · total "+eur(x.total):"")+"</span>"
       :'<span class="pnx'+(INV_ERR(x.k)?" ko":"")+'">Facturado <b>'+eur(x.sum)+"</b> · Pagado <b>"+eur(x.paid)+"</b>"+(x.total?" · Total "+eur(x.total):"")+(x.k==="dif"?" · <b>"+(x.diff>0?"+":"")+eur(x.diff)+"</b>":"")+(x.k==="cobro"?" · factura sin cobrar":"")+"</span>";
     const chips=x.inv.map(i=>chip(i)).concat(x.res.map(i=>chip(i,' <i>reserva</i>'))).join("");
-    return '<div class="prow frow is-'+x.k+'" data-pid="'+esc(x.r.id)+'"><span class="pnm"><b class="nmrow"><span class="nmt" title="'+esc(x.r.name)+'">'+esc(x.r.name)+'</span>'+vipTag(x.r)+agTag(x.r.d)+campTag(x.r)+'</b><span class="code">'+esc(x.r.code)+'</span></span><span class="pst ist-'+x.k+'">'+INV_LBL[x.k]+"</span>"+amt+'<span class="fchips">'+(chips||(x.k==="none"?"":'<span class="ichip none">Ninguna factura</span>'))+"</span></div>"};
+    return '<div class="prow frow is-'+x.k+'" data-pid="'+esc(x.r.id)+'"><span class="pnm"><b class="nmrow"><span class="nmt" title="'+esc(x.r.name)+'">'+esc(x.r.name)+'</span>'+vipTag(x.r)+agTag(x.r.d)+campTag(x.r)+'</b><span class="code">'+esc(x.r.code)+'</span></span><span class="pst ist-'+x.k+'">'+INV_LBL[x.k]+"</span>"+amt+'<span class="fchips">'+(chips||(x.k==="none"?"":'<span class="ichip none">Ninguna factura</span>'))+F.b+"</span>"+F.x+"</div>"};
   const secH=(t,n)=>INV.f==="all"&&n?'<div class="devsec">'+t+"<span>"+n+"</span></div>":"";
-  $("invList").innerHTML=(pendIt.length||oi.length||okIt.length)?
-    secH("Pendientes de cuadrar",pendIt.length+oi.length)+pendIt.map(rowOf).join("")+(oi.length?'<div class="devsec cerr" style="margin-top:10px">Facturas sin inscripción activa<span>'+oi.length+" · reservas sin inscripción, bajas o devoluciones: revisa si necesitan rectificativa</span></div>"+oi.map(orphRow).join(""):"")+
+  $("invList").innerHTML=(errIt.length||pendIt.length||oi.length||okIt.length)?
+    secH("Errores de facturación",errIt.length)+errIt.map(rowOf).join("")+secH("Pendientes de cuadrar",pendIt.length+oi.length)+pendIt.map(rowOf).join("")+(oi.length?'<div class="devsec cerr" style="margin-top:10px">Facturas sin inscripción activa<span>'+oi.length+" · reservas sin inscripción, bajas o devoluciones: revisa si necesitan rectificativa</span></div>"+oi.map(orphRow).join(""):"")+
     secH("Correctas",okIt.length)+okIt.map(rowOf).join("")
-    :'<div class="eqempty"><h3 class="wide" style="margin:0">'+(INV.f==="pend"?"Nada pendiente: todo cuadra":INV.f==="ok"?"Ninguna correcta todavía":"Nadie")+"</h3></div>";
+    :'<div class="eqempty"><h3 class="wide" style="margin:0">'+(INV.f==="pend"?"Nada pendiente: todo cuadra":INV.f==="ok"?"Ninguna correcta todavía":INV.f==="err"?"No hay errores de facturación":"Nadie")+"</h3></div>";
   $("invOrph").innerHTML="";
   if(false)$("invOrph").innerHTML=orph.length?'<details class="iorph"><summary><b>Facturas sin inscripción activa</b><span>'+orph.length+'</span><small>Reservas sin inscripción, bajas o devoluciones. Revisa si necesitan factura rectificativa.</small></summary><div class="paylist">'+orph.sort((a,b)=>String(b.i.date).localeCompare(String(a.i.date))).map(o=>'<div class="prow frow is-orph"><span class="pnm"><b>'+esc(o.i.customer_name||"—")+'</b><span class="code">'+esc(o.i.email||"")+'</span></span><span class="pst ist-sin">Revisar</span><span class="pnx ko">'+esc(o.why)+'</span><span class="fchips">'+chip(o.i)+"</span></div>").join("")+"</div></details>":"";
 }
 $("invBoxes").addEventListener("click",e=>{const b=e.target.closest("[data-if]");if(!b)return;INV.f=b.dataset.if;renderFacturas()});
 $("invQ").addEventListener("input",e=>{INV.q=e.target.value;renderFacturas()});
 $("invRefresh").addEventListener("click",()=>loadBooks(true));
-$("invList").addEventListener("click",e=>{if(e.target.closest("a"))return;const row=e.target.closest("[data-pid]");if(!row)return;if(typeof openDrawer==="function")openDrawer(row.dataset.pid)});
+$("invList").addEventListener("click",e=>{if(e.target.closest("a"))return;let b;
+  if((b=e.target.closest("[data-iemark]"))){IE.mark=b.dataset.iemark;IE.why="";renderFacturas();const t=$("invList").querySelector("[data-iewhy]");if(t)t.focus();return}
+  if((b=e.target.closest("[data-ielog]"))){IE.open=IE.open===b.dataset.ielog?"":b.dataset.ielog;renderFacturas();return}
+  if(e.target.closest("[data-iecancel]")){IE.mark="";IE.why="";renderFacturas();return}
+  if(e.target.closest(".ifx"))return;
+  const row=e.target.closest("[data-pid]");if(!row)return;if(typeof openDrawer==="function")openDrawer(row.dataset.pid)});
+$("invList").addEventListener("input",e=>{if(e.target.matches("[data-iewhy]"))IE.why=e.target.value});
+$("invList").addEventListener("submit",async e=>{const f=e.target.closest("[data-ieform]");if(!f)return;e.preventDefault();const id=f.dataset.ieform;const why=IE.why.trim();
+  if(!why){toast("Escribe el motivo");const t=f.querySelector("[data-iewhy]");if(t)t.focus();return}
+  IE.busy=true;const ok=await ieSet(id,!ieErr(id),why);IE.busy=false;if(ok){IE.mark="";IE.why=""}renderFacturas()});
 /* ===== DEVOLUCIONES =====
    Pendiente: la inscripción tiene «Refund amount» (Refund) en el CRM y aún no hay rectificativa.
    Reparto sugerido: se devuelve desde la última factura hacia atrás (150 € con dos de 100 → 100 de la última y 50 de la anterior).
@@ -5270,7 +5333,7 @@ $("canList").addEventListener("keydown",e=>{if(e.key!=="Enter")return;const row=
    Estadísticas: resumen de cada lista, gestiones por día y contacto con las inscripciones 2027 (incluye Incidencias y tickets de Zoho Desk).
    Los contactos se guardan en el software (colección «attc», un documento por persona). El CRM no se toca. */
 var ATT={docs:{},list:"",q:"",fAtt:"",fSt:"",lim:200,b26:null,b26busy:false,b26err:"",x27:null,x27busy:false,x27err:"",panel:null,edit:null,
-  lpW:0,lpF:"pend",lpQ:"",lpPay:"",lpDoc:"",lpSort:"name",desk:null,deskBusy:false,deskErr:"",me:null};
+  lpW:0,lpF:"pend",lpQ:"",lpPay:"",lpFac:"",lpDoc:"",lpSort:"name",desk:null,deskBusy:false,deskErr:"",me:null};
 const ATT_ST=["No contesta","No contesta X2","En su tejado","Volver a llamar","Fuera de horario","Inscrito","No interesado","No apto","Duplicado","Error de datos","Otras sedes","Agencia/grupo","Hermanos","Incidencia"];
 const ATT_TONE=st=>/^Trash$/i.test(st)?"off":/^Inscrito/.test(st)?"ok":/tejado/i.test(st)?"hot":/No contesta|Volver a llamar|Fuera de horario/.test(st)?"wait":st?"off":"none";
 const ATT_VIA=[["telefono","Teléfono"],["whatsapp","WhatsApp"],["email","Email"],["persona","En persona"],["otros","Otros"]];
@@ -5402,7 +5465,8 @@ function lpDocs(r){const f2=lpBool(r.d.Form_2),comp=lpBool(r.d.Comprobaci_n_docu
   return {k,pend,ok:k==="comp"&&!pend.length,txt:pend==null?"Falta toda la documentación":pend.length?"Falta: "+pend.map(x=>LP_DL[x]).join(", "):"No falta nada"}}
 const lpMed=r=>!!String(r.d.Especificacion_condiciones_medicas||"").trim()||r.d.Condiciones_medicas==="Sí";
 const LP_MEDTAG='<span class="lpmed" title="Tiene rellena la especificación de condiciones médicas">Revisar condiciones médicas</span>';
-const lpDone=r=>{let pay=false;try{pay=payState(r).k!=="late"}catch(e){}const ds=lpDocs(r);return {pay,doc:ds.ok,ds,ok:pay&&ds.ok}};
+const lpDone=r=>{let pay=false;try{pay=payState(r).k!=="late"}catch(e){}const ds=lpDocs(r);const fac=lpFac(r);return {pay,doc:ds.ok,ds,fac,ok:pay&&ds.ok&&fac.ok}};
+const lpFacChip=f=>'<span class="lpchk'+(f.ok?" ok":"")+'" title="'+esc(f.why)+'">'+esc(f.t)+"</span>";
 /* fecha de inscripción: «Fecha rellenado CE Form» si viene; si no, cuándo se creó la inscripción */
 const lpInsc=r=>String(r.d.Fecha_rellenado_CE_Form||r.d.Created_Time||"");
 const lpSur=n=>String(n||"").trim().split(/\s+/).slice(1).join(" ");
@@ -5426,8 +5490,8 @@ function renderLimpieza(){if($("view-limpieza").hidden){prsBeat(false);return}se
     [["nac","Nacionales"],["inst","Institucionales"]].forEach(([k,l])=>{const cs=CAMPS.filter(c=>c.kind===k);if(!cs.length)return;h+='<span class="wsec">'+l+"</span>";cs.forEach(c=>{h+=box("c:"+c.id,c.n,campDates(c.id),lpItems("c:"+c.id),"wc-"+k)})});
     $("lpWeeks").innerHTML=h;return}
   const it=lpItems(w).map(x=>Object.assign({},x,{s:lpDone(x.r)}));const ok=it.filter(x=>x.s.ok),pe=it.filter(x=>!x.s.ok);
-  $("lpBoxes").innerHTML=[["pend","Pendientes","Falta el pago al día o la documentación",pe.length],["ok","Completadas","Pago al día y documentación completa, sin nada pendiente",ok.length]].map(([k,t,sub,n])=>'<button type="button" class="pbx lb-'+k+'" data-lpf="'+k+'" aria-pressed="'+(ATT.lpF===k)+'"><span class="pt2">'+t+'</span><span class="pc2">'+n+'</span><span class="ps2">'+sub+"</span></button>").join("");
-  const q=attNrm(ATT.lpQ.trim());let L=(ATT.lpF==="ok"?ok:pe).filter(x=>(!q||attNrm(x.r.hay+" "+x.r.tutor).includes(q))&&(!ATT.lpPay||(ATT.lpPay==="late")!==x.s.pay)&&(!ATT.lpDoc||(ATT.lpDoc==="med"?lpMed(x.r):x.s.ds.k===ATT.lpDoc)));
+  $("lpBoxes").innerHTML=[["pend","Pendientes","Falta el pago al día, la facturación o la documentación",pe.length],["ok","Completadas","Pago al día, facturación correcta y documentación completa",ok.length]].map(([k,t,sub,n])=>'<button type="button" class="pbx lb-'+k+'" data-lpf="'+k+'" aria-pressed="'+(ATT.lpF===k)+'"><span class="pt2">'+t+'</span><span class="pc2">'+n+'</span><span class="ps2">'+sub+"</span></button>").join("");
+  const q=attNrm(ATT.lpQ.trim());let L=(ATT.lpF==="ok"?ok:pe).filter(x=>(!q||attNrm(x.r.hay+" "+x.r.tutor).includes(q))&&(!ATT.lpPay||(ATT.lpPay==="late")!==x.s.pay)&&(!ATT.lpDoc||(ATT.lpDoc==="med"?lpMed(x.r):x.s.ds.k===ATT.lpDoc))&&(!ATT.lpFac||(ATT.lpFac==="ok")===x.s.fac.ok));
   const fd=x=>lpInsc(x.r);
   L.sort(ATT.lpSort==="ape"?(a,b)=>lpSur(a.r.name).localeCompare(lpSur(b.r.name),"es")||a.r.name.localeCompare(b.r.name,"es"):ATT.lpSort==="form"?(a,b)=>(!fd(a)-!fd(b))||fd(a).localeCompare(fd(b))||a.r.name.localeCompare(b.r.name,"es"):(a,b)=>a.r.name.localeCompare(b.r.name,"es"));
   $("lpCount").textContent=L.length+" jugadores";
@@ -5435,9 +5499,9 @@ function renderLimpieza(){if($("view-limpieza").hidden){prsBeat(false);return}se
     const mk=x.w&&x.w.prog?'<span class="lpmod"><span class="mk2" style="background:var(--'+String(x.w.prog).toLowerCase()+')"></span>'+esc(x.w.prog)+" · "+esc(MODLBL[x.w.mod]||x.w.mod||"")+"</span>":"";
     const ds=x.s.ds,fr=lpInsc(r);
     return '<div class="prow lprow '+(x.s.ok?"is-ok":"is-pe")+'" data-attd="'+esc(r.id)+'" tabindex="0"><span class="pnm"><b class="nmrow"><span class="nmt" title="'+esc(r.name)+'">'+esc(r.name)+"</span>"+vipTag(r)+agTag(r.d)+campTag(r)+'</b><span class="code">'+esc(r.code)+(r.tutor?" · "+esc(r.tutor):"")+(fr?" · Inscrito el "+esc(fmtD(attDay(fr))):"")+"</span>"+(lpMed(r)?LP_MEDTAG:"")+"</span>"+mk+
-      '<span class="lpchk'+(x.s.pay?" ok":"")+'">'+(x.s.pay?"✓ Pago al día":"✗ Pago atrasado")+'</span><span class="lpdoc"><span class="lpchk d-'+ds.k+'">'+LP_DS[ds.k][0]+'</span><small>'+esc(ds.txt)+"</small></span>"+
+      '<span class="lpchks"><span class="lpchk'+(x.s.pay?" ok":"")+'">'+(x.s.pay?"✓ Pago al día":"✗ Pago atrasado")+"</span>"+lpFacChip(x.s.fac)+'</span><span class="lpdoc"><span class="lpchk d-'+ds.k+'">'+LP_DS[ds.k][0]+'</span><small>'+esc(ds.txt)+"</small></span>"+
       '<span class="lpct">'+(log.length+ic?"<b>"+(log.length+ic)+"</b> contacto"+(log.length+ic>1?"s":"")+(last?"<small>último "+esc(fmtD(last.day||attDay(last.at)))+(last.byName?" · "+esc(last.byName):"")+"</small>":""):'<span class="muted">Sin contactos</span>')+"</span></div>"}).join("")
-    :'<div class="eqempty"><h3 class="wide" style="margin:0">'+(ATT.lpF==="ok"?"Ninguna completada todavía":"Nada pendiente")+"</h3>"+(ATT.lpF==="ok"?"<p>Pasan a completadas con el pago al día, la casilla «Comprobación documentos» marcada en el CRM y nada pendiente apuntado.</p>":"")+"</div>"}
+    :'<div class="eqempty"><h3 class="wide" style="margin:0">'+(ATT.lpF==="ok"?"Ninguna completada todavía":"Nada pendiente")+"</h3>"+(ATT.lpF==="ok"?"<p>Pasan a completadas con el pago al día, la facturación correcta, la casilla «Comprobación documentos» marcada en el CRM y nada pendiente apuntado.</p>":"")+"</div>"}
 /* ---------- OPERATIVA › BUSES: servicio de bus de cada semana (Madrid) ---------- */
 var BUS={w:0,q:"",f:""};
 /* servicios del desplegable «Servicio de autobús» del CRM; si aparece uno nuevo en una inscripción, se añade solo */
@@ -5561,7 +5625,7 @@ $("lpList").addEventListener("click",e=>{const row=e.target.closest("[data-attd]
 function lpOpen(r){const d=r.d;const s=lpDone(r);
   attOpen("d-"+r.id,{name:r.name,tutor:r.tutor,code:r.code,where:lpLabel(ATT.lpW),phone:String(d.Telefono_Tutor_legal||""),email:String(d.Email||""),nat:String(d.Nationality||""),lang:attLang(d),mod:(r.weeks[0]?r.weeks[0].prog+" · "+(MODLBL[r.weeks[0].mod]||r.weeks[0].mod):""),gen:attGen(d.Gender),dob:attDob(d.A_o_de_nacimiento),ag:agName(d),list:"lim",dealId:r.id,
     crmId:r.id,camp:r.camp,email2:String(d.Email||""),
-    extra:'<span class="lpchk'+(s.pay?" ok":"")+'">'+(s.pay?"✓ Pago al día":"✗ Pago atrasado")+"</span>"+(lpMed(r)?LP_MEDTAG:"")})}
+    extra:'<span class="lpchk'+(s.pay?" ok":"")+'">'+(s.pay?"✓ Pago al día":"✗ Pago atrasado")+"</span>"+lpFacChip(s.fac)+(lpMed(r)?LP_MEDTAG:"")})}
 /* ---------- BUSCADOR GENERAL de Atención al público: todas las listas de Base de datos y Limpieza ---------- */
 const ATTG={q:"",t:0};
 function attGSearch(){const q=attNrm(ATTG.q.trim());const box=$("attGRes");if(q.length<2){box.innerHTML="";return}
@@ -5643,7 +5707,7 @@ $("lpWeeks").addEventListener("click",e=>{const b=e.target.closest("[data-lpw]")
 $("lpCrumbs").addEventListener("click",e=>{if(e.target.closest("[data-lpgo]")){ATT.lpW=0;renderLimpieza()}});
 $("lpBoxes").addEventListener("click",e=>{const b=e.target.closest("[data-lpf]");if(!b)return;ATT.lpF=b.dataset.lpf;renderLimpieza()});
 $("lpQ").addEventListener("input",e=>{ATT.lpQ=e.target.value;renderLimpieza()});
-[["lpPay","lpPay"],["lpDoc","lpDoc"],["lpSort","lpSort"]].forEach(([id,k])=>$(id).addEventListener("change",e=>{ATT[k]=e.target.value;renderLimpieza()}));
+[["lpPay","lpPay"],["lpFac","lpFac"],["lpDoc","lpDoc"],["lpSort","lpSort"]].forEach(([id,k])=>$(id).addEventListener("change",e=>{ATT[k]=e.target.value;renderLimpieza()}));
 /* marcar la documentación pendiente (Limpieza y ficha) */
 document.addEventListener("change",async e=>{const c=e.target.closest&&e.target.closest("input[data-lpdoc]");if(!c)return;const id=c.dataset.lpdoc;const r=(S.allRows||[]).find(x=>String(x.id)===id);if(!r)return;
   if(!attEdit()){c.checked=!c.checked;toast("No tienes permiso para cambiar la documentación");return}
@@ -6259,6 +6323,9 @@ renderRegistros();
   C.use("downloads").then(d=>{S.dl=d||null;renderHorarios()}).catch(()=>{});
   C.use("db").then(db=>{if(!db)return;
     db.collection("attc").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});ATT.docs=m;attRenderAll()},()=>{});
+    if(viewOk("facturas")||viewOk("limpieza")){
+      db.collection("inverr").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});IE.docs=m;try{renderFacturas()}catch(e){}try{renderLimpieza()}catch(e){}},()=>{});
+      db.collection("invst").onSnapshot(snap=>{let v=null;snap.docs.forEach(d=>{if(d.id==="main")v=d.data()});INVST.doc=v;try{renderLimpieza()}catch(e){}},()=>{})}
     if(viewOk("bbdd")||viewOk("limpieza")){PRS.on=true;db.collection("presence").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});PRS.docs=m;prsRender()},()=>{})}
     db.collection("agent").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});AGX.docs=Object.assign({},m,Object.fromEntries(Object.entries(AGX.docs).filter(([k,v])=>!m[k]&&v&&v.ok)));try{renderAgentes()}catch(e){}},()=>{});
     db.collection("agliq").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const v=d.data();if(v)m[d.id]=v});AGX.liq=m;try{renderAgentes()}catch(e){}},()=>{})}).catch(()=>{});
