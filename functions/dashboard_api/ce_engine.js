@@ -61,6 +61,23 @@ var PAIS_AL={"espana":"España","spain":"España","espanya":"España","reinodees
 function paisOf(r){var raw=String(r['Contact_Name.Mailing_Country']||'').trim(),c=nrm(raw);
   if(!c)return PROV_TXT[nrm(r['Contact_Name.Mailing_State'])]?'España':'ND';
   return PAIS_AL[c]||raw.charAt(0).toUpperCase()+raw.slice(1);}
+/* municipio de residencia (sedes nacionales): código INE de 5 cifras, 'AD' Andorra, 'EXT' resto del mundo, 'ND' sin ubicar.
+   Primero el código postal (tabla del INE); si el CP tiene varios municipios, el que coincide con la ciudad; si no hay CP válido, por el nombre de la ciudad. */
+var CPES=null;function cpes(){if(CPES===null){try{CPES=require('./cp_es.js');}catch(e){CPES=false;}}return CPES;}
+var NMIX=null;function nmVariants(s){var v=[],t=String(s||'');t.split(/[\/()]/).forEach(function(x){x=x.trim();if(!x)return;v.push(x);var m=x.match(/^(.*),\s*(el|la|los|las|l'|els|les|o|a|os|as)$/i);if(m)v.push(m[2]+' '+m[1]);});v.push(t);return v.map(nrm).filter(Boolean);}
+function nmIndex(){if(NMIX)return NMIX;NMIX={};var c=cpes();if(!c)return NMIX;Object.keys(c.NM).forEach(function(k){nmVariants(c.NM[k]).forEach(function(n){(NMIX[n]=NMIX[n]||[]).push(k);});});return NMIX;}
+function muniOf(r){
+  var p=paisOf(r),zr=String(r['Contact_Name.Mailing_Zip']||'').trim(),z=zr.replace(/\D/g,'');
+  if(p==='Andorra'||/^ad\s*\d/i.test(zr))return 'AD';
+  if(p!=='España'&&p!=='ND')return 'EXT';
+  var c=cpes();if(!c)return 'ND';
+  var city=nmVariants(r['Contact_Name.Mailing_City']);
+  if(z.length===4)z='0'+z;
+  var cand=z.length===5?c.CP[z]:null;
+  if(cand&&cand.length){if(cand.length===1)return cand[0];for(var i=0;i<cand.length;i++){var nv=nmVariants(c.NM[cand[i]]);if(nv.some(function(n){return city.indexOf(n)>=0;}))return cand[i];}return cand[0];}
+  var ix=nmIndex(),pv=z.length>=2?z.slice(0,2):(PROV_TXT[nrm(r['Contact_Name.Mailing_State'])]||null);
+  for(var j=0;j<city.length;j++){var l=ix[city[j]];if(!l)continue;if(pv){var q=l.filter(function(k){return k.slice(0,2)===pv;});if(q.length)return q[0];}if(l.length===1)return l[0];}
+  return 'ND';}
 /* opt.black: sede institucional → la equipación incluida (y la que se compra aparte) es la Black */
 function build(rs,ex,opt){opt=opt||{};
   var PRE='2026-10-08';
@@ -105,7 +122,7 @@ function build(rs,ex,opt){opt=opt||{};
     gen_:top(rs,function(r){return {Male:'Masculino',Female:'Femenino'}[r.Gender]||'N/D';}),
     pos:top(rs,function(r){return r.Posicion_participante||'N/D';}),
     nat:top(rs,function(r){return r.Nationality||'N/D';},10),
-    prov:top(rs,provOf,80),pais:top(rs,paisOf,300),age:top(rs,age,40),
+    prov:top(rs,provOf,80),pais:top(rs,paisOf,300),age:top(rs,age,40),muni:opt.muni?top(rs,muniOf,3000):[],
     src:top(rs,chan,40),promo:top(rs,function(r){return r.Codigo_descuento||'Sin código';},40),
     col:col,pay:top(rs,function(r){return r.Forma_de_pago||'N/D';}),
     stage:stages.map(function(s){var a=rs.filter(function(r){return r.Stage===s;});return [s,a.length,r2(a.reduce(function(t,r){return t+nz(r.Total);},0)),r2(a.reduce(function(t,r){return t+nz(r.Paid);},0))];})};
@@ -188,7 +205,7 @@ function conv(d){
   (d.rweek||[]).forEach(function(e){t.push({view:'rweek',key:e[0],start:e[1],end:e[2],count:e[3]});});
   (d.rhour||[]).forEach(function(e){t.push({view:'rhour',key:e[0],start:'',end:'',count:e[1]});});
   var rev={};d.modrev.forEach(function(e){rev[e[0]]=e[1];});var dm=[];
-  [['mod','mod'],['gen','gen_'],['pos','pos'],['age','age'],['nat','nat'],['prov','prov'],['pais','pais'],['src','src'],['promo','promo'],['col','col'],['pay','pay']].forEach(function(p){
+  [['mod','mod'],['gen','gen_'],['pos','pos'],['age','age'],['nat','nat'],['prov','prov'],['pais','pais'],['muni','muni'],['src','src'],['promo','promo'],['col','col'],['pay','pay']].forEach(function(p){
     d[p[1]].forEach(function(e){dm.push({dim:p[0],label:e[0],count:e[1],revenue:p[0]==='mod'?(e[0] in rev?rev[e[0]]:''):''});});});
   d.campwk.forEach(function(e){dm.push({dim:'campwk',label:e[0],count:e[1],revenue:''});});
   d.modrev.forEach(function(e){dm.push({dim:'rev',label:e[0],count:e[1],revenue:''});});
@@ -226,7 +243,7 @@ var SEDES=[['andorra','Andorra'],['valencia','Valencia'],['malaga','Málaga'],['
 function makeData(inputs,att){
   var d=build(inputs.madrid.rs,inputs.madrid.ex);
   var out=conv(d);out.gen=d.gen;
-  var sedes={};SEDES.forEach(function(s){var i=inputs[s[0]]||{rs:[],ex:[]};var o=conv(build(i.rs,i.ex));o.name=s[1];sedes[s[0]]=o;});
+  var sedes={};SEDES.forEach(function(s){var i=inputs[s[0]]||{rs:[],ex:[]};var o=conv(build(i.rs,i.ex,{muni:true}));o.name=s[1];sedes[s[0]]=o;});
   out.sedes=sedes;
   /* institucionales (municipios): mismo cálculo que una sede, con la equipación Black */
   var ins_sedes={};INS.forEach(function(s){var i=inputs['ins_'+s[0]]||{rs:[],ex:[]};var o=conv(build(i.rs,i.ex,{black:true}));o.name=s[1];ins_sedes[s[0]]=o;});

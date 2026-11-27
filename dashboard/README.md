@@ -32,6 +32,19 @@ Versión del dashboard que antes vivía en claude.ai, ahora dentro del software 
 - Selector **Equipaciones | Mochilas | Jerseys** en «Semana a semana»: cambia la gráfica, el desglose por talla y la tabla (mochilas: semana × ONE/MAX). Arriba, mochilas y jerseys como cifras separadas.
 - El apartado de equipaciones por grupo en Nacionales e Institucionales (`grpShow`) está preparado pero sin activar.
 
+## Sedes nacionales (27 nov)
+- **Estructura de cada sede:** Ritmo de inscripción · Perfil del jugador · Dinero · Ingresos adicionales · Captación · Equipaciones necesarias. El grupo de la sede queda en `#ce[data-grp]` (`M` Madrid, `N` nacional, `I` institucional); `.only-nac` solo se ve en nacionales.
+- **Mapa de calor municipal** (Perfil, después de Género): jugadores por municipio de residencia en España y Andorra.
+  - Municipio (`muniOf` en `ce_engine.js`, dim `muni`): código postal → municipio con la tabla del INE (`functions/dashboard_api/cp_es.js`, generada del Callejero del Censo Electoral vía github.com/inigoflores/ds-codigos-postales-ine-es); si el CP tiene varios municipios, el que coincide con la ciudad; sin CP válido, por el nombre de la ciudad (`Mailing_City`); si no, «sin ubicar» (`ND`). Andorra = `AD`; el resto de países = `EXT`.
+  - Contornos: atlas del IGN `es-atlas@0.6.0` (códigos INE), que el navegador descarga al abrir el mapa desde jsDelivr (o unpkg); Andorra va incrustada (`AD_GEO`).
+  - Se abre con zoom sobre el municipio del campus (`CAMPUS_INE`), con + / − / «Ver campus», rueda y arrastre. Debajo: tramos de color, internacionales (solo el país y el número) y sin ubicar.
+- **Ingresos adicionales:** solo Extras y Campus Protection Plan (sin Servicios adicionales).
+- **Equipaciones:** cada sede hace una sola semana (jornada completa, como ONE Jornada Completa: 1 minikit y 1 mochila ONE, más extras); la gráfica y la tabla muestran solo las semanas con datos.
+- En Madrid, el mapa de provincias también pasa a ir después de Género.
+
+## Ritmo de inscripción (27 nov, global)
+- Las gráficas se abren mostrando los últimos días y el scroll sirve para ir atrás (`toEnd`: se colocan al final al dibujarse o al hacerse visibles, salvo que el usuario ya se haya desplazado).
+
 ## Storage (quitado el 27 nov)
 - La vista «Storage» (equipaciones necesarias de todas las sedes) se ha quitado del dashboard: ni pestaña ni tarjeta en la Portada. Cada modalidad tendrá su propio apartado más adelante.
 - El servidor sigue calculando `storage` (no se ve); un enlace antiguo a Storage lleva a la Portada.
