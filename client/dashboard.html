@@ -678,17 +678,31 @@ body{margin:0;background:var(--color-bg);color:var(--color-fg);font:14px/1.45 va
 
 /* ===== Mapa de calor municipal (sedes nacionales) ===== */
 .ce:not([data-grp="N"]) .only-nac{display:none!important}
-.ce .mun-box{position:relative;margin-top:14px;border-radius:12px;overflow:hidden;background:color-mix(in srgb,var(--tileink) 4%,transparent)}
+.ce .mun-box{position:relative;margin-top:14px;border-radius:16px;overflow:hidden;background:radial-gradient(120% 90% at 30% 20%,color-mix(in srgb,#7cc4ec 16%,var(--tilebg)) 0%,color-mix(in srgb,#0f2145 10%,var(--tilebg)) 100%);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--tileink) 8%,transparent)}
+.ce .mun-box:fullscreen{border-radius:0;margin:0}.ce .mun-box:fullscreen .munsvg{height:100vh}
+.ce .mun-box:-webkit-full-screen{border-radius:0;margin:0;width:100%;height:100%}.ce .mun-box:-webkit-full-screen .munsvg{height:100vh}
+.ce .mun-hint{position:absolute;left:14px;bottom:12px;padding:6px 10px;border-radius:999px;background:color-mix(in srgb,var(--tilebg) 88%,transparent);backdrop-filter:blur(6px);font:600 11px var(--font);color:var(--tileink);opacity:.8;pointer-events:none}
+.ce .mun-zl{position:absolute;left:14px;top:12px;padding:5px 10px;border-radius:999px;background:color-mix(in srgb,var(--tilebg) 88%,transparent);backdrop-filter:blur(6px);font:800 10.5px var(--font);letter-spacing:.06em;text-transform:uppercase;color:var(--tileink);pointer-events:none}
 .ce .munsvg{display:block;width:100%;height:clamp(340px,52vw,520px);cursor:grab;touch-action:none}
 .ce .munsvg:active{cursor:grabbing}
 .ce .munsvg path{vector-effect:non-scaling-stroke}
-.ce .munsvg .mu{stroke:color-mix(in srgb,var(--tileink) 9%,transparent);stroke-width:.4}
+.ce .munsvg .mu{stroke:color-mix(in srgb,var(--tileink) 10%,transparent);stroke-width:.35;transition:fill .2s}
+.ce .munsvg .mu:not(.has){fill:color-mix(in srgb,var(--tilebg) 82%,#c9d3e3)}
+.ce .munsvg .mu:not(.has):hover{fill:color-mix(in srgb,var(--tilebg) 60%,#c9d3e3)}
+.ce .munsvg .mu.has{filter:drop-shadow(0 1px 2px rgba(15,33,69,.25))}
+.ce .munsvg .lbl{font-family:Archivo,'Arial Black',Impact,sans-serif;font-style:italic;font-weight:900;text-transform:uppercase;fill:var(--tileink);paint-order:stroke;stroke:var(--tilebg);stroke-linejoin:round;pointer-events:none}
+.ce .munsvg .lbl tspan.v{fill:var(--pink);font-family:'Instrument Serif',Georgia,serif;font-weight:400;text-transform:none}
+.ce .munsvg .lbls{transition:opacity .2s}.ce .munsvg .lbls.off{opacity:0}
+.ce .munsvg .pin circle.c{fill:var(--pink);stroke:#fff}
+.ce .munsvg .pin circle.p{fill:var(--pink);opacity:.35;animation:munp 2.4s ease-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes munp{from{transform:scale(1);opacity:.45}to{transform:scale(3.2);opacity:0}}
+@media (prefers-reduced-motion:reduce){.ce .munsvg .pin circle.p{animation:none}}
 .ce .munsvg .mu.has{stroke:var(--tilebg);stroke-width:.8}
 .ce .munsvg .mu.has:hover,.ce .munsvg .mu.on{stroke:var(--tileink);stroke-width:1.6}
-.ce .munsvg .pv{fill:none;stroke:color-mix(in srgb,var(--tileink) 35%,transparent);stroke-width:.7;pointer-events:none}
-.ce .munsvg .cmp{fill:none;stroke:var(--pink);stroke-width:2;stroke-dasharray:4 3;pointer-events:none}
+.ce .munsvg .pv{fill:none;stroke:color-mix(in srgb,#0f2145 45%,transparent);stroke-width:.9;pointer-events:none}
+.ce .munsvg .cmp{fill:none;stroke:var(--pink);stroke-width:2.2;stroke-dasharray:5 3;pointer-events:none}
 .ce .mun-ctl{position:absolute;top:12px;right:12px;display:flex;flex-direction:column;gap:6px}
-.ce .mun-ctl button{all:unset;box-sizing:border-box;cursor:pointer;min-width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:8px;background:var(--tilebg);color:var(--tileink);font:700 18px var(--font);box-shadow:0 1px 3px rgba(15,33,69,.18)}
+.ce .mun-ctl button{all:unset;box-sizing:border-box;cursor:pointer;min-width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:color-mix(in srgb,var(--tilebg) 90%,transparent);backdrop-filter:blur(6px);color:var(--tileink);font:700 19px var(--font);box-shadow:0 4px 14px rgba(15,33,69,.16)}
 .ce .mun-ctl button:hover{color:var(--pink)}
 .ce .mun-ctl button:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
 .ce .mun-ctl .mun-home{font:800 10px var(--font);letter-spacing:.06em;text-transform:uppercase;padding:0 10px}
@@ -1279,7 +1293,7 @@ body{margin:0;background:var(--color-bg);color:var(--color-fg);font:14px/1.45 va
       <div class="head"><div><h3>De dónde vienen los jugadores</h3><p class="n" id="mun-n">Jugadores por municipio de residencia</p></div></div>
       <div class="mun-box">
         <svg id="m-mun" class="munsvg" role="img" aria-label="Mapa de calor por municipio de residencia" data-source="dims"></svg>
-        <div class="mun-ctl" role="group" aria-label="Zoom del mapa"><button type="button" data-z="in" aria-label="Acercar">+</button><button type="button" data-z="out" aria-label="Alejar">−</button><button type="button" data-z="home" class="mun-home">Ver campus</button></div>
+        <div class="mun-ctl" role="group" aria-label="Zoom del mapa"><button type="button" data-z="in" aria-label="Acercar">+</button><button type="button" data-z="out" aria-label="Alejar">−</button><button type="button" data-z="home" class="mun-home">Ver campus</button><button type="button" data-z="full" class="mun-home" aria-pressed="false">Pantalla completa</button></div><div class="mun-hint" id="mun-hint">Rueda o pellizco para ampliar · arrastra para moverte · doble clic para acercar</div>
         <div class="mun-msg" id="mun-msg">Cargando el mapa de municipios…</div>
       </div>
       <div class="mun-foot"><div class="map-leg" id="mun-leg"></div><div class="mun-intl" id="mun-intl"></div></div>
@@ -1591,11 +1605,25 @@ function drawMuni(dm){
     g.append('g').selectAll('path').data(A.prov.concat([AD_GEO])).join('path').attr('class','pv').attr('d',path);
     const hf=home&&feats.find(d=>d.id===home);if(hf)g.append('path').attr('class','cmp').attr('d',path(hf));
     g.selectAll('.mu.has').raise();if(hf)g.select('.cmp').raise();
-    const z=d3.zoom().scaleExtent([.6,80]).on('zoom',e=>g.attr('transform',e.transform));svg.call(z).on('dblclick.zoom',null);
-    const goHome=(t)=>{let k=1,cx=W/2,cy=H/2;if(hf){const c=path.centroid(hf),b=path.bounds(hf),sz=Math.max(b[1][0]-b[0][0],b[1][1]-b[0][1],1);k=Math.min(60,Math.max(4,Math.min(W,H)/(sz*7)));cx=c[0];cy=c[1];}
+    /* etiquetas de los municipios con jugadores (aparecen al acercarse) y marca del campus */
+    const LB=g.append('g').attr('class','lbls off');
+    feats.filter(d=>cnt[d.id]).forEach(d=>{const c=path.centroid(d);if(!isFinite(c[0]))return;const t=LB.append('text').attr('class','lbl').attr('x',c[0]).attr('y',c[1]).attr('dy',d.id===home?'1.6em':'0.35em').attr('text-anchor','middle');
+      t.append('tspan').text((d.properties.name||'').split('/')[0]+' ');t.append('tspan').attr('class','v').text(f(cnt[d.id]));});
+    let pin=null;if(hf){const c=path.centroid(hf);pin=g.append('g').attr('class','pin').attr('transform','translate('+c[0]+','+c[1]+')');pin.append('circle').attr('class','p').attr('r',5);pin.append('circle').attr('class','c').attr('r',5);}
+    const zl=d3.select(svgE.parentNode).selectAll('.mun-zl').data([0]).join('div').attr('class','mun-zl');
+    const onZ=e=>{const k=e.transform.k;g.attr('transform',e.transform);LB.classed('off',k<14).selectAll('text').attr('font-size',11/k).attr('stroke-width',3/k);
+      if(pin){pin.selectAll('circle').attr('r',6/k).attr('stroke-width',2/k);}zl.text('Zoom ×'+(k<10?k.toFixed(1).replace('.',','):Math.round(k)));};
+    const z=d3.zoom().scaleExtent([.6,1500]).wheelDelta(e=>-e.deltaY*(e.deltaMode===1?.06:e.deltaMode?1:.004)*(e.ctrlKey?6:1)).on('zoom',onZ);svg.call(z);
+    const goHome=(t)=>{let k=1,cx=W/2,cy=H/2;if(hf){const c=path.centroid(hf),b=path.bounds(hf),sz=Math.max(b[1][0]-b[0][0],b[1][1]-b[0][1],.5);k=Math.min(400,Math.max(8,Math.min(W,H)/(sz*3.2)));cx=c[0];cy=c[1];}
       svg.transition().duration(t?650:0).call(z.transform,d3.zoomIdentity.translate(W/2,H/2).scale(k).translate(-cx,-cy));};
     MUN_Z={z,svg,goHome};goHome(false);
-    root.querySelectorAll('#mapa-mun .mun-ctl button').forEach(b=>{b.onclick=()=>{const m=MUN_Z;if(!m)return;if(b.dataset.z==='home')m.goHome(true);else m.svg.transition().duration(300).call(m.z.scaleBy,b.dataset.z==='in'?1.8:1/1.8);};});
+    root.querySelectorAll('#mapa-mun .mun-ctl button').forEach(b=>{b.onclick=()=>{const m=MUN_Z;if(!m)return;
+      if(b.dataset.z==='full'){const bx=$('#mapa-mun .mun-box'),fe=document.fullscreenElement||document.webkitFullscreenElement;
+        if(fe){(document.exitFullscreen||document.webkitExitFullscreen).call(document);}else{const rq=bx.requestFullscreen||bx.webkitRequestFullscreen;if(rq)rq.call(bx);}return;}
+      if(b.dataset.z==='home')m.goHome(true);else m.svg.transition().duration(300).call(m.z.scaleBy,b.dataset.z==='in'?2.2:1/2.2);};});
+    if(!window.__MUNFS){window.__MUNFS=1;const fs=()=>{const on=!!(document.fullscreenElement||document.webkitFullscreenElement);const fb=$('#mapa-mun [data-z="full"]');if(fb){fb.textContent=on?'Salir de pantalla completa':'Pantalla completa';fb.setAttribute('aria-pressed',String(on));}
+      const m=MUN_Z,sv=$('#m-mun');if(m&&sv){const W2=sv.clientWidth,H2=sv.clientHeight;if(W2&&H2){sv.setAttribute('viewBox','0 0 '+W2+' '+H2);}}};
+      document.addEventListener('fullscreenchange',fs);document.addEventListener('webkitfullscreenchange',fs);}
   }).catch(()=>{msg.hidden=false;msg.textContent='No se ha podido cargar el mapa de municipios. Vuelve a intentarlo más tarde.';});}
 function drawMap(dm){
   const svg=$('#m-es'),R=$('#map-r');if(!svg||!R)return;

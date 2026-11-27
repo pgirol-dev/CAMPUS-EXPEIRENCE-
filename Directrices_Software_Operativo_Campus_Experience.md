@@ -590,6 +590,7 @@ Se asignan automáticamente en este orden, un equipo por nombre y sin repetir de
   - `selfhost/` se mantiene como alternativa.
 - 13/11 (tarde): El acceso «Dashboard» volvió a desaparecer porque `client/index.html` se publicó sin la línea `<script src="dashboard-menu.js" defer>` (no se generó con `build.js`) y este documento se sobrescribió con una copia anterior. Se restaura, se añade **Torrevieja** al dashboard (abierta, Ubicacion = Torrevieja) y se refuerzan las reglas del apartado 1.
 - 13/11: **Almería** abierta también en el dashboard (Ubicacion = Almeria; productos «… Almería»).
+- 27/11: **Mapa municipal (nacionales):** zoom mucho mayor (×1500), rueda más rápida, doble clic, pantalla completa, nombres de los municipios con jugadores al acercarse y diseño renovado.
 - 27/11: **Nacionales:** mapa de calor por municipio (CP → municipio INE; España y Andorra; internacionales por país), sin Servicios adicionales, equipaciones solo de la semana del campus. **Ritmo:** se abre en los últimos días (global). Mapa de Madrid después de Género.
 - 27/11: **Equipaciones** rediseñadas (resumen unificado: cifras globales arriba y anillo de porcentaje por tipo; gráfica semanal) y tipos según el grupo de la sede.
 - 27/11: **Storage** quitado del dashboard (pestaña y tarjeta de la Portada); cada modalidad tendrá su apartado más adelante.
