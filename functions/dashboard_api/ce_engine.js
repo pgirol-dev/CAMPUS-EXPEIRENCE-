@@ -118,13 +118,36 @@ function build(rs,ex,opt){opt=opt||{};
   var RW={};Object.keys(LN).forEach(function(pid){LN[pid].forEach(function(x){if(x[0]!=='MI'&&x[0]!=='OI')return;var w=+x[1];if(!RW[w])RW[w]={max:0,one:0};RW[w][x[0]==='MI'?'max':'one']+=1;});});
   out.resid=Object.keys(RW).map(Number).sort(function(a,b){return a-b;}).map(function(w){return {week:w,max:RW[w].max,one:RW[w].one};});
   out.campwk=Array.from(wc.m.entries()).sort(function(a,b){return lastWord(a[0])-lastWord(b[0]);});
-  function cat(p,nn){var q=(p||'').toLowerCase();if(q.indexOf('uniforme')===0||q.indexOf('mochila')===0||q.indexOf('jersey')===0)return 'Equipaciones';if(q.indexOf('protection')>=0)return 'Campus Protection Plan (CPP)';
-    if(q.indexOf('noche')>=0||nn==='Sí'||nn==='Si')return 'Noches extra';if(q.indexOf('bus')>=0||q.indexOf('transfer')>=0||q.indexOf('autob')>=0)return 'Buses y transfers';return null;}
-  var CATS=['Equipaciones','Campus Protection Plan (CPP)','Noches extra','Buses y transfers'];
-  var agg={};CATS.forEach(function(c){agg[c]={u:0,imp:0,ins:new Set(),prod:new Counter(),prodimp:new Counter()};});
-  ex.forEach(function(e){var c=cat(e[0],e[3]);if(!c)return;var a=agg[c];a.u+=1;a.imp+=e[1]||0;a.ins.add(e[2]);a.prod.add(e[0]);a.prodimp.add(e[0],e[1]||0);});
+  /* ===== Ingresos adicionales: todo lo que no es una semana de campus, del form 1 (inscripción) y del form 3 (después) =====
+     Extras: minikit, kit de portero, mochila Adidas ONE y jersey Adidas · Campus Protection Plan · Servicios adicionales:
+     transporte (bus de externos desde Zona Bernabéu, bus de internos desde Zona Bernabéu, transfer aeropuerto) y noches extra
+     (las que se cobran solas al juntar semanas de ONE Interno y las que se contratan en el form 3).
+     Unidades = «Cantidad» de la línea (si está vacía, 1). Origen: si la línea se creó más de 30 min después que la inscripción → form 3. */
+  function addl(p,nn){var q=(p||'').toLowerCase();
+    if(q.indexOf('uniforme portero')===0||q.indexOf('camiseta portero')===0)return ['Extras','Kit de portero'];
+    if(q.indexOf('uniforme')===0)return ['Extras','Minikit'];
+    if(q.indexOf('mochila')===0)return ['Extras','Mochila Adidas ONE'];
+    if(q.indexOf('jersey')===0)return ['Extras','Jersey Adidas'];
+    if(q.indexOf('protection')>=0||q.indexOf('portection')>=0)return ['Campus Protection Plan',q.indexOf('interno')>=0?'CPP Interno':'CPP Jornada Completa'];
+    if(q.indexOf('noche')>=0||nn==='Sí'||nn==='Si')return ['Servicios adicionales','Noches extra'];
+    if(q.indexOf('transfer')>=0||q.indexOf('traslado')>=0)return ['Servicios adicionales','Transfer aeropuerto'];
+    if(q.indexOf('autob')>=0||/\bbus\b/.test(q))return ['Servicios adicionales',(q.indexOf('no interno')>=0||/autobus (mj|jc)/.test(q))?'Bus externos':'Bus internos'];
+    return null;}
+  var CATS=['Extras','Campus Protection Plan','Servicios adicionales'];
+  var DCT={};rs.forEach(function(r){DCT[r.id]=Date.parse(r.Created_Time)||0;});
+  var agg={};CATS.forEach(function(c){agg[c]={u:0,imp:0,ins:new Set(),prod:{}};});
+  ex.forEach(function(e){var p=e[0],imp=+e[1]||0,pid=e[2],sem=e[4];if(mcode(p)&&sem)return;if(imp<0)return;
+    var k=addl(p,e[3]);if(!k){if(String(p||'').indexOf('Campus Experience')===0||!imp)return;k=['Extras',p];}
+    var a=agg[k[0]],u=Math.max(1,+e[5]||1);a.u+=u;a.imp+=imp;a.ins.add(pid);
+    var x=a.prod[k[1]]=a.prod[k[1]]||{u:0,imp:0,ins:new Set(),pr:new Counter(),f1:0,f3:0,fi:0,ff:0};
+    x.u+=u;x.imp+=imp;x.ins.add(pid);x.pr.add(r2(imp/u),u);
+    var lt=Date.parse(e[6]||'')||0,dt=DCT[pid]||0,f3=!!(lt&&dt&&lt-dt>30*60000);if(f3){x.f3+=u;x.ff+=imp;}else{x.f1+=u;x.fi+=imp;}});
   var tot=CATS.reduce(function(s,c){return s+agg[c].imp;},0);var allins=new Set();CATS.forEach(function(c){agg[c].ins.forEach(function(i){allins.add(i);});});
-  out.extras={n:rs.length,tot:r2(tot),ins:allins.size,cats:CATS.map(function(c){var a=agg[c];return [c,a.u,r2(a.imp),a.ins.size,Array.from(a.prod.m.keys()).map(function(k){return [k,a.prod.get(k),r2(a.prodimp.get(k))];})];})};
+  /* noches que tocan por semanas seguidas de ONE Interno: 2 noches (sábado y domingo) entre cada par de semanas seguidas */
+  var NPID={};ex.forEach(function(e){var k=addl(e[0],e[3]);if(k&&k[1]==='Noches extra'&&(+e[1]||0)>0)NPID[e[2]]=1;});var nexp={jug:0,noches:0,con:0};Object.keys(LN).forEach(function(pid){if(!DCT.hasOwnProperty(pid))return;var w=LN[pid].filter(function(x){return x[0]==='OI';}).map(function(x){return +x[1];}).sort(function(a,b){return a-b;});
+    var g=0;for(var i=1;i<w.length;i++)if(w[i]===w[i-1]+1)g++;if(g){nexp.jug++;nexp.noches+=2*g;if(NPID[pid])nexp.con++;}});
+  out.extras={n:rs.length,tot:r2(tot),ins:allins.size,nexp:nexp,cats:CATS.map(function(c){var a=agg[c];return [c,a.u,r2(a.imp),a.ins.size,Object.keys(a.prod).map(function(k){var x=a.prod[k];
+    return {product:k,units:x.u,amount:r2(x.imp),price:(x.pr.most(1)[0]||[0])[0],prices:x.pr.most(5).map(function(e){return [e[0],e[1]];}),ins:x.ins.size,f1:x.f1,f3:x.f3,amount_f1:r2(x.fi),amount_f3:r2(x.ff)};})];})};
   var INC={OM:[1,0],OJ:[1,0],OI:[2,0],MI:[1,1],MJ:[1,1]};
   var SZ=['Niño 128','Niño 140','Niño 152','Niño 164','Adulto S','Adulto M','Adulto L','Adulto XL'];
   var RB={};rs.forEach(function(r){RB[r.id]=r;});
@@ -163,15 +186,15 @@ function conv(d){
     d[p[1]].forEach(function(e){dm.push({dim:p[0],label:e[0],count:e[1],revenue:p[0]==='mod'?(e[0] in rev?rev[e[0]]:''):''});});});
   d.campwk.forEach(function(e){dm.push({dim:'campwk',label:e[0],count:e[1],revenue:''});});
   d.modrev.forEach(function(e){dm.push({dim:'rev',label:e[0],count:e[1],revenue:''});});
-  dm.push({dim:'rev',label:'Extras',count:d.money.extras,revenue:''});
+  dm.push({dim:'rev',label:'Ingresos adicionales',count:d.money.extras,revenue:''});
   d.paymod.forEach(function(e){dm.push({dim:'paymod',label:e[0]+'|'+e[1],count:e[2],revenue:''});});
   d.tkmod.forEach(function(e){dm.push({dim:'tkmod',label:e[0],count:e[1],revenue:e[2]});});
-  var pr=[];x.cats.forEach(function(c){if(c[4].length)c[4].forEach(function(p){pr.push({product:p[0],category:c[0],units:p[1],amount:p[2]});});else pr.push({product:'(sin ventas todavía)',category:c[0],units:0,amount:0});});
+  var pr=[];x.cats.forEach(function(c){c[4].forEach(function(p){pr.push(Object.assign({category:c[0]},p));});});
   return {kpis:kp.map(function(e){return {metric:e[0],value:e[1]};}),timeline:t,dims:dm,
     stages:d.stage.map(function(s){return {stage:s[0],n:s[1],total:s[2],paid:s[3]};}),
     resid:d.resid||[],
     extras_cat:x.cats.map(function(c){return {category:c[0],units:c[1],amount:c[2],inscriptions:c[3],pct_insc:pyRound(c[3]/Math.max(k.n,1)*100)};}),
-    extras:pr,
+    extras:pr,extras_nexp:[x.nexp||{jug:0,noches:0,con:0}],
     kits_week:d.kits.week.map(function(e){return {week:e[0],blanca:e[1],light_blue:e[2],portero:e[3],black:e[4]};}),
     kits_size:d.kits.size.map(function(e){return {talla:e[0],blanca:e[1],light_blue:e[2],portero:e[3],black:e[4]};}),
     kits_matrix:d.kits.matrix.map(function(e){return {week:e[0],talla:e[1],blanca:e[2],light_blue:e[3],portero:e[4],black:e[5]};})};
