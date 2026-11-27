@@ -277,8 +277,9 @@ Documento vivo con las decisiones tomadas con Pau (director de Campus Experience
   - Campus Protection Plan.
   - Servicios adicionales: transporte (bus externos, bus internos, transfer aeropuerto) y noches extra.
 - **Equipaciones por semana y talla:**
-  - Incluidas por modalidad: ONE MJ/JC = 1 blanca; ONE Interno = 2 blancas; MAX = 1 blanca + 1 light blue.
-  - Las extra y las de portero se cuentan en la primera semana del niño.
+  - Incluidas por modalidad: ONE MJ/JC = 1 blanca; ONE Interno = 2 blancas; MAX = 1 blanca + 1 light blue; institucionales = 1 Black.
+  - Las extra y las de portero se cuentan en la primera semana del niño, por su «Cantidad» (vacía = 1).
+  - Tipos que se muestran: Madrid minikit, light blue y portero; nacionales minikit y portero; institucionales Black y portero. Portero siempre visible.
 - **Canal de origen:** a partir de *utm_source* / *utm_medium* (Email/newsletter, Meta Ads, Instagram/Facebook, Google Ads, Google orgánico, TikTok, ChatGPT, YouTube, LinkedIn, X, Directo/sin dato).
 - **Actualización:** sola cada 15 minutos y con el botón «Actualizar»; si Zoho falla, se muestran los últimos datos guardados.
 - **Diseño del dashboard:** es la referencia de diseño del software (ver apartado 3). **No se rompe su línea estética:** cualquier apartado nuevo usa sus mismos componentes (encabezados destacados en marino con título en Archivo 900 cursiva, cifra grande rosa en Instrument Serif cursiva y subtítulo en cursiva).
@@ -588,6 +589,7 @@ Se asignan automáticamente en este orden, un equipo por nombre y sin repetir de
   - `selfhost/` se mantiene como alternativa.
 - 13/11 (tarde): El acceso «Dashboard» volvió a desaparecer porque `client/index.html` se publicó sin la línea `<script src="dashboard-menu.js" defer>` (no se generó con `build.js`) y este documento se sobrescribió con una copia anterior. Se restaura, se añade **Torrevieja** al dashboard (abierta, Ubicacion = Torrevieja) y se refuerzan las reglas del apartado 1.
 - 13/11: **Almería** abierta también en el dashboard (Ubicacion = Almeria; productos «… Almería»).
+- 27/11: **Equipaciones** rediseñadas (resumen en una fila con incluidas/compradas, gráfica semanal) y tipos según el grupo de la sede.
 - 27/11: **Storage** quitado del dashboard (pestaña y tarjeta de la Portada); cada modalidad tendrá su apartado más adelante.
 - 27/11: **Ingresos adicionales** sustituye a «Extras» en el dashboard (Extras · Campus Protection Plan · Servicios adicionales); se lee la «Cantidad» de cada línea y se distinguen las compras del form 3.
 - 24/11: **Institucionales** conectados al dashboard: Yepes y Argés (equipación Black).

@@ -155,7 +155,7 @@ function build(rs,ex,opt){opt=opt||{};
   function tl(pid){var t=RB[pid].Talla_equipacion;return SZ.indexOf(t)>=0?t:'Sin talla';}
   Object.keys(LN).forEach(function(pid){if(!RB[pid])return;LN[pid].forEach(function(x){if(opt.black){cell(x[1]).add('Black|'+tl(pid),1);return;}var b=INC[x[0]];cell(x[1]).add('Blanca|'+tl(pid),b[0]);cell(x[1]).add('Light blue|'+tl(pid),b[1]);});});
   ex.forEach(function(e){var p=e[0],pid=e[2];if((p!=='Uniforme Oficial Adidas'&&p!=='Uniforme Portero Oficial Adidas')||!RB[pid]||!(LN[pid]&&LN[pid].length))return;
-    var first=Math.min.apply(null,LN[pid].map(function(x){return x[1];}));cell(first).add((p==='Uniforme Oficial Adidas'?(opt.black?'Black':'Blanca'):'Portero')+'|'+tl(pid));if(p==='Uniforme Oficial Adidas')cell(first).add('Compra|'+tl(pid));});
+    var first=Math.min.apply(null,LN[pid].map(function(x){return x[1];}));var u=Math.max(1,+e[5]||1);cell(first).add((p==='Uniforme Oficial Adidas'?(opt.black?'Black':'Blanca'):'Portero')+'|'+tl(pid),u);if(p==='Uniforme Oficial Adidas')cell(first).add('Compra|'+tl(pid),u);});
   var KT=['Blanca','Light blue','Portero','Black','Compra']; /* Compra: minikits/Black comprados aparte (ya sumados en su tipo; no suma al total) */
   var anySin=Object.keys(cells).some(function(w){return Array.from(cells[w].m.keys()).some(function(k){return k.split('|')[1]==='Sin talla';});});
   var SZX=SZ.concat(anySin?['Sin talla']:[]);var WK=[1,2,3,4,5,6,7,8,9];

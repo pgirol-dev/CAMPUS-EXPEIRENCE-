@@ -1159,9 +1159,6 @@ body{margin:0;background:var(--color-bg);color:var(--color-fg);font:14px/1.45 va
     <div class="bh"><span class="num">02</span><h2>Sedes</h2><p>Pulsa una sede para ver su panel completo</p></div>
     <div class="nac-grid" id="nac-grid"></div>
   </section>
-  <section class="grp-k" id="nac-kblk">
-    <div id="nac-khost"></div>
-  </section>
   </div>
 
   <div class="view" id="v-ins">
@@ -1172,9 +1169,6 @@ body{margin:0;background:var(--color-bg);color:var(--color-fg);font:14px/1.45 va
   <section class="blk">
     <div class="bh"><span class="num">02</span><h2>Municipios</h2><p>Pulsa un municipio para ver su panel completo</p></div>
     <div class="nac-grid" id="ins-grid"></div>
-  </section>
-  <section class="grp-k" id="ins-kblk">
-    <div id="ins-khost"></div>
   </section>
   </div>
 
@@ -1693,7 +1687,7 @@ function grpPick(g){const host=$('#kz-gpick');if(!host)return;const keys=g==='na
 function grpShow(g){const k=GSEL[g];const keys=g==='nac'?NAC:INSK;if(!keys.length)return;root.dataset.sede='grp-'+g;window.__KG=g==='ins'?'I':'N';
   kitsTo($('#'+g+'-khost'),'03');useData(grpData(g,k),k==='all'?SN[g]:SN[k]);grpPick(g);
   const kb=$('#kits .bh p');if(kb)kb.textContent=(k==='all'?(g==='nac'?'Suma de todas las sedes nacionales':'Suma de todos los municipios institucionales'):SN[k])+': resumen, pedido semana a semana y desglose por talla. Con esto se hace el pedido.';}
-function go(v){if(v==='stor')v='home';if(v==='madrid')useSede('madrid');if(v==='nac'||v==='ins')grpShow(v);setView(v);}
+function go(v){if(v==='stor')v='home';if(v==='madrid')useSede('madrid');setView(v);}
 {const bk=$('#back-nac');if(bk)bk.onclick=()=>go('nac');}
 const OPEN=['andorra','valencia','malaga','alicante','torrevieja','almeria'];
 function renderNac(G0){G0=G0||{grid:'#nac-grid',tot:'#nac-tot',keys:NAC,src:SEDES,open:OPEN,go:'nac',kind:'sedes nacionales'};const g=$(G0.grid),t=$(G0.tot);if(!g||!t)return;
