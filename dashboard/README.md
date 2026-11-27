@@ -26,7 +26,7 @@ Versión del dashboard que antes vivía en claude.ai, ahora dentro del software 
   - Compradas aparte: «Uniforme Oficial Adidas» = minikit (Black en institucionales) y «Uniforme Portero Oficial Adidas» = portero, por su **Cantidad** (vacía = 1), en la **primera semana** del jugador.
   - Talla: la de la inscripción (`Talla_equipacion`); si no es válida, «Sin talla».
   - Mochilas y jerseys no son equipación: se indican aparte en el resumen (sin talla).
-- **Diseño:** resumen en una fila (total con incluidas / compradas aparte y una tarjeta por tipo), semana a semana en gráfica de columnas (al pulsar una, su pedido por talla), desglose por talla y tabla semana × talla para copiar.
+- **Diseño:** resumen unificado en una tarjeta (arriba las cifras globales: total, por jugador, incluidas, compradas aparte y mochilas/jerseys; debajo un anillo con el % de cada tipo y su leyenda con barra; al pasar el ratón se resalta el tipo), semana a semana en gráfica de columnas (al pulsar una, su pedido por talla), desglose por talla y tabla semana × talla para copiar.
 - Campo nuevo `compra` en `kits_week`, `kits_size` y `kits_matrix`: minikits/Black comprados (ya sumados en su tipo).
 - El apartado de equipaciones por grupo en Nacionales e Institucionales (`grpShow`) está preparado pero sin activar.
 

@@ -589,7 +589,7 @@ Se asignan automáticamente en este orden, un equipo por nombre y sin repetir de
   - `selfhost/` se mantiene como alternativa.
 - 13/11 (tarde): El acceso «Dashboard» volvió a desaparecer porque `client/index.html` se publicó sin la línea `<script src="dashboard-menu.js" defer>` (no se generó con `build.js`) y este documento se sobrescribió con una copia anterior. Se restaura, se añade **Torrevieja** al dashboard (abierta, Ubicacion = Torrevieja) y se refuerzan las reglas del apartado 1.
 - 13/11: **Almería** abierta también en el dashboard (Ubicacion = Almeria; productos «… Almería»).
-- 27/11: **Equipaciones** rediseñadas (resumen en una fila con incluidas/compradas, gráfica semanal) y tipos según el grupo de la sede.
+- 27/11: **Equipaciones** rediseñadas (resumen unificado: cifras globales arriba y anillo de porcentaje por tipo; gráfica semanal) y tipos según el grupo de la sede.
 - 27/11: **Storage** quitado del dashboard (pestaña y tarjeta de la Portada); cada modalidad tendrá su apartado más adelante.
 - 27/11: **Ingresos adicionales** sustituye a «Extras» en el dashboard (Extras · Campus Protection Plan · Servicios adicionales); se lee la «Cantidad» de cada línea y se distinguen las compras del form 3.
 - 24/11: **Institucionales** conectados al dashboard: Yepes y Argés (equipación Black).

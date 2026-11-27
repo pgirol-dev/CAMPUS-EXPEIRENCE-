@@ -671,6 +671,39 @@ body{margin:0;background:var(--color-bg);color:var(--color-fg);font:14px/1.45 va
 .ce main .card.nat-fact{padding:22px 26px 24px}
 .ce main .card.nat-fact .big{font-size:clamp(3rem,6vw,4.6rem)}
 
+/* ===== Equipaciones: resumen unificado (cifras globales + anillo por tipo) ===== */
+.ce .xt-grid.kz-sum.kz-uni{display:block}
+.ce .ku{background:var(--tilebg);color:var(--tileink);border-radius:12px;border-top:4px solid var(--pink);padding:22px 26px 26px}
+.ce .ku-top{display:grid;grid-template-columns:repeat(var(--kc,5),minmax(0,1fr));border-bottom:1px solid color-mix(in srgb,var(--tileink) 14%,transparent);padding-bottom:18px}
+.ce .ku-s{padding:0 18px;border-left:1px solid color-mix(in srgb,var(--tileink) 14%,transparent);min-width:0}
+.ce .ku-s:first-child{padding-left:0;border-left:0}
+.ce .ku-s b{display:block;font:italic 400 2.5rem/1 "Instrument Serif","Cormorant Garamond",Georgia,serif;color:var(--pink);white-space:nowrap}
+.ce .ku-s:first-child b{font-size:3.4rem}
+.ce .ku-s span{display:block;margin-top:6px;font-family:Archivo,"Arial Black",Impact,sans-serif;font-style:italic;font-weight:900;font-stretch:125%;font-variation-settings:"wdth" 125;text-transform:uppercase;font-size:.72rem;letter-spacing:.02em}
+.ce .ku-s em{display:block;margin-top:2px;font:500 11.5px var(--font);font-style:normal;opacity:.7}
+.ce .ku-body{display:grid;grid-template-columns:240px 1fr;gap:38px;align-items:center;padding-top:22px}
+.ce .ku-ring{position:relative;width:240px;height:240px}
+.ce .ku-ring svg{width:100%;height:100%;overflow:visible}
+.ce .ku-ring path{transition:opacity .2s,transform .25s;cursor:pointer}
+.ce .ku-ring.hl path:not(.on){opacity:.25}
+.ce .ku-ring path.on{transform:scale(1.04)}
+.ce .ku-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none}
+.ce .ku-c b{font:italic 400 3.2rem/1 "Instrument Serif","Cormorant Garamond",Georgia,serif;color:var(--pink)}
+.ce .ku-c span{margin-top:4px;font:700 10.5px var(--font);letter-spacing:.08em;text-transform:uppercase;opacity:.75}
+.ce .ku-leg{display:flex;flex-direction:column;gap:6px}
+.ce .ku-r{all:unset;box-sizing:border-box;cursor:default;display:grid;grid-template-columns:16px 1fr auto auto;gap:4px 16px;align-items:center;padding:12px 14px;border-radius:10px;transition:background .2s}
+.ce .ku-r:hover,.ce .ku-r.on{background:color-mix(in srgb,var(--tileink) 6%,transparent)}
+.ce .ku-r .ku-d{width:14px;height:14px;border-radius:50%}
+.ce .ku-r .ku-d.kwhite{box-shadow:inset 0 0 0 2px var(--navy,#0f2145)}
+.ce .ku-r .ku-n{font-family:Archivo,"Arial Black",Impact,sans-serif;font-style:italic;font-weight:900;font-stretch:125%;font-variation-settings:"wdth" 125;text-transform:uppercase;font-size:.85rem}
+.ce .ku-r .ku-v{font:italic 400 2rem/1 "Instrument Serif","Cormorant Garamond",Georgia,serif;color:var(--pink);text-align:right}
+.ce .ku-r .ku-p{font:800 13px var(--font);min-width:3.2em;text-align:right;opacity:.8}
+.ce .ku-r .ku-g{grid-column:2/-1;font:500 12px var(--font);opacity:.7}
+.ce .ku-r .ku-b{grid-column:2/-1;height:5px;border-radius:3px;background:color-mix(in srgb,var(--tileink) 10%,transparent);overflow:hidden}
+.ce .ku-r .ku-b i{display:block;height:100%;border-radius:3px;transition:width .6s cubic-bezier(.2,.7,.2,1)}
+.ce .ku-r.zero .ku-v,.ce .ku-r.zero .ku-p{opacity:.45}
+@media(max-width:900px){.ce .ku-top{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:16px}.ce .ku-s:nth-child(4){padding-left:0;border-left:0}.ce .ku-body{grid-template-columns:1fr;justify-items:center}.ce .ku-leg{width:100%}}
+@media(max-width:520px){.ce .ku{padding:18px}.ce .ku-top{grid-template-columns:1fr 1fr}.ce .ku-s{padding:0;border-left:0}.ce .ku-ring{width:200px;height:200px}}
 /* ===== Equipaciones: resumen en una fila, gráfica semanal y apartado de grupo ===== */
 .ce .xt-grid.kz-sum.kz-row{grid-template-columns:1.5fr repeat(var(--kn,3),1fr);align-items:stretch}
 .ce .kz-row .xt.kz-band{grid-column:auto;grid-template-columns:1fr;align-content:start}
@@ -1965,20 +1998,28 @@ dash.onData(()=>{
   const KV=[KB,KL,KP,KK];
   {const g=$('#kz-sum');
     const XR=(D.extras&&D.extras.data)||[];const xu=re=>d3.sum(XR.filter(r=>re.test(r.product||'')),r=>+r.units||0);const MO=xu(/mochila/i),JE=xu(/jersey/i);
-    const band=mk('<b class="xt-v"></b><span class="xt-n">Total equipaciones</span><em class="xt-a"></em><em class="xt-b"></em><div class="kz-split"></div><div class="kz-leg"></div><div class="kz-inc"></div>','xt xt-all kz-band');band.style.setProperty('--pc','#ea456c');
-    $('.xt-v',band).textContent=f(GT);$('.xt-a',band).textContent='para '+f(+KN)+' jugadores con pago';$('.xt-b',band).textContent=(+KN?(GT/+KN).toLocaleString('es-ES',{minimumFractionDigits:1,maximumFractionDigits:1}):'0')+' equipaciones por jugador de media';
-    const sp=$('.kz-split',band),lg=$('.kz-leg',band);KI.forEach(i=>{const v=KV[i];const l=document.createElement('span');l.innerHTML=kdot(i)+KNAME[i]+' <b></b>';$('b',l).textContent=f(v);lg.appendChild(l);if(!v)return;const e=document.createElement('div');e.style.flex=String(v);e.style.background=KCOL[i];if(i===0)e.classList.add('kwhite');if(i===3)e.classList.add('kblk');e.textContent=v/(GT||1)>.08?f(v):'';hover(e,KNAME[i]+': '+f(v)+' ('+pct(v,GT||1)+')');sp.appendChild(e);});
-    const bought=KC+KP,inc=GT-bought;
-    $('.kz-inc',band).innerHTML='<span><b></b> incluidas en la inscripción</span><span><b></b> compradas aparte</span>'+(MO||JE?'<span>Además <b></b> mochilas y <b></b> jerseys</span>':'');
-    {const bb=band.querySelectorAll('.kz-inc b');bb[0].textContent=f(inc);bb[1].textContent=f(bought);if(bb[2]){bb[2].textContent=f(MO);bb[3].textContent=f(JE);}}
-    hover(band,'Total de equipaciones: '+f(inc)+' incluidas en la inscripción y '+f(bought)+' compradas aparte (se entregan en la primera semana del jugador)'+(MO||JE?'. Mochilas y jerseys van aparte, sin talla.':''));
-    const RC=['#5e6a83','#7cc4ec','#3faa6c','#1d2030'];
-    const tile=(i,v,name,tag)=>{const p=GT?v/GT*100:0;const d=mk('<div class="kt-ring"><b></b></div><div class="kt-t"><b class="kt-v"></b><span class="kt-n"></span><em class="kt-g"></em></div>','kt'+(v?'':' zero'));d.style.setProperty('--pc',RC[i]);d.style.setProperty('--p',p.toFixed(1));
-      $('.kt-ring b',d).textContent=Math.round(p)+'%';$('.kt-v',d).textContent=v?f(v):'0';$('.kt-n',d).textContent=name;const g2=$('.kt-g',d);if(tag)g2.textContent=tag;else g2.remove();hover(d,name+': '+f(v)+' ('+pct(v,GT||1)+' del pedido)'+(tag?' · '+tag:''));return d;};
-    const main=KG==='I'?3:0,mv=KV[main];
-    const tags={[main]:f(mv-KC)+' incluidas · '+f(KC)+' compradas',2:KP?'todas compradas aparte':'sin ventas todavía',1:'incluida en MAX'};
-    g.classList.add('kz-row');g.style.setProperty('--kn',KI.length);g.style.gridTemplateColumns='';
-    g.replaceChildren(band,...KI.map(i=>tile(i,KV[i],KNAME[i],tags[i]||'')));}
+    const bought=KC+KP,inc=GT-bought,main=KG==='I'?3:0;
+    const d1=v=>v.toLocaleString('es-ES',{minimumFractionDigits:1,maximumFractionDigits:1});
+    const card=mk('<div class="ku-top"></div><div class="ku-body"><div class="ku-ring"><svg viewBox="-120 -120 240 240" role="img"></svg><div class="ku-c"><b></b><span>equipaciones</span></div></div><div class="ku-leg"></div></div>','ku');
+    const ST2=[[f(GT),'Total equipaciones','para '+f(+KN)+' jugadores con pago'],[+KN?d1(GT/+KN):'0','Por jugador','de media'],[f(inc),'Incluidas','en la inscripción'],[f(bought),'Compradas aparte','minikits y portero'+(KG==='I'?' · Black':'')]];
+    if(MO||JE)ST2.push([f(MO+JE),'Mochilas y jerseys',f(MO)+' mochilas · '+f(JE)+' jerseys · sin talla']);
+    const top=$('.ku-top',card);top.style.setProperty('--kc',ST2.length);
+    ST2.forEach(([v,l,sub])=>{const e=mk('<b></b><span></span><em></em>','ku-s');$('b',e).textContent=v;$('span',e).textContent=l;$('em',e).textContent=sub;top.appendChild(e);});
+    $('.ku-c b',card).textContent=f(GT);
+    const ring=$('.ku-ring',card),svg=d3.select($('svg',card));svg.attr('aria-label','Equipaciones por tipo');
+    const pd=KI.map(i=>({i,v:KV[i]}));const arcs=d3.pie().sort(null).value(d=>d.v).padAngle(GT?.018:0)(pd.filter(d=>d.v>0));
+    const arc=d3.arc().innerRadius(84).outerRadius(118).cornerRadius(4);
+    if(!GT)svg.append('circle').attr('r',101).attr('fill','none').attr('stroke','currentColor').attr('stroke-opacity',.12).attr('stroke-width',34);
+    const leg=$('.ku-leg',card);const rows={};
+    const tags={[main]:f(KV[main]-KC)+' incluidas · '+f(KC)+' compradas aparte',2:KP?'todas compradas aparte':'sin ventas todavía',1:'incluida en MAX (1 por semana)'};
+    const on=i=>{ring.classList.toggle('hl',i!=null);svg.selectAll('path').classed('on',d=>d.data.i===i);Object.keys(rows).forEach(k=>rows[k].classList.toggle('on',+k===i));$('.ku-c b',card).textContent=i==null?f(GT):f(KV[i]);$('.ku-c span',card).textContent=i==null?'equipaciones':KNAME[i].toLowerCase()+' · '+pct(KV[i],GT||1);};
+    svg.selectAll('path').data(arcs).join('path').attr('d',arc).attr('fill',d=>KCOL[d.data.i]).attr('stroke',d=>d.data.i===0?'#0f2145':'none').attr('stroke-width',d=>d.data.i===0?1.5:0)
+      .on('mouseenter',(e,d)=>on(d.data.i)).on('mouseleave',()=>on(null));
+    KI.forEach(i=>{const v=KV[i],p=GT?v/GT*100:0;const r=mk('<i class="ku-d"></i><span class="ku-n"></span><b class="ku-v"></b><em class="ku-p"></em><span class="ku-g"></span><div class="ku-b"><i></i></div>','ku-r'+(v?'':' zero'));
+      const dt=$('.ku-d',r);dt.style.background=KCOL[i];if(i===0)dt.classList.add('kwhite');$('.ku-n',r).textContent=KNAME[i];$('.ku-v',r).textContent=f(v);$('.ku-p',r).textContent=GT?Math.round(p)+'%':'—';$('.ku-g',r).textContent=tags[i]||'';
+      const bi=$('.ku-b i',r);bi.style.background=i===0?'#0f2145':KCOL[i];bi.style.width='0%';requestAnimationFrame(()=>requestAnimationFrame(()=>{bi.style.width=p+'%';}));
+      r.onmouseenter=()=>on(i);r.onmouseleave=()=>on(null);rows[i]=r;leg.appendChild(r);});
+    g.classList.remove('kz-row');g.classList.add('kz-uni');g.style.gridTemplateColumns='';g.replaceChildren(card);}
   const kweeks=[...new Set(KMX.map(r=>r.w))].sort((a,b)=>a-b);
   const kwk=kweeks.map(w=>({w,rows:KMX.filter(r=>r.w===w)}));const kmaxw=Math.max(...kwk.map(x=>ktot(x.rows)),1);
   let kselW=null;
