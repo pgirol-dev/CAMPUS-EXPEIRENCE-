@@ -31,9 +31,9 @@ module.exports = function makeDashboard(zohoCoql) {
     const seen = {}, rs = [];
     rows.forEach(r => { if (!seen[r.id]) { seen[r.id] = 1; rs.push(r); } });
     if (!rs.length) return { rs: [], ex: [] };
-    const L = await coql("select Producto, Importe, Parent_Id, Noches_extra, Semana1 from Campus_y_servicios_extra where (((Parent_Id.Ano_Campus = 2027 and Parent_Id." + campo + " = '" + ub + "') and Parent_Id.Stage not in " + STG + ") and Importe is not null) order by Created_Time asc", 2000);
+    const L = await coql("select Producto, Importe, Parent_Id, Noches_extra, Semana1, Cantidad, Created_Time from Campus_y_servicios_extra where (((Parent_Id.Ano_Campus = 2027 and Parent_Id." + campo + " = '" + ub + "') and Parent_Id.Stage not in " + STG + ") and Importe is not null) order by Created_Time asc", 2000);
     const sl = {}, ex = [];
-    L.forEach(r => { const pid = r.Parent_Id && r.Parent_Id.id; if (sl[r.id] || !seen[pid]) return; sl[r.id] = 1; ex.push([r.Producto && r.Producto.name, r.Importe, pid, r.Noches_extra, r.Semana1]); });
+    L.forEach(r => { const pid = r.Parent_Id && r.Parent_Id.id; if (sl[r.id] || !seen[pid]) return; sl[r.id] = 1; ex.push([r.Producto && r.Producto.name, r.Importe, pid, r.Noches_extra, r.Semana1, r.Cantidad, r.Created_Time]); });
     return { rs, ex };
   }
   /* prevN: registros de Madrid de la última versión buena (si baja más de un 10 %, no se acepta) */
