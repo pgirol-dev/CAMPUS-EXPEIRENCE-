@@ -1887,7 +1887,7 @@ try{rzInit();}catch(e){console.error(e);}
 
 
 dash.onData(()=>{
-  const ids=['kpis','timeline','dims','stages','extras_cat','extras','kits_week','kits_size','kits_matrix'];if(!(window.__CUR||DATA).extras_nexp)(window.__CUR||DATA).extras_nexp=[{jug:0,noches:0}];
+  const ids=['kpis','timeline','dims','stages','extras_cat','extras','kits_week','kits_size','kits_matrix'];if(!(window.__CUR||DATA).extras_nexp)(window.__CUR||DATA).extras_nexp=[{jug:0,noches:0,con:0}];
   const D=Object.fromEntries(ids.map(i=>[i,dash.data(i)]));
   const ok=ids.slice(0,8).every(i=>D[i].status==='ok');
   const targets=['#tl','#d-mod','#l-mod','#s-gen','#s-pos','#c-age','#c-wk','#b-nat','#d-rev','#l-rev','#cobro','#paybox','#b-src','#b-promo','#b-col'].map(s=>$(s));
@@ -1984,8 +1984,8 @@ dash.onData(()=>{
     $('.xt-v',nb).textContent=nr.units?eur(nr.amount):'—';
     const rr=nb.querySelectorAll('.xd-nr');rr[0].innerHTML='<span><b></b>noches automáticas</span><span><b></b>noches del form 3</span>';const bb=rr[0].querySelectorAll('b');bb[0].textContent=f(auto);bb[1].textContent=f(f3);
     rr[1].textContent=(nr.units?f(nr.ins)+' jugadores · ':'Sin noches extra todavía · ')+eur(pr)+' cada noche';
-    const ck=$('.xd-chk',nb);ck.textContent=NEXP.noches?'Por semanas seguidas de ONE Interno tocan '+f(NEXP.noches)+' noches ('+f(NEXP.jug)+' jugadores)'+(auto===NEXP.noches?' ✓ cuadra':' · cobradas '+f(auto)):'Ningún jugador con pago tiene dos semanas seguidas de ONE Interno';if(NEXP.noches&&auto!==NEXP.noches)ck.classList.add('bad');
-    hover(nb,'Noches extra: las automáticas se cobran al juntar dos semanas seguidas de ONE Interno (2 noches por cada par); las del form 3 se contratan después como servicio adicional.');
+    const ck=$('.xd-chk',nb);const nc=+NEXP.con||0;ck.textContent=NEXP.jug?f(NEXP.jug)+(NEXP.jug===1?' jugador':' jugadores')+' con dos semanas seguidas de ONE Interno · '+f(nc)+' con noches extra y '+f(NEXP.jug-nc)+' sin ellas (lo eligen en el form)':'Ningún jugador con pago tiene dos semanas seguidas de ONE Interno';
+    hover(nb,'Noches extra: al juntar dos semanas seguidas de ONE Interno el jugador elige en el form si quiere las dos noches (sábado y domingo); también se pueden contratar después en el form 3. Las cifras suman lo ingresado.');
     box.replaceChildren(head('Servicios adicionales','Transporte (bus de externos, bus de internos y transfer al aeropuerto) y noches extra',ta,uds(ttu+nr.units,['servicio','servicios'])),sT,tiles,sN,nb);}}
   /* resumen arriba: total y las tres categorías */
   {const xg=$('#ex-cards');

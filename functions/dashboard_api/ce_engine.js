@@ -144,8 +144,8 @@ function build(rs,ex,opt){opt=opt||{};
     var lt=Date.parse(e[6]||'')||0,dt=DCT[pid]||0,f3=!!(lt&&dt&&lt-dt>30*60000);if(f3){x.f3+=u;x.ff+=imp;}else{x.f1+=u;x.fi+=imp;}});
   var tot=CATS.reduce(function(s,c){return s+agg[c].imp;},0);var allins=new Set();CATS.forEach(function(c){agg[c].ins.forEach(function(i){allins.add(i);});});
   /* noches que tocan por semanas seguidas de ONE Interno: 2 noches (sábado y domingo) entre cada par de semanas seguidas */
-  var nexp={jug:0,noches:0};Object.keys(LN).forEach(function(pid){if(!DCT.hasOwnProperty(pid))return;var w=LN[pid].filter(function(x){return x[0]==='OI';}).map(function(x){return +x[1];}).sort(function(a,b){return a-b;});
-    var g=0;for(var i=1;i<w.length;i++)if(w[i]===w[i-1]+1)g++;if(g){nexp.jug++;nexp.noches+=2*g;}});
+  var NPID={};ex.forEach(function(e){var k=addl(e[0],e[3]);if(k&&k[1]==='Noches extra'&&(+e[1]||0)>0)NPID[e[2]]=1;});var nexp={jug:0,noches:0,con:0};Object.keys(LN).forEach(function(pid){if(!DCT.hasOwnProperty(pid))return;var w=LN[pid].filter(function(x){return x[0]==='OI';}).map(function(x){return +x[1];}).sort(function(a,b){return a-b;});
+    var g=0;for(var i=1;i<w.length;i++)if(w[i]===w[i-1]+1)g++;if(g){nexp.jug++;nexp.noches+=2*g;if(NPID[pid])nexp.con++;}});
   out.extras={n:rs.length,tot:r2(tot),ins:allins.size,nexp:nexp,cats:CATS.map(function(c){var a=agg[c];return [c,a.u,r2(a.imp),a.ins.size,Object.keys(a.prod).map(function(k){var x=a.prod[k];
     return {product:k,units:x.u,amount:r2(x.imp),price:(x.pr.most(1)[0]||[0])[0],prices:x.pr.most(5).map(function(e){return [e[0],e[1]];}),ins:x.ins.size,f1:x.f1,f3:x.f3,amount_f1:r2(x.fi),amount_f3:r2(x.ff)};})];})};
   var INC={OM:[1,0],OJ:[1,0],OI:[2,0],MI:[1,1],MJ:[1,1]};
@@ -194,7 +194,7 @@ function conv(d){
     stages:d.stage.map(function(s){return {stage:s[0],n:s[1],total:s[2],paid:s[3]};}),
     resid:d.resid||[],
     extras_cat:x.cats.map(function(c){return {category:c[0],units:c[1],amount:c[2],inscriptions:c[3],pct_insc:pyRound(c[3]/Math.max(k.n,1)*100)};}),
-    extras:pr,extras_nexp:[x.nexp||{jug:0,noches:0}],
+    extras:pr,extras_nexp:[x.nexp||{jug:0,noches:0,con:0}],
     kits_week:d.kits.week.map(function(e){return {week:e[0],blanca:e[1],light_blue:e[2],portero:e[3],black:e[4]};}),
     kits_size:d.kits.size.map(function(e){return {talla:e[0],blanca:e[1],light_blue:e[2],portero:e[3],black:e[4]};}),
     kits_matrix:d.kits.matrix.map(function(e){return {week:e[0],talla:e[1],blanca:e[2],light_blue:e[3],portero:e[4],black:e[5]};})};

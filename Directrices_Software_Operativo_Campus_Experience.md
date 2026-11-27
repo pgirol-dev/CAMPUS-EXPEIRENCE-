@@ -272,11 +272,10 @@ Documento vivo con las decisiones tomadas con Pau (director de Campus Experience
 - **Modalidad por inscripción:** sale de las líneas semanales (producto de cada semana). Si una aplicación tiene más de una modalidad cuenta como «Varias»; sin líneas, se usa *Tipo_Modalidad*.
 - **Semanas por inscripción:** de las líneas semanales; si no hay, del campo *Weeks*.
 - **Facturación por modalidad:** el importe de programa (Total − extras) se reparte entre sus líneas semanales en proporción a su importe.
-- **Extras por categoría:**
-  - Equipaciones (productos «Uniforme…»).
+- **Ingresos adicionales por bloque** (se suma el importe ingresado; unidades por «Cantidad»):
+  - Extras: minikit, kit de portero, mochila Adidas ONE y jersey Adidas.
   - Campus Protection Plan.
-  - Noches extra.
-  - Buses y transfers.
+  - Servicios adicionales: transporte (bus externos, bus internos, transfer aeropuerto) y noches extra.
 - **Equipaciones por semana y talla:**
   - Incluidas por modalidad: ONE MJ/JC = 1 blanca; ONE Interno = 2 blancas; MAX = 1 blanca + 1 light blue.
   - Las extra y las de portero se cuentan en la primera semana del niño.
@@ -287,7 +286,7 @@ Documento vivo con las decisiones tomadas con Pau (director de Campus Experience
 - **Mapa de calor de España (Madrid):** jugadores con pago de Madrid por provincia de residencia (dirección postal del contacto: código postal y, si no sirve, provincia). Los que viven fuera de España se indican como internacionales. Va entre Nacionalidades y Género. Color por tramos del rosa al marino.
 - **Institucionales:** Yepes y Argés abiertos (24/11). Se leen por `Ubicacion_Institucionales`; solo media jornada; equipación incluida Black. Salen en la vista Institucionales, la Portada, el ritmo, el mapamundi y Storage.
 - **Mapamundi (Portada):** debajo del ritmo; país de residencia de todas las sedes; proyección Miller; ranking sin banderas.
-- **Extras:** Equipación incluye uniformes, mochila y jersey; Transporte, autobuses y transfers. Desglose con una tarjeta por producto.
+- **Ingresos adicionales (antes «Extras»):** tres bloques, Extras (minikit, portero, mochila, jersey), Campus Protection Plan y Servicios adicionales (transporte desglosado por servicio y noches extra automáticas y del form 3). Cuenta el dinero ingresado; dos semanas de ONE Interno sin noches extra no es un error (lo eligen en el form).
 - **Residencias (Madrid):** UAM y UEM, semanas 2 a 8. Cuentan los jugadores con pago de MAX Interno y ONE Interno (sin noches extra). Por semana: bloqueo editable por residencia, residencia abierta o cerrada, y cada modalidad asignada a una residencia o dividida entre las dos. Plazas contratadas editables por residencia y total combinado arriba. Rojo por debajo del bloqueo, ámbar desde el 80 %, verde con ✓ al cubrirlo.
 - **Permiso de residencias:** editan los administradores y quien tenga **Dashboard › Residencias: Editar** en *Administración › Usuarios*. Esa entrada del catálogo de permisos (`k: "dashboard"` en `campus_api`) **no se quita** al publicar versiones nuevas del software.
 
@@ -589,6 +588,7 @@ Se asignan automáticamente en este orden, un equipo por nombre y sin repetir de
   - `selfhost/` se mantiene como alternativa.
 - 13/11 (tarde): El acceso «Dashboard» volvió a desaparecer porque `client/index.html` se publicó sin la línea `<script src="dashboard-menu.js" defer>` (no se generó con `build.js`) y este documento se sobrescribió con una copia anterior. Se restaura, se añade **Torrevieja** al dashboard (abierta, Ubicacion = Torrevieja) y se refuerzan las reglas del apartado 1.
 - 13/11: **Almería** abierta también en el dashboard (Ubicacion = Almeria; productos «… Almería»).
+- 27/11: **Ingresos adicionales** sustituye a «Extras» en el dashboard (Extras · Campus Protection Plan · Servicios adicionales); se lee la «Cantidad» de cada línea y se distinguen las compras del form 3.
 - 24/11: **Institucionales** conectados al dashboard: Yepes y Argés (equipación Black).
 - 20/11: **Mapamundi** en la Portada (proyección Miller, sin banderas) y **extras** actualizados (mochila, jersey, transporte) con desglose por producto. El autobús pasa a contar como extra.
 - 19/11: **Mapa de calor de España** en la vista Madrid (provincia de residencia). El mapa mundial de la Portada se descartó.

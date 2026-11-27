@@ -25,10 +25,20 @@ Versión del dashboard que antes vivía en claude.ai, ahora dentro del software 
 - **Diseño:** mapa a todo el ancho en proyección Miller (la Equal Earth se veía deformada), color por tramos (1, 2–4, 5–9, 10–19, 20 o más); debajo, tarjeta marino con el número de países e internacionales y ranking de los 8 primeros (resalta el país en el mapa). **Sin banderas** (decisión de Pau).
 - Contornos: `countries.geo.json` (johan/world.geo.json), simplificados e incrustados (`W_GEO`); Andorra, Singapur y Baréin como punto.
 
-## Extras (actualizado el 20 nov)
-- **Equipación** = uniforme oficial, uniforme de portero, **mochila** y **jersey**. **Transporte** = autobuses y transfers («Campus Experience Autobus No Interno», «Servicio de Transfer Aeropuerto»…).
-- Todo lo que no es una semana de campus cuenta como extra (antes el autobús, al empezar por «Campus Experience», se sumaba al precio del programa).
-- **Desglose:** bajo las tarjetas de extras, un bloque de Equipación y otro de Transporte con una tarjeta por producto (importe, unidades, precio por unidad y % dentro del bloque). Los productos del catálogo salen aunque no tengan ventas.
+## Ingresos adicionales (Madrid, desde el 27 nov; antes «Extras»)
+- Todo lo que no es una semana de campus, comprado en el form 1 (inscripción) o en el form 3 (después). Se leen todas las líneas de `Campus_y_servicios_extra` del pedido.
+- **Se suma siempre el dinero ingresado** (campo `Importe`). El precio que se enseña es solo informativo (el más habitual de la línea).
+- **Unidades = `Cantidad`** de la línea (vacía = 1).
+- **Origen:** una línea creada más de 30 minutos después de la inscripción cuenta como form 3.
+- Tres bloques (`addl()` en `ce_engine.js`):
+  - **Extras:** Minikit («Uniforme Oficial Adidas»), Kit de portero («Uniforme Portero…»), Mochila Adidas ONE, Jersey Adidas.
+  - **Campus Protection Plan:** Jornada Completa e Interno.
+  - **Servicios adicionales:**
+    - Transporte: **Bus externos** («Autobus No Interno», diario desde Zona Bernabéu), **Bus internos** («Autobus interno» / «MAX Autobus interno», desde Zona Bernabéu) y **Transfer aeropuerto** («Servicio de Transfer Aeropuerto» / «Transfer interno»). Importe y número de servicios de cada uno.
+    - **Noches extra** (productos con «noche»): las que se cobran al inscribirse con dos semanas seguidas de ONE Interno (el jugador elige en el form si quiere las dos noches, sábado y domingo; si no las quiere **no es un error**) y las del form 3.
+- Debajo de las noches se informa de cuántos jugadores con pago tienen dos semanas seguidas de ONE Interno y cuántos han cogido noches (`extras_nexp`).
+- Los productos del catálogo salen aunque no tengan ventas.
+- El «Servicio de autobús» de la línea semanal no suma (solo cuenta lo cobrado); «Ciudad Real Madrid» como parada es un error de datos.
 
 ## Mapa de calor de España (Madrid, desde el 19 nov)
 - Tarjeta en «Perfil del jugador» de la vista Madrid, entre «Edad / Nacionalidades» y «Género y posición». Solo jugadores con pago de Madrid (ONE y MAX); no sale en las sedes nacionales.
