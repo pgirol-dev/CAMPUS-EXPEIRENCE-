@@ -279,7 +279,7 @@ Documento vivo con las decisiones tomadas con Pau (director de Campus Experience
 - **Equipaciones por semana y talla:**
   - Incluidas por modalidad: ONE MJ/JC = 1 blanca; ONE Interno = 2 blancas; MAX = 1 blanca + 1 light blue; institucionales = 1 Black.
   - Las extra y las de portero se cuentan en la primera semana del niño, por su «Cantidad» (vacía = 1).
-  - Mochila: 1 por semana contratada (ONE en programas ONE, MAX en MAX) + las compradas; jersey solo comprado, con la talla del jugador. Extras en la primera semana.
+  - Mochila: 1 por semana contratada (ONE en programas ONE, MAX en MAX) + las compradas, que siempre son ONE (también para jugadores MAX); jersey solo comprado, con la talla del jugador. Extras en la primera semana.
   - Tipos que se muestran: Madrid minikit, light blue y portero; nacionales minikit y portero; institucionales Black y portero. Portero siempre visible.
 - **Canal de origen:** a partir de *utm_source* / *utm_medium* (Email/newsletter, Meta Ads, Instagram/Facebook, Google Ads, Google orgánico, TikTok, ChatGPT, YouTube, LinkedIn, X, Directo/sin dato).
 - **Actualización:** sola cada 15 minutos y con el botón «Actualizar»; si Zoho falla, se muestran los últimos datos guardados.

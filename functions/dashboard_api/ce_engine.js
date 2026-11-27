@@ -158,10 +158,10 @@ function build(rs,ex,opt){opt=opt||{};
   Object.keys(LN).forEach(function(pid){if(!RB[pid])return;LN[pid].forEach(function(x){cell(x[1]).add((x[0]==='MI'||x[0]==='MJ'?'MochMAX':'MochONE')+'|Única',1);});});
   ex.forEach(function(e){var p=e[0],pid=e[2];if((p!=='Uniforme Oficial Adidas'&&p!=='Uniforme Portero Oficial Adidas')||!RB[pid]||!(LN[pid]&&LN[pid].length))return;
     var first=Math.min.apply(null,LN[pid].map(function(x){return x[1];}));var u=Math.max(1,+e[5]||1);cell(first).add((p==='Uniforme Oficial Adidas'?(opt.black?'Black':'Blanca'):'Portero')+'|'+tl(pid),u);if(p==='Uniforme Oficial Adidas')cell(first).add('Compra|'+tl(pid),u);});
-  /* mochilas y jerseys comprados aparte: en la primera semana del jugador, por su Cantidad; el jersey con la talla del jugador */
+  /* mochilas (siempre ONE) y jerseys comprados aparte: en la primera semana del jugador, por su Cantidad; el jersey con la talla del jugador */
   ex.forEach(function(e){var p=String(e[0]||''),pid=e[2],q=p.toLowerCase();if(!RB[pid]||!(LN[pid]&&LN[pid].length))return;var isM=q.indexOf('mochila')===0,isJ=q.indexOf('jersey')===0;if(!isM&&!isJ)return;
     var first=Math.min.apply(null,LN[pid].map(function(x){return x[1];})),u=Math.max(1,+e[5]||1);
-    if(isM){cell(first).add((/\bmax\b/i.test(p)?'MochMAX':'MochONE')+'|Única',u);cell(first).add('MochCompra|Única',u);}else cell(first).add('Jersey|'+tl(pid),u);});
+    if(isM){cell(first).add('MochONE|Única',u); /* toda mochila comprada aparte es ONE, también para jugadores MAX */cell(first).add('MochCompra|Única',u);}else cell(first).add('Jersey|'+tl(pid),u);});
   var KT=['Blanca','Light blue','Portero','Black','Compra','MochONE','MochMAX','Jersey','MochCompra']; /* Compra: minikits/Black comprados aparte (ya sumados en su tipo; no suma al total) */
   var anySin=Object.keys(cells).some(function(w){return Array.from(cells[w].m.keys()).some(function(k){return k.split('|')[1]==='Sin talla';});});
   var SZX=SZ.concat(anySin?['Sin talla']:[]).concat(['Única']);var WK=[1,2,3,4,5,6,7,8,9];
