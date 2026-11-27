@@ -713,6 +713,27 @@ body{margin:0;background:var(--color-bg);color:var(--color-fg);font:14px/1.45 va
 .ce .mun-intl .lt{font-family:Archivo,"Arial Black",Impact,sans-serif;font-style:italic;font-weight:900;font-size:.62rem;text-transform:uppercase;margin-right:2px}
 .ce .mun-intl b{font-weight:800;color:var(--pink);margin-left:4px}
 .ce .mun-intl .nd{opacity:.65}
+/* lista de municipios del mapa (se abre al pasar por encima del botón) */
+.ce .mun-mlw{position:relative}
+.ce .mun-ml{position:absolute;right:calc(100% + 8px);top:0;width:min(280px,70vw);max-height:340px;overflow:auto;display:none;padding:6px;border-radius:12px;background:color-mix(in srgb,var(--tilebg) 96%,transparent);backdrop-filter:blur(8px);box-shadow:0 12px 32px rgba(15,33,69,.22);z-index:5}
+.ce .mun-mlw:hover .mun-ml,.ce .mun-mlw:focus-within .mun-ml,.ce .mun-mlw.open .mun-ml{display:block}
+.ce .mun-ml button{all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;font:600 12.5px var(--font);color:var(--tileink)}
+.ce .mun-ml button:hover,.ce .mun-ml button:focus-visible{background:color-mix(in srgb,var(--pink) 10%,transparent)}
+.ce .mun-ml button b{font:italic 400 1.15rem/1 "Instrument Serif",Georgia,serif;color:var(--pink)}
+.ce .mun-ml button i{display:inline-flex;gap:2px}.ce .mun-ml button i s{display:block;width:8px;height:8px;border-radius:50%;background:var(--sc)}
+.ce .mun-ml .ml-h{font:800 10px var(--font);letter-spacing:.06em;text-transform:uppercase;color:var(--pink);grid-template-columns:1fr}
+.ce .mun-ml .ml-t{padding:6px 10px 4px;font:800 10px var(--font);letter-spacing:.06em;text-transform:uppercase;opacity:.6}
+/* ===== Mapa común de las sedes nacionales ===== */
+.ce .nm-pick{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:4px}
+.ce .nm-pick button{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:var(--tilebg);color:var(--tileink);border:1.5px solid color-mix(in srgb,var(--tileink) 14%,transparent);font:800 10.5px var(--font);letter-spacing:.06em;text-transform:uppercase;transition:all .2s}
+.ce .nm-pick button i{width:12px;height:12px;border-radius:50%;background:var(--sc);box-shadow:0 0 0 2px color-mix(in srgb,var(--sc) 25%,transparent)}
+.ce .nm-pick button b{font:italic 400 1.05rem/1 "Instrument Serif",Georgia,serif;color:var(--pink);letter-spacing:0;text-transform:none}
+.ce .nm-pick button[aria-pressed=true]{border-color:var(--sc);background:color-mix(in srgb,var(--sc) 12%,var(--tilebg))}
+.ce .nm-pick button[aria-pressed=false]{opacity:.45}
+.ce .nm-pick button[aria-pressed=false] i{background:transparent;box-shadow:inset 0 0 0 2px var(--sc)}
+.ce .nm-pick button:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+.ce .nm-pick .all{border-style:dashed}
+.ce .map-leg .nm-sh{display:inline-flex;gap:2px;margin-left:4px}.ce .map-leg .nm-sh i{width:14px;height:10px;border-radius:2px}
 /* ===== Equipaciones: resumen unificado (cifras globales + anillo por tipo) ===== */
 .ce .xt-grid.kz-sum.kz-uni{display:block}
 .ce .ku{background:var(--tilebg);color:var(--tileink);border-radius:12px;border-top:4px solid var(--pink);padding:22px 26px 26px}
@@ -1231,6 +1252,19 @@ body{margin:0;background:var(--color-bg);color:var(--color-fg);font:14px/1.45 va
     <div class="bh"><span class="num">02</span><h2>Sedes</h2><p>Pulsa una sede para ver su panel completo</p></div>
     <div class="nac-grid" id="nac-grid"></div>
   </section>
+  <section class="blk">
+    <div class="bh"><span class="num">03</span><h2>Mapa de calor</h2><p>De dónde vienen los jugadores de cada sede nacional. Activa o desactiva cada sede</p></div>
+    <div class="card mapcard mun" id="mapa-nac">
+      <div class="nm-pick" id="nm-pick" role="group" aria-label="Sedes del mapa"></div>
+      <div class="mun-box">
+        <svg id="m-nmun" class="munsvg" role="img" aria-label="Mapa de calor por municipio de todas las sedes nacionales"></svg>
+        <div class="mun-ctl" role="group" aria-label="Zoom del mapa"><button type="button" data-z="in" aria-label="Acercar">+</button><button type="button" data-z="out" aria-label="Alejar">−</button><div class="mun-mlw"><button type="button" data-z="list" class="mun-home" aria-haspopup="true">Municipios</button><div class="mun-ml" role="menu"></div></div><button type="button" data-z="full" class="mun-home" aria-pressed="false">Pantalla completa</button></div>
+        <div class="mun-hint">Rueda o pellizco para ampliar · arrastra para moverte · doble clic para acercar</div>
+        <div class="mun-msg" id="nm-msg">Cargando el mapa de municipios…</div>
+      </div>
+      <div class="mun-foot"><div class="map-leg" id="nm-leg"></div><div class="mun-intl" id="nm-intl"></div></div>
+    </div>
+  </section>
   </div>
 
   <div class="view" id="v-ins">
@@ -1293,7 +1327,7 @@ body{margin:0;background:var(--color-bg);color:var(--color-fg);font:14px/1.45 va
       <div class="head"><div><h3>De dónde vienen los jugadores</h3><p class="n" id="mun-n">Jugadores por municipio de residencia</p></div></div>
       <div class="mun-box">
         <svg id="m-mun" class="munsvg" role="img" aria-label="Mapa de calor por municipio de residencia" data-source="dims"></svg>
-        <div class="mun-ctl" role="group" aria-label="Zoom del mapa"><button type="button" data-z="in" aria-label="Acercar">+</button><button type="button" data-z="out" aria-label="Alejar">−</button><button type="button" data-z="home" class="mun-home">Ver campus</button><button type="button" data-z="full" class="mun-home" aria-pressed="false">Pantalla completa</button></div><div class="mun-hint" id="mun-hint">Rueda o pellizco para ampliar · arrastra para moverte · doble clic para acercar</div>
+        <div class="mun-ctl" role="group" aria-label="Zoom del mapa"><button type="button" data-z="in" aria-label="Acercar">+</button><button type="button" data-z="out" aria-label="Alejar">−</button><div class="mun-mlw"><button type="button" data-z="list" class="mun-home" aria-haspopup="true">Municipios</button><div class="mun-ml" role="menu"></div></div><button type="button" data-z="full" class="mun-home" aria-pressed="false">Pantalla completa</button></div><div class="mun-hint" id="mun-hint">Rueda o pellizco para ampliar · arrastra para moverte · doble clic para acercar</div>
         <div class="mun-msg" id="mun-msg">Cargando el mapa de municipios…</div>
       </div>
       <div class="mun-foot"><div class="map-leg" id="mun-leg"></div><div class="mun-intl" id="mun-intl"></div></div>
@@ -1582,6 +1616,16 @@ function topoFeatures(t,name){const o=t.objects[name];if(!o)return [];const tr=t
 function loadAtlas(){if(ATLAS)return ATLAS;ATLAS=(async()=>{for(const u of ATLAS_URLS){try{const r=await fetch(u);if(!r.ok)continue;const t=await r.json();
   return {mun:topoFeatures(t,'municipalities'),prov:topoFeatures(t,'provinces')};}catch(e){}}throw new Error('atlas');})();ATLAS.catch(()=>{ATLAS=null;});return ATLAS;}
 let MUN_Z=null;
+/* lista de municipios: items [{f,name,n,cols}] ordenados; pick(f) acerca el mapa; home() vuelve a la vista inicial */
+function munList(box,items,homeLabel,home,pick){const w=$('.mun-mlw',box);if(!w)return;const bt=$('[data-z="list"]',w),ml=$('.mun-ml',w);
+  bt.textContent='Municipios · '+items.length;bt.onclick=()=>w.classList.toggle('open');
+  const hb=document.createElement('button');hb.type='button';hb.className='ml-h';hb.textContent=homeLabel;hb.onclick=()=>{w.classList.remove('open');home();};
+  const tt=document.createElement('div');tt.className='ml-t';tt.textContent=items.length?'Municipios con inscritos':'Sin inscritos todavía';
+  ml.replaceChildren(hb,tt,...items.map(x=>{const b=document.createElement('button');b.type='button';b.innerHTML='<i></i><span></span><b></b>';
+    $('i',b).innerHTML=(x.cols||[]).map(c=>'<s style="--sc:'+c+'"></s>').join('');$('span',b).textContent=x.name;$('b',b).textContent=f(x.n);
+    b.onclick=()=>{w.classList.remove('open');pick(x.f);};return b;}));}
+function zoomToF(m,path,f0,W,H){const b=path.bounds(f0),c=path.centroid(f0),sz=Math.max(b[1][0]-b[0][0],b[1][1]-b[0][1],.5),k=Math.min(800,Math.max(8,Math.min(W,H)/(sz*2.6)));
+  m.svg.transition().duration(650).call(m.z.transform,d3.zoomIdentity.translate(W/2,H/2).scale(k).translate(-c[0],-c[1]));}
 function drawMuni(dm){
   const svgE=$('#m-mun');if(!svgE||window.__KG!=='N')return;
   const rows=dimRows(dm,'muni'),cnt={};rows.forEach(r=>cnt[r.l]=r.v);
@@ -1617,12 +1661,77 @@ function drawMuni(dm){
     const goHome=(t)=>{let k=1,cx=W/2,cy=H/2;if(hf){const c=path.centroid(hf),b=path.bounds(hf),sz=Math.max(b[1][0]-b[0][0],b[1][1]-b[0][1],.5);k=Math.min(400,Math.max(8,Math.min(W,H)/(sz*3.2)));cx=c[0];cy=c[1];}
       svg.transition().duration(t?650:0).call(z.transform,d3.zoomIdentity.translate(W/2,H/2).scale(k).translate(-cx,-cy));};
     MUN_Z={z,svg,goHome};goHome(false);
+    munList($('#mapa-mun'),feats.filter(d=>cnt[d.id]).map(d=>({f:d,name:(d.properties.name||d.id).split('/')[0],n:cnt[d.id],cols:[mapCol(cnt[d.id])]})).sort((a,b)=>b.n-a.n||a.name.localeCompare(b.name,'es')),
+      'Centrar en el campus',()=>goHome(true),f0=>zoomToF(MUN_Z,path,f0,W,H));
     root.querySelectorAll('#mapa-mun .mun-ctl button').forEach(b=>{b.onclick=()=>{const m=MUN_Z;if(!m)return;
       if(b.dataset.z==='full'){const bx=$('#mapa-mun .mun-box'),fe=document.fullscreenElement||document.webkitFullscreenElement;
         if(fe){(document.exitFullscreen||document.webkitExitFullscreen).call(document);}else{const rq=bx.requestFullscreen||bx.webkitRequestFullscreen;if(rq)rq.call(bx);}return;}
       if(b.dataset.z==='home')m.goHome(true);else m.svg.transition().duration(300).call(m.z.scaleBy,b.dataset.z==='in'?2.2:1/2.2);};});
     if(!window.__MUNFS){window.__MUNFS=1;const fs=()=>{const on=!!(document.fullscreenElement||document.webkitFullscreenElement);const fb=$('#mapa-mun [data-z="full"]');if(fb){fb.textContent=on?'Salir de pantalla completa':'Pantalla completa';fb.setAttribute('aria-pressed',String(on));}
       const m=MUN_Z,sv=$('#m-mun');if(m&&sv){const W2=sv.clientWidth,H2=sv.clientHeight;if(W2&&H2){sv.setAttribute('viewBox','0 0 '+W2+' '+H2);}}};
+      document.addEventListener('fullscreenchange',fs);document.addEventListener('webkitfullscreenchange',fs);}
+  }).catch(()=>{msg.hidden=false;msg.textContent='No se ha podido cargar el mapa de municipios. Vuelve a intentarlo más tarde.';});}
+/* ===== Mapa común de las sedes nacionales: cada sede con su color; intensidad por tramos de jugadores ===== */
+const NM_COL={andorra:'#2f9fd8',valencia:'#e8a33d',malaga:'#2e9e6a',alicante:'#ea456c',almeria:'#7b4fc9',torrevieja:'#0f2145'};
+const NM_ON={};let NM_Z=null;
+const nmShade=(c,v)=>{const i=MAP_T.findIndex(t=>v>=t[0]&&v<=t[1]);const pc=[28,45,65,82,100][i<0?0:i];return 'color-mix(in srgb,'+c+' '+pc+'%,#ffffff)';};
+function drawMuniAll(){
+  const svgE=$('#m-nmun');if(!svgE||!svgE.clientWidth)return;
+  const keys=NAC.filter(k=>SEDES[k]);keys.forEach(k=>{if(NM_ON[k]===undefined)NM_ON[k]=true;});
+  const per={},intl={};let nd={};
+  keys.forEach(k=>{const D=SEDES[k];(D.dims||[]).forEach(r=>{if(r.dim==='muni'){if(r.label==='ND'){nd[k]=(nd[k]||0)+(+r.count);}else if(r.label!=='EXT'){(per[r.label]=per[r.label]||{})[k]=+r.count;}}
+    else if(r.dim==='pais'&&!['España','Andorra','ND'].includes(r.label)){(intl[r.label]=intl[r.label]||{})[k]=+r.count;}});});
+  const tot=k=>d3.sum(Object.values(per),o=>o[k]||0)+d3.sum(Object.values(intl),o=>o[k]||0)+(nd[k]||0);
+  const pick=$('#nm-pick');
+  const chip=(k,lab,n)=>{const b=document.createElement('button');b.type='button';b.style.setProperty('--sc',NM_COL[k]||'#93a0ba');b.innerHTML='<i></i><span></span><b></b>';$('span',b).textContent=lab;$('b',b).textContent=f(n);
+    b.setAttribute('aria-pressed',String(!!NM_ON[k]));b.onclick=()=>{NM_ON[k]=!NM_ON[k];b.setAttribute('aria-pressed',String(NM_ON[k]));paint();};return b;};
+  const allB=document.createElement('button');allB.type='button';allB.className='all';allB.style.setProperty('--sc','#93a0ba');allB.textContent='Todas';
+  allB.onclick=()=>{const on=!keys.every(k=>NM_ON[k]);keys.forEach(k=>NM_ON[k]=on);pick.querySelectorAll('button[data-k]').forEach(b=>b.setAttribute('aria-pressed',String(on)));paint();};
+  pick.replaceChildren(allB,...keys.map(k=>{const b=chip(k,SN[k],tot(k));b.dataset.k=k;return b;}));
+  $('#nm-leg').innerHTML='<span class="lt">Jugadores</span>'+MAP_T.map(t=>'<span>'+t[3]+'</span>').join(' · ')+'<span class="nm-sh">'+[1,2,4,8,20].map(v=>'<i style="background:'+nmShade('#ea456c',v)+'"></i>').join('')+'</span><span style="opacity:.7">más intenso = más jugadores; cada sede en su color</span>';
+  let paintFn=()=>{};function paint(){paintFn();}
+  const msg=$('#nm-msg');msg.hidden=false;msg.textContent='Cargando el mapa de municipios…';
+  loadAtlas().then(A=>{msg.hidden=true;
+    const W=svgE.clientWidth||900,H=svgE.clientHeight||480;svgE.setAttribute('viewBox','0 0 '+W+' '+H);
+    const pj=d3.geoMercator().fitExtent([[10,10],[W-10,H-10]],{type:'Feature',geometry:{type:'Polygon',coordinates:[[[-9.4,36],[3.4,36],[3.4,43.8],[-9.4,43.8],[-9.4,36]]]}});
+    const path=d3.geoPath(pj),svg=d3.select(svgE);svg.selectAll('*').remove();
+    const rw=f0=>{if(d3.geoArea(f0)<=2*Math.PI)return f0;const gg=f0.geometry,rev=p=>p.map(r=>r.slice().reverse());return Object.assign({},f0,{geometry:{type:gg.type,coordinates:gg.type==='Polygon'?rev(gg.coordinates):gg.coordinates.map(rev)}});};
+    const feats=A.mun.concat([AD_GEO]).map(rw),prov=A.prov.map(rw);
+    const g=svg.append('g');
+    const mu=g.append('g').selectAll('path').data(feats).join('path').attr('class','mu').attr('d',path);
+    g.append('g').selectAll('path').data(prov.concat([AD_GEO].map(rw))).join('path').attr('class','pv').attr('d',path);
+    const camp=keys.map(k=>({k,f:feats.find(d=>d.id===CAMPUS_INE[k])})).filter(x=>x.f);
+    const cmp=g.append('g');camp.forEach(x=>cmp.append('path').attr('class','cmp').attr('d',path(x.f)).style('stroke',NM_COL[x.k]));
+    const LB=g.append('g').attr('class','lbls off');
+    const pins=g.append('g');camp.forEach(x=>{const c=path.centroid(x.f);const pn=pins.append('g').attr('class','pin').attr('transform','translate('+c[0]+','+c[1]+')').datum(x.k);pn.append('circle').attr('class','p').attr('r',5).style('fill',NM_COL[x.k]);pn.append('circle').attr('class','c').attr('r',5).style('fill',NM_COL[x.k]);});
+    const vis=id=>{const o=per[id]||{};let t=0,best=null,bv=0;keys.forEach(k=>{if(!NM_ON[k]||!o[k])return;t+=o[k];if(o[k]>bv){bv=o[k];best=k;}});return {t,best,o};};
+    let kNow=1;
+    paintFn=()=>{
+      mu.attr('fill',d=>{const v=vis(d.id);return v.t?nmShade(NM_COL[v.best],v.t):null;}).classed('has',d=>vis(d.id).t>0);
+      mu.on('mousemove',(e,d)=>{const v=vis(d.id);showTip(e,(d.properties.name||d.id)+': '+(v.t?f(v.t)+' '+(v.t===1?'jugador':'jugadores')+' · '+keys.filter(k=>NM_ON[k]&&v.o[k]).map(k=>SN[k]+' '+f(v.o[k])).join(' · '):'sin jugadores'));}).on('mouseleave',()=>hideTip());
+      g.selectAll('.mu.has').raise();cmp.raise();LB.raise();pins.raise();
+      cmp.selectAll('path').style('display',(d,i,n)=>NM_ON[camp[i].k]?null:'none');pins.selectAll('.pin').style('display',k=>NM_ON[k]?null:'none');
+      LB.selectAll('*').remove();feats.forEach(d=>{const v=vis(d.id);if(!v.t)return;const c=path.centroid(d);if(!isFinite(c[0]))return;const t=LB.append('text').attr('class','lbl').attr('x',c[0]).attr('y',c[1]).attr('dy','1.6em').attr('text-anchor','middle').attr('font-size',11/kNow).attr('stroke-width',3/kNow);
+        t.append('tspan').text((d.properties.name||'').split('/')[0]+' ');t.append('tspan').attr('class','v').text(f(v.t));});
+      const IL=Object.keys(intl).map(p=>({p,v:d3.sum(keys.filter(k=>NM_ON[k]),k=>intl[p][k]||0)})).filter(x=>x.v).sort((a,b)=>b.v-a.v||a.p.localeCompare(b.p,'es'));
+      const ndv=d3.sum(keys.filter(k=>NM_ON[k]),k=>nd[k]||0);const it=$('#nm-intl');
+      it.innerHTML=IL.length?'<span class="lt">Internacionales</span>'+IL.map(x=>'<span>'+x.p.replace(/</g,'')+'<b>'+f(x.v)+'</b></span>').join(''):'';
+      if(ndv){const e=document.createElement('span');e.className='nd';e.textContent='Sin ubicar ';const b=document.createElement('b');b.textContent=f(ndv);e.appendChild(b);it.appendChild(e);}
+      if(NM_Z)munList($('#mapa-nac'),feats.map(d=>({d,v:vis(d.id)})).filter(x=>x.v.t).map(x=>({f:x.d,name:(x.d.properties.name||x.d.id).split('/')[0],n:x.v.t,cols:keys.filter(k=>NM_ON[k]&&x.v.o[k]).map(k=>NM_COL[k])})).sort((a,b)=>b.n-a.n||a.name.localeCompare(b.name,'es')),
+        'Ver todas las sedes activas',()=>NM_Z.goHome(true),f0=>zoomToF(NM_Z,path,f0,W,H));};
+    const zl=d3.select(svgE.parentNode).selectAll('.mun-zl').data([0]).join('div').attr('class','mun-zl');
+    const onZ=e=>{const k=e.transform.k;kNow=k;g.attr('transform',e.transform);LB.classed('off',k<10).selectAll('text').attr('font-size',11/k).attr('stroke-width',3/k);
+      pins.selectAll('circle').attr('r',6/k).attr('stroke-width',2/k);zl.text('Zoom ×'+(k<10?k.toFixed(1).replace('.',','):Math.round(k)));};
+    const z=d3.zoom().scaleExtent([.6,1500]).wheelDelta(e=>-e.deltaY*(e.deltaMode===1?.06:e.deltaMode?1:.004)*(e.ctrlKey?6:1)).on('zoom',onZ);svg.call(z);
+    const goHome=t=>{const on=camp.filter(x=>NM_ON[x.k]);const fs=on.length?on:camp;let k=1,cx=W/2,cy=H/2;
+      if(fs.length){let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;fs.forEach(x=>{const b=path.bounds(x.f);x0=Math.min(x0,b[0][0]);y0=Math.min(y0,b[0][1]);x1=Math.max(x1,b[1][0]);y1=Math.max(y1,b[1][1]);});
+        const pad=40;k=Math.min(400,Math.max(1,Math.min((W-2*pad)/Math.max(x1-x0,1),(H-2*pad)/Math.max(y1-y0,1))*.85));cx=(x0+x1)/2;cy=(y0+y1)/2;}
+      svg.transition().duration(t?650:0).call(z.transform,d3.zoomIdentity.translate(W/2,H/2).scale(k).translate(-cx,-cy));};
+    NM_Z={z,svg,goHome};paint();goHome(false);
+    root.querySelectorAll('#mapa-nac .mun-ctl button').forEach(b=>{b.onclick=()=>{const m=NM_Z;if(!m)return;
+      if(b.dataset.z==='full'){const bx=$('#mapa-nac .mun-box'),fe=document.fullscreenElement||document.webkitFullscreenElement;if(fe){(document.exitFullscreen||document.webkitExitFullscreen).call(document);}else{const rq=bx.requestFullscreen||bx.webkitRequestFullscreen;if(rq)rq.call(bx);}return;}
+      if(b.dataset.z==='home')m.goHome(true);else m.svg.transition().duration(300).call(m.z.scaleBy,b.dataset.z==='in'?2.2:1/2.2);};});
+    if(!window.__NMFS){window.__NMFS=1;const fs=()=>{const fe=document.fullscreenElement||document.webkitFullscreenElement;root.querySelectorAll('.mun-ctl [data-z="full"]').forEach(b=>{const on=!!fe&&fe.contains(b);b.textContent=on?'Salir de pantalla completa':'Pantalla completa';b.setAttribute('aria-pressed',String(on));});};
       document.addEventListener('fullscreenchange',fs);document.addEventListener('webkitfullscreenchange',fs);}
   }).catch(()=>{msg.hidden=false;msg.textContent='No se ha podido cargar el mapa de municipios. Vuelve a intentarlo más tarde.';});}
 function drawMap(dm){
@@ -1828,7 +1937,7 @@ function grpPick(g){const host=$('#kz-gpick');if(!host)return;const keys=g==='na
 function grpShow(g){const k=GSEL[g];const keys=g==='nac'?NAC:INSK;if(!keys.length)return;root.dataset.sede='grp-'+g;window.__KG=g==='ins'?'I':'N';
   kitsTo($('#'+g+'-khost'),'03');useData(grpData(g,k),k==='all'?SN[g]:SN[k]);grpPick(g);
   const kb=$('#kits .bh p');if(kb)kb.textContent=(k==='all'?(g==='nac'?'Suma de todas las sedes nacionales':'Suma de todos los municipios institucionales'):SN[k])+': resumen, pedido semana a semana y desglose por talla. Con esto se hace el pedido.';}
-function go(v){if(v==='stor')v='home';if(v==='madrid')useSede('madrid');setView(v);}
+function go(v){if(v==='stor')v='home';if(v==='madrid')useSede('madrid');setView(v);if(v==='nac')requestAnimationFrame(()=>{try{if(!NM_Z)drawMuniAll();}catch(e){console.error(e);}});}
 {const bk=$('#back-nac');if(bk)bk.onclick=()=>go('nac');}
 const OPEN=['andorra','valencia','malaga','alicante','torrevieja','almeria'];
 function renderNac(G0){G0=G0||{grid:'#nac-grid',tot:'#nac-tot',keys:NAC,src:SEDES,open:OPEN,go:'nac',kind:'sedes nacionales'};const g=$(G0.grid),t=$(G0.tot);if(!g||!t)return;
