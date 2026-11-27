@@ -671,6 +671,68 @@ body{margin:0;background:var(--color-bg);color:var(--color-fg);font:14px/1.45 va
 .ce main .card.nat-fact{padding:22px 26px 24px}
 .ce main .card.nat-fact .big{font-size:clamp(3rem,6vw,4.6rem)}
 
+/* ===== Equipaciones: resumen unificado (cifras globales + anillo por tipo) ===== */
+.ce .xt-grid.kz-sum.kz-uni{display:block}
+.ce .ku{background:var(--tilebg);color:var(--tileink);border-radius:12px;border-top:4px solid var(--pink);padding:22px 26px 26px}
+.ce .ku-top{display:grid;grid-template-columns:repeat(var(--kc,5),minmax(0,1fr));border-bottom:1px solid color-mix(in srgb,var(--tileink) 14%,transparent);padding-bottom:18px}
+.ce .ku-s{padding:0 18px;border-left:1px solid color-mix(in srgb,var(--tileink) 14%,transparent);min-width:0}
+.ce .ku-s:first-child{padding-left:0;border-left:0}
+.ce .ku-s b{display:block;font:italic 400 2.5rem/1 "Instrument Serif","Cormorant Garamond",Georgia,serif;color:var(--pink);white-space:nowrap}
+.ce .ku-s:first-child b{font-size:3.4rem}
+.ce .ku-s span{display:block;margin-top:6px;font-family:Archivo,"Arial Black",Impact,sans-serif;font-style:italic;font-weight:900;font-stretch:125%;font-variation-settings:"wdth" 125;text-transform:uppercase;font-size:.72rem;letter-spacing:.02em}
+.ce .ku-s em{display:block;margin-top:2px;font:500 11.5px var(--font);font-style:normal;opacity:.7}
+.ce .ku-body{display:grid;grid-template-columns:240px 1fr;gap:38px;align-items:center;padding-top:22px}
+.ce .ku-ring{position:relative;width:240px;height:240px}
+.ce .ku-ring svg{width:100%;height:100%;overflow:visible}
+.ce .ku-ring path{transition:opacity .2s,transform .25s;cursor:pointer}
+.ce .ku-ring.hl path:not(.on){opacity:.25}
+.ce .ku-ring path.on{transform:scale(1.04)}
+.ce .ku-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none}
+.ce .ku-c b{font:italic 400 3.2rem/1 "Instrument Serif","Cormorant Garamond",Georgia,serif;color:var(--pink)}
+.ce .ku-c span{margin-top:4px;font:700 10.5px var(--font);letter-spacing:.08em;text-transform:uppercase;opacity:.75}
+.ce .ku-leg{display:flex;flex-direction:column;gap:6px}
+.ce .ku-r{all:unset;box-sizing:border-box;cursor:default;display:grid;grid-template-columns:16px 1fr auto auto;gap:4px 16px;align-items:center;padding:12px 14px;border-radius:10px;transition:background .2s}
+.ce .ku-r:hover,.ce .ku-r.on{background:color-mix(in srgb,var(--tileink) 6%,transparent)}
+.ce .ku-r .ku-d{width:14px;height:14px;border-radius:50%}
+.ce .ku-r .ku-d.kwhite{box-shadow:inset 0 0 0 2px var(--navy,#0f2145)}
+.ce .ku-r .ku-n{font-family:Archivo,"Arial Black",Impact,sans-serif;font-style:italic;font-weight:900;font-stretch:125%;font-variation-settings:"wdth" 125;text-transform:uppercase;font-size:.85rem}
+.ce .ku-r .ku-v{font:italic 400 2rem/1 "Instrument Serif","Cormorant Garamond",Georgia,serif;color:var(--pink);text-align:right}
+.ce .ku-r .ku-p{font:800 13px var(--font);min-width:3.2em;text-align:right;opacity:.8}
+.ce .ku-r .ku-g{grid-column:2/-1;font:500 12px var(--font);opacity:.7}
+.ce .ku-r .ku-b{grid-column:2/-1;height:5px;border-radius:3px;background:color-mix(in srgb,var(--tileink) 10%,transparent);overflow:hidden}
+.ce .ku-r .ku-b i{display:block;height:100%;border-radius:3px;transition:width .6s cubic-bezier(.2,.7,.2,1)}
+.ce .ku-r.zero .ku-v,.ce .ku-r.zero .ku-p{opacity:.45}
+@media(max-width:900px){.ce .ku-top{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:16px}.ce .ku-s:nth-child(4){padding-left:0;border-left:0}.ce .ku-body{grid-template-columns:1fr;justify-items:center}.ce .ku-leg{width:100%}}
+@media(max-width:520px){.ce .ku{padding:18px}.ce .ku-top{grid-template-columns:1fr 1fr}.ce .ku-s{padding:0;border-left:0}.ce .ku-ring{width:200px;height:200px}}
+.ce .kz-card{position:relative}.ce .kz-what{position:absolute;top:18px;right:20px}
+@media(max-width:700px){.ce .kz-what{position:static;margin-bottom:12px}}
+/* ===== Equipaciones: resumen en una fila, gráfica semanal y apartado de grupo ===== */
+.ce .xt-grid.kz-sum.kz-row{grid-template-columns:1.5fr repeat(var(--kn,3),1fr);align-items:stretch}
+.ce .kz-row .xt.kz-band{grid-column:auto;grid-template-columns:1fr;align-content:start}
+.ce .kz-row .kz-band .xt-v{grid-row:auto;font-size:3.2rem}
+.ce .kz-row .kz-band .kz-inc{grid-column:1/-1}
+.ce .kz-row .kt{flex-direction:column;align-items:flex-start;justify-content:center}
+#kz-gpick{margin:0 0 18px}.ce:not([data-sede^="grp-"]) #kz-gpick{display:none}
+@media(max-width:900px){.ce .xt-grid.kz-sum.kz-row{grid-template-columns:1fr 1fr}.ce .kz-row .kz-band{grid-column:1/-1}}
+@media(max-width:520px){.ce .xt-grid.kz-sum.kz-row{grid-template-columns:1fr}}
+.ce .kz-band .kz-inc{display:flex;flex-wrap:wrap;gap:4px 16px;margin-top:10px;font:500 12px var(--font);color:var(--tileink);opacity:.85}
+.ce .kz-band .kz-inc b{font-weight:800}
+.ce .kz-chart{display:grid;grid-template-columns:repeat(var(--wn,9),1fr);gap:10px;align-items:end;height:250px;margin-top:22px;padding:0 2px 0;border-bottom:1px solid color-mix(in srgb,var(--tileink) 18%,transparent)}
+.ce .kc-col{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;justify-content:flex-end;align-items:stretch;height:100%;position:relative;border-radius:6px 6px 0 0}
+.ce .kc-col:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+.ce .kc-v{font:italic 400 1.45rem/1 "Instrument Serif","Cormorant Garamond",Georgia,serif;color:var(--pink);text-align:center;margin-bottom:6px}
+.ce .kc-st{display:flex;flex-direction:column-reverse;border-radius:6px 6px 0 0;overflow:hidden;transition:height .5s cubic-bezier(.2,.7,.2,1),opacity .2s}
+.ce .kc-st i{display:block;min-height:2px}
+.ce .kc-st i.kwhite{box-shadow:inset 0 0 0 1.5px var(--navy,#0f2145)}
+.ce .kz-chart.has-sel .kc-col:not(.sel) .kc-st{opacity:.35}
+.ce .kc-col:hover .kc-st{opacity:1}
+.ce .kz-wl{display:grid;grid-template-columns:repeat(var(--wn,9),1fr);gap:10px;margin-top:8px}
+.ce .kz-wl span{font:800 10.5px var(--font);letter-spacing:.06em;text-transform:uppercase;text-align:center;color:var(--tileink);opacity:.75}
+.ce .kz-wl span.sel{color:var(--pink);opacity:1}
+.ce .grp-k{margin-top:46px}
+.ce .grp-pick{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+.ce .grp-pick .stp-sd{min-width:9.5rem;flex:0 1 auto}
+.ce .grp-pick .stp-sd.all{min-width:12rem}
 /* ===== Ingresos adicionales: bloques y subgrupos ===== */
 .ce .xd-sub{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-top:6px}
 .ce .xd-sub b{font-family:Archivo,"Arial Black",Impact,sans-serif;font-style:italic;font-weight:900;font-stretch:125%;font-variation-settings:"wdth" 125;text-transform:uppercase;font-size:.78rem;color:var(--tileink)}
@@ -1203,10 +1265,11 @@ body{margin:0;background:var(--color-bg);color:var(--color-fg);font:14px/1.45 va
 
   <section class="blk" id="kits">
     <div class="bh"><span class="num">06</span><h2>Equipaciones necesarias</h2><p>Resumen general, pedido semana a semana y desglose por talla. Con esto se hace el pedido.</p></div>
+    <div class="grp-pick" id="kz-gpick" role="group" aria-label="Qué sede ver"></div>
     <div class="xt-grid kz-sum" id="kz-sum" data-source="kits_matrix"></div>
-    <div class="card kz-card"><h3>Semana a semana</h3><p class="n">Cuántas equipaciones hay que tener cada semana. Pulsa una semana para ver su pedido por talla.</p><div class="kz-weeks" id="kz-weeks" data-source="kits_week"></div><div class="kz-det" id="kz-det"></div></div>
-    <div class="card"><div class="head"><div><h3>Pedido por semana y talla</h3><p class="n" style="margin-top:4px">Cuántas equipaciones hay que tener cada semana, talla a talla. Pasa el ratón para ver la fila y la columna.</p></div>
-      <div class="pillrow"><div class="seg" id="seg-kit" role="group" aria-label="Tipo de equipación"><button type="button" data-k="all" aria-pressed="true">Todas</button><button type="button" data-k="blanca" aria-pressed="false">Minikits</button><button type="button" data-k="light_blue" aria-pressed="false">Light blue</button><button type="button" data-k="portero" aria-pressed="false">Portero</button><button type="button" data-k="black" aria-pressed="false" hidden>Black</button></div><button type="button" class="btn sm" id="mx-copy">Copiar tabla</button></div></div>
+    <div class="card kz-card"><div class="seg kz-what" id="seg-what" role="group" aria-label="Qué ver"><button type="button" data-w="eq" aria-pressed="true">Equipaciones</button><button type="button" data-w="mo" aria-pressed="false">Mochilas</button><button type="button" data-w="je" aria-pressed="false">Jerseys</button></div><h3>Semana a semana</h3><p class="n" id="kz-wsub">Cuántas equipaciones hay que tener cada semana. Pulsa una columna para ver el pedido de esa semana por talla.</p><div class="kz-chart" id="kz-weeks" data-source="kits_week"></div><div class="kz-det" id="kz-det"></div></div>
+    <div class="card"><div class="head"><div><h3 id="k-mx-t">Pedido por semana y talla</h3><p class="n" id="k-mx-sub" style="margin-top:4px">Cuántas equipaciones hay que tener cada semana, talla a talla. Pasa el ratón para ver la fila y la columna.</p></div>
+      <div class="pillrow"><div class="seg" id="seg-kit" role="group" aria-label="Tipo de equipación"><button type="button" data-k="all" aria-pressed="true">Todas</button><button type="button" data-k="blanca" aria-pressed="false">Minikits</button><button type="button" data-k="black" aria-pressed="false">Black</button><button type="button" data-k="light_blue" aria-pressed="false">Light blue</button><button type="button" data-k="portero" aria-pressed="false">Portero</button></div><button type="button" class="btn sm" id="mx-copy">Copiar tabla</button></div></div>
       <div id="k-mx" data-source="kits_matrix"></div></div>
   </section>
   <section class="blk only-mad" id="resid">
@@ -1593,10 +1656,10 @@ const INSS=DATA.ins_sedes&&!Array.isArray(DATA.ins_sedes)?DATA.ins_sedes:{},INSK
 const SN={madrid:'Madrid',general:'Total general',nac:'Nacionales',ins:'Institucionales'};NAC.forEach(k=>SN[k]=SEDES[k].name||k);INSK.forEach(k=>SN[k]=INSS[k].name||k);
 const FOOT0=($('.foot')||{}).textContent||'';
 function useData(cur,name){window.__CUR=cur;window.__SCOPE=cur?$('#v-madrid'):null;window.__SEDENAME=name;try{if(window.__RENDER)window.__RENDER();}catch(e){console.error(e);}}
-function kitsTo(host,num){const k=$('#kits');if(!k||!host)return;const n=$('.bh .num',k);if(n)n.textContent=num;host.appendChild(k);}
-function useSede(k){const isM=!k||k==='madrid';const nm=isM?'Madrid':SN[k];root.dataset.sede=isM?'madrid':k;root.dataset.nat=isM?'':'1';{const tn=$('#tkt-n');if(tn)tn.textContent='Gasto medio por jugador en '+nm+' y según la modalidad que ha contratado';const ep=$('#ex-p');if(ep)ep.textContent=isM?'Extras, Campus Protection Plan y servicios adicionales (transporte y noches extra), del form 1 y del form 3':'Extras, Campus Protection Plan y servicios adicionales';}
+function kitsTo(host,num){const k=$('#kits');if(!k||!host)return;const n=$('.bh .num',k);if(n)n.textContent=num;const rz=$('#resid');if(rz&&rz.parentNode===host)host.insertBefore(k,rz);else host.appendChild(k);}
+function useSede(k){const isM=!k||k==='madrid';window.__KWHAT='eq';window.__KG=isM?'M':(INSK.includes(k)?'I':'N');const nm=isM?'Madrid':SN[k];root.dataset.sede=isM?'madrid':k;root.dataset.nat=isM?'':'1';{const tn=$('#tkt-n');if(tn)tn.textContent='Gasto medio por jugador en '+nm+' y según la modalidad que ha contratado';const ep=$('#ex-p');if(ep)ep.textContent=isM?'Extras, Campus Protection Plan y servicios adicionales (transporte y noches extra), del form 1 y del form 3':'Extras, Campus Protection Plan y servicios adicionales';}
   VIEW.madrid.h1=nm+' 2027';VIEW.madrid.ct=nm;VIEW.madrid.eye='Campus Experience · Sede '+nm;
-  kitsTo($('#v-madrid'),'06');useData(isM?null:ALLS[k],nm);
+  kitsTo($('#v-madrid'),'06');{const kb=$('#kits .bh p');if(kb)kb.textContent='Resumen general, pedido semana a semana y desglose por talla. Con esto se hace el pedido.';}useData(isM?null:ALLS[k],nm);
   {const bk=$('#back-nac'),isI=INSK.includes(k);if(bk){bk.textContent=isI?'← Todos los municipios institucionales':'← Todas las sedes nacionales';bk.onclick=()=>go(isI?'ins':'nac');}}
   const ft=$('.foot');if(ft)ft.textContent=FOOT0.replace('CE Madrid (Pau)','CE '+(isM?'Madrid':SN[k])+' (Pau)');}
 function openSede(k){useSede(k);setView('madrid');}
@@ -1628,6 +1691,17 @@ function stPick(){const host=$('#st-pick');if(!host)return;
 function stShow(k){stSel=k;root.dataset.sede='stor';kitsTo($('#st-host'),'01');
   useData(k==='madrid'?null:(ST[k]||ALLS[k]||{}),SN[k]||k);stPick();
   const sub=$('#st-sub');if(sub)sub.textContent=k==='general'?'Suma de Madrid, sedes nacionales e institucionales':k==='nac'?'Suma de todas las sedes nacionales':k==='ins'?'Suma de todos los municipios institucionales':k==='madrid'?'Sede Madrid':'Sede '+(SN[k]||k);}
+/* Equipaciones de un grupo (Nacionales o Institucionales): la suma de todas sus sedes o una concreta */
+const GSEL={nac:'all',ins:'all'};
+function grpData(g,k){if(k!=='all')return ALLS[k]||{};const keys=g==='nac'?NAC:INSK;return Object.assign({},ST[g]||{},{extras:[].concat(...keys.map(x=>(ALLS[x]&&ALLS[x].extras)||[]))});}
+function grpPick(g){const host=$('#kz-gpick');if(!host)return;const keys=g==='nac'?NAC:INSK;
+  const tot=k=>{const o=k==='all'?ST[g]:ALLS[k];return d3.sum((o&&o.kits_week)||[],r=>(+r.blanca||0)+(+r.light_blue||0)+(+r.portero||0)+(+r.black||0));};
+  const btn=(k,label)=>{const b=document.createElement('button');b.type='button';b.className='stp-sd'+(k==='all'?' all':'');b.setAttribute('aria-pressed',String(GSEL[g]===k));b.innerHTML='<span></span><b></b>';$('span',b).textContent=label;$('b',b).textContent=f(tot(k));
+    hover(b,label+': '+f(tot(k))+' equipaciones');b.onclick=()=>{GSEL[g]=k;grpShow(g);};return b;};
+  host.replaceChildren(btn('all',g==='nac'?'Todas las sedes':'Todos los municipios'),...keys.map(k=>btn(k,SN[k])));}
+function grpShow(g){const k=GSEL[g];const keys=g==='nac'?NAC:INSK;if(!keys.length)return;root.dataset.sede='grp-'+g;window.__KG=g==='ins'?'I':'N';
+  kitsTo($('#'+g+'-khost'),'03');useData(grpData(g,k),k==='all'?SN[g]:SN[k]);grpPick(g);
+  const kb=$('#kits .bh p');if(kb)kb.textContent=(k==='all'?(g==='nac'?'Suma de todas las sedes nacionales':'Suma de todos los municipios institucionales'):SN[k])+': resumen, pedido semana a semana y desglose por talla. Con esto se hace el pedido.';}
 function go(v){if(v==='stor')v='home';if(v==='madrid')useSede('madrid');setView(v);}
 {const bk=$('#back-nac');if(bk)bk.onclick=()=>go('nac');}
 const OPEN=['andorra','valencia','malaga','alicante','torrevieja','almeria'];
@@ -1916,77 +1990,108 @@ dash.onData(()=>{
    const cats=['Extras','Campus Protection Plan','Servicios adicionales'].map(l=>XC.find(r=>r.l===l)||{l,v:0,u:0,p:0}).filter(r=>!NATX||r.v>0||r.l!=='Servicios adicionales');
    xg.style.gridTemplateColumns='repeat('+cats.length+',1fr)';
    xg.replaceChildren(tot,...cats.map(r=>{const z=r.v<=0;const d=xtile(XCOL[r.l],z?'—':eur(r.v),r.l,z?'sin ventas todavía':uds(r.u,U[r.l]),z?'':r.p+'% de los jugadores',r.v/xt*100,z);hover(d,r.l+': '+eur(r.v)+' ('+pct(r.v,xt)+' de los ingresos adicionales)');return d;}));}
-  // equipaciones
-  const KMX=D.kits_matrix.data.map(r=>({w:+r.week,t:r.talla,v:[+r.blanca,+r.light_blue,+r.portero,+(r.black||0)]}));
+  // equipaciones · cada grupo con sus tipos: Madrid minikit, light blue y portero; nacionales minikit y portero; institucionales Black y portero
+  const KMX=D.kits_matrix.data.map(r=>({w:+r.week,t:r.talla,v:[+r.blanca,+r.light_blue,+r.portero,+(r.black||0)],c:+(r.compra||0),m:[+(r.moch_one||0),+(r.moch_max||0)],mc:+(r.moch_compra||0),j:+(r.jersey||0)}));
   const KCOL=['var(--kw)','var(--kl)','var(--kp)','var(--kk)'],KNAME=['Minikits','Light blue','Portero','Black'];
   const ksum=(rows,i)=>d3.sum(rows,r=>r.v[i]);const ktot=rows=>d3.sum(rows,r=>d3.sum(r.v));
   const kdot=(i)=>'<i class="kz-dot'+(i===0?' kwhite':'')+'" style="background:'+KCOL[i]+'"></i>';
-  const GT=ktot(KMX),KB=ksum(KMX,0),KL=ksum(KMX,1),KP=ksum(KMX,2),KK=ksum(KMX,3),KI=KK?[0,1,2,3]:[0,1,2],KN=(D.kpis.data.find(r=>r.metric==='n')||{}).value||0;
+  const KG=window.__KG||'M';const KI=KG==='I'?[3,2]:KG==='N'?[0,2]:[0,1,2];
+  const GT=ktot(KMX),KB=ksum(KMX,0),KL=ksum(KMX,1),KP=ksum(KMX,2),KK=ksum(KMX,3),KC=d3.sum(KMX,r=>r.c),KN=(D.kpis.data.find(r=>r.metric==='n')||{}).value||0;
+  const KV=[KB,KL,KP,KK];
   {const g=$('#kz-sum');
-    const band=mk('<b class="xt-v"></b><span class="xt-n">Total equipaciones</span><em class="xt-a"></em><em class="xt-b"></em><div class="kz-split"></div><div class="kz-leg"></div>','xt xt-all kz-band');band.style.setProperty('--pc','#ea456c');
-    $('.xt-v',band).textContent=f(GT);$('.xt-a',band).textContent='para '+f(+KN)+' jugadores con pago';$('.xt-b',band).textContent=(+KN?(GT/+KN).toLocaleString('es-ES',{minimumFractionDigits:1,maximumFractionDigits:1}):'0')+' equipaciones por jugador de media';
-    const sp=$('.kz-split',band),lg=$('.kz-leg',band);[KB,KL,KP,KK].forEach((v,i)=>{if(!v)return;const e=document.createElement('div');e.style.flex=String(v);e.style.background=KCOL[i];if(i===0)e.classList.add('kwhite');if(i===3)e.classList.add('kblk');e.textContent=v/(GT||1)>.08?f(v):'';hover(e,KNAME[i]+': '+f(v)+' ('+pct(v,GT||1)+')');sp.appendChild(e);const l=document.createElement('span');l.innerHTML=kdot(i)+KNAME[i]+' <b></b>';$('b',l).textContent=f(v);lg.appendChild(l);});
-    hover(band,'Total de equipaciones del campus');
-    const RC=['#5e6a83','#7cc4ec','#3faa6c','#1d2030'];
-    const tile=(i,v,name,tag)=>{const p=GT?v/GT*100:0;const d=mk('<div class="kt-ring"><b></b></div><div class="kt-t"><b class="kt-v"></b><span class="kt-n"></span><em class="kt-g"></em></div>','kt');d.style.setProperty('--pc',RC[i]);d.style.setProperty('--p',p.toFixed(1));
-      $('.kt-ring b',d).textContent=Math.round(p)+'%';$('.kt-v',d).textContent=f(v);$('.kt-n',d).textContent=name;const g2=$('.kt-g',d);if(tag)g2.textContent=tag;else g2.remove();hover(d,name+': '+f(v)+' ('+pct(v,GT||1)+' del pedido)');return d;};
-    const tl=[band,tile(0,KB,'Minikits','incluye extras'),tile(1,KL,'Light blue',''),tile(2,KP,'Portero','')];if(KK)tl.push(tile(3,KK,'Black','institucionales'));g.style.gridTemplateColumns=KK?'repeat(4,1fr)':'';g.replaceChildren(...tl);}
-  const kweeks=[...new Set(KMX.map(r=>r.w))].sort((a,b)=>a-b);
-  const kwk=kweeks.map(w=>({w,rows:KMX.filter(r=>r.w===w)}));const kmaxw=Math.max(...kwk.map(x=>ktot(x.rows)),1);
-  let kselW=null;
+    const MO1=d3.sum(KMX,r=>r.m[0]),MO2=d3.sum(KMX,r=>r.m[1]),MO=MO1+MO2,MOC=d3.sum(KMX,r=>r.mc),JE=d3.sum(KMX,r=>r.j);
+    const bought=KC+KP,inc=GT-bought,main=KG==='I'?3:0;
+    const d1=v=>v.toLocaleString('es-ES',{minimumFractionDigits:1,maximumFractionDigits:1});
+    const card=mk('<div class="ku-top"></div><div class="ku-body"><div class="ku-ring"><svg viewBox="-120 -120 240 240" role="img"></svg><div class="ku-c"><b></b><span>equipaciones</span></div></div><div class="ku-leg"></div></div>','ku');
+    const ST2=[[f(GT),'Total equipaciones','para '+f(+KN)+' jugadores con pago'],[+KN?d1(GT/+KN):'0','Por jugador','de media'],[f(inc),'Incluidas','en la inscripción'],[f(bought),'Compradas aparte','minikits y portero'+(KG==='I'?' · Black':'')]];
+    ST2.push([f(MO),'Mochilas',(KG==='M'?'ONE '+f(MO1)+' · MAX '+f(MO2):'1 por semana')+' · '+f(MOC)+' compradas']);ST2.push([f(JE),'Jerseys','comprados aparte · por talla']);
+    const top=$('.ku-top',card);top.style.setProperty('--kc',ST2.length);
+    ST2.forEach(([v,l,sub])=>{const e=mk('<b></b><span></span><em></em>','ku-s');$('b',e).textContent=v;$('span',e).textContent=l;$('em',e).textContent=sub;top.appendChild(e);});
+    $('.ku-c b',card).textContent=f(GT);
+    const ring=$('.ku-ring',card),svg=d3.select($('svg',card));svg.attr('aria-label','Equipaciones por tipo');
+    const pd=KI.map(i=>({i,v:KV[i]}));const arcs=d3.pie().sort(null).value(d=>d.v).padAngle(GT?.018:0)(pd.filter(d=>d.v>0));
+    const arc=d3.arc().innerRadius(84).outerRadius(118).cornerRadius(4);
+    if(!GT)svg.append('circle').attr('r',101).attr('fill','none').attr('stroke','currentColor').attr('stroke-opacity',.12).attr('stroke-width',34);
+    const leg=$('.ku-leg',card);const rows={};
+    const tags={[main]:f(KV[main]-KC)+' incluidas · '+f(KC)+' compradas aparte',2:KP?'todas compradas aparte':'sin ventas todavía',1:'incluida en MAX (1 por semana)'};
+    const on=i=>{ring.classList.toggle('hl',i!=null);svg.selectAll('path').classed('on',d=>d.data.i===i);Object.keys(rows).forEach(k=>rows[k].classList.toggle('on',+k===i));$('.ku-c b',card).textContent=i==null?f(GT):f(KV[i]);$('.ku-c span',card).textContent=i==null?'equipaciones':KNAME[i].toLowerCase()+' · '+pct(KV[i],GT||1);};
+    svg.selectAll('path').data(arcs).join('path').attr('d',arc).attr('fill',d=>KCOL[d.data.i]).attr('stroke',d=>d.data.i===0?'#0f2145':'none').attr('stroke-width',d=>d.data.i===0?1.5:0)
+      .on('mouseenter',(e,d)=>on(d.data.i)).on('mouseleave',()=>on(null));
+    KI.forEach(i=>{const v=KV[i],p=GT?v/GT*100:0;const r=mk('<i class="ku-d"></i><span class="ku-n"></span><b class="ku-v"></b><em class="ku-p"></em><span class="ku-g"></span><div class="ku-b"><i></i></div>','ku-r'+(v?'':' zero'));
+      const dt=$('.ku-d',r);dt.style.background=KCOL[i];if(i===0)dt.classList.add('kwhite');$('.ku-n',r).textContent=KNAME[i];$('.ku-v',r).textContent=f(v);$('.ku-p',r).textContent=GT?Math.round(p)+'%':'—';$('.ku-g',r).textContent=tags[i]||'';
+      const bi=$('.ku-b i',r);bi.style.background=i===0?'#0f2145':KCOL[i];bi.style.width='0%';requestAnimationFrame(()=>requestAnimationFrame(()=>{bi.style.width=p+'%';}));
+      r.onmouseenter=()=>on(i);r.onmouseleave=()=>on(null);rows[i]=r;leg.appendChild(r);});
+    g.classList.remove('kz-row');g.classList.add('kz-uni');g.style.gridTemplateColumns='';g.replaceChildren(card);}
+  /* qué se ve en la gráfica, el desglose por talla y la tabla: equipaciones, mochilas o jerseys */
+  const SERS={eq:KI.map(i=>({k:i,n:KNAME[i],c:KCOL[i],w:i===0,g:r=>r.v[i]})),
+    mo:[{k:'one',n:'Mochila ONE',c:'#ea456c',g:r=>r.m[0]},{k:'max',n:'Mochila MAX',c:'#0f2145',g:r=>r.m[1]}].filter((x,i)=>KG==='M'||i===0||d3.sum(KMX,r=>r.m[1])>0),
+    je:[{k:'je',n:'Jerseys',c:'#8c2f5a',g:r=>r.j}]};
+  const WN={eq:['equipación','equipaciones'],mo:['mochila','mochilas'],je:['jersey','jerseys']};
   const kszo=['Niño 128','Niño 140','Niño 152','Niño 164','Adulto S','Adulto M','Adulto L','Adulto XL','Sin talla'];
-  const kdet=()=>{
-    const rows=kselW==null?KMX:KMX.filter(r=>r.w===kselW);const tt=ktot(rows);
-    const by=kszo.map(t=>({t,v:[0,1,2,3].map(i=>d3.sum(rows.filter(r=>r.t===t),r=>r.v[i]))})).filter(x=>d3.sum(x.v)>0||x.t!=='Sin talla');
-    const mx=Math.max(...by.map(x=>d3.sum(x.v)),1);const H=180;
-    const head=mk('<div><b class="kz-dt"></b><em class="kz-ds"></em></div><div class="kz-leg"></div>','kz-dh');
-    $('.kz-dt',head).textContent=kselW==null?'Todo el campus · por talla':'Semana '+kselW+' · por talla';$('.kz-ds',head).textContent=f(tt)+' equipaciones en total';
-    KI.forEach(i=>{const l=document.createElement('span');l.innerHTML=kdot(i)+KNAME[i]+' <b></b>';$('b',l).textContent=f(ksum(rows,i));$('.kz-leg',head).appendChild(l);});
-    const ch=mk('','kl');
-    by.forEach(x=>{const tot=d3.sum(x.v);const r=mk('<span class="kl-badge"></span><div class="kl-m"><div class="kl-bar"></div><div class="kl-d"></div></div><b class="kl-n"></b><em class="kl-p"></em>','kl-row');
-      const lab=x.t.replace('Niño ','').replace('Adulto ','');const bd=$('.kl-badge',r);bd.textContent=x.t==='Sin talla'?'?':lab;bd.title=x.t;if(x.t.startsWith('Adulto'))bd.classList.add('ad');
-      $('.kl-n',r).textContent=f(tot);$('.kl-p',r).textContent=pct(tot,tt||1);
-      const bar=$('.kl-bar',r);x.v.forEach((v,i)=>{if(!v)return;const e=document.createElement('i');e.style.background=KCOL[i];if(i===0)e.classList.add('kwhite');if(i===3)e.classList.add('kblk');e.dataset.w=String(v/mx*100);e.style.width='0%';e.textContent=v/mx>.06?f(v):'';bar.appendChild(e);});
-      if(x.t==='Sin talla'){r.classList.add('warn');}
-      $('.kl-d',r).innerHTML=x.v.map((v,i)=>v?'<span>'+kdot(i)+KNAME[i]+' <b>'+f(v)+'</b><em>'+pct(v,tot||1)+'</em></span>':'').join('');
-      ch.appendChild(r);});
-    $('#kz-det').replaceChildren(head,ch);
-    requestAnimationFrame(()=>requestAnimationFrame(()=>ch.querySelectorAll('.kl-bar i').forEach(e=>{e.style.width=e.dataset.w+'%';})));
-  };
-  const kdraw=()=>{
-    $('#kz-weeks').replaceChildren(...kwk.map(x=>{const t=ktot(x.rows);const d=mk('<span class="kw-l"></span><b class="kw-v"></b><div class="kw-bar"></div><div class="kw-k"></div><div class="kw-d"></div>','kw');if(kselW===x.w)d.classList.add('sel');if(t===kmaxw&&t>0)d.classList.add('peak');
-      $('.kw-l',d).textContent='Semana '+x.w;$('.kw-v',d).textContent=f(t);
-      const bar=$('.kw-bar',d);bar.style.width='100%';KI.forEach(i=>{const v=ksum(x.rows,i);if(!v)return;const e=document.createElement('i');e.style.flex=String(v);e.style.background=KCOL[i];if(i===0)e.classList.add('kwhite');if(i===3)e.classList.add('kblk');e.textContent=f(v);bar.appendChild(e);});
-      $('.kw-d',d).innerHTML=KI.map(i=>{const v=ksum(x.rows,i);return '<span>'+kdot(i)+KNAME[i]+'<b>'+f(v)+'</b><em>'+pct(v,t||1)+'</em></span>';}).join('');
-      $('.kw-k',d).innerHTML=KI.map(i=>'<span>'+kdot(i)+'<b>'+f(ksum(x.rows,i))+'</b></span>').join('');
-      d.onclick=()=>{kselW=kselW===x.w?null:x.w;kdraw();kdet();};return d;}));
-  };
-  kdraw();kdet();
-  // matriz semana x talla
-  const KM=D.kits_matrix.data;
-  const SZO=['Niño 128','Niño 140','Niño 152','Niño 164','Adulto S','Adulto M','Adulto L','Adulto XL','Sin talla'];
-  if(KM.length){
-    const sizes=SZO.filter(s=>KM.some(r=>r.talla===s));const weeks=[...new Set(KM.map(r=>+r.week))].sort((a,b)=>a-b);
-    let kind='all';const val=(r)=>kind==='all'?(+r.blanca+ +r.light_blue+ +r.portero+ +(r.black||0)):+(r[kind]||0);
-    const KC={all:'var(--c0)',blanca:'var(--c6)',light_blue:'var(--kl)',portero:'var(--kp)',black:'var(--kk)'};
-    {const kb=root.querySelector('#seg-kit [data-k="black"]');if(kb)kb.hidden=!KK;}
-    const drawMx=()=>{const g={};KM.forEach(r=>{g[r.week+'|'+r.talla]=val(r);});const get=(w,s)=>g[w+'|'+s]||0;
-      const mxv=Math.max(...weeks.flatMap(w=>sizes.map(s=>get(w,s))),1);
+  const kweeks=[...new Set(KMX.map(r=>r.w))].sort((a,b)=>a-b);
+  let kselW=null,kind='all';
+  const renderK=()=>{
+    const WHAT=window.__KWHAT||'eq',SER=SERS[WHAT],wn=WN[WHAT];
+    root.querySelectorAll('#seg-what button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.w===WHAT)));
+    const val=r=>d3.sum(SER,x=>x.g(r));
+    const kwk=kweeks.map(w=>({w,rows:KMX.filter(r=>r.w===w)}));const kmaxw=Math.max(...kwk.map(x=>d3.sum(x.rows,val)),1);
+    const dot=x=>'<i class="kz-dot'+(x.w?' kwhite':'')+'" style="background:'+x.c+'"></i>';
+    // semana a semana
+    const host=$('#kz-weeks');host.style.setProperty('--wn',kwk.length||1);host.classList.toggle('has-sel',kselW!=null);
+    host.replaceChildren(...kwk.map(x=>{const t=d3.sum(x.rows,val);const d=document.createElement('button');d.type='button';d.className='kc-col'+(kselW===x.w?' sel':'');d.setAttribute('aria-pressed',String(kselW===x.w));d.setAttribute('aria-label','Semana '+x.w+': '+t+' '+wn[1]);
+      d.innerHTML='<span class="kc-v"></span><div class="kc-st"></div>';$('.kc-v',d).textContent=f(t);const st=$('.kc-st',d);st.style.height=(t/kmaxw*82)+'%';
+      SER.forEach(sr=>{const v=d3.sum(x.rows,sr.g);if(!v)return;const e=document.createElement('i');e.style.flex=String(v);e.style.background=sr.c;if(sr.w)e.classList.add('kwhite');st.appendChild(e);});
+      hover(d,'Semana '+x.w+': '+f(t)+' '+wn[t===1?0:1]+(SER.length>1?' · '+SER.map(sr=>sr.n+' '+f(d3.sum(x.rows,sr.g))).join(' · '):''));
+      d.onclick=()=>{kselW=kselW===x.w?null:x.w;renderK();};return d;}));
+    let wl=host.nextElementSibling;if(!wl||!wl.classList.contains('kz-wl')){wl=document.createElement('div');wl.className='kz-wl';host.after(wl);}
+    wl.style.setProperty('--wn',kwk.length||1);wl.replaceChildren(...kwk.map(x=>{const e=document.createElement('span');e.textContent='S'+x.w;if(kselW===x.w)e.className='sel';return e;}));
+    // por talla
+    {const rows=kselW==null?KMX:KMX.filter(r=>r.w===kselW);const tt=d3.sum(rows,val);
+      const sizes=WHAT==='mo'?['Única']:kszo;
+      const by=sizes.map(t=>({t,v:SER.map(sr=>d3.sum(rows.filter(r=>r.t===t),sr.g))})).filter(x=>d3.sum(x.v)>0||(x.t!=='Sin talla'));
+      const mx=Math.max(...by.map(x=>d3.sum(x.v)),1);
+      const head=mk('<div><b class="kz-dt"></b><em class="kz-ds"></em></div><div class="kz-leg"></div>','kz-dh');
+      $('.kz-dt',head).textContent=(kselW==null?'Todo el campus':'Semana '+kselW)+(WHAT==='mo'?' · talla única':' · por talla');$('.kz-ds',head).textContent=f(tt)+' '+wn[tt===1?0:1]+' en total';
+      SER.forEach(sr=>{const l=document.createElement('span');l.innerHTML=dot(sr)+sr.n+' <b></b>';$('b',l).textContent=f(d3.sum(rows,sr.g));$('.kz-leg',head).appendChild(l);});
+      const ch=mk('','kl');
+      by.forEach(x=>{const tot=d3.sum(x.v);const r=mk('<span class="kl-badge"></span><div class="kl-m"><div class="kl-bar"></div><div class="kl-d"></div></div><b class="kl-n"></b><em class="kl-p"></em>','kl-row');
+        const lab=x.t==='Única'?'U':x.t.replace('Niño ','').replace('Adulto ','');const bd=$('.kl-badge',r);bd.textContent=x.t==='Sin talla'?'?':lab;bd.title=x.t;if(x.t.startsWith('Adulto'))bd.classList.add('ad');
+        $('.kl-n',r).textContent=f(tot);$('.kl-p',r).textContent=pct(tot,tt||1);
+        const bar=$('.kl-bar',r);x.v.forEach((v,i)=>{if(!v)return;const sr=SER[i];const e=document.createElement('i');e.style.background=sr.c;if(sr.w)e.classList.add('kwhite');e.dataset.w=String(v/mx*100);e.style.width='0%';e.textContent=v/mx>.06?f(v):'';bar.appendChild(e);});
+        if(x.t==='Sin talla')r.classList.add('warn');
+        $('.kl-d',r).innerHTML=x.v.map((v,i)=>v?'<span>'+dot(SER[i])+SER[i].n+' <b>'+f(v)+'</b><em>'+pct(v,tot||1)+'</em></span>':'').join('');
+        ch.appendChild(r);});
+      $('#kz-det').replaceChildren(head,ch);
+      requestAnimationFrame(()=>requestAnimationFrame(()=>ch.querySelectorAll('.kl-bar i').forEach(e=>{e.style.width=e.dataset.w+'%';})));}
+    // tabla semana × talla (mochilas: semana × tipo)
+    {const sg=$('#seg-kit');if(!SER.some(x=>String(x.k)===kind))kind='all';
+      sg.replaceChildren(...[{k:'all',n:'Todas'}].concat(SER.length>1?SER:[]).map(x=>{const b=document.createElement('button');b.type='button';b.dataset.k=String(x.k);b.textContent=x.n==='Todas'?'Todas':x.n.replace('Mochila ','');b.setAttribute('aria-pressed',String(String(x.k)===kind));b.onclick=()=>{kind=String(x.k);renderK();};return b;}));
+      sg.hidden=SER.length<2;
+      const weeks=kweeks;const isMo=WHAT==='mo';
+      const cols=isMo?SER.map(x=>({id:String(x.k),l:x.n.replace('Mochila ',''),get:w=>d3.sum(KMX.filter(r=>r.w===w),x.g)}))
+        :kszo.filter(t=>KMX.some(r=>r.t===t&&val(r)>0)||(t!=='Sin talla'&&KMX.some(r=>r.t===t))).map(t=>({id:t,l:t.replace('Niño ','N ').replace('Adulto ','A '),get:w=>{const rr=KMX.filter(r=>r.w===w&&r.t===t);const sr=SER.find(x=>String(x.k)===kind);return kind==='all'||!sr?d3.sum(rr,val):d3.sum(rr,sr.g);}}));
+      const g={};weeks.forEach(w=>cols.forEach(c=>{g[w+'|'+c.id]=c.get(w);}));const get=(w,c)=>g[w+'|'+c.id]||0;
+      const mxv=Math.max(...weeks.flatMap(w=>cols.map(c=>get(w,c))),1);
+      const cc=(kind==='all'||isMo)?(WHAT==='eq'?'var(--c0)':SER[0].c):(SER.find(x=>String(x.k)===kind)||SER[0]).c;
       const tb=document.createElement('table');tb.className='mx';
-      tb.innerHTML='<thead><tr><th class="c-t">Semana</th>'+sizes.map(s=>'<th class="cell" data-s="'+s+'">'+s.replace('Niño ','N ').replace('Adulto ','A ')+'</th>').join('')+'<th class="cell tot">Total</th></tr></thead><tbody></tbody><tfoot><tr></tr></tfoot>';
+      tb.innerHTML='<thead><tr><th class="c-t">Semana</th>'+cols.map(c=>'<th class="cell" data-s="'+c.id+'">'+c.l+'</th>').join('')+'<th class="cell tot">Total</th></tr></thead><tbody></tbody><tfoot><tr></tr></tfoot>';
       const bd=$('tbody',tb);
       weeks.forEach(w=>{const tr=document.createElement('tr');const th=document.createElement('th');th.textContent='Semana '+w;tr.appendChild(th);let rt=0;
-        sizes.forEach(s=>{const v=get(w,s);rt+=v;const td=document.createElement('td');td.className='cell'+(v?'':' zero');td.dataset.s=s;td.dataset.w=w;td.textContent=v||'·';if(v)td.style.background='color-mix(in srgb,'+KC[kind]+' '+Math.round(12+v/mxv*68)+'%,transparent)';
-          td.onmouseenter=()=>{tb.querySelectorAll('.hl').forEach(e=>e.classList.remove('hl'));tr.querySelectorAll('td,th').forEach(e=>e.classList.add('hl'));tb.querySelectorAll('[data-s="'+s+'"]').forEach(e=>e.classList.add('hl'));};
-          td.onmousemove=e=>showTip(e,'Semana '+w+' · '+s+': '+v);td.onmouseleave=()=>{hideTip();tb.querySelectorAll('.hl').forEach(e=>e.classList.remove('hl'));};tr.appendChild(td);});
+        cols.forEach(c=>{const v=get(w,c);rt+=v;const td=document.createElement('td');td.className='cell'+(v?'':' zero');td.dataset.s=c.id;td.textContent=v||'·';if(v)td.style.background='color-mix(in srgb,'+cc+' '+Math.round(12+v/mxv*68)+'%,transparent)';
+          td.onmouseenter=()=>{tb.querySelectorAll('.hl').forEach(e=>e.classList.remove('hl'));tr.querySelectorAll('td,th').forEach(e=>e.classList.add('hl'));tb.querySelectorAll('[data-s="'+c.id+'"]').forEach(e=>e.classList.add('hl'));};
+          td.onmousemove=e=>showTip(e,'Semana '+w+' · '+c.l+': '+v);td.onmouseleave=()=>{hideTip();tb.querySelectorAll('.hl').forEach(e=>e.classList.remove('hl'));};tr.appendChild(td);});
         const tt=document.createElement('td');tt.className='cell tot';tt.textContent=rt;tr.appendChild(tt);bd.appendChild(tr);});
       const fr=$('tfoot tr',tb);const th0=document.createElement('td');th0.className='c-t';th0.textContent='Total';fr.appendChild(th0);let gt=0;
-      sizes.forEach(s=>{const v=d3.sum(weeks,w=>get(w,s));gt+=v;const td=document.createElement('td');td.className='cell';td.textContent=v;fr.appendChild(td);});
+      cols.forEach(c=>{const v=d3.sum(weeks,w=>get(w,c));gt+=v;const td=document.createElement('td');td.className='cell';td.textContent=v;fr.appendChild(td);});
       const tg=document.createElement('td');tg.className='cell';tg.textContent=gt;fr.appendChild(tg);
-      const w=document.createElement('div');w.className='dt';const tw=document.createElement('div');tw.className='twrap';tw.appendChild(tb);w.appendChild(tw);$('#k-mx').replaceChildren(w);
-      $('#mx-copy').onclick=async()=>{const lines=[['Semana',...sizes,'Total'].join('\t')];weeks.forEach(wk=>{lines.push(['S'+wk,...sizes.map(s=>get(wk,s)),d3.sum(sizes,s=>get(wk,s))].join('\t'));});const txt=lines.join('\n');const b=$('#mx-copy');try{await navigator.clipboard.writeText(txt);b.textContent='Copiada ✓';}catch(e){b.textContent='No se pudo copiar';}setTimeout(()=>b.textContent='Copiar tabla',1800);};};
-    drawMx();window.__KIT=k=>{kind=k;drawMx();};root.querySelectorAll('#seg-kit button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.k==='all')));if(!window.__KITSEG){window.__KITSEG=1;seg('#seg-kit',b=>window.__KIT(b.dataset.k));}
-  }else{$('#k-mx').textContent='Disponible en la próxima actualización de datos.';}
+      const wr=document.createElement('div');wr.className='dt';const tw=document.createElement('div');tw.className='twrap';tw.appendChild(tb);wr.appendChild(tw);$('#k-mx').replaceChildren(wr);
+      {const h=$('#k-mx-t');if(h)h.textContent=isMo?'Pedido de mochilas por semana':WHAT==='je'?'Pedido de jerseys por semana y talla':'Pedido por semana y talla';
+       const sb=$('#k-mx-sub');if(sb)sb.textContent=isMo?'Cuántas mochilas hay que tener cada semana, ONE y MAX. Pasa el ratón para ver la fila y la columna.':(WHAT==='je'?'Cuántos jerseys':'Cuántas equipaciones')+' hay que tener cada semana, talla a talla. Pasa el ratón para ver la fila y la columna.';
+       const ws=$('#kz-wsub');if(ws)ws.textContent=(WHAT==='eq'?'Cuántas equipaciones':WHAT==='mo'?'Cuántas mochilas':'Cuántos jerseys')+' hay que tener cada semana. Pulsa una columna para ver el detalle de esa semana.';}
+      $('#mx-copy').onclick=async()=>{const lines=[['Semana',...cols.map(c=>c.l),'Total'].join('\t')];weeks.forEach(wk=>{lines.push(['S'+wk,...cols.map(c=>get(wk,c)),d3.sum(cols,c=>get(wk,c))].join('\t'));});const b=$('#mx-copy');try{await navigator.clipboard.writeText(lines.join('\n'));b.textContent='Copiada ✓';}catch(e){b.textContent='No se pudo copiar';}setTimeout(()=>b.textContent='Copiar tabla',1800);};}
+  };
+  if(KMX.length){root.querySelectorAll('#seg-what button').forEach(b=>{b.onclick=()=>{window.__KWHAT=b.dataset.w;kselW=null;renderK();};});renderK();}
+  else{$('#k-mx').textContent='Disponible en la próxima actualización de datos.';}
 });
 })();
 </script>

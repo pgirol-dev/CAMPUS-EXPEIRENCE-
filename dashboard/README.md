@@ -19,6 +19,19 @@ Versión del dashboard que antes vivía en claude.ai, ahora dentro del software 
 - **Dónde salen:** vista «Institucionales» (resumen y tarjeta por municipio, que abre su panel completo como una sede nacional), tarjeta de la Portada, totales de la Portada, ritmo general (origen «Institucionales», con marca de apertura el 24 nov) y mapamundi.
 - Datos: `ins_sedes` (objeto por municipio) y `storage.ins`.
 
+## Equipaciones (rediseño del 27 nov)
+- **Tipos por grupo:** Madrid muestra Minikits, Light blue y Portero; las sedes nacionales, Minikits y Portero; los institucionales, Black y Portero (nunca Light blue). Portero sale siempre, aunque esté a 0. El grupo lo fija `window.__KG` en `useSede`.
+- **Cómo se cuentan** (`ce_engine.js`, solo jugadores con pago):
+  - Incluidas, por cada semana contratada: ONE Media Jornada y ONE Jornada Completa = 1 minikit; ONE Interno = 2 minikits; MAX (interno o jornada completa) = 1 minikit + 1 light blue. Institucionales: 1 Black por semana.
+  - Compradas aparte: «Uniforme Oficial Adidas» = minikit (Black en institucionales) y «Uniforme Portero Oficial Adidas» = portero, por su **Cantidad** (vacía = 1), en la **primera semana** del jugador.
+  - Talla: la de la inscripción (`Talla_equipacion`); si no es válida, «Sin talla».
+  - **Mochilas** (talla única): incluida 1 por semana contratada, la ONE en los programas ONE (también nacionales e institucionales) y la MAX en los MAX; las compradas aparte («Mochila…», MAX si el nombre lo dice) por su Cantidad en la primera semana.
+  - **Jerseys:** nunca incluidos; los comprados aparte («Jersey…») por su Cantidad, con la talla del jugador, en la primera semana.
+- **Diseño:** resumen unificado en una tarjeta (arriba las cifras globales: total, por jugador, incluidas, compradas aparte y mochilas/jerseys; debajo un anillo con el % de cada tipo y su leyenda con barra; al pasar el ratón se resalta el tipo), semana a semana en gráfica de columnas (al pulsar una, su pedido por talla), desglose por talla y tabla semana × talla para copiar.
+- Campos en `kits_week`, `kits_size` y `kits_matrix`: `compra` (minikits/Black comprados, ya sumados en su tipo), `moch_one`, `moch_max`, `moch_compra` (talla «Única») y `jersey`.
+- Selector **Equipaciones | Mochilas | Jerseys** en «Semana a semana»: cambia la gráfica, el desglose por talla y la tabla (mochilas: semana × ONE/MAX). Arriba, mochilas y jerseys como cifras separadas.
+- El apartado de equipaciones por grupo en Nacionales e Institucionales (`grpShow`) está preparado pero sin activar.
+
 ## Storage (quitado el 27 nov)
 - La vista «Storage» (equipaciones necesarias de todas las sedes) se ha quitado del dashboard: ni pestaña ni tarjeta en la Portada. Cada modalidad tendrá su propio apartado más adelante.
 - El servidor sigue calculando `storage` (no se ve); un enlace antiguo a Storage lleva a la Portada.
