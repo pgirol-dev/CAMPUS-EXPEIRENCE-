@@ -15,9 +15,13 @@ Versión del dashboard que antes vivía en claude.ai, ahora dentro del software 
 ## Institucionales (desde el 24 nov)
 - **Municipios abiertos:** Yepes y Argés (`INS` en `functions/dashboard_api/dashboard.js` y en `ce_engine.js`; `OPENI` en `template_natv.html`). Para abrir otro municipio, añadirlo en los tres sitios.
 - **De dónde salen:** inscripciones con pago con `Ubicacion_Institucionales` = «Yepes» / «Argés» (no tienen `Ubicacion`). Productos «Campus Experience ONE Media Jornada <municipio>». Solo media jornada.
-- **Equipación:** la incluida es la **Black** (1 por semana contratada), y el uniforme comprado aparte también cuenta como Black. La Black aparece en Equipaciones y en Storage solo donde hay alguna.
-- **Dónde salen:** vista «Institucionales» (resumen y tarjeta por municipio, que abre su panel completo como una sede nacional), tarjeta de la Portada, totales de la Portada, ritmo general (origen «Institucionales», con marca de apertura el 24 nov), mapamundi y Storage (grupo «Institucionales» con sus municipios).
+- **Equipación:** la incluida es la **Black** (1 por semana contratada), y el uniforme comprado aparte también cuenta como Black. La Black aparece en Equipaciones solo donde hay alguna.
+- **Dónde salen:** vista «Institucionales» (resumen y tarjeta por municipio, que abre su panel completo como una sede nacional), tarjeta de la Portada, totales de la Portada, ritmo general (origen «Institucionales», con marca de apertura el 24 nov) y mapamundi.
 - Datos: `ins_sedes` (objeto por municipio) y `storage.ins`.
+
+## Storage (quitado el 27 nov)
+- La vista «Storage» (equipaciones necesarias de todas las sedes) se ha quitado del dashboard: ni pestaña ni tarjeta en la Portada. Cada modalidad tendrá su propio apartado más adelante.
+- El servidor sigue calculando `storage` (no se ve); un enlace antiguo a Storage lleva a la Portada.
 
 ## Mapamundi (Portada, desde el 20 nov)
 - Apartado «02 · De dónde son los jugadores», debajo del ritmo de inscripción. Suma Madrid, sedes nacionales e institucionales.

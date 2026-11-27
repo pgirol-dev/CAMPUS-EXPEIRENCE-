@@ -38,7 +38,7 @@ Cada pull request que cambie el comportamiento actualiza también, en el mismo c
 ## Comprobar antes de proponer el cambio
 - `node -e "require('./functions/campus_api/index.js')"` no da error.
 - `node build.js` no deja diferencias en `client/` aparte de las esperadas.
-- Si tocas el dashboard: abrir `client/dashboard.html` con datos de prueba y revisar Portada, Madrid, Nacionales y Storage sin errores en consola.
+- Si tocas el dashboard: abrir `client/dashboard.html` con datos de prueba y revisar Portada, Madrid, Nacionales e Institucionales sin errores en consola.
 
 ## Idioma
 Todo (interfaz, mensajes de error, commits y documentación) en español.
