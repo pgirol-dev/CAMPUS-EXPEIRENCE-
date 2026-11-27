@@ -590,6 +590,7 @@ Se asignan automáticamente en este orden, un equipo por nombre y sin repetir de
   - `selfhost/` se mantiene como alternativa.
 - 13/11 (tarde): El acceso «Dashboard» volvió a desaparecer porque `client/index.html` se publicó sin la línea `<script src="dashboard-menu.js" defer>` (no se generó con `build.js`) y este documento se sobrescribió con una copia anterior. Se restaura, se añade **Torrevieja** al dashboard (abierta, Ubicacion = Torrevieja) y se refuerzan las reglas del apartado 1.
 - 13/11: **Almería** abierta también en el dashboard (Ubicacion = Almeria; productos «… Almería»).
+- 27/11: **Escala de color móvil en todos los mapas** (5 tramos en escalera según el máximo de cada mapa) y mapa municipal aún más fluido y con el diseño del resto de mapas.
 - 27/11: **Mapas municipales fluidos:** el mapa ya no se cuelga (fondo y malla en un solo trazo, solo los municipios con jugadores como elementos), burbujas a distancia, botones con iconos, sedes en tarjetas con su barra, sombras y animaciones que se pausan al mover.
 - 27/11: **Mapa común de nacionales** en la vista Nacionales (todas las sedes, un color por sede, activar/desactivar) y botón «Municipios» con la lista de municipios e inscritos en los mapas municipales.
 - 27/11: **Mapa municipal (nacionales):** zoom mucho mayor (×1500), rueda más rápida, doble clic, pantalla completa, nombres de los municipios con jugadores al acercarse y diseño renovado.
